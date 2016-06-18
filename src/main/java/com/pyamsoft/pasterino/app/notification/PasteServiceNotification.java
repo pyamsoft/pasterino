@@ -57,6 +57,7 @@ public final class PasteServiceNotification {
         .setSmallIcon(R.mipmap.ic_launcher)
         .setContentText("Pasterino Plzarino")
         .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
+        .setPriority(NotificationCompat.PRIORITY_MIN)
         .build();
   }
 }
