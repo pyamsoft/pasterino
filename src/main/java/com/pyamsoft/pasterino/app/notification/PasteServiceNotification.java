@@ -54,7 +54,7 @@ public final class PasteServiceNotification {
     final Intent singlePasteIntent = new Intent(appContext, SinglePasteService.class);
     return new NotificationCompat.Builder(appContext).setContentTitle(
         appContext.getString(R.string.app_name))
-        .setSmallIcon(R.mipmap.ic_launcher)
+        .setSmallIcon(R.drawable.ic_notification)
         .setContentText("Pasterino Plzarino")
         .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
         .setPriority(NotificationCompat.PRIORITY_MIN)
