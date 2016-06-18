@@ -19,7 +19,11 @@ package com.pyamsoft.pasterino.app.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.service.PasteService;
@@ -30,10 +34,17 @@ import com.pyamsoft.pydroid.util.StringUtil;
 public final class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider {
 
+  @Nullable @BindView(R.id.main_toolbar) Toolbar toolbar;
+  @Nullable private Unbinder unbinder;
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_Pasterino_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    unbinder = ButterKnife.bind(this);
+
+    setupAppBar();
   }
 
   @Override protected void onPostResume() {
@@ -45,6 +56,19 @@ public final class MainActivity extends DonationActivityBase
     } else {
       showAccessibilityRequestFragment();
     }
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    assert unbinder != null;
+    unbinder.unbind();
+  }
+
+  private void setupAppBar() {
+    assert toolbar != null;
+    toolbar.setTitle(getString(R.string.app_name));
+    setSupportActionBar(toolbar);
+    setActionBarUpEnabled(false);
   }
 
   private void showAccessibilityRequestFragment() {
