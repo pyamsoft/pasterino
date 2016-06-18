@@ -48,13 +48,13 @@ public final class MainActivity extends DonationActivityBase
 
   private void showAccessibilityRequestFragment() {
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, new MainFragment())
+        .replace(R.id.main_container, new AccessibilityRequestFragment())
         .commit();
   }
 
   private void showMainFragment() {
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, new AccessibilityRequestFragment())
+        .replace(R.id.main_container, new MainFragment())
         .commit();
   }
 

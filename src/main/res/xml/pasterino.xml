@@ -21,5 +21,5 @@
     android:accessibilityEventTypes="typeViewAccessibilityFocused|typeViewFocused|typeViewSelected"
     android:accessibilityFeedbackType="feedbackGeneric"
     android:canRetrieveWindowContent="true"
-    android:description="@string/app_name"
+    android:description="@string/accessibility_service_description"
     android:notificationTimeout="400"/>
