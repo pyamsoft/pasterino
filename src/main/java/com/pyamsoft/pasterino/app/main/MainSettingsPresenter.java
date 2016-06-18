@@ -20,7 +20,12 @@ import com.pyamsoft.pydroid.base.Presenter;
 
 public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.MainSettingsView> {
 
+  void clearAll();
+
   interface MainSettingsView {
 
+    void showConfirmDialog();
+
+    void onClearAll();
   }
 }

@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
+import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
 import com.pyamsoft.pasterino.dagger.main.DaggerMainSettingsComponent;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -54,6 +55,8 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
     final Preference resetAll = findPreference(getString(R.string.clear_all_key));
     resetAll.setOnPreferenceClickListener(preference -> {
       Timber.d("Reset settings onClick");
+      assert presenter != null;
+      presenter.clearAll();
       return true;
     });
 
@@ -84,7 +87,29 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
     presenter.unbindView();
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    assert presenter != null;
+    presenter.onResume();
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    assert presenter != null;
+    presenter.onPause();
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+  }
+
+  @Override public void showConfirmDialog() {
+    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new ConfirmationDialog(),
+        "confirm");
+  }
+
+  @Override public void onClearAll() {
+    PasteServiceNotification.stop(getContext());
+    android.os.Process.killProcess(android.os.Process.myPid());
   }
 }

@@ -14,13 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.model;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
+import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
+import rx.subjects.Subject;
 
-interface MainSettingsInteractor {
+public abstract class RxBus<T> {
 
-  @CheckResult @NonNull Observable<Boolean> clearAll();
+  @NonNull private final Subject<T, T> bus = new SerializedSubject<>(PublishSubject.create());
+
+  public void post(@NonNull T event) {
+    if (bus.hasObservers()) {
+      bus.onNext(event);
+    }
+  }
+
+  @NonNull public Observable<T> register() {
+    return bus.filter(confirmationEvent -> confirmationEvent != null);
+  }
 }

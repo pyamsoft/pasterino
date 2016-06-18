@@ -42,4 +42,8 @@ final class PasterinoPreferencesImpl extends ApplicationPreferences
   @Override public void setPasteDelayTime(long time) {
     put(delayTime, Long.toString(time));
   }
+
+  @Override public void clearAll() {
+    clear(true);
+  }
 }

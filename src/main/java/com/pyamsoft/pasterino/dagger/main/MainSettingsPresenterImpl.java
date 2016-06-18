@@ -17,16 +17,79 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.app.main.ConfirmationDialog;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pydroid.base.PresenterImpl;
 import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 final class MainSettingsPresenterImpl extends PresenterImpl<MainSettingsPresenter.MainSettingsView>
     implements MainSettingsPresenter {
 
   @NonNull private final MainSettingsInteractor interactor;
+  @NonNull private final Scheduler ioScheduler;
+  @NonNull private final Scheduler mainScheduler;
+  @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
+  @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
 
-  @Inject MainSettingsPresenterImpl(@NonNull MainSettingsInteractor interactor) {
+  @Inject MainSettingsPresenterImpl(@NonNull MainSettingsInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
     this.interactor = interactor;
+    this.ioScheduler = ioScheduler;
+    this.mainScheduler = mainScheduler;
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    registerOnConfirmEventBus();
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    unregisterFromConfirmEventBus();
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubscribeConfirm();
+  }
+
+  private void unsubscribeConfirm() {
+    if (!confirmedSubscription.isUnsubscribed()) {
+      confirmedSubscription.unsubscribe();
+    }
+  }
+
+  private void unregisterFromConfirmEventBus() {
+    if (!confirmBusSubscription.isUnsubscribed()) {
+      confirmBusSubscription.unsubscribe();
+    }
+  }
+
+  @Override public void clearAll() {
+    getView().showConfirmDialog();
+  }
+
+  private void registerOnConfirmEventBus() {
+    unregisterFromConfirmEventBus();
+    confirmBusSubscription =
+        ConfirmationDialog.ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
+          unsubscribeConfirm();
+          confirmedSubscription = interactor.clearAll()
+              .subscribeOn(ioScheduler)
+              .observeOn(mainScheduler)
+              .subscribe(aBoolean -> {
+                getView().onClearAll();
+              }, throwable -> {
+                Timber.e(throwable, "onError");
+              });
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        });
   }
 }

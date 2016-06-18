@@ -23,4 +23,6 @@ public interface PasterinoPreferences {
   @CheckResult long getPasteDelayTime();
 
   void setPasteDelayTime(long time);
+
+  void clearAll();
 }

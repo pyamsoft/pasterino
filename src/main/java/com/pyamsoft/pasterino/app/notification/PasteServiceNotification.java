@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import com.pyamsoft.pasterino.R;
+import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.app.service.SinglePasteService;
 import timber.log.Timber;
 
@@ -35,8 +36,10 @@ public final class PasteServiceNotification {
   private static final int RC = 1005;
 
   public static void start(@NonNull Context context) {
-    Timber.d("Start notification %d", ID);
-    getNotificationManager(context).notify(ID, createNotification(context));
+    if (PasteService.isRunning()) {
+      Timber.d("Start notification %d", ID);
+      getNotificationManager(context).notify(ID, createNotification(context));
+    }
   }
 
   public static void stop(@NonNull Context context) {
