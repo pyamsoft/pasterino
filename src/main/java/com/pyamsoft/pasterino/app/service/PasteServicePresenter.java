@@ -31,5 +31,7 @@ public interface PasteServicePresenter
   interface PasteServiceProvider {
 
     void onPaste(@NonNull AccessibilityNodeInfoCompat target);
+
+    void stopPasteService();
   }
 }

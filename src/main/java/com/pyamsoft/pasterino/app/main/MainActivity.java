@@ -22,7 +22,7 @@ import android.support.annotation.Nullable;
 import android.text.Spannable;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
+import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
@@ -33,8 +33,29 @@ public final class MainActivity extends DonationActivityBase
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+  }
 
-    PasteServiceNotification.start(this);
+  @Override protected void onPostResume() {
+    super.onPostResume();
+    RatingDialog.showRatingDialog(this, this);
+
+    if (PasteService.isRunning()) {
+      showMainFragment();
+    } else {
+      showAccessibilityRequestFragment();
+    }
+  }
+
+  private void showAccessibilityRequestFragment() {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main_container, new MainFragment())
+        .commit();
+  }
+
+  private void showMainFragment() {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main_container, new AccessibilityRequestFragment())
+        .commit();
   }
 
   @NonNull @Override protected String getPlayStoreAppPackage() {

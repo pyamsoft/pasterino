@@ -45,6 +45,10 @@ public class PasteService extends AccessibilityService
     }
   }
 
+  @CheckResult public static boolean isRunning() {
+    return instance != null;
+  }
+
   public static synchronized void setInstance(@Nullable PasteService instance) {
     PasteService.instance = instance;
   }
@@ -98,5 +102,10 @@ public class PasteService extends AccessibilityService
   @Override public void onPaste(@NonNull AccessibilityNodeInfoCompat target) {
     Timber.d("Perform paste on target: %s", target.getViewIdResourceName());
     target.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
+  }
+
+  @Override
+  public final void stopPasteService() {
+    Timber.e("API 24 only");
   }
 }

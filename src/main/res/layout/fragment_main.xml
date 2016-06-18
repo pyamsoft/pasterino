@@ -18,13 +18,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
+    android:padding="16dp"
     >
 
-  <FrameLayout
-      android:id="@+id/main_container"
+  <Button
+      android:id="@+id/service_enabled_text"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Touch to stop Pasterino"
+      android:textAppearance="?android:attr/textAppearanceLarge"
       />
 
 </LinearLayout>
