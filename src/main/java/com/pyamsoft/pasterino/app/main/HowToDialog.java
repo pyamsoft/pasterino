@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.service;
+package com.pyamsoft.pasterino.app.main;
 
-import android.support.annotation.CheckResult;
+import android.app.Dialog;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 
-interface PasteServiceInteractor {
+public class HowToDialog extends DialogFragment {
 
-  void storePasteView(@NonNull AccessibilityNodeInfoCompat target);
-
-  void clearPasteView();
-
-  @CheckResult @Nullable AccessibilityNodeInfoCompat getPasteView();
-
-  @CheckResult long getPasteDelayTime();
+  @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    return new AlertDialog.Builder(getActivity()).setMessage(
+        "When you want to paste into a text input field, simply click the notification and wait a little.")
+        .setTitle("How to Use")
+        .setNeutralButton("Got It", (dialog, which) -> {
+          dialog.dismiss();
+        })
+        .create();
+  }
 }

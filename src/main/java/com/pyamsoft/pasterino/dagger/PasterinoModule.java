@@ -18,6 +18,7 @@ package com.pyamsoft.pasterino.dagger;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.PasterinoPreferences;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,13 +30,19 @@ import rx.schedulers.Schedulers;
 @Module public class PasterinoModule {
 
   @NonNull private final Context appContext;
+  @NonNull private final PasterinoPreferences preferences;
 
   public PasterinoModule(final @NonNull Context context) {
     appContext = context.getApplicationContext();
+    preferences = new PasterinoPreferencesImpl(appContext);
   }
 
   @Singleton @Provides Context provideContext() {
     return appContext;
+  }
+
+  @Singleton @Provides PasterinoPreferences providePreferences() {
+    return preferences;
   }
 
   @Singleton @Provides @Named("io") Scheduler provideIOScheduler() {

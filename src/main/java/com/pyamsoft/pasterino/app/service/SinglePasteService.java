@@ -16,32 +16,60 @@
 
 package com.pyamsoft.pasterino.app.service;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.pyamsoft.pasterino.Pasterino;
+import com.pyamsoft.pasterino.dagger.service.DaggerPasteServiceComponent;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public final class SinglePasteService extends IntentService {
+public final class SinglePasteService extends Service
+    implements SinglePastePresenter.SinglePasteProvider {
 
-  private static final long NOTIFICATION_SHADE_DISMISS_DELAY = 600L;
   @NonNull private final Handler handler;
+  @Nullable @Inject SinglePastePresenter presenter;
 
   public SinglePasteService() {
-    super(SinglePasteService.class.getName());
     handler = new Handler(Looper.getMainLooper());
   }
 
-  @Override protected void onHandleIntent(Intent intent) {
-    Timber.d("Attempt single paste");
-    handler.removeCallbacksAndMessages(null);
-    handler.postDelayed(() -> PasteService.getInstance().pasteIntoTarget(),
-        NOTIFICATION_SHADE_DISMISS_DELAY);
+  @Override public void onCreate() {
+    super.onCreate();
+    Timber.d("onCreate");
+    DaggerPasteServiceComponent.builder()
+        .pasterinoComponent(Pasterino.getInstance().getPasterinoComponent())
+        .build()
+        .inject(this);
+
+    assert presenter != null;
+    presenter.bindView(this);
   }
 
-  @Override public boolean onUnbind(Intent intent) {
+  @Override public void onDestroy() {
+    super.onDestroy();
+    Timber.d("onDestroy");
     handler.removeCallbacksAndMessages(null);
-    return super.onUnbind(intent);
+    assert presenter != null;
+    presenter.unbindView();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
+  }
+
+  @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    Timber.d("Attempt single paste");
+    handler.removeCallbacksAndMessages(null);
+    assert presenter != null;
+    handler.postDelayed(() -> {
+      PasteService.getInstance().pasteIntoTarget();
+      stopSelf();
+    }, presenter.getPasteDelayTime());
+    return START_NOT_STICKY;
   }
 }

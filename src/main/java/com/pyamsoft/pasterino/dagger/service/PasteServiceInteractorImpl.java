@@ -16,21 +16,21 @@
 
 package com.pyamsoft.pasterino.dagger.service;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import com.pyamsoft.pasterino.PasterinoPreferences;
 import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 final class PasteServiceInteractorImpl implements PasteServiceInteractor {
 
-  @NonNull private final Context appContext;
+  @NonNull private final PasterinoPreferences preferences;
   @NonNull private WeakReference<AccessibilityNodeInfoCompat> pasteView;
 
-  @Inject PasteServiceInteractorImpl(@NonNull Context appContext) {
-    this.appContext = appContext;
+  @Inject PasteServiceInteractorImpl(@NonNull PasterinoPreferences preferences) {
+    this.preferences = preferences;
     pasteView = new WeakReference<>(null);
   }
 
@@ -51,5 +51,9 @@ final class PasteServiceInteractorImpl implements PasteServiceInteractor {
 
   @Nullable @Override public AccessibilityNodeInfoCompat getPasteView() {
     return pasteView.get();
+  }
+
+  @Override public long getPasteDelayTime() {
+    return preferences.getPasteDelayTime();
   }
 }

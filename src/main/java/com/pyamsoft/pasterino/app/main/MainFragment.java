@@ -17,46 +17,41 @@
 package com.pyamsoft.pasterino.app.main;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.service.PasteService;
+import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
-public final class MainFragment extends Fragment {
+public final class MainFragment extends PreferenceFragmentCompat {
 
-  @Nullable @BindView(R.id.service_enabled_text) Button enabled;
-  @Nullable private Unbinder unbinder;
+  @Override public void onCreatePreferences(Bundle bundle, String s) {
+    addPreferencesFromResource(R.xml.preferences);
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_main, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
-  }
+    final Preference explain = findPreference(getString(R.string.explain_key));
+    explain.setOnPreferenceClickListener(preference -> {
+      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new HowToDialog(), "howto");
+      return true;
+    });
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
+    final Preference resetAll = findPreference(getString(R.string.clear_all_key));
+    resetAll.setOnPreferenceClickListener(preference -> {
+      Timber.d("Reset settings onClick");
+      return true;
+    });
 
-    assert unbinder != null;
-    unbinder.unbind();
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    assert enabled != null;
-    enabled.setOnClickListener(v -> {
-      Timber.d("Stop Paste Service");
-      PasteService.getInstance().stopPasteService();
+    final Preference upgradeInfo = findPreference(getString(R.string.upgrade_info_key));
+    upgradeInfo.setOnPreferenceClickListener(preference -> {
+      final FragmentActivity activity = getActivity();
+      if (activity instanceof RatingDialog.ChangeLogProvider) {
+        final RatingDialog.ChangeLogProvider provider = (RatingDialog.ChangeLogProvider) activity;
+        RatingDialog.showRatingDialog(activity, provider, true);
+      } else {
+        throw new ClassCastException("Activity is not a change log provider");
+      }
+      return true;
     });
   }
 }

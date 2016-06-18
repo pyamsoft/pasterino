@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+  <string name="explain_key">explain</string>
+  <string name="explain_title">How to Use</string>
+  <string name="explain_summary">The simply way to use Pasterino</string>
+
+  <string name="delay_time_default">600</string>
+  <string name="delay_time_key">delay_time</string>
+  <string name="delay_time_title">Delay Time</string>
+  <string name="delay_time_summary">Delay Time Summary</string>
+
+  <string name="clear_all_key">clear_all</string>
+  <string name="clear_all_title">Reset All Settings</string>
+  <string name="clear_all_summary">Reset all application settings to default</string>
+
+  <string name="upgrade_info_key">upgrade_info</string>
+  <string name="upgrade_info_title">Show Upgrade Information</string>
+  <string name="upgrade_info_summary">Show the most recent upgrade change log</string>
+
+</resources>

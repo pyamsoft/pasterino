@@ -16,17 +16,21 @@
 
 package com.pyamsoft.pasterino.dagger.service;
 
-import com.pyamsoft.pasterino.app.service.PasteService;
-import com.pyamsoft.pasterino.app.service.SinglePasteService;
-import com.pyamsoft.pasterino.dagger.ActivityScope;
-import com.pyamsoft.pasterino.dagger.PasterinoComponent;
-import dagger.Component;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
+import com.pyamsoft.pydroid.base.PresenterImpl;
+import javax.inject.Inject;
 
-@ActivityScope
-@Component(modules = PasteServiceModule.class, dependencies = PasterinoComponent.class)
-public interface PasteServiceComponent {
+final class SinglePastePresenterImpl extends PresenterImpl<SinglePastePresenter.SinglePasteProvider>
+    implements SinglePastePresenter {
 
-  void inject(PasteService service);
+  @NonNull private final PasteServiceInteractor interactor;
 
-  void inject(SinglePasteService service);
+  @Inject SinglePastePresenterImpl(@NonNull PasteServiceInteractor interactor) {
+    this.interactor = interactor;
+  }
+
+  @Override public long getPasteDelayTime() {
+    return interactor.getPasteDelayTime();
+  }
 }

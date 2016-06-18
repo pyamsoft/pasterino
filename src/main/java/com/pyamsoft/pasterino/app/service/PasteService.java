@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
 import com.pyamsoft.pasterino.dagger.service.DaggerPasteServiceComponent;
@@ -102,10 +103,11 @@ public class PasteService extends AccessibilityService
   @Override public void onPaste(@NonNull AccessibilityNodeInfoCompat target) {
     Timber.d("Perform paste on target: %s", target.getViewIdResourceName());
     target.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
+    Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",
+        Toast.LENGTH_SHORT).show();
   }
 
-  @Override
-  public final void stopPasteService() {
+  @Override public final void stopPasteService() {
     Timber.e("API 24 only");
   }
 }

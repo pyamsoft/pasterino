@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger;
+package com.pyamsoft.pasterino.app.service;
 
-import android.content.Context;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import dagger.Component;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import rx.Scheduler;
+import android.support.annotation.CheckResult;
+import com.pyamsoft.pydroid.base.Presenter;
 
-@Singleton @Component(modules = PasterinoModule.class) public interface PasterinoComponent {
+public interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
 
-  Context provideContext();
+  @CheckResult long getPasteDelayTime();
 
-  PasterinoPreferences providePreferences();
+  interface SinglePasteProvider {
 
-  @Named("main") Scheduler provideMainScheduler();
-
-  @Named("io") Scheduler provideIoScheduler();
+  }
 }
