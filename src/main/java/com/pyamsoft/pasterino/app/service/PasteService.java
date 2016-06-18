@@ -56,15 +56,11 @@ public class PasteService extends AccessibilityService
   }
 
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {
-    final int eventType = event.getEventType();
-    switch (eventType) {
-      case AccessibilityEvent.TYPE_VIEW_FOCUSED:
-        Timber.d("New view in focus");
-        final AccessibilityNodeInfoCompat potentialTarget =
-            AccessibilityEventCompat.asRecord(event).getSource();
-        assert presenter != null;
-        presenter.storeEditableViewForPasting(potentialTarget);
-    }
+    Timber.d("New view related event");
+    final AccessibilityNodeInfoCompat potentialTarget =
+        AccessibilityEventCompat.asRecord(event).getSource();
+    assert presenter != null;
+    presenter.storeEditableViewForPasting(potentialTarget);
   }
 
   @Override public void onInterrupt() {

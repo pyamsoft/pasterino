@@ -58,6 +58,10 @@ public final class PasteServiceNotification {
         .setContentText("Pasterino Plzarino")
         .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
         .setPriority(NotificationCompat.PRIORITY_MIN)
+        .setWhen(0)
+        .setOngoing(true)
+        .setAutoCancel(false)
+        .setNumber(0)
         .build();
   }
 }
