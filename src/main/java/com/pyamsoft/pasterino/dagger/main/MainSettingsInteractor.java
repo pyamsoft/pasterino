@@ -17,6 +17,4 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 interface MainSettingsInteractor {
-
-  void setPasteDelayTime(long time);
 }

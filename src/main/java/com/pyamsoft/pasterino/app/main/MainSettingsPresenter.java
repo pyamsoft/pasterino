@@ -20,8 +20,6 @@ import com.pyamsoft.pydroid.base.Presenter;
 
 public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.MainSettingsView> {
 
-  void updatePasteDelayTime(long time);
-
   interface MainSettingsView {
 
   }

@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino.app.main;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
@@ -37,7 +36,6 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
     implements MainSettingsPresenter.MainSettingsView {
 
   @Nullable @Inject MainSettingsPresenter presenter;
-  @Nullable private ListPreference delayTimePreference;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
     DaggerMainSettingsComponent.builder()
@@ -70,8 +68,6 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
       }
       return true;
     });
-
-    delayTimePreference = (ListPreference) findPreference(getString(R.string.delay_time_key));
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,25 +86,5 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    assert delayTimePreference != null;
-    delayTimePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object o) {
-        if (o instanceof String) {
-          final String string = (String) o;
-          final long time = Long.parseLong(string);
-          Timber.d("New time: %d", time);
-          if (time == -1) {
-            // TODO update custom
-            Timber.d("Update custom time!");
-          } else {
-            Timber.d("Update preset time");
-            assert presenter != null;
-            presenter.updatePasteDelayTime(time);
-          }
-          return true;
-        }
-        return false;
-      }
-    });
   }
 }

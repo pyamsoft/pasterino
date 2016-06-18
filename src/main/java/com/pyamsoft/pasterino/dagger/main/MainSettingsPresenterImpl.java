@@ -29,8 +29,4 @@ final class MainSettingsPresenterImpl extends PresenterImpl<MainSettingsPresente
   @Inject MainSettingsPresenterImpl(@NonNull MainSettingsInteractor interactor) {
     this.interactor = interactor;
   }
-
-  @Override public void updatePasteDelayTime(long time) {
-    interactor.setPasteDelayTime(time);
-  }
 }

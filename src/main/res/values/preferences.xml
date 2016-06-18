@@ -21,7 +21,6 @@
   <string name="explain_title">How to Use</string>
   <string name="explain_summary">The simply way to use Pasterino</string>
 
-  <string name="real_delay_time_key">real_delay_time</string>
   <string name="delay_time_default">600</string>
   <string name="delay_time_key">delay_time</string>
   <string name="delay_time_title">Delay Time</string>
@@ -31,14 +30,12 @@
     <item name="value_small">Small</item>
     <item name="value_default">Default</item>
     <item name="value_large">Large</item>
-    <item name="value_custom">Custom</item>
   </string-array>
 
   <string-array name="delay_time_values">
     <item name="value_small">400</item>
     <item name="value_default">600</item>
     <item name="value_large">1000</item>
-    <item name="value_custom">-1</item>
   </string-array>
 
   <string name="clear_all_key">clear_all</string>

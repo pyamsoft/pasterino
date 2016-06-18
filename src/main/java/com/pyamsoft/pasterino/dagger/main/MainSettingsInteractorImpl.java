@@ -27,8 +27,4 @@ final class MainSettingsInteractorImpl implements MainSettingsInteractor {
   @Inject MainSettingsInteractorImpl(@NonNull PasterinoPreferences preferences) {
     this.preferences = preferences;
   }
-
-  @Override public void setPasteDelayTime(long time) {
-    preferences.setPasteDelayTime(time);
-  }
 }
