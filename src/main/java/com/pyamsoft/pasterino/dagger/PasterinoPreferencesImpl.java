@@ -31,7 +31,7 @@ final class PasterinoPreferencesImpl extends ApplicationPreferences
   protected PasterinoPreferencesImpl(@NonNull Context context) {
     super(context);
     final Context appContext = context.getApplicationContext();
-    delayTime = appContext.getString(R.string.delay_time_key);
+    delayTime = appContext.getString(R.string.real_delay_time_key);
     delayTimeDefault = appContext.getString(R.string.delay_time_default);
   }
 

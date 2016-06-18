@@ -25,6 +25,16 @@
         android:summary="@string/explain_summary"
         android:title="@string/explain_title"/>
 
+    <ListPreference
+        android:defaultValue="@string/delay_time_default"
+        android:dialogTitle="@string/delay_time_title"
+        android:entries="@array/delay_time_names"
+        android:entryValues="@array/delay_time_values"
+        android:key="@string/delay_time_key"
+        android:summary="@string/delay_time_summary"
+        android:title="@string/delay_time_title"/>
+    />
+
   </PreferenceCategory>
 
   <PreferenceCategory

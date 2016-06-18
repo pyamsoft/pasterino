@@ -55,7 +55,7 @@ public final class MainActivity extends DonationActivityBase
 
   private void showMainFragment() {
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, new MainFragment())
+        .replace(R.id.main_container, new MainSettingsFragment())
         .commit();
   }
 
