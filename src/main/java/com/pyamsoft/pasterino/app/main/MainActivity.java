@@ -31,6 +31,7 @@ public final class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    setTheme(R.style.Theme_Pasterino_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
   }

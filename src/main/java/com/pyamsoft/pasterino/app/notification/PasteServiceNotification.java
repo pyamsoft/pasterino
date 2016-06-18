@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.service.SinglePasteService;
 import timber.log.Timber;
@@ -61,6 +62,7 @@ public final class PasteServiceNotification {
         .setWhen(0)
         .setOngoing(true)
         .setAutoCancel(false)
+        .setColor(ContextCompat.getColor(appContext, R.color.green500))
         .setNumber(0)
         .build();
   }
