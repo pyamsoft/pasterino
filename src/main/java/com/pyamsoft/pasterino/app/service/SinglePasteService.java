@@ -67,7 +67,7 @@ public final class SinglePasteService extends Service
     handler.removeCallbacksAndMessages(null);
     assert presenter != null;
     handler.postDelayed(() -> {
-      PasteService.getInstance().pasteIntoTarget();
+      PasteService.getInstance().pasteIntoCurrentFocus();
       stopSelf();
     }, presenter.getPasteDelayTime());
     return START_NOT_STICKY;

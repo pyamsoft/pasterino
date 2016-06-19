@@ -18,19 +18,17 @@ package com.pyamsoft.pasterino.app.service;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import android.view.accessibility.AccessibilityNodeInfo;
 import com.pyamsoft.pydroid.base.Presenter;
 
 public interface PasteServicePresenter
     extends Presenter<PasteServicePresenter.PasteServiceProvider> {
 
-  void storeEditableViewForPasting(@Nullable AccessibilityNodeInfoCompat potentialTarget);
-
-  void pasteClipboardIntoFocusedView();
+  void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target);
 
   interface PasteServiceProvider {
 
-    void onPaste(@NonNull AccessibilityNodeInfoCompat target);
+    void onPaste(@NonNull AccessibilityNodeInfo target);
 
     void stopPasteService();
   }

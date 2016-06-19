@@ -16,9 +16,8 @@
 
 package com.pyamsoft.pasterino.dagger.service;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import android.view.accessibility.AccessibilityNodeInfo;
 import com.pyamsoft.pasterino.app.service.PasteServicePresenter;
 import com.pyamsoft.pydroid.base.PresenterImpl;
 import javax.inject.Inject;
@@ -28,26 +27,11 @@ final class PasteServicePresenterImpl
     extends PresenterImpl<PasteServicePresenter.PasteServiceProvider>
     implements PasteServicePresenter {
 
-  @NonNull private final PasteServiceInteractor interactor;
-
-  @Inject PasteServicePresenterImpl(@NonNull PasteServiceInteractor interactor) {
-    this.interactor = interactor;
+  @Inject PasteServicePresenterImpl() {
   }
 
-  @Override
-  public void storeEditableViewForPasting(@Nullable AccessibilityNodeInfoCompat potentialTarget) {
-    Timber.d("Store target if it is editable...");
-    if (potentialTarget != null && potentialTarget.isEditable()) {
-      interactor.storePasteView(potentialTarget);
-    } else {
-      Timber.e("Target is not editable, ignore");
-      interactor.clearPasteView();
-    }
-  }
-
-  @Override public void pasteClipboardIntoFocusedView() {
-    final AccessibilityNodeInfoCompat target = interactor.getPasteView();
-    if (target != null) {
+  @Override public void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target) {
+    if (target != null && target.isEditable()) {
       Timber.d("Got valid paste target, attempt paste");
       getView().onPaste(target);
     } else {

@@ -21,9 +21,9 @@ import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
@@ -54,18 +54,15 @@ public class PasteService extends AccessibilityService
     PasteService.instance = instance;
   }
 
-  public final void pasteIntoTarget() {
-    Timber.d("Call pasteIntoTarget()");
+  public final void pasteIntoCurrentFocus() {
+    final AccessibilityNodeInfo info =
+        getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
     assert presenter != null;
-    presenter.pasteClipboardIntoFocusedView();
+    presenter.pasteClipboardIntoFocusedView(info);
   }
 
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {
-    Timber.d("New view related event");
-    final AccessibilityNodeInfoCompat potentialTarget =
-        AccessibilityEventCompat.asRecord(event).getSource();
-    assert presenter != null;
-    presenter.storeEditableViewForPasting(potentialTarget);
+    Timber.d("onAccessibilityEvent");
   }
 
   @Override public void onInterrupt() {
@@ -100,7 +97,7 @@ public class PasteService extends AccessibilityService
     return super.onUnbind(intent);
   }
 
-  @Override public void onPaste(@NonNull AccessibilityNodeInfoCompat target) {
+  @Override public void onPaste(@NonNull AccessibilityNodeInfo target) {
     Timber.d("Perform paste on target: %s", target.getViewIdResourceName());
     target.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
     Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",

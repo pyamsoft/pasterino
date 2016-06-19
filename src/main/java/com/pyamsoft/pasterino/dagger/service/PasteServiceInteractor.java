@@ -17,17 +17,8 @@
 package com.pyamsoft.pasterino.dagger.service;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 
 interface PasteServiceInteractor {
-
-  void storePasteView(@NonNull AccessibilityNodeInfoCompat target);
-
-  void clearPasteView();
-
-  @CheckResult @Nullable AccessibilityNodeInfoCompat getPasteView();
 
   @CheckResult long getPasteDelayTime();
 }
