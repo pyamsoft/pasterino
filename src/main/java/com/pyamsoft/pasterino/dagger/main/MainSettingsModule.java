@@ -21,12 +21,15 @@ import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pasterino.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
+import rx.Scheduler;
 
 @Module public class MainSettingsModule {
 
   @ActivityScope @Provides MainSettingsPresenter provideMainSettingsPresenter(
-      @NonNull MainSettingsPresenterImpl presenter) {
-    return presenter;
+      @NonNull MainSettingsInteractor interactor, @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    return new MainSettingsPresenter(interactor, ioScheduler, mainScheduler);
   }
 
   @ActivityScope @Provides MainSettingsInteractor provideMainSettingsInteractor(

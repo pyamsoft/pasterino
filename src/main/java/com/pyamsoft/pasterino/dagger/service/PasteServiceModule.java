@@ -26,13 +26,13 @@ import dagger.Provides;
 @Module public class PasteServiceModule {
 
   @ActivityScope @Provides PasteServicePresenter providePasteServicePresenter(
-      @NonNull PasteServicePresenterImpl presenter) {
-    return presenter;
+      @NonNull PasteServiceInteractor interactor) {
+    return new PasteServicePresenter();
   }
 
   @ActivityScope @Provides SinglePastePresenter provideSinglePastePresenter(
-      @NonNull SinglePastePresenterImpl presenter) {
-    return presenter;
+      @NonNull PasteServiceInteractor interactor) {
+    return new SinglePastePresenter(interactor);
   }
 
   @ActivityScope @Provides PasteServiceInteractor providePasteServiceInteractor(

@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-interface MainSettingsInteractor {
+public interface MainSettingsInteractor {
 
   @CheckResult @NonNull Observable<Boolean> clearAll();
 }
