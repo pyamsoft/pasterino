@@ -19,12 +19,12 @@ package com.pyamsoft.pasterino.app.service;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.accessibility.AccessibilityNodeInfo;
-import com.pyamsoft.pydroid.base.PresenterImpl;
+import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public final class PasteServicePresenter
-    extends PresenterImpl<PasteServicePresenter.PasteServiceProvider> {
+    extends Presenter<PasteServicePresenter.PasteServiceProvider> {
 
   @Inject public PasteServicePresenter() {
   }

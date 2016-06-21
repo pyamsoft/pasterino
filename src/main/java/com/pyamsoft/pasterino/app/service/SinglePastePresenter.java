@@ -19,11 +19,11 @@ package com.pyamsoft.pasterino.app.service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.dagger.service.PasteServiceInteractor;
-import com.pyamsoft.pydroid.base.PresenterImpl;
+import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Inject;
 
 public final class SinglePastePresenter
-    extends PresenterImpl<SinglePastePresenter.SinglePasteProvider> {
+    extends Presenter<SinglePastePresenter.SinglePasteProvider> {
 
   @NonNull private final PasteServiceInteractor interactor;
 

@@ -18,7 +18,7 @@ package com.pyamsoft.pasterino.app.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.dagger.main.MainSettingsInteractor;
-import com.pyamsoft.pydroid.base.PresenterImpl;
+import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -27,7 +27,7 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public final class MainSettingsPresenter
-    extends PresenterImpl<MainSettingsPresenter.MainSettingsView> {
+    extends Presenter<MainSettingsPresenter.MainSettingsView> {
 
   @NonNull private final MainSettingsInteractor interactor;
   @NonNull private final Scheduler ioScheduler;

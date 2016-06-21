@@ -49,7 +49,8 @@ public final class MainActivity extends DonationActivityBase
 
   @Override protected void onPostResume() {
     super.onPostResume();
-    RatingDialog.showRatingDialog(this, this);
+    // Do not show rating dialog for first version
+    //RatingDialog.showRatingDialog(this, this);
 
     if (PasteService.isRunning()) {
       showMainFragment();

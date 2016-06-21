@@ -23,13 +23,13 @@
 
   <string name="delay_time_default">600</string>
   <string name="delay_time_key">delay_time</string>
-  <string name="delay_time_title">Delay Time</string>
-  <string name="delay_time_summary">Delay Time Summary</string>
+  <string name="delay_time_title">Paste Delay Time</string>
+  <string name="delay_time_summary">Set the amount of delay before attempting to paste text</string>
 
   <string-array name="delay_time_names">
-    <item name="value_small">Small</item>
-    <item name="value_default">Default</item>
-    <item name="value_large">Large</item>
+    <item name="value_small">400 ms</item>
+    <item name="value_default">600 ms</item>
+    <item name="value_large">1000 ms</item>
   </string-array>
 
   <string-array name="delay_time_values">
