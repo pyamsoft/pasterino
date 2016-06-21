@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pasterino.app.service;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.dagger.service.PasteServiceInteractor;
 import com.pyamsoft.pydroid.base.Presenter;
@@ -31,11 +30,12 @@ public final class SinglePastePresenter
     this.interactor = interactor;
   }
 
-  @CheckResult public final long getPasteDelayTime() {
-    return interactor.getPasteDelayTime();
+  public final void onPostDelayedEvent() {
+    getView().postDelayedEvent(interactor.getPasteDelayTime());
   }
 
   public interface SinglePasteProvider {
 
+    void postDelayedEvent(long delay);
   }
 }

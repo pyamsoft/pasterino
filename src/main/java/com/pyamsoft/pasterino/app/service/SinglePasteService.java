@@ -32,7 +32,7 @@ public final class SinglePasteService extends Service
     implements SinglePastePresenter.SinglePasteProvider {
 
   @NonNull private final Handler handler;
-  @Nullable @Inject SinglePastePresenter presenter;
+  @Inject SinglePastePresenter presenter;
 
   public SinglePasteService() {
     handler = new Handler(Looper.getMainLooper());
@@ -46,7 +46,6 @@ public final class SinglePasteService extends Service
         .build()
         .inject(this);
 
-    assert presenter != null;
     presenter.bindView(this);
   }
 
@@ -54,7 +53,6 @@ public final class SinglePasteService extends Service
     super.onDestroy();
     Timber.d("onDestroy");
     handler.removeCallbacksAndMessages(null);
-    assert presenter != null;
     presenter.unbindView();
   }
 
@@ -64,12 +62,15 @@ public final class SinglePasteService extends Service
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Timber.d("Attempt single paste");
+    presenter.onPostDelayedEvent();
+    return START_NOT_STICKY;
+  }
+
+  @Override public void postDelayedEvent(long delay) {
     handler.removeCallbacksAndMessages(null);
-    assert presenter != null;
     handler.postDelayed(() -> {
       PasteService.getInstance().pasteIntoCurrentFocus();
       stopSelf();
-    }, presenter.getPasteDelayTime());
-    return START_NOT_STICKY;
+    }, delay);
   }
 }

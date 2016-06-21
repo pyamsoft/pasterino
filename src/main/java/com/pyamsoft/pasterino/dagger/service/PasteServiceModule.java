@@ -25,8 +25,7 @@ import dagger.Provides;
 
 @Module public class PasteServiceModule {
 
-  @ActivityScope @Provides PasteServicePresenter providePasteServicePresenter(
-      @NonNull PasteServiceInteractor interactor) {
+  @ActivityScope @Provides PasteServicePresenter providePasteServicePresenter() {
     return new PasteServicePresenter();
   }
 

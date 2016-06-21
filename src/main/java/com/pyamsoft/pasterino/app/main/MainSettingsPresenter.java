@@ -26,8 +26,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public final class MainSettingsPresenter
-    extends Presenter<MainSettingsPresenter.MainSettingsView> {
+public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter.MainSettingsView> {
 
   @NonNull private final MainSettingsInteractor interactor;
   @NonNull private final Scheduler ioScheduler;
@@ -58,6 +57,10 @@ public final class MainSettingsPresenter
     unsubscribeConfirm();
   }
 
+  public final void clearAll() {
+    getView().showConfirmDialog();
+  }
+
   private void unsubscribeConfirm() {
     if (!confirmedSubscription.isUnsubscribed()) {
       confirmedSubscription.unsubscribe();
@@ -68,10 +71,6 @@ public final class MainSettingsPresenter
     if (!confirmBusSubscription.isUnsubscribed()) {
       confirmBusSubscription.unsubscribe();
     }
-  }
-
-  public final void clearAll() {
-    getView().showConfirmDialog();
   }
 
   private void registerOnConfirmEventBus() {

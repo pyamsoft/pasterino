@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.app.main;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -36,7 +35,7 @@ import timber.log.Timber;
 public final class MainSettingsFragment extends PreferenceFragmentCompat
     implements MainSettingsPresenter.MainSettingsView {
 
-  @Nullable @Inject MainSettingsPresenter presenter;
+  @Inject MainSettingsPresenter presenter;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
     DaggerMainSettingsComponent.builder()
@@ -75,32 +74,23 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    assert presenter != null;
     presenter.bindView(this);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
-    assert presenter != null;
     presenter.unbindView();
   }
 
   @Override public void onResume() {
     super.onResume();
-    assert presenter != null;
     presenter.onResume();
   }
 
   @Override public void onPause() {
     super.onPause();
-    assert presenter != null;
     presenter.onPause();
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override public void showConfirmDialog() {
