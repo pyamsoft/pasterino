@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
 import javax.inject.Inject;
 import rx.Observable;
-import rx.functions.Func0;
 
 final class MainSettingsInteractorImpl implements MainSettingsInteractor {
 
@@ -31,11 +30,9 @@ final class MainSettingsInteractorImpl implements MainSettingsInteractor {
   }
 
   @NonNull @Override public Observable<Boolean> clearAll() {
-    return Observable.defer(new Func0<Observable<Boolean>>() {
-      @Override public Observable<Boolean> call() {
-        preferences.clearAll();
-        return Observable.just(true);
-      }
+    return Observable.defer(() -> {
+      preferences.clearAll();
+      return Observable.just(true);
     });
   }
 }

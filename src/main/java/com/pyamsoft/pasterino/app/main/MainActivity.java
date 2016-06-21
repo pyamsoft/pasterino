@@ -34,8 +34,8 @@ import com.pyamsoft.pydroid.util.StringUtil;
 public final class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider {
 
-  @Nullable @BindView(R.id.main_toolbar) Toolbar toolbar;
-  @Nullable private Unbinder unbinder;
+  @BindView(R.id.main_toolbar) Toolbar toolbar;
+  private Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_Pasterino_Light);
@@ -61,12 +61,10 @@ public final class MainActivity extends DonationActivityBase
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    assert unbinder != null;
     unbinder.unbind();
   }
 
   private void setupAppBar() {
-    assert toolbar != null;
     toolbar.setTitle(getString(R.string.app_name));
     setSupportActionBar(toolbar);
     setActionBarUpEnabled(false);

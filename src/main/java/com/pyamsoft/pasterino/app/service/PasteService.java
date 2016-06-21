@@ -34,8 +34,8 @@ import timber.log.Timber;
 public class PasteService extends AccessibilityService
     implements PasteServicePresenter.PasteServiceProvider {
 
-  @Nullable private static volatile PasteService instance = null;
-  @Nullable @Inject PasteServicePresenter presenter;
+  private static volatile PasteService instance = null;
+  @Inject PasteServicePresenter presenter;
 
   @NonNull @CheckResult public static synchronized PasteService getInstance() {
     if (instance == null) {
@@ -57,7 +57,6 @@ public class PasteService extends AccessibilityService
   public final void pasteIntoCurrentFocus() {
     final AccessibilityNodeInfo info =
         getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
-    assert presenter != null;
     presenter.pasteClipboardIntoFocusedView(info);
   }
 
@@ -78,7 +77,6 @@ public class PasteService extends AccessibilityService
         .build()
         .inject(this);
 
-    assert presenter != null;
     presenter.bindView(this);
 
     setInstance(this);
@@ -88,7 +86,6 @@ public class PasteService extends AccessibilityService
 
   @Override public boolean onUnbind(Intent intent) {
     Timber.d("onUnbind");
-    assert presenter != null;
     presenter.unbindView();
 
     PasteServiceNotification.stop(this);

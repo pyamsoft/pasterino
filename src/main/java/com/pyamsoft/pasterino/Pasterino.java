@@ -28,8 +28,8 @@ import com.pyamsoft.pydroid.crash.CrashHandler;
 
 public final class Pasterino extends ApplicationBase {
 
-  @Nullable private volatile static Pasterino instance = null;
-  @Nullable private PasterinoComponent pasterinoComponent;
+  private volatile static Pasterino instance = null;
+  private PasterinoComponent pasterinoComponent;
 
   @NonNull @CheckResult public synchronized static Pasterino getInstance() {
     if (instance == null) {
