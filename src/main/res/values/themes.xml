@@ -25,7 +25,7 @@
 
   <!-- Normal App Theme -->
   <style name="Theme.Pasterino.Light" parent="@style/Base.Theme.Pasterino.Light">
-    <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
   </style>
 
   <!-- Splash screen-->
