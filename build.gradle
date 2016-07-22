@@ -119,7 +119,7 @@ dependencies {
   apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
   // Android Framework Testing
-  androidTestCompile 'com.android.support:support-annotations:24.1.0'
+  androidTestCompile 'com.android.support:support-annotations:24.1.1'
   androidTestCompile 'com.android.support.test:runner:0.5'
   androidTestCompile 'com.android.support.test:rules:0.5'
   androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
