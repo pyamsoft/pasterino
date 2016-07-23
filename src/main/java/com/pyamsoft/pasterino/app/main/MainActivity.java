@@ -28,31 +28,31 @@ import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
-import com.pyamsoft.pydroid.support.AdvertisementView;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider {
 
-  @BindView(R.id.ad_view) AdvertisementView adView;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   private Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_Pasterino_Light);
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
 
     unbinder = ButterKnife.bind(this);
-    adView.create();
     setupAppBar();
+  }
+
+  @Override protected int bindActivityToView() {
+    setContentView(R.layout.activity_main);
+    return R.id.ad_view;
   }
 
   @Override protected void onPostResume() {
     super.onPostResume();
-    // Do not show rating dialog for first version
-    //RatingDialog.showRatingDialog(this, this);
+    RatingDialog.showRatingDialog(this, this);
 
     if (PasteService.isRunning()) {
       showMainFragment();
@@ -63,7 +63,6 @@ public final class MainActivity extends DonationActivityBase
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    adView.destroy();
     unbinder.unbind();
   }
 
@@ -87,14 +86,6 @@ public final class MainActivity extends DonationActivityBase
 
   @NonNull @Override protected String getPlayStoreAppPackage() {
     return getPackageName();
-  }
-
-  @Override public void showAd() {
-    adView.show(false);
-  }
-
-  @Override public void hideAd() {
-    adView.hide();
   }
 
   @NonNull @Override public Spannable getChangeLogText() {
