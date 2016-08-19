@@ -17,20 +17,18 @@
 package com.pyamsoft.pasterino.app.main;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.Singleton;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
 import com.pyamsoft.pasterino.dagger.main.MainSettingsPresenter;
-import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public final class MainSettingsFragment extends PreferenceFragmentCompat
+public final class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
     implements MainSettingsPresenter.MainSettingsView {
 
   @Inject MainSettingsPresenter presenter;
@@ -55,34 +53,11 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
     });
 
     final Preference upgradeInfo = findPreference(getString(R.string.upgrade_info_key));
-    upgradeInfo.setOnPreferenceClickListener(preference -> {
-      final FragmentActivity activity = getActivity();
-      if (activity instanceof RatingDialog.ChangeLogProvider) {
-        final RatingDialog.ChangeLogProvider provider = (RatingDialog.ChangeLogProvider) activity;
-        RatingDialog.showRatingDialog(activity, provider, true);
-      } else {
-        throw new ClassCastException("Activity is not a change log provider");
-      }
-      return true;
-    });
+    upgradeInfo.setOnPreferenceClickListener(preference -> showChangelog());
 
     final SwitchPreferenceCompat showAds =
         (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
-    showAds.setOnPreferenceChangeListener((preference, newValue) -> {
-      if (newValue instanceof Boolean) {
-        final boolean b = (boolean) newValue;
-        final MainActivity activity = (MainActivity) getActivity();
-        if (b) {
-          Timber.d("Turn on ads");
-          activity.showAd();
-        } else {
-          Timber.d("Turn off ads");
-          activity.hideAd();
-        }
-        return true;
-      }
-      return false;
-    });
+    showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
   }
 
   @Override public void onDestroyView() {
