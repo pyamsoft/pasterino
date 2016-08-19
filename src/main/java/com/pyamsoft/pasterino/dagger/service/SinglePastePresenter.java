@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.model;
+package com.pyamsoft.pasterino.dagger.service;
 
 import android.support.annotation.NonNull;
-import rx.Observable;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
+import com.pyamsoft.pydroid.base.Presenter;
+import javax.inject.Inject;
 
-public abstract class RxBus<T> {
+public final class SinglePastePresenter
+    extends Presenter<SinglePastePresenter.SinglePasteProvider> {
 
-  @NonNull private final Subject<T, T> bus = new SerializedSubject<>(PublishSubject.create());
+  @NonNull private final PasteServiceInteractor interactor;
 
-  public void post(@NonNull T event) {
-    if (bus.hasObservers()) {
-      bus.onNext(event);
-    }
+  @Inject SinglePastePresenter(@NonNull PasteServiceInteractor interactor) {
+    this.interactor = interactor;
   }
 
-  @NonNull public Observable<T> register() {
-    return bus.filter(confirmationEvent -> confirmationEvent != null);
+  public void onPostDelayedEvent() {
+    getView().postDelayedEvent(interactor.getPasteDelayTime());
+  }
+
+  public interface SinglePasteProvider {
+
+    void postDelayedEvent(long delay);
   }
 }

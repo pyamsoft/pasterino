@@ -16,20 +16,16 @@
 
 package com.pyamsoft.pasterino.dagger;
 
-import android.content.Context;
-import com.pyamsoft.pasterino.PasterinoPreferences;
+import com.pyamsoft.pasterino.dagger.main.MainSettingsComponent;
+import com.pyamsoft.pasterino.dagger.service.PasteServiceComponent;
 import dagger.Component;
-import javax.inject.Named;
 import javax.inject.Singleton;
-import rx.Scheduler;
 
 @Singleton @Component(modules = PasterinoModule.class) public interface PasterinoComponent {
 
-  Context provideContext();
+  // Subcomponent Main
+  MainSettingsComponent plusMainSettingsComponent();
 
-  PasterinoPreferences providePreferences();
-
-  @Named("main") Scheduler provideMainScheduler();
-
-  @Named("io") Scheduler provideIoScheduler();
+  // Subcomponent PasteService
+  PasteServiceComponent plusPasteServiceComponent();
 }

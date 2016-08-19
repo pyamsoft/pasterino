@@ -17,8 +17,6 @@
 package com.pyamsoft.pasterino.dagger.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.app.service.PasteServicePresenter;
-import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
 import com.pyamsoft.pasterino.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

@@ -19,11 +19,9 @@ package com.pyamsoft.pasterino.dagger.service;
 import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.app.service.SinglePasteService;
 import com.pyamsoft.pasterino.dagger.ActivityScope;
-import com.pyamsoft.pasterino.dagger.PasterinoComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
-@ActivityScope
-@Component(modules = PasteServiceModule.class, dependencies = PasterinoComponent.class)
+@ActivityScope @Subcomponent(modules = PasteServiceModule.class)
 public interface PasteServiceComponent {
 
   void inject(PasteService service);

@@ -21,13 +21,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
+import com.pyamsoft.pasterino.Singleton;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
-import com.pyamsoft.pasterino.dagger.main.DaggerMainSettingsComponent;
+import com.pyamsoft.pasterino.dagger.main.MainSettingsPresenter;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
@@ -39,12 +36,9 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
   @Inject MainSettingsPresenter presenter;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    DaggerMainSettingsComponent.builder()
-        .pasterinoComponent(Pasterino.getInstance().getPasterinoComponent())
-        .build()
-        .inject(this);
-
+    Singleton.Dagger.with(getContext()).plusMainSettingsComponent().inject(this);
     addPreferencesFromResource(R.xml.preferences);
+    presenter.bindView(this);
 
     final Preference explain = findPreference(getString(R.string.explain_key));
     explain.setOnPreferenceClickListener(preference -> {
@@ -89,12 +83,6 @@ public final class MainSettingsFragment extends PreferenceFragmentCompat
       }
       return false;
     });
-  }
-
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    presenter.bindView(this);
-    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override public void onDestroyView() {
