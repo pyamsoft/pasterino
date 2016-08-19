@@ -69,7 +69,6 @@ public final class MainActivity extends DonationActivityBase
   private void setupAppBar() {
     toolbar.setTitle(getString(R.string.app_name));
     setSupportActionBar(toolbar);
-    setActionBarUpEnabled(false);
   }
 
   private void showAccessibilityRequestFragment() {
@@ -82,10 +81,6 @@ public final class MainActivity extends DonationActivityBase
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main_container, new MainSettingsFragment())
         .commit();
-  }
-
-  @NonNull @Override protected String getPlayStoreAppPackage() {
-    return getPackageName();
   }
 
   @NonNull @Override public Spannable getChangeLogText() {

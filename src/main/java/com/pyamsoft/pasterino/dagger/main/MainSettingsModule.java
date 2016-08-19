@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pasterino.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

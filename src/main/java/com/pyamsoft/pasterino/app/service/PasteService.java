@@ -25,9 +25,9 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
-import com.pyamsoft.pasterino.Pasterino;
+import com.pyamsoft.pasterino.Singleton;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
-import com.pyamsoft.pasterino.dagger.service.DaggerPasteServiceComponent;
+import com.pyamsoft.pasterino.dagger.service.PasteServicePresenter;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -46,12 +46,12 @@ public class PasteService extends AccessibilityService
     }
   }
 
-  @CheckResult public static boolean isRunning() {
-    return instance != null;
-  }
-
   public static synchronized void setInstance(@Nullable PasteService instance) {
     PasteService.instance = instance;
+  }
+
+  @CheckResult public static boolean isRunning() {
+    return instance != null;
   }
 
   public final void pasteIntoCurrentFocus() {
@@ -72,10 +72,7 @@ public class PasteService extends AccessibilityService
     super.onServiceConnected();
     Timber.d("onServiceConnected");
 
-    DaggerPasteServiceComponent.builder()
-        .pasterinoComponent(Pasterino.getInstance().getPasterinoComponent())
-        .build()
-        .inject(this);
+    Singleton.Dagger.with(this).plusPasteServiceComponent().inject(this);
 
     presenter.bindView(this);
 

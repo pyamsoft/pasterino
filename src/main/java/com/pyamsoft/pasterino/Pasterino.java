@@ -17,40 +17,11 @@
 package com.pyamsoft.pasterino;
 
 import android.os.StrictMode;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.dagger.DaggerPasterinoComponent;
-import com.pyamsoft.pasterino.dagger.PasterinoComponent;
-import com.pyamsoft.pasterino.dagger.PasterinoModule;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.pyamsoft.pydroid.crash.CrashHandler;
 
 public final class Pasterino extends ApplicationBase {
-
-  private volatile static Pasterino instance = null;
-  private PasterinoComponent pasterinoComponent;
-
-  @NonNull @CheckResult public synchronized static Pasterino getInstance() {
-    if (instance == null) {
-      throw new NullPointerException("Pasterino instance is NULL");
-    } else {
-      //noinspection ConstantConditions
-      return instance;
-    }
-  }
-
-  public synchronized static void setInstance(@Nullable Pasterino instance) {
-    Pasterino.instance = instance;
-  }
-
-  @NonNull @CheckResult public final PasterinoComponent getPasterinoComponent() {
-    if (pasterinoComponent == null) {
-      throw new NullPointerException("PasterinoComponent is NULL");
-    } else {
-      return pasterinoComponent;
-    }
-  }
 
   @Override public void onCreate() {
     super.onCreate();
@@ -59,13 +30,6 @@ public final class Pasterino extends ApplicationBase {
       new CrashHandler(getApplicationContext(), this).register();
       setStrictMode();
     }
-
-    pasterinoComponent = DaggerPasterinoComponent.builder()
-        .pasterinoModule(new PasterinoModule(getApplicationContext()))
-        .build();
-
-    // Set instance
-    setInstance(this);
   }
 
   private void setStrictMode() {
@@ -95,9 +59,5 @@ public final class Pasterino extends ApplicationBase {
 
   @Override public int buildConfigVersionCode() {
     return BuildConfig.VERSION_CODE;
-  }
-
-  @NonNull @Override public String getApplicationPackageName() {
-    return getPackageName();
   }
 }

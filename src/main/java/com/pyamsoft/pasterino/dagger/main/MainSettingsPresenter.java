@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.dagger.main.MainSettingsInteractor;
+import com.pyamsoft.pasterino.app.main.ConfirmationDialog;
 import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,7 +34,7 @@ public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter
   @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
 
-  @Inject public MainSettingsPresenter(@NonNull MainSettingsInteractor interactor,
+  @Inject MainSettingsPresenter(@NonNull MainSettingsInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     this.interactor = interactor;
@@ -57,23 +57,23 @@ public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter
     unsubscribeConfirm();
   }
 
-  public final void clearAll() {
+  public void clearAll() {
     getView().showConfirmDialog();
   }
 
-  private void unsubscribeConfirm() {
+  void unsubscribeConfirm() {
     if (!confirmedSubscription.isUnsubscribed()) {
       confirmedSubscription.unsubscribe();
     }
   }
 
-  private void unregisterFromConfirmEventBus() {
+  void unregisterFromConfirmEventBus() {
     if (!confirmBusSubscription.isUnsubscribed()) {
       confirmBusSubscription.unsubscribe();
     }
   }
 
-  private void registerOnConfirmEventBus() {
+  void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
     confirmBusSubscription =
         ConfirmationDialog.ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {

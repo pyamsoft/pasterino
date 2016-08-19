@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.service;
+package com.pyamsoft.pasterino.dagger.service;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,10 +26,10 @@ import timber.log.Timber;
 public final class PasteServicePresenter
     extends Presenter<PasteServicePresenter.PasteServiceProvider> {
 
-  @Inject public PasteServicePresenter() {
+  @Inject PasteServicePresenter() {
   }
 
-  public final void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target) {
+  public void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target) {
     if (target != null && target.isEditable()) {
       Timber.d("Got valid paste target, attempt paste");
       getView().onPaste(target);
