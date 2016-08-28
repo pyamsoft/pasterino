@@ -17,6 +17,7 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pasterino.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -28,7 +29,7 @@ import rx.Scheduler;
   @ActivityScope @Provides MainSettingsPresenter provideMainSettingsPresenter(
       @NonNull MainSettingsInteractor interactor, @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    return new MainSettingsPresenter(interactor, ioScheduler, mainScheduler);
+    return new MainSettingsPresenterImpl(interactor, ioScheduler, mainScheduler);
   }
 
   @ActivityScope @Provides MainSettingsInteractor provideMainSettingsInteractor(

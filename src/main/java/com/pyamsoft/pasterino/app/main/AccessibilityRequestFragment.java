@@ -31,12 +31,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pasterino.R;
 
-public final class AccessibilityRequestFragment extends Fragment {
+public class AccessibilityRequestFragment extends Fragment {
 
-  @NonNull private final Intent accessibilityServiceIntent =
+  @NonNull final Intent accessibilityServiceIntent =
       new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
   @BindView(R.id.enable_accessibility_button) Button enableService;
-  private Unbinder unbinder;
+  Unbinder unbinder;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

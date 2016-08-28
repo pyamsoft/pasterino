@@ -20,8 +20,9 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.pyamsoft.pydroid.crash.CrashHandler;
+import com.squareup.leakcanary.LeakCanary;
 
-public final class Pasterino extends ApplicationBase {
+public class Pasterino extends ApplicationBase {
 
   @Override public void onCreate() {
     super.onCreate();
@@ -29,10 +30,11 @@ public final class Pasterino extends ApplicationBase {
     if (buildConfigDebug()) {
       new CrashHandler(getApplicationContext(), this).register();
       setStrictMode();
+      LeakCanary.install(this);
     }
   }
 
-  private void setStrictMode() {
+  void setStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
         .penaltyLog()
         .penaltyDeath()

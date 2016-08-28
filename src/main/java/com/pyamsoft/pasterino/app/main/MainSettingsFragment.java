@@ -16,27 +16,48 @@
 
 package com.pyamsoft.pasterino.app.main;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.view.View;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.Singleton;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
-import com.pyamsoft.pasterino.dagger.main.MainSettingsPresenter;
 import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
-import javax.inject.Inject;
 import timber.log.Timber;
 
-public final class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
+public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
     implements MainSettingsPresenter.MainSettingsView {
 
-  @Inject MainSettingsPresenter presenter;
+  MainSettingsPresenter presenter;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    Singleton.Dagger.with(getContext()).plusMainSettingsComponent().inject(this);
     addPreferencesFromResource(R.xml.preferences);
-    presenter.bindView(this);
+
+    getLoaderManager().initLoader(0, null,
+        new LoaderManager.LoaderCallbacks<MainSettingsPresenter>() {
+          @Override public Loader<MainSettingsPresenter> onCreateLoader(int id, Bundle args) {
+            return new MainSettingsPresenterLoader(getContext());
+          }
+
+          @Override public void onLoadFinished(Loader<MainSettingsPresenter> loader,
+              MainSettingsPresenter data) {
+            presenter = data;
+          }
+
+          @Override public void onLoaderReset(Loader<MainSettingsPresenter> loader) {
+            presenter = null;
+          }
+        });
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     final Preference explain = findPreference(getString(R.string.explain_key));
     explain.setOnPreferenceClickListener(preference -> {
@@ -60,19 +81,14 @@ public final class MainSettingsFragment extends ActionBarSettingsPreferenceFragm
     showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    presenter.unbindView();
-  }
-
   @Override public void onResume() {
     super.onResume();
-    presenter.resume();
+    presenter.bindView(this);
   }
 
   @Override public void onPause() {
     super.onPause();
-    presenter.pause();
+    presenter.unbindView();
   }
 
   @Override public void showConfirmDialog() {
@@ -82,6 +98,9 @@ public final class MainSettingsFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onClearAll() {
     PasteServiceNotification.stop(getContext());
+    final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
+        .getSystemService(Context.ACTIVITY_SERVICE);
+    activityManager.clearApplicationUserData();
     android.os.Process.killProcess(android.os.Process.myPid());
   }
 }

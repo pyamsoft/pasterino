@@ -24,14 +24,13 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.Singleton;
-import com.pyamsoft.pasterino.dagger.service.SinglePastePresenter;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public final class SinglePasteService extends Service
+public class SinglePasteService extends Service
     implements SinglePastePresenter.SinglePasteProvider {
 
-  @NonNull private final Handler handler;
+  @NonNull final Handler handler;
   @Inject SinglePastePresenter presenter;
 
   public SinglePasteService() {
@@ -51,6 +50,7 @@ public final class SinglePasteService extends Service
     Timber.d("onDestroy");
     handler.removeCallbacksAndMessages(null);
     presenter.unbindView();
+    presenter.destroyView();
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {

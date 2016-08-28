@@ -17,8 +17,9 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.app.main.ConfirmationDialog;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pasterino.app.bus.ConfirmationDialogBus;
+import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
+import com.pyamsoft.pydroid.base.presenter.PresenterBase;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -26,7 +27,8 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter.MainSettingsView> {
+class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.MainSettingsView>
+    implements MainSettingsPresenter {
 
   @NonNull private final MainSettingsInteractor interactor;
   @NonNull private final Scheduler ioScheduler;
@@ -34,7 +36,7 @@ public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter
   @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
 
-  @Inject MainSettingsPresenter(@NonNull MainSettingsInteractor interactor,
+  @Inject MainSettingsPresenterImpl(@NonNull MainSettingsInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     this.interactor = interactor;
@@ -42,22 +44,18 @@ public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter
     this.mainScheduler = mainScheduler;
   }
 
-  @Override protected void onResume(@NonNull MainSettingsView view) {
-    super.onResume(view);
+  @Override protected void onBind(@NonNull MainSettingsView view) {
+    super.onBind(view);
     registerOnConfirmEventBus();
-  }
-
-  @Override protected void onPause(@NonNull MainSettingsView view) {
-    super.onPause(view);
-    unregisterFromConfirmEventBus();
   }
 
   @Override protected void onUnbind(@NonNull MainSettingsView view) {
     super.onUnbind(view);
+    unregisterFromConfirmEventBus();
     unsubscribeConfirm();
   }
 
-  public void clearAll() {
+  @Override public void clearAll() {
     getView().showConfirmDialog();
   }
 
@@ -76,7 +74,7 @@ public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter
   void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
     confirmBusSubscription =
-        ConfirmationDialog.ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
+        ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
           unsubscribeConfirm();
           confirmedSubscription = interactor.clearAll()
               .subscribeOn(ioScheduler)
@@ -89,12 +87,5 @@ public final class MainSettingsPresenter extends Presenter<MainSettingsPresenter
         }, throwable -> {
           Timber.e(throwable, "onError");
         });
-  }
-
-  public interface MainSettingsView {
-
-    void showConfirmDialog();
-
-    void onClearAll();
   }
 }

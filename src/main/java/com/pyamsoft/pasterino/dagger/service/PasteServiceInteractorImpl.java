@@ -20,9 +20,9 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
 import javax.inject.Inject;
 
-final class PasteServiceInteractorImpl implements PasteServiceInteractor {
+class PasteServiceInteractorImpl implements PasteServiceInteractor {
 
-  @NonNull private final PasterinoPreferences preferences;
+  @NonNull final PasterinoPreferences preferences;
 
   @Inject PasteServiceInteractorImpl(@NonNull PasterinoPreferences preferences) {
     this.preferences = preferences;

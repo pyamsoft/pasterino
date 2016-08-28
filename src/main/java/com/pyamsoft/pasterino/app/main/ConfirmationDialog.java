@@ -18,12 +18,12 @@ package com.pyamsoft.pasterino.app.main;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pydroid.tool.RxBus;
+import com.pyamsoft.pasterino.app.bus.ConfirmationDialogBus;
+import com.pyamsoft.pasterino.model.event.ConfirmationEvent;
 
 public class ConfirmationDialog extends DialogFragment {
 
@@ -38,18 +38,5 @@ public class ConfirmationDialog extends DialogFragment {
           dialogInterface.dismiss();
         })
         .create();
-  }
-
-  public static final class ConfirmationEvent {
-
-  }
-
-  public static final class ConfirmationDialogBus extends RxBus<ConfirmationEvent> {
-
-    @NonNull private static final ConfirmationDialogBus instance = new ConfirmationDialogBus();
-
-    @CheckResult @NonNull public static ConfirmationDialogBus get() {
-      return instance;
-    }
   }
 }

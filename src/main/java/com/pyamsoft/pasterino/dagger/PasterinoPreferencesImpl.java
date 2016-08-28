@@ -22,13 +22,13 @@ import com.pyamsoft.pasterino.PasterinoPreferences;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pydroid.base.app.ApplicationPreferences;
 
-final class PasterinoPreferencesImpl extends ApplicationPreferences
+class PasterinoPreferencesImpl extends ApplicationPreferences
     implements PasterinoPreferences {
 
-  @NonNull private final String delayTime;
-  @NonNull private final String delayTimeDefault;
+  @NonNull final String delayTime;
+  @NonNull final String delayTimeDefault;
 
-  protected PasterinoPreferencesImpl(@NonNull Context context) {
+  PasterinoPreferencesImpl(@NonNull Context context) {
     super(context);
     final Context appContext = context.getApplicationContext();
     delayTime = appContext.getString(R.string.delay_time_key);

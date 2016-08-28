@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.app.main;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import javax.inject.Inject;
-import rx.Observable;
+import com.pyamsoft.pydroid.base.presenter.Presenter;
 
-class MainSettingsInteractorImpl implements MainSettingsInteractor {
+public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.MainSettingsView> {
 
-  @NonNull final PasterinoPreferences preferences;
+  void clearAll();
 
-  @Inject MainSettingsInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
-  }
+  interface MainSettingsView {
 
-  @NonNull @Override public Observable<Boolean> clearAll() {
-    return Observable.defer(() -> {
-      preferences.clearAll();
-      return Observable.just(true);
-    });
+    void showConfirmDialog();
+
+    void onClearAll();
   }
 }

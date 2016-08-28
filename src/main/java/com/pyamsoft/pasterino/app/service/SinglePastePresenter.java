@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.app.service;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import javax.inject.Inject;
-import rx.Observable;
+import com.pyamsoft.pydroid.base.presenter.Presenter;
 
-class MainSettingsInteractorImpl implements MainSettingsInteractor {
+public interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
 
-  @NonNull final PasterinoPreferences preferences;
+  void onPostDelayedEvent();
 
-  @Inject MainSettingsInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
-  }
+  interface SinglePasteProvider {
 
-  @NonNull @Override public Observable<Boolean> clearAll() {
-    return Observable.defer(() -> {
-      preferences.clearAll();
-      return Observable.just(true);
-    });
+    void postDelayedEvent(long delay);
   }
 }

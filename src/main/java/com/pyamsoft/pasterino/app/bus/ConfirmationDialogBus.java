@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.service;
+package com.pyamsoft.pasterino.app.bus;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.Presenter;
-import javax.inject.Inject;
+import com.pyamsoft.pasterino.model.event.ConfirmationEvent;
+import com.pyamsoft.pydroid.tool.RxBus;
 
-public final class SinglePastePresenter
-    extends Presenter<SinglePastePresenter.SinglePasteProvider> {
+public class ConfirmationDialogBus extends RxBus<ConfirmationEvent> {
 
-  @NonNull private final PasteServiceInteractor interactor;
+  @NonNull private static final ConfirmationDialogBus instance = new ConfirmationDialogBus();
 
-  @Inject SinglePastePresenter(@NonNull PasteServiceInteractor interactor) {
-    this.interactor = interactor;
-  }
-
-  public void onPostDelayedEvent() {
-    getView().postDelayedEvent(interactor.getPasteDelayTime());
-  }
-
-  public interface SinglePasteProvider {
-
-    void postDelayedEvent(long delay);
+  @CheckResult @NonNull public static ConfirmationDialogBus get() {
+    return instance;
   }
 }
