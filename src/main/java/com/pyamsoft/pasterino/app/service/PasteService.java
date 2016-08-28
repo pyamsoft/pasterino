@@ -27,14 +27,13 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import com.pyamsoft.pasterino.Singleton;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
-import com.pyamsoft.pasterino.dagger.service.PasteServicePresenter;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class PasteService extends AccessibilityService
     implements PasteServicePresenter.PasteServiceProvider {
 
-  private static volatile PasteService instance = null;
+  static volatile PasteService instance = null;
   @Inject PasteServicePresenter presenter;
 
   @NonNull @CheckResult public static synchronized PasteService getInstance() {
@@ -89,6 +88,11 @@ public class PasteService extends AccessibilityService
 
     setInstance(null);
     return super.onUnbind(intent);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    presenter.destroyView();
   }
 
   @Override public void onPaste(@NonNull AccessibilityNodeInfo target) {

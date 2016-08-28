@@ -14,25 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.model.event;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import javax.inject.Inject;
-import rx.Observable;
+public class ConfirmationEvent {
 
-class MainSettingsInteractorImpl implements MainSettingsInteractor {
-
-  @NonNull final PasterinoPreferences preferences;
-
-  @Inject MainSettingsInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
-  }
-
-  @NonNull @Override public Observable<Boolean> clearAll() {
-    return Observable.defer(() -> {
-      preferences.clearAll();
-      return Observable.just(true);
-    });
-  }
 }

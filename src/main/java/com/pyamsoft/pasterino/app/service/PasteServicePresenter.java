@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.app.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import javax.inject.Inject;
-import rx.Observable;
+import android.support.annotation.Nullable;
+import android.view.accessibility.AccessibilityNodeInfo;
+import com.pyamsoft.pydroid.base.presenter.Presenter;
 
-class MainSettingsInteractorImpl implements MainSettingsInteractor {
+public interface PasteServicePresenter
+    extends Presenter<PasteServicePresenter.PasteServiceProvider> {
 
-  @NonNull final PasterinoPreferences preferences;
+  void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target);
 
-  @Inject MainSettingsInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
-  }
+  interface PasteServiceProvider {
 
-  @NonNull @Override public Observable<Boolean> clearAll() {
-    return Observable.defer(() -> {
-      preferences.clearAll();
-      return Observable.just(true);
-    });
+    void onPaste(@NonNull AccessibilityNodeInfo target);
+
+    void stopPasteService();
   }
 }

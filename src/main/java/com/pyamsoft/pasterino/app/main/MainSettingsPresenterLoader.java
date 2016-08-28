@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.app.main;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
+import com.pyamsoft.pasterino.Singleton;
+import com.pyamsoft.pydroid.base.presenter.PresenterLoader;
 import javax.inject.Inject;
-import rx.Observable;
+import javax.inject.Provider;
 
-class MainSettingsInteractorImpl implements MainSettingsInteractor {
+public class MainSettingsPresenterLoader extends PresenterLoader<MainSettingsPresenter> {
 
-  @NonNull final PasterinoPreferences preferences;
+  @Inject Provider<MainSettingsPresenter> presenterProvider;
 
-  @Inject MainSettingsInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
+  MainSettingsPresenterLoader(@NonNull Context context) {
+    super(context);
   }
 
-  @NonNull @Override public Observable<Boolean> clearAll() {
-    return Observable.defer(() -> {
-      preferences.clearAll();
-      return Observable.just(true);
-    });
+  @NonNull @Override protected MainSettingsPresenter loadPresenter() {
+    Singleton.Dagger.with(getContext()).plusMainSettingsComponent().inject(this);
+    return presenterProvider.get();
   }
 }

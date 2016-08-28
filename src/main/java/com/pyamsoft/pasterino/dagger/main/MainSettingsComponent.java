@@ -16,12 +16,12 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
-import com.pyamsoft.pasterino.app.main.MainSettingsFragment;
+import com.pyamsoft.pasterino.app.main.MainSettingsPresenterLoader;
 import com.pyamsoft.pasterino.dagger.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = MainSettingsModule.class)
 public interface MainSettingsComponent {
 
-  void inject(MainSettingsFragment fragment);
+  void inject(MainSettingsPresenterLoader loader);
 }

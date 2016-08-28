@@ -31,11 +31,11 @@ import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public final class MainActivity extends DonationActivityBase
+public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider {
 
   @BindView(R.id.main_toolbar) Toolbar toolbar;
-  private Unbinder unbinder;
+  Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_Pasterino_Light);
@@ -66,18 +66,18 @@ public final class MainActivity extends DonationActivityBase
     unbinder.unbind();
   }
 
-  private void setupAppBar() {
+  void setupAppBar() {
     toolbar.setTitle(getString(R.string.app_name));
     setSupportActionBar(toolbar);
   }
 
-  private void showAccessibilityRequestFragment() {
+  void showAccessibilityRequestFragment() {
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main_container, new AccessibilityRequestFragment())
         .commit();
   }
 
-  private void showMainFragment() {
+  void showMainFragment() {
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main_container, new MainSettingsFragment())
         .commit();

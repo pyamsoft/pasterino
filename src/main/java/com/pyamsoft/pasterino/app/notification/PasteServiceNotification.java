@@ -30,10 +30,10 @@ import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.app.service.SinglePasteService;
 import timber.log.Timber;
 
-public final class PasteServiceNotification {
+public class PasteServiceNotification {
 
-  private static final int ID = 1005;
-  private static final int RC = 1005;
+  static final int ID = 1005;
+  static final int RC = 1005;
 
   public static void start(@NonNull Context context) {
     if (PasteService.isRunning()) {
@@ -48,12 +48,12 @@ public final class PasteServiceNotification {
   }
 
   @CheckResult @NonNull
-  private static NotificationManager getNotificationManager(@NonNull Context context) {
+  static NotificationManager getNotificationManager(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     return (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
   }
 
-  @CheckResult @NonNull private static Notification createNotification(@NonNull Context context) {
+  @CheckResult @NonNull static Notification createNotification(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     final Intent singlePasteIntent = new Intent(appContext, SinglePasteService.class);
     return new NotificationCompat.Builder(appContext).setContentTitle(
