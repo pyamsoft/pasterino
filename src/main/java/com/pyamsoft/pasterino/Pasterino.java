@@ -30,7 +30,6 @@ public class Pasterino extends ApplicationBase {
     if (buildConfigDebug()) {
       new CrashHandler(getApplicationContext(), this).register();
       setStrictMode();
-      LeakCanary.install(this);
     }
   }
 
