@@ -82,19 +82,11 @@ dependencies {
 
   compile 'com.android.support:support-annotations:24.2.0'
 
-  // Leak Canary
-  debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-  releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-  testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-
   // Dagger2
-  // Dagger 2 and Compiler
-  compile 'com.google.dagger:dagger:2.6'
-  apt "com.google.dagger:dagger-compiler:2.6"
+  apt "com.google.dagger:dagger-compiler:2.6.1"
 
   // Butterknife
-  compile 'com.jakewharton:butterknife:8.2.1'
-  apt 'com.jakewharton:butterknife-compiler:8.2.1'
+  apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.2.0'
@@ -111,7 +103,7 @@ dependencies {
   // Mockito for unit tests
   testCompile 'org.mockito:mockito-core:2.0.104-beta'
 
-  // PYDroid 3.3.0
+  // PYDroid 3.3.1
   compile project(':PYDroid')
 }
 

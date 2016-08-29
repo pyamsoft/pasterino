@@ -27,11 +27,11 @@ import butterknife.Unbinder;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.service.PasteService;
-import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
+import com.pyamsoft.pydroid.base.activity.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public class MainActivity extends DonationActivityBase
+public class MainActivity extends DonationActivity
     implements RatingDialog.ChangeLogProvider {
 
   @BindView(R.id.main_toolbar) Toolbar toolbar;
