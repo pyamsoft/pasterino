@@ -17,7 +17,7 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenterLoader;
-import com.pyamsoft.pasterino.dagger.ActivityScope;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = MainSettingsModule.class)
