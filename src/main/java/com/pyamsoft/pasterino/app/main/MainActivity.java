@@ -31,8 +31,7 @@ import com.pyamsoft.pydroid.base.activity.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public class MainActivity extends DonationActivity
-    implements RatingDialog.ChangeLogProvider {
+public class MainActivity extends DonationActivity implements RatingDialog.ChangeLogProvider {
 
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   Unbinder unbinder;
@@ -48,6 +47,14 @@ public class MainActivity extends DonationActivity
   @Override protected int bindActivityToView() {
     setContentView(R.layout.activity_main);
     return R.id.ad_view;
+  }
+
+  @NonNull @Override protected String provideAdViewUnitId() {
+    return getString(R.string.banner_ad_id);
+  }
+
+  @Override protected boolean isAdDebugMode() {
+    return BuildConfig.DEBUG;
   }
 
   @Override protected void onPostResume() {
@@ -86,10 +93,11 @@ public class MainActivity extends DonationActivity
   @NonNull @Override public Spannable getChangeLogText() {
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
-    final String line1 = "FEATURE: This change log screen";
+    final String line1 = "FEATURE: Added advertisements (can be disabled in settings)";
+    final String line2 = "BUGFIX: Less memory usage";
 
     // Turn it into a spannable
-    final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1);
+    final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1, line2);
 
     int start = 0;
     int end = title.length();
@@ -107,7 +115,7 @@ public class MainActivity extends DonationActivity
     StringUtil.colorSpan(spannable, start, end, largeColor);
 
     start += end + 2;
-    end += 2 + line1.length();
+    end += 2 + line1.length() + 2 + line2.length();
 
     StringUtil.sizeSpan(spannable, start, end, smallSize);
     StringUtil.colorSpan(spannable, start, end, smallColor);

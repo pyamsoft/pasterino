@@ -17,6 +17,7 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pasterino.app.bus.ConfirmationDialogBus;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pydroid.base.presenter.PresenterBase;
@@ -49,8 +50,8 @@ class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.Main
     registerOnConfirmEventBus();
   }
 
-  @Override protected void onUnbind(@NonNull MainSettingsView view) {
-    super.onUnbind(view);
+  @Override protected void onUnbind() {
+    super.onUnbind();
     unregisterFromConfirmEventBus();
     unsubscribeConfirm();
   }
@@ -65,27 +66,26 @@ class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.Main
     }
   }
 
-  void unregisterFromConfirmEventBus() {
+  private void unregisterFromConfirmEventBus() {
     if (!confirmBusSubscription.isUnsubscribed()) {
       confirmBusSubscription.unsubscribe();
     }
   }
 
-  void registerOnConfirmEventBus() {
+  @VisibleForTesting void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
-    confirmBusSubscription =
-        ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
-          unsubscribeConfirm();
-          confirmedSubscription = interactor.clearAll()
-              .subscribeOn(ioScheduler)
-              .observeOn(mainScheduler)
-              .subscribe(aBoolean -> {
-                getView().onClearAll();
-              }, throwable -> {
-                Timber.e(throwable, "onError");
-              });
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-        });
+    confirmBusSubscription = ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
+      unsubscribeConfirm();
+      confirmedSubscription = interactor.clearAll()
+          .subscribeOn(ioScheduler)
+          .observeOn(mainScheduler)
+          .subscribe(aBoolean -> {
+            getView().onClearAll();
+          }, throwable -> {
+            Timber.e(throwable, "onError");
+          });
+    }, throwable -> {
+      Timber.e(throwable, "onError");
+    });
   }
 }
