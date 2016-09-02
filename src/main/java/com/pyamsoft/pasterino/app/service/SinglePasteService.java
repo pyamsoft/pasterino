@@ -50,7 +50,7 @@ public class SinglePasteService extends Service
     Timber.d("onDestroy");
     handler.removeCallbacksAndMessages(null);
     presenter.unbindView();
-    presenter.destroyView();
+    presenter.destroy();
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {

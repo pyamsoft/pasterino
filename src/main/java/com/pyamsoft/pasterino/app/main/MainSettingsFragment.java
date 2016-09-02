@@ -19,41 +19,42 @@ package com.pyamsoft.pasterino.app.main;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
+import com.pyamsoft.pydroid.tool.PersistentCache;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
 public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
     implements MainSettingsPresenter.MainSettingsView {
 
+  @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
   MainSettingsPresenter presenter;
+  private long loadedKey;
 
-  @Override public void onCreatePreferences(Bundle bundle, String s) {
-    addPreferencesFromResource(R.xml.preferences);
-
-    getLoaderManager().initLoader(0, null,
-        new LoaderManager.LoaderCallbacks<MainSettingsPresenter>() {
-          @Override public Loader<MainSettingsPresenter> onCreateLoader(int id, Bundle args) {
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<MainSettingsPresenter>() {
+          @NonNull @Override public PersistLoader<MainSettingsPresenter> createLoader() {
             return new MainSettingsPresenterLoader(getContext());
           }
 
-          @Override public void onLoadFinished(Loader<MainSettingsPresenter> loader,
-              MainSettingsPresenter data) {
-            presenter = data;
-          }
-
-          @Override public void onLoaderReset(Loader<MainSettingsPresenter> loader) {
-            presenter = null;
+          @Override public void onPersistentLoaded(@NonNull MainSettingsPresenter persist) {
+            presenter = persist;
           }
         });
+  }
+
+  @Override public void onCreatePreferences(Bundle bundle, String s) {
+    addPreferencesFromResource(R.xml.preferences);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -81,14 +82,26 @@ public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
     showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override public void onStart() {
+    super.onStart();
     presenter.bindView(this);
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override public void onStop() {
+    super.onStop();
     presenter.unbindView();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.unload(loadedKey);
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    super.onSaveInstanceState(outState);
   }
 
   @Override public void showConfirmDialog() {

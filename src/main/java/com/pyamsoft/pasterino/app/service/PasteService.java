@@ -92,7 +92,7 @@ public class PasteService extends AccessibilityService
 
   @Override public void onDestroy() {
     super.onDestroy();
-    presenter.destroyView();
+    presenter.destroy();
   }
 
   @Override public void onPaste(@NonNull AccessibilityNodeInfo target) {
