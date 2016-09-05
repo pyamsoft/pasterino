@@ -18,7 +18,7 @@ package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
-import com.pyamsoft.pydroid.base.app.ActivityScope;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

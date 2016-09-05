@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.bus;
+package com.pyamsoft.pasterino.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.model.event.ConfirmationEvent;
-import com.pyamsoft.pydroid.tool.RxBus;
+import com.pyamsoft.pydroid.bus.RxBus;
 
 public class ConfirmationDialogBus extends RxBus<ConfirmationEvent> {
 

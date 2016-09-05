@@ -18,7 +18,7 @@ package com.pyamsoft.pasterino.dagger.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
-import com.pyamsoft.pydroid.base.presenter.PresenterBase;
+import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import javax.inject.Inject;
 
 class SinglePastePresenterImpl

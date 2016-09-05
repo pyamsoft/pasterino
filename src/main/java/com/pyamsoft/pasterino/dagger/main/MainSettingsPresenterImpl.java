@@ -18,9 +18,9 @@ package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pasterino.app.bus.ConfirmationDialogBus;
+import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
-import com.pyamsoft.pydroid.base.presenter.PresenterBase;
+import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pasterino.app.service;
 
-import com.pyamsoft.pydroid.base.presenter.Presenter;
+import com.pyamsoft.pydroid.dagger.presenter.Presenter;
 
 public interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
 

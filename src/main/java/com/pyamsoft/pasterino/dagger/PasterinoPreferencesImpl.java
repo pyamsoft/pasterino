@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pydroid.base.app.ApplicationPreferences;
+import com.pyamsoft.pydroid.base.ApplicationPreferences;
 
 class PasterinoPreferencesImpl extends ApplicationPreferences
     implements PasterinoPreferences {
