@@ -40,6 +40,7 @@
   <PreferenceCategory
       android:title="Pasterino Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/adview_default"
         android:key="@string/adview_key"
@@ -47,6 +48,15 @@
         android:summaryOn="@string/adview_summary_checked"
         android:title="@string/adview_title"
         />
+
+
+    <Preference
+        android:key="@string/about_license_key"
+        android:title="@string/about_license_title"/>
+
+    <Preference
+        android:key="@string/check_version_key"
+        android:title="@string/check_version_title"/>
 
     <Preference
         android:key="@string/upgrade_info_key"

@@ -19,15 +19,18 @@ package com.pyamsoft.pasterino.app.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
+import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.service.PasteService;
-import com.pyamsoft.pydroid.base.activity.DonationActivity;
+import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.app.activity.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 
@@ -53,10 +56,6 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     return getString(R.string.banner_ad_id);
   }
 
-  @Override protected boolean isAdDebugMode() {
-    return BuildConfig.DEBUG;
-  }
-
   @Override protected void onPostResume() {
     super.onPostResume();
     RatingDialog.showRatingDialog(this, this);
@@ -73,21 +72,53 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     unbinder.unbind();
   }
 
+  @Override public void onBackPressed() {
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    final int backStackCount = fragmentManager.getBackStackEntryCount();
+    if (backStackCount > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
+  @Override public boolean onOptionsItemSelected(final @NonNull MenuItem item) {
+    final int itemId = item.getItemId();
+    boolean handled;
+    switch (itemId) {
+      case android.R.id.home:
+        onBackPressed();
+        handled = true;
+        break;
+      default:
+        handled = false;
+    }
+    return handled || super.onOptionsItemSelected(item);
+  }
+
   void setupAppBar() {
     toolbar.setTitle(getString(R.string.app_name));
     setSupportActionBar(toolbar);
   }
 
   void showAccessibilityRequestFragment() {
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, new AccessibilityRequestFragment())
-        .commit();
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    if (fragmentManager.findFragmentByTag(AccessibilityRequestFragment.TAG) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, new AccessibilityRequestFragment(),
+              AccessibilityRequestFragment.TAG)
+          .commit();
+    }
   }
 
   void showMainFragment() {
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, new MainSettingsFragment())
-        .commit();
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, new MainSettingsFragment(), MainSettingsFragment.TAG)
+          .commit();
+    }
   }
 
   @NonNull @Override public Spannable getChangeLogText() {
@@ -127,11 +158,11 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     return R.mipmap.ic_launcher;
   }
 
-  @NonNull @Override public String getChangeLogPackageName() {
-    return getPackageName();
+  @NonNull @Override public String provideApplicationName() {
+    return "Pasterino";
   }
 
-  @Override public int getChangeLogVersion() {
+  @Override public int getCurrentApplicationVersion() {
     return BuildConfig.VERSION_CODE;
   }
 }
