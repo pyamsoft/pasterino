@@ -16,8 +16,7 @@
 
 package com.pyamsoft.pasterino;
 
-import com.pyamsoft.pydroid.base.ApplicationBase;
+import com.pyamsoft.pydroid.base.SingleInitContentProvider;
 
-public class Pasterino extends ApplicationBase {
-
+public class PasterinoSingleInitProvider extends SingleInitContentProvider{
 }
