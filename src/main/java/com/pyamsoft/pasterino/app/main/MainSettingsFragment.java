@@ -98,7 +98,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
 
   @Override public void onResume() {
     super.onResume();
-    setActionBarUpEnabled(true);
+    setActionBarUpEnabled(false);
     presenter.setFABFromState();
     displayPreferenceFragment();
   }
