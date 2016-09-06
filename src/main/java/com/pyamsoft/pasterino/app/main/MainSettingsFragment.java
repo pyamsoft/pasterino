@@ -103,6 +103,16 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
     displayPreferenceFragment();
   }
 
+  @Override public void onStop() {
+    super.onStop();
+    presenter.unbindView();
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    presenter.bindView(this);
+  }
+
   private void displayPreferenceFragment() {
     // KLUDGE child fragment, not the nicest
     final FragmentManager fragmentManager = getChildFragmentManager();
