@@ -42,8 +42,8 @@ public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
   MainSettingsPresenter presenter;
   private long loadedKey;
 
-  @Override protected boolean isLastOnBackStack() {
-    return true;
+  @NonNull @Override protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
+    return AboutLibrariesFragment.BackStackState.LAST;
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -119,7 +119,7 @@ public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
