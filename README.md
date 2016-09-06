@@ -1,5 +1,9 @@
 # pasterino
 
+[![Get it on Google Play](art/google-play-badge.png)][1]
+
+## Motivation
+
 Some text input fields do not allow you to paste for some reason.
 
 If you, like me, use a password manager with extremely long passwords, there  
@@ -18,3 +22,5 @@ It is a simple application, built to solve an annoying problem:
 I cannot paste my password into the Google Play dialog for Purchases.
 
 Fear no more.
+
+[1]: https://play.google.com/store/apps/details?id=com.pyamsoft.pasterino
