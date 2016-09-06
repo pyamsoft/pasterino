@@ -18,14 +18,20 @@ package com.pyamsoft.pasterino.app.main;
 
 import com.pyamsoft.pydroid.base.Presenter;
 
-public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.MainSettingsView> {
+public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.View> {
 
-  void clearAll();
+  void setFABFromState();
 
-  interface MainSettingsView {
+  void clickFab();
 
-    void showConfirmDialog();
+  interface View {
 
-    void onClearAll();
+    void onFABEnabled();
+
+    void onFABDisabled();
+
+    void onCreateAccessibilityDialog();
+
+    void onDisplayServiceInfo();
   }
 }

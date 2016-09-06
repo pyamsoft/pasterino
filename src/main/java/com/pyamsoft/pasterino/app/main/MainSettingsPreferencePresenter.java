@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.app.main;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.pydroid.base.Presenter;
 
-public interface MainSettingsInteractor {
+public interface MainSettingsPreferencePresenter extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
 
-  @CheckResult @NonNull Observable<Boolean> clearAll();
+  void clearAll();
+
+  interface MainSettingsView {
+
+    void showConfirmDialog();
+
+    void onClearAll();
+  }
 }

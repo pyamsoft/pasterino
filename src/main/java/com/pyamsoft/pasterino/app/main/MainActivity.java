@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.activity.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
@@ -59,12 +58,11 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @Override protected void onPostResume() {
     super.onPostResume();
     RatingDialog.showRatingDialog(this, this);
+  }
 
-    if (PasteService.isRunning()) {
-      showMainFragment();
-    } else {
-      showAccessibilityRequestFragment();
-    }
+  @Override protected void onStart() {
+    super.onStart();
+    showMainFragment();
   }
 
   @Override protected void onDestroy() {
@@ -101,19 +99,9 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     setSupportActionBar(toolbar);
   }
 
-  void showAccessibilityRequestFragment() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.findFragmentByTag(AccessibilityRequestFragment.TAG) == null) {
-      fragmentManager.beginTransaction()
-          .replace(R.id.main_container, new AccessibilityRequestFragment(),
-              AccessibilityRequestFragment.TAG)
-          .commit();
-    }
-  }
-
   void showMainFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null
+    if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null
         && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {
       fragmentManager.beginTransaction()
           .replace(R.id.main_container, new MainSettingsFragment(), MainSettingsFragment.TAG)

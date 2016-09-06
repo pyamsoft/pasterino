@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterino.app.main;
 
+import android.app.Dialog;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import javax.inject.Inject;
-import rx.Observable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 
-class MainSettingsInteractorImpl implements MainSettingsInteractor {
+public class ServiceInfoDialog extends DialogFragment {
 
-  @NonNull final PasterinoPreferences preferences;
-
-  @Inject MainSettingsInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
-  }
-
-  @NonNull @Override public Observable<Boolean> clearAll() {
-    return Observable.defer(() -> {
-      preferences.clearAll();
-      return Observable.just(true);
-    });
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    return new AlertDialog.Builder(getActivity()).setMessage("Pasterino service is On")
+        .setPositiveButton("Okay", (dialogInterface, i) -> {
+          dismiss();
+        })
+        .create();
   }
 }

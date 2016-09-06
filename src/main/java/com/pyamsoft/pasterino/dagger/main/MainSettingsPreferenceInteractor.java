@@ -16,15 +16,11 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
-import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenterLoader;
-import com.pyamsoft.pasterino.app.main.MainSettingsPresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
 
-@ActivityScope @Subcomponent(modules = MainSettingsModule.class)
-public interface MainSettingsComponent {
+public interface MainSettingsPreferenceInteractor {
 
-  void inject(MainSettingsPreferencePresenterLoader loader);
-
-  void inject(MainSettingsPresenterLoader loader);
+  @CheckResult @NonNull Observable<Boolean> clearAll();
 }

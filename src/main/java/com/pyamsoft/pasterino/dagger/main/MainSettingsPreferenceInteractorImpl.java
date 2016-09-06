@@ -16,15 +16,23 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
-import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenterLoader;
-import com.pyamsoft.pasterino.app.main.MainSettingsPresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.PasterinoPreferences;
+import javax.inject.Inject;
+import rx.Observable;
 
-@ActivityScope @Subcomponent(modules = MainSettingsModule.class)
-public interface MainSettingsComponent {
+class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
 
-  void inject(MainSettingsPreferencePresenterLoader loader);
+  @NonNull final PasterinoPreferences preferences;
 
-  void inject(MainSettingsPresenterLoader loader);
+  @Inject MainSettingsPreferenceInteractorImpl(@NonNull PasterinoPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  @NonNull @Override public Observable<Boolean> clearAll() {
+    return Observable.defer(() -> {
+      preferences.clearAll();
+      return Observable.just(true);
+    });
+  }
 }

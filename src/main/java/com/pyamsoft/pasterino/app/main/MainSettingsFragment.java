@@ -16,40 +16,41 @@
 
 package com.pyamsoft.pasterino.app.main;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.SwitchPreferenceCompat;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
-import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;
+import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.model.Licenses;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import timber.log.Timber;
+import rx.Subscription;
 
-public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
-    implements MainSettingsPresenter.MainSettingsView {
+public class MainSettingsFragment extends ActionBarFragment implements MainSettingsPresenter.View {
 
   @NonNull public static final String TAG = "MainSettingsFragment";
-  @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
+  @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
+  @NonNull private final AsyncDrawableMap drawableMap = new AsyncDrawableMap();
+  @BindView(R.id.main_settings_fab) FloatingActionButton floatingActionButton;
   MainSettingsPresenter presenter;
+  private Unbinder unbinder;
   private long loadedKey;
 
-  @NonNull @Override protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
-    return AboutLibrariesFragment.BackStackState.LAST;
-  }
-
-  @Override public void onCreate(Bundle savedInstanceState) {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<MainSettingsPresenter>() {
+
           @NonNull @Override public PersistLoader<MainSettingsPresenter> createLoader() {
             return new MainSettingsPresenterLoader(getContext());
           }
@@ -60,55 +61,27 @@ public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
         });
   }
 
-  @Override public void onCreatePreferences(Bundle bundle, String s) {
-    addPreferencesFromResource(R.xml.preferences);
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    final View view = inflater.inflate(R.layout.fragment_main, container, false);
+    unbinder = ButterKnife.bind(this, view);
+    return view;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
-    final Preference explain = findPreference(getString(R.string.explain_key));
-    explain.setOnPreferenceClickListener(preference -> {
-      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new HowToDialog(), "howto");
-      return true;
-    });
-
-    final Preference resetAll = findPreference(getString(R.string.clear_all_key));
-    resetAll.setOnPreferenceClickListener(preference -> {
-      Timber.d("Reset settings onClick");
-      assert presenter != null;
-      presenter.clearAll();
-      return true;
-    });
-
-    final Preference upgradeInfo = findPreference(getString(R.string.upgrade_info_key));
-    upgradeInfo.setOnPreferenceClickListener(preference -> showChangelog());
-
-    final SwitchPreferenceCompat showAds =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
-    showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
-
-    final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
-    showAboutLicenses.setOnPreferenceClickListener(
-        preference -> showAboutLicensesFragment(R.id.main_container,
-            AboutLibrariesFragment.Styling.LIGHT, Licenses.ANDROID, Licenses.ANDROID_SUPPORT,
-            Licenses.PYDROID, Licenses.GOOGLE_PLAY_SERVICES, Licenses.ANDROID_IN_APP_BILLING,
-            Licenses.AUTO_VALUE, Licenses.BUTTERKNIFE, Licenses.DAGGER, Licenses.FAST_ADAPTER,
-            Licenses.FIREBASE, Licenses.LEAK_CANARY, Licenses.RETROFIT2, Licenses.RXANDROID,
-            Licenses.RXJAVA));
-
-    final Preference checkVersion = findPreference(getString(R.string.check_version_key));
-    checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
+    setupFAB();
   }
 
-  @Override public void onStart() {
-    super.onStart();
-    presenter.bindView(this);
+  private void setupFAB() {
+    floatingActionButton.setOnClickListener(view -> presenter.clickFab());
   }
 
-  @Override public void onStop() {
-    super.onStop();
-    presenter.unbindView();
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    drawableMap.clear();
+    unbinder.unbind();
   }
 
   @Override public void onDestroy() {
@@ -123,16 +96,45 @@ public class MainSettingsFragment extends ActionBarSettingsPreferenceFragment
     super.onSaveInstanceState(outState);
   }
 
-  @Override public void showConfirmDialog() {
-    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new ConfirmationDialog(),
-        "confirm");
+  @Override public void onResume() {
+    super.onResume();
+    setActionBarUpEnabled(true);
+    presenter.setFABFromState();
+    displayPreferenceFragment();
   }
 
-  @Override public void onClearAll() {
-    PasteServiceNotification.stop(getContext());
-    final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
-        .getSystemService(Context.ACTIVITY_SERVICE);
-    activityManager.clearApplicationUserData();
-    android.os.Process.killProcess(android.os.Process.myPid());
+  private void displayPreferenceFragment() {
+    // KLUDGE child fragment, not the nicest
+    final FragmentManager fragmentManager = getChildFragmentManager();
+    if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, new MainSettingsPreferenceFragment(),
+              MainSettingsPreferenceFragment.TAG)
+          .commit();
+    }
+  }
+
+  @Override public void onFABEnabled() {
+    final Subscription task = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_help_24dp)
+        .into(floatingActionButton);
+    drawableMap.put("fab", task);
+  }
+
+  @Override public void onFABDisabled() {
+    final Subscription task = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_service_start_24dp)
+        .into(floatingActionButton);
+    drawableMap.put("fab", task);
+  }
+
+  @Override public void onCreateAccessibilityDialog() {
+    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new AccessibilityRequestDialog(),
+        "accessibility");
+  }
+
+  @Override public void onDisplayServiceInfo() {
+    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new ServiceInfoDialog(),
+        "servce_info");
   }
 }

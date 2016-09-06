@@ -17,75 +17,33 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
-import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
+import com.pyamsoft.pasterino.app.service.PasteService;
+import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
 
-class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.MainSettingsView>
+class MainSettingsPresenterImpl extends SchedulerPresenter<MainSettingsPresenter.View>
     implements MainSettingsPresenter {
 
-  @NonNull private final MainSettingsInteractor interactor;
-  @NonNull private final Scheduler ioScheduler;
-  @NonNull private final Scheduler mainScheduler;
-  @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
-  @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
-
-  @Inject MainSettingsPresenterImpl(@NonNull MainSettingsInteractor interactor,
-      @NonNull @Named("io") Scheduler ioScheduler,
-      @NonNull @Named("main") Scheduler mainScheduler) {
-    this.interactor = interactor;
-    this.ioScheduler = ioScheduler;
-    this.mainScheduler = mainScheduler;
+  @Inject MainSettingsPresenterImpl(@NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler) {
+    super(observeScheduler, subscribeScheduler);
   }
 
-  @Override protected void onBind(@NonNull MainSettingsView view) {
-    super.onBind(view);
-    registerOnConfirmEventBus();
-  }
-
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    unregisterFromConfirmEventBus();
-    unsubscribeConfirm();
-  }
-
-  @Override public void clearAll() {
-    getView().showConfirmDialog();
-  }
-
-  void unsubscribeConfirm() {
-    if (!confirmedSubscription.isUnsubscribed()) {
-      confirmedSubscription.unsubscribe();
+  @Override public void setFABFromState() {
+    if (PasteService.isRunning()) {
+      getView().onFABEnabled();
+    } else {
+      getView().onFABDisabled();
     }
   }
 
-  private void unregisterFromConfirmEventBus() {
-    if (!confirmBusSubscription.isUnsubscribed()) {
-      confirmBusSubscription.unsubscribe();
+  @Override public void clickFab() {
+    if (PasteService.isRunning()) {
+      getView().onDisplayServiceInfo();
+    } else {
+      getView().onCreateAccessibilityDialog();
     }
-  }
-
-  @VisibleForTesting void registerOnConfirmEventBus() {
-    unregisterFromConfirmEventBus();
-    confirmBusSubscription = ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
-      unsubscribeConfirm();
-      confirmedSubscription = interactor.clearAll()
-          .subscribeOn(ioScheduler)
-          .observeOn(mainScheduler)
-          .subscribe(aBoolean -> {
-            getView().onClearAll();
-          }, throwable -> {
-            Timber.e(throwable, "onError");
-          });
-    }, throwable -> {
-      Timber.e(throwable, "onError");
-    });
   }
 }
