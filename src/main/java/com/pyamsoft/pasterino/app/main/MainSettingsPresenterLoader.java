@@ -18,7 +18,7 @@ package com.pyamsoft.pasterino.app.main;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.Singleton;
+import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,7 +32,7 @@ public class MainSettingsPresenterLoader extends PersistLoader<MainSettingsPrese
   }
 
   @NonNull @Override public MainSettingsPresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusMainSettingsComponent().inject(this);
+    Pasterino.get(getContext()).provideComponent().plusMainSettingsComponent().inject(this);
     return presenterProvider.get();
   }
 }

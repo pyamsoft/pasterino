@@ -16,7 +16,11 @@
 
 package com.pyamsoft.pasterino;
 
-import com.pyamsoft.pydroid.base.SingleInitContentProvider;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.dagger.PasterinoComponent;
 
-public class PasterinoSingleInitProvider extends SingleInitContentProvider {
+public interface IPasterino {
+
+  @CheckResult @NonNull <T extends PasterinoComponent> T provideComponent();
 }

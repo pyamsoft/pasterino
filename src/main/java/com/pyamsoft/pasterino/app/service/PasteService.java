@@ -25,7 +25,7 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
-import com.pyamsoft.pasterino.Singleton;
+import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -71,21 +71,19 @@ public class PasteService extends AccessibilityService
     super.onServiceConnected();
     Timber.d("onServiceConnected");
 
-    Singleton.Dagger.with(this).plusPasteServiceComponent().inject(this);
+    if (presenter == null) {
+      Pasterino.get(this).provideComponent().plusPasteServiceComponent().inject(this);
+    }
 
     presenter.bindView(this);
-
-    setInstance(this);
-
     PasteServiceNotification.start(this);
+    setInstance(this);
   }
 
   @Override public boolean onUnbind(Intent intent) {
     Timber.d("onUnbind");
-    presenter.unbindView();
-
     PasteServiceNotification.stop(this);
-
+    presenter.unbindView();
     setInstance(null);
     return super.onUnbind(intent);
   }
