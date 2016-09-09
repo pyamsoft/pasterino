@@ -18,8 +18,8 @@ package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
+import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
 import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +28,8 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class MainSettingsPreferencePresenterImpl extends PresenterBase<MainSettingsPreferencePresenter.MainSettingsView>
+class MainSettingsPreferencePresenterImpl
+    extends PresenterBase<MainSettingsPreferencePresenter.MainSettingsView>
     implements MainSettingsPreferencePresenter {
 
   @NonNull private final MainSettingsPreferenceInteractor interactor;

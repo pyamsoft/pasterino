@@ -21,8 +21,7 @@ import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
 import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import javax.inject.Inject;
 
-class SinglePastePresenterImpl
-    extends PresenterBase<SinglePastePresenter.SinglePasteProvider>
+class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.SinglePasteProvider>
     implements SinglePastePresenter {
 
   @NonNull final PasteServiceInteractor interactor;
