@@ -105,7 +105,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
         && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {
       fragmentManager.beginTransaction()
           .replace(R.id.main_container, new MainSettingsFragment(), MainSettingsFragment.TAG)
-          .commit();
+          .commitNow();
     }
   }
 
