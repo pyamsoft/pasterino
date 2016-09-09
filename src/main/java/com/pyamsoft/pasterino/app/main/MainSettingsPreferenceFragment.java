@@ -26,8 +26,8 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
-import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;
+import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.lib.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -48,7 +48,7 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+    loadedKey = PersistentCache.get().load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<MainSettingsPreferencePresenter>() {
           @NonNull @Override public PersistLoader<MainSettingsPreferencePresenter> createLoader() {
             return new MainSettingsPreferencePresenterLoader(getContext());
@@ -114,12 +114,12 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

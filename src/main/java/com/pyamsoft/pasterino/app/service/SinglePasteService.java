@@ -23,7 +23,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.Singleton;
+import com.pyamsoft.pasterino.Pasterino;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -40,8 +40,9 @@ public class SinglePasteService extends Service
   @Override public void onCreate() {
     super.onCreate();
     Timber.d("onCreate");
-    Singleton.Dagger.with(this).plusPasteServiceComponent().inject(this);
-
+    if (presenter == null) {
+      Pasterino.get(this).provideComponent().plusPasteServiceComponent().inject(this);
+    }
     presenter.bindView(this);
   }
 
