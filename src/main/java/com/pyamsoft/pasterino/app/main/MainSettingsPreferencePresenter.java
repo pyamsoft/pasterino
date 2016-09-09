@@ -18,7 +18,8 @@ package com.pyamsoft.pasterino.app.main;
 
 import com.pyamsoft.pydroid.base.Presenter;
 
-public interface MainSettingsPreferencePresenter extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
+public interface MainSettingsPreferencePresenter
+    extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
 
   void clearAll();
 

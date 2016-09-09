@@ -22,8 +22,7 @@ import com.pyamsoft.pasterino.PasterinoPreferences;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pydroid.base.ApplicationPreferences;
 
-class PasterinoPreferencesImpl extends ApplicationPreferences
-    implements PasterinoPreferences {
+class PasterinoPreferencesImpl extends ApplicationPreferences implements PasterinoPreferences {
 
   @NonNull final String delayTime;
   @NonNull final String delayTimeDefault;

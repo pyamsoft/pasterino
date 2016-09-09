@@ -26,9 +26,9 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.lib.ActionBarSettingsPreferenceFragment;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -48,16 +48,19 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get().load(KEY_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<MainSettingsPreferencePresenter>() {
-          @NonNull @Override public PersistLoader<MainSettingsPreferencePresenter> createLoader() {
-            return new MainSettingsPreferencePresenterLoader(getContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<MainSettingsPreferencePresenter>() {
+              @NonNull @Override
+              public PersistLoader<MainSettingsPreferencePresenter> createLoader() {
+                return new MainSettingsPreferencePresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull MainSettingsPreferencePresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override
+              public void onPersistentLoaded(@NonNull MainSettingsPreferencePresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {

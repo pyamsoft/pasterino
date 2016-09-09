@@ -48,17 +48,18 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get().load(KEY_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<MainSettingsPresenter>() {
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<MainSettingsPresenter>() {
 
-          @NonNull @Override public PersistLoader<MainSettingsPresenter> createLoader() {
-            return new MainSettingsPresenterLoader(getContext());
-          }
+              @NonNull @Override public PersistLoader<MainSettingsPresenter> createLoader() {
+                return new MainSettingsPresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull MainSettingsPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull MainSettingsPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @Nullable @Override
@@ -125,9 +126,8 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   @Override public void onFABEnabled() {
-    final Subscription task = AsyncDrawable.with(getContext())
-        .load(R.drawable.ic_help_24dp)
-        .into(floatingActionButton);
+    final Subscription task =
+        AsyncDrawable.with(getContext()).load(R.drawable.ic_help_24dp).into(floatingActionButton);
     drawableMap.put("fab", task);
   }
 
