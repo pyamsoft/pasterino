@@ -24,14 +24,14 @@ import com.pyamsoft.pasterino.dagger.PasterinoComponent;
 import com.pyamsoft.pasterino.dagger.PasterinoModule;
 import com.pyamsoft.pydroid.lib.PYDroidApplication;
 
-public class Pasterino extends PYDroidApplication implements IPasterino {
+public class Pasterino extends PYDroidApplication implements IPasterino<PasterinoComponent> {
 
   private PasterinoComponent component;
 
-  @NonNull @CheckResult public static IPasterino get(@NonNull Context context) {
+  @NonNull @CheckResult public static IPasterino<PasterinoComponent> get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     if (appContext instanceof IPasterino) {
-      return (IPasterino) appContext;
+      return Pasterino.class.cast(appContext);
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPasterino");
     }
@@ -44,7 +44,7 @@ public class Pasterino extends PYDroidApplication implements IPasterino {
         .build();
   }
 
-  @SuppressWarnings("unchecked") @NonNull @Override public PasterinoComponent provideComponent() {
+  @NonNull @Override public PasterinoComponent provideComponent() {
     if (component == null) {
       throw new NullPointerException("Pasterino component is NULL");
     }

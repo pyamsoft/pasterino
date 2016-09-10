@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.dagger.PasterinoComponent;
 
-public interface IPasterino {
+public interface IPasterino<T extends PasterinoComponent> {
 
-  @CheckResult @NonNull <T extends PasterinoComponent> T provideComponent();
+  @CheckResult @NonNull T provideComponent();
 }
