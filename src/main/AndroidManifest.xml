@@ -25,10 +25,9 @@
 
   <application
       android:name=".Pasterino"
-      android:allowBackup="true"
+      android:allowBackup="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
-      android:supportsRtl="true"
       android:theme="@style/Theme.Pasterino.Light">
 
     <!-- Main Activity -->
@@ -37,7 +36,7 @@
         android:excludeFromRecents="false"
         android:exported="true"
         android:label="@string/app_name"
-        android:launchMode="singleTop"
+        android:launchMode="singleTask"
         android:theme="@style/Theme.Pasterino.Light.Splash">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
