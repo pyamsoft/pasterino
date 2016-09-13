@@ -17,7 +17,7 @@
 
 <resources>
 
-  <style name="Base.Theme.Pasterino.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
+  <style name="Base.Theme.Pasterino.Light" parent="@style/Theme.Design.Light.NoActionBar">
     <item name="colorPrimary">@color/green500</item>
     <item name="colorPrimaryDark">@color/green700</item>
     <item name="colorAccent">@color/redA400</item>
