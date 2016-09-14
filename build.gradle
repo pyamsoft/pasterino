@@ -35,8 +35,8 @@ android {
     applicationId "com.pyamsoft.pasterino"
     minSdkVersion 19
     targetSdkVersion 24
-    versionCode 9
-    versionName "1.1.5"
+    versionCode 10
+    versionName "1.1.6"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
