@@ -30,10 +30,14 @@ import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.app.service.SinglePasteService;
 import timber.log.Timber;
 
-public class PasteServiceNotification {
+public final class PasteServiceNotification {
 
   static final int ID = 1005;
   static final int RC = 1005;
+
+  private PasteServiceNotification() {
+    throw new RuntimeException("No instances");
+  }
 
   public static void start(@NonNull Context context) {
     if (PasteService.isRunning()) {

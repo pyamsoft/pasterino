@@ -76,8 +76,8 @@ public class PasteService extends AccessibilityService
     }
 
     presenter.bindView(this);
-    PasteServiceNotification.start(this);
     setInstance(this);
+    PasteServiceNotification.start(this);
   }
 
   @Override public boolean onUnbind(Intent intent) {
