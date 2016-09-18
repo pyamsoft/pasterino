@@ -46,8 +46,8 @@ class MainSettingsPreferencePresenterImpl
     this.mainScheduler = mainScheduler;
   }
 
-  @Override protected void onBind(@NonNull MainSettingsView view) {
-    super.onBind(view);
+  @Override protected void onBind() {
+    super.onBind();
     registerOnConfirmEventBus();
   }
 
@@ -58,7 +58,7 @@ class MainSettingsPreferencePresenterImpl
   }
 
   @Override public void clearAll() {
-    getView().showConfirmDialog();
+    getView(MainSettingsView::showConfirmDialog);
   }
 
   void unsubscribeConfirm() {
@@ -81,7 +81,7 @@ class MainSettingsPreferencePresenterImpl
           .subscribeOn(ioScheduler)
           .observeOn(mainScheduler)
           .subscribe(aBoolean -> {
-            getView().onClearAll();
+            getView(MainSettingsView::onClearAll);
           }, throwable -> {
             Timber.e(throwable, "onError");
           });
