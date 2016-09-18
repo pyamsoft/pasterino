@@ -28,8 +28,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pydroid.lib.DonationActivity;
 import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.lib.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 
@@ -112,10 +112,12 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @NonNull @Override public Spannable getChangeLogText() {
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
-    final String line1 = "BUGFIX: Better memory maangement";
+    final String line1 =
+        "CHANGE: Pro Version applications!\nAdvertisements can be disabled from the settings screen once the Pro version of the application is installed";
+    final String line2 = "BUGFIX: Clean up memory management";
 
     // Turn it into a spannable
-    final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1);
+    final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1, line2);
 
     int start = 0;
     int end = title.length();
@@ -133,7 +135,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     StringUtil.colorSpan(spannable, start, end, largeColor);
 
     start += end + 2;
-    end += 2 + line1.length();
+    end += 2 + line1.length() + 2 + line2.length();
 
     StringUtil.sizeSpan(spannable, start, end, smallSize);
     StringUtil.colorSpan(spannable, start, end, smallColor);
