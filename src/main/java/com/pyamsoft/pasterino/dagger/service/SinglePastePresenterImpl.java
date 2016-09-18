@@ -31,6 +31,7 @@ class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.Single
   }
 
   @Override public void onPostDelayedEvent() {
-    getView().postDelayedEvent(interactor.getPasteDelayTime());
+    getView(singlePasteProvider -> singlePasteProvider.postDelayedEvent(
+        interactor.getPasteDelayTime()));
   }
 }

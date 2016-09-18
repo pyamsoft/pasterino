@@ -32,7 +32,7 @@ class PasteServicePresenterImpl extends PresenterBase<PasteServicePresenter.Past
   @Override public void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target) {
     if (target != null && target.isEditable()) {
       Timber.d("Got valid paste target, attempt paste");
-      getView().onPaste(target);
+      getView(pasteServiceProvider -> pasteServiceProvider.onPaste(target));
     } else {
       Timber.e("No valid paste target exists");
     }

@@ -32,18 +32,22 @@ class MainSettingsPresenterImpl extends SchedulerPresenter<MainSettingsPresenter
   }
 
   @Override public void setFABFromState() {
-    if (PasteService.isRunning()) {
-      getView().onFABEnabled();
-    } else {
-      getView().onFABDisabled();
-    }
+    getView(view -> {
+      if (PasteService.isRunning()) {
+        view.onFABEnabled();
+      } else {
+        view.onFABDisabled();
+      }
+    });
   }
 
   @Override public void clickFab() {
-    if (PasteService.isRunning()) {
-      getView().onDisplayServiceInfo();
-    } else {
-      getView().onCreateAccessibilityDialog();
-    }
+    getView(view -> {
+      if (PasteService.isRunning()) {
+        view.onDisplayServiceInfo();
+      } else {
+        view.onCreateAccessibilityDialog();
+      }
+    });
   }
 }
