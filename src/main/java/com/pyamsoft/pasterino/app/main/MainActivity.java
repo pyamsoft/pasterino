@@ -141,7 +141,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     return spannable;
   }
 
-  @Override public int getChangeLogIcon() {
+  @Override public int getApplicationIcon() {
     return R.mipmap.ic_launcher;
   }
 
