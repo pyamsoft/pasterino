@@ -30,7 +30,7 @@ import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.lib.DonationActivity;
-import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.lib.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public class MainActivity extends DonationActivity implements RatingDialog.ChangeLogProvider {
@@ -49,10 +49,6 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @Override protected int bindActivityToView() {
     setContentView(R.layout.activity_main);
     return R.id.ad_view;
-  }
-
-  @NonNull @Override protected String provideAdViewUnitId() {
-    return getString(R.string.banner_ad_id);
   }
 
   @Override protected void onPostResume() {

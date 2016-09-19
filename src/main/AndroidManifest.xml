@@ -56,12 +56,6 @@
         android:name=".app.service.SinglePasteService"
         android:exported="false"/>
 
-    <provider
-        android:name=".PasterinoSingleInitProvider"
-        android:authorities="com.pyamsoft.pasterino.PasterinoSingleInitProvider"
-        android:exported="false"
-        android:syncable="false"/>
-
   </application>
 
 </manifest>

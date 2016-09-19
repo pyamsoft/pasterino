@@ -19,6 +19,8 @@ package com.pyamsoft.pasterino;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.pasterino.dagger.DaggerPasterinoComponent;
 import com.pyamsoft.pasterino.dagger.PasterinoComponent;
 import com.pyamsoft.pasterino.dagger.PasterinoModule;
@@ -49,5 +51,9 @@ public class Pasterino extends PYDroidApplication implements IPasterino<Pasterin
       throw new NullPointerException("Pasterino component is NULL");
     }
     return component;
+  }
+
+  @Nullable @Override public String provideGoogleOpenSourceLicenses() {
+    return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this);
   }
 }
