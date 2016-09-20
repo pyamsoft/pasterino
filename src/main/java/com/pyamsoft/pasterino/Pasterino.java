@@ -39,8 +39,8 @@ public class Pasterino extends PYDroidApplication implements IPasterino<Pasterin
     }
   }
 
-  @Override protected void onFirstCreate() {
-    super.onFirstCreate();
+  @Override protected void createApplicationComponents() {
+    super.createApplicationComponents();
     component = DaggerPasterinoComponent.builder()
         .pasterinoModule(new PasterinoModule(getApplicationContext()))
         .build();
