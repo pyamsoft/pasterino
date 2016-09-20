@@ -35,8 +35,8 @@ android {
     applicationId "com.pyamsoft.pasterino"
     minSdkVersion 19
     targetSdkVersion 24
-    versionCode 14
-    versionName "1.1.10"
+    versionCode 16
+    versionName "1.2.0"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
@@ -112,7 +112,7 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  // PYDroid 4.2.0
+  // PYDroid 4.2.1
   debugCompile project(path: ":PYDroid", configuration: "debug")
   releaseCompile project(path: ":PYDroid", configuration: "release")
 }
