@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
 import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
-import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;

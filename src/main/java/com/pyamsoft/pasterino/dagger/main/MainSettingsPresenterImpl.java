@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.dagger.main;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pasterino.app.service.PasteService;
-import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import javax.inject.Inject;
 import rx.Scheduler;
 

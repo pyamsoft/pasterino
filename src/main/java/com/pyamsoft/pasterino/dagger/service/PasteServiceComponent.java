@@ -18,7 +18,7 @@ package com.pyamsoft.pasterino.dagger.service;
 
 import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.app.service.SinglePasteService;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
+import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = PasteServiceModule.class)
