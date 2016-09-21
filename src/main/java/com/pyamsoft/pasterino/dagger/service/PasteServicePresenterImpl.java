@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.dagger.service;
 import android.support.annotation.Nullable;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.pyamsoft.pasterino.app.service.PasteServicePresenter;
-import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
 import javax.inject.Inject;
 import timber.log.Timber;
 

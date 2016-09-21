@@ -24,7 +24,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.pasterino.dagger.DaggerPasterinoComponent;
 import com.pyamsoft.pasterino.dagger.PasterinoComponent;
 import com.pyamsoft.pasterino.dagger.PasterinoModule;
-import com.pyamsoft.pydroid.lib.PYDroidApplication;
+import com.pyamsoft.pydroid.PYDroidApplication;
 
 public class Pasterino extends PYDroidApplication implements IPasterino<PasterinoComponent> {
 

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pasterino.app.main;
 
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface MainSettingsPreferencePresenter
     extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
