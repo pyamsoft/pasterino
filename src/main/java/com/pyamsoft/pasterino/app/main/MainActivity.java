@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pydroid.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.support.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
