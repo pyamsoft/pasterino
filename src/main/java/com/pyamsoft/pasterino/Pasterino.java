@@ -56,4 +56,8 @@ public class Pasterino extends PYDroidApplication implements IPasterino<Pasterin
   @Nullable @Override public String provideGoogleOpenSourceLicenses() {
     return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this);
   }
+
+  @Override public void insertCustomLicensesIntoMap() {
+
+  }
 }
