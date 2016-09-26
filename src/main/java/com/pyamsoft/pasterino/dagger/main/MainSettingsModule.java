@@ -28,16 +28,16 @@ import rx.Scheduler;
 @Module public class MainSettingsModule {
 
   @ActivityScope @Provides MainSettingsPresenter provideMainSettingsPresenter(
-      @NonNull @Named("computation") Scheduler ioScheduler,
-      @NonNull @Named("main") Scheduler mainScheduler) {
-    return new MainSettingsPresenterImpl(mainScheduler, ioScheduler);
+      @NonNull @Named("sub") Scheduler subScheduler,
+      @NonNull @Named("obs") Scheduler obsScheduler) {
+    return new MainSettingsPresenterImpl(obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides MainSettingsPreferencePresenter provideMainSettingsPreferencePresenter(
       @NonNull MainSettingsPreferenceInteractor interactor,
-      @NonNull @Named("computation") Scheduler ioScheduler,
-      @NonNull @Named("main") Scheduler mainScheduler) {
-    return new MainSettingsPreferencePresenterImpl(interactor, mainScheduler, ioScheduler);
+      @NonNull @Named("sub") Scheduler subScheduler,
+      @NonNull @Named("obs") Scheduler obsScheduler) {
+    return new MainSettingsPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides MainSettingsPreferenceInteractor provideMainSettingsPreferenceInteractor(
