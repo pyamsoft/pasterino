@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 class PasteServiceInteractorImpl implements PasteServiceInteractor {
 
-  @NonNull final PasterinoPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
 
   @Inject PasteServiceInteractorImpl(@NonNull PasterinoPreferences preferences) {
     this.preferences = preferences;

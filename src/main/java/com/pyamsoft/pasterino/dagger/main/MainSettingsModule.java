@@ -28,14 +28,14 @@ import rx.Scheduler;
 @Module public class MainSettingsModule {
 
   @ActivityScope @Provides MainSettingsPresenter provideMainSettingsPresenter(
-      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("computation") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     return new MainSettingsPresenterImpl(mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides MainSettingsPreferencePresenter provideMainSettingsPreferencePresenter(
       @NonNull MainSettingsPreferenceInteractor interactor,
-      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("computation") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     return new MainSettingsPreferencePresenterImpl(interactor, mainScheduler, ioScheduler);
   }

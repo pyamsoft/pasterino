@@ -61,7 +61,7 @@ class MainSettingsPreferencePresenterImpl
     getView(MainSettingsView::showConfirmDialog);
   }
 
-  void unsubscribeConfirm() {
+  @SuppressWarnings("WeakerAccess") void unsubscribeConfirm() {
     if (!confirmedSubscription.isUnsubscribed()) {
       confirmedSubscription.unsubscribe();
     }
@@ -73,7 +73,7 @@ class MainSettingsPreferencePresenterImpl
     }
   }
 
-  @VisibleForTesting void registerOnConfirmEventBus() {
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
     confirmBusSubscription = ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
       unsubscribeConfirm();

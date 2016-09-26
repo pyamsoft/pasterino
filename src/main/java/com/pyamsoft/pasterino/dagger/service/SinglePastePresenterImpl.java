@@ -24,7 +24,7 @@ import javax.inject.Inject;
 class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.SinglePasteProvider>
     implements SinglePastePresenter {
 
-  @NonNull final PasteServiceInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull final PasteServiceInteractor interactor;
 
   @Inject SinglePastePresenterImpl(@NonNull PasteServiceInteractor interactor) {
     this.interactor = interactor;
