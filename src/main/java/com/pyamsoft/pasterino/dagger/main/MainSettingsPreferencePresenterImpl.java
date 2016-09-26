@@ -33,17 +33,17 @@ class MainSettingsPreferencePresenterImpl
     implements MainSettingsPreferencePresenter {
 
   @NonNull private final MainSettingsPreferenceInteractor interactor;
-  @NonNull private final Scheduler ioScheduler;
-  @NonNull private final Scheduler mainScheduler;
+  @NonNull private final Scheduler subScheduler;
+  @NonNull private final Scheduler obsScheduler;
   @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
 
   @Inject MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor,
-      @NonNull @Named("io") Scheduler ioScheduler,
-      @NonNull @Named("main") Scheduler mainScheduler) {
+      @NonNull @Named("io") Scheduler subScheduler,
+      @NonNull @Named("obs") Scheduler obsScheduler) {
     this.interactor = interactor;
-    this.ioScheduler = ioScheduler;
-    this.mainScheduler = mainScheduler;
+    this.subScheduler = subScheduler;
+    this.obsScheduler = obsScheduler;
   }
 
   @Override protected void onBind() {
@@ -78,8 +78,8 @@ class MainSettingsPreferencePresenterImpl
     confirmBusSubscription = ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
       unsubscribeConfirm();
       confirmedSubscription = interactor.clearAll()
-          .subscribeOn(ioScheduler)
-          .observeOn(mainScheduler)
+          .subscribeOn(subScheduler)
+          .observeOn(obsScheduler)
           .subscribe(aBoolean -> {
             getView(MainSettingsView::onClearAll);
           }, throwable -> {
