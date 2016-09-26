@@ -23,7 +23,7 @@ import rx.Observable;
 
 class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
 
-  @NonNull final PasterinoPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
 
   @Inject MainSettingsPreferenceInteractorImpl(@NonNull PasterinoPreferences preferences) {
     this.preferences = preferences;
