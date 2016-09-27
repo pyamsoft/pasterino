@@ -17,39 +17,55 @@
 package com.pyamsoft.pasterino.dagger;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import com.pyamsoft.pasterino.dagger.main.MainSettingsModule;
+import com.pyamsoft.pasterino.dagger.service.PasteServiceModule;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-@Module public class PasterinoModule {
+public class PasterinoModule {
 
-  @NonNull private final Context appContext;
-  @NonNull private final PasterinoPreferences preferences;
+  @NonNull private final Provider provider;
 
-  public PasterinoModule(final @NonNull Context context) {
-    appContext = context.getApplicationContext();
-    preferences = new PasterinoPreferencesImpl(appContext);
+  public PasterinoModule(@NonNull Context context) {
+    provider = new Provider(context);
   }
 
-  @Singleton @Provides Context provideContext() {
-    return appContext;
+  @CheckResult @NonNull public final PasteServiceModule providePasteServiceModule() {
+    return new PasteServiceModule(provider);
   }
 
-  @Singleton @Provides PasterinoPreferences providePreferences() {
-    return preferences;
+  @CheckResult @NonNull public final MainSettingsModule provideMainSettingsModule() {
+    return new MainSettingsModule(provider);
   }
 
-  @Singleton @Provides @Named("sub") Scheduler provideIOScheduler() {
-    return Schedulers.io();
-  }
+  public static class Provider {
 
-  @Singleton @Provides @Named("obs") Scheduler provideMainThreadScheduler() {
-    return AndroidSchedulers.mainThread();
+    @NonNull private final Context appContext;
+    @NonNull private final PasterinoPreferences preferences;
+
+    Provider(final @NonNull Context context) {
+      appContext = context.getApplicationContext();
+      preferences = new PasterinoPreferencesImpl(appContext);
+    }
+
+    @CheckResult @NonNull public final Context provideContext() {
+      return appContext;
+    }
+
+    @CheckResult @NonNull public final PasterinoPreferences providePreferences() {
+      return preferences;
+    }
+
+    @CheckResult @NonNull public final Scheduler provideSubScheduler() {
+      return Schedulers.io();
+    }
+
+    @CheckResult @NonNull public final Scheduler provideObsScheduler() {
+      return AndroidSchedulers.mainThread();
+    }
   }
 }

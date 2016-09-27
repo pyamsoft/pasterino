@@ -21,14 +21,13 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pydroid.app.ApplicationPreferences;
-import javax.inject.Inject;
 
 class PasterinoPreferencesImpl extends ApplicationPreferences implements PasterinoPreferences {
 
-  @NonNull final String delayTime;
-  @NonNull final String delayTimeDefault;
+  @NonNull private final String delayTime;
+  @NonNull private final String delayTimeDefault;
 
-  @Inject PasterinoPreferencesImpl(@NonNull Context context) {
+  PasterinoPreferencesImpl(@NonNull Context context) {
     super(context);
     final Context appContext = context.getApplicationContext();
     delayTime = appContext.getString(R.string.delay_time_key);

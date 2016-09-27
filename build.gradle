@@ -89,9 +89,6 @@ dependencies {
   // Firebase Crash
   compile "com.google.firebase:firebase-crash:$firebase"
 
-  // Dagger2
-  annotationProcessor"com.google.dagger:dagger-compiler:$dagger"
-
   // Butterknife
   annotationProcessor"com.jakewharton:butterknife-compiler:$butterknife"
 
@@ -110,7 +107,7 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  // PYDroid 4.4.2
+  // PYDroid 4.5.0
   debugCompile project(path: ":PYDroid", configuration: "debug")
   releaseCompile project(path: ":PYDroid", configuration: "release")
 }

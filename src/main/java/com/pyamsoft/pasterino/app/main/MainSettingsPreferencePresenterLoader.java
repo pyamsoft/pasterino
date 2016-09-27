@@ -20,20 +20,18 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class MainSettingsPreferencePresenterLoader
     extends PersistLoader<MainSettingsPreferencePresenter> {
-
-  @Inject Provider<MainSettingsPreferencePresenter> presenterProvider;
 
   MainSettingsPreferencePresenterLoader(@NonNull Context context) {
     super(context);
   }
 
   @NonNull @Override public MainSettingsPreferencePresenter loadPersistent() {
-    Pasterino.get(getContext()).provideComponent().plusMainSettingsComponent().inject(this);
-    return presenterProvider.get();
+    return Pasterino.get(getContext())
+        .provideComponent()
+        .provideMainSettingsModule()
+        .getSettingsPreferencePresenter();
   }
 }

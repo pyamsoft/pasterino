@@ -25,7 +25,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
+import com.pyamsoft.pasterino.app.service.PasteServiceNotification;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;

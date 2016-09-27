@@ -18,7 +18,7 @@ package com.pyamsoft.pasterino.dagger.service;
 
 import android.support.annotation.CheckResult;
 
-public interface PasteServiceInteractor {
+interface PasteServiceInteractor {
 
   @CheckResult long getPasteDelayTime();
 }

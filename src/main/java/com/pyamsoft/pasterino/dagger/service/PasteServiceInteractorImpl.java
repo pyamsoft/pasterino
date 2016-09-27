@@ -18,13 +18,12 @@ package com.pyamsoft.pasterino.dagger.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
-import javax.inject.Inject;
 
 class PasteServiceInteractorImpl implements PasteServiceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
 
-  @Inject PasteServiceInteractorImpl(@NonNull PasterinoPreferences preferences) {
+  PasteServiceInteractorImpl(@NonNull PasterinoPreferences preferences) {
     this.preferences = preferences;
   }
 

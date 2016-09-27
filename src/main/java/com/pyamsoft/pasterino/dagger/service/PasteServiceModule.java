@@ -16,26 +16,29 @@
 
 package com.pyamsoft.pasterino.dagger.service;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.service.PasteServicePresenter;
 import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
+import com.pyamsoft.pasterino.dagger.PasterinoModule;
 
-@Module public class PasteServiceModule {
+public class PasteServiceModule {
 
-  @ActivityScope @Provides PasteServicePresenter providePasteServicePresenter() {
-    return new PasteServicePresenterImpl();
+  @NonNull private final PasteServicePresenter servicePresenter;
+  @NonNull private final PasteServiceInteractor interactor;
+  @NonNull private final SinglePastePresenter singlePresenter;
+
+  public PasteServiceModule(@NonNull PasterinoModule.Provider pasterinoModule) {
+    servicePresenter = new PasteServicePresenterImpl();
+    interactor = new PasteServiceInteractorImpl(pasterinoModule.providePreferences());
+    singlePresenter = new SinglePastePresenterImpl(interactor);
   }
 
-  @ActivityScope @Provides SinglePastePresenter provideSinglePastePresenter(
-      @NonNull PasteServiceInteractor interactor) {
-    return new SinglePastePresenterImpl(interactor);
+  @NonNull @CheckResult public PasteServicePresenter getServicePresenter() {
+    return servicePresenter;
   }
 
-  @ActivityScope @Provides PasteServiceInteractor providePasteServiceInteractor(
-      @NonNull PasteServiceInteractorImpl interactor) {
-    return interactor;
+  @NonNull @CheckResult public SinglePastePresenter getSinglePresenter() {
+    return singlePresenter;
   }
 }
