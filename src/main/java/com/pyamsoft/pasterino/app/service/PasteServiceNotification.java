@@ -26,8 +26,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.service.PasteService;
-import com.pyamsoft.pasterino.app.service.SinglePasteService;
 import timber.log.Timber;
 
 public final class PasteServiceNotification {
