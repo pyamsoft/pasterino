@@ -26,15 +26,13 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 import com.pyamsoft.pasterino.Pasterino;
-import com.pyamsoft.pasterino.app.notification.PasteServiceNotification;
-import javax.inject.Inject;
 import timber.log.Timber;
 
 public class PasteService extends AccessibilityService
     implements PasteServicePresenter.PasteServiceProvider {
 
   static volatile PasteService instance = null;
-  @Inject PasteServicePresenter presenter;
+  private PasteServicePresenter presenter;
 
   @NonNull @CheckResult public static synchronized PasteService getInstance() {
     if (instance == null) {
@@ -72,7 +70,8 @@ public class PasteService extends AccessibilityService
     Timber.d("onServiceConnected");
 
     if (presenter == null) {
-      Pasterino.get(this).provideComponent().plusPasteServiceComponent().inject(this);
+      presenter =
+          Pasterino.get(this).provideComponent().providePasteServiceModule().getServicePresenter();
     }
 
     presenter.bindView(this);

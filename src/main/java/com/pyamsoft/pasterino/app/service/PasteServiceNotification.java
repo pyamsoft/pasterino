@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.notification;
+package com.pyamsoft.pasterino.app.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -52,12 +52,12 @@ public final class PasteServiceNotification {
   }
 
   @CheckResult @NonNull
-  static NotificationManager getNotificationManager(@NonNull Context context) {
+  private static NotificationManager getNotificationManager(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     return (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
   }
 
-  @CheckResult @NonNull static Notification createNotification(@NonNull Context context) {
+  @CheckResult @NonNull private static Notification createNotification(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     final Intent singlePasteIntent = new Intent(appContext, SinglePasteService.class);
     return new NotificationCompat.Builder(appContext).setContentTitle(

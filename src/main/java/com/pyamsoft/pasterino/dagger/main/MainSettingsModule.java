@@ -16,32 +16,32 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import rx.Scheduler;
+import com.pyamsoft.pasterino.dagger.PasterinoModule;
 
-@Module public class MainSettingsModule {
+public class MainSettingsModule {
 
-  @ActivityScope @Provides MainSettingsPresenter provideMainSettingsPresenter(
-      @NonNull @Named("sub") Scheduler subScheduler,
-      @NonNull @Named("obs") Scheduler obsScheduler) {
-    return new MainSettingsPresenterImpl(obsScheduler, subScheduler);
+  @NonNull private final MainSettingsPreferenceInteractor interactor;
+  @NonNull private final MainSettingsPresenter settingsPresenter;
+  @NonNull private final MainSettingsPreferencePresenter settingsPreferencePresenter;
+
+  public MainSettingsModule(@NonNull PasterinoModule.Provider provider) {
+    interactor = new MainSettingsPreferenceInteractorImpl(provider.providePreferences());
+    settingsPresenter = new MainSettingsPresenterImpl(provider.provideObsScheduler(),
+        provider.provideSubScheduler());
+    settingsPreferencePresenter =
+        new MainSettingsPreferencePresenterImpl(interactor, provider.provideObsScheduler(),
+            provider.provideSubScheduler());
   }
 
-  @ActivityScope @Provides MainSettingsPreferencePresenter provideMainSettingsPreferencePresenter(
-      @NonNull MainSettingsPreferenceInteractor interactor,
-      @NonNull @Named("sub") Scheduler subScheduler,
-      @NonNull @Named("obs") Scheduler obsScheduler) {
-    return new MainSettingsPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+  @NonNull @CheckResult public MainSettingsPreferencePresenter getSettingsPreferencePresenter() {
+    return settingsPreferencePresenter;
   }
 
-  @ActivityScope @Provides MainSettingsPreferenceInteractor provideMainSettingsPreferenceInteractor(
-      @NonNull MainSettingsPreferenceInteractorImpl interactor) {
-    return interactor;
+  @NonNull @CheckResult public MainSettingsPresenter getSettingsPresenter() {
+    return settingsPresenter;
   }
 }

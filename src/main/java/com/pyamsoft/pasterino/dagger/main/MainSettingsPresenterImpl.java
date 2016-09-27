@@ -20,13 +20,12 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import javax.inject.Inject;
 import rx.Scheduler;
 
 class MainSettingsPresenterImpl extends SchedulerPresenter<MainSettingsPresenter.View>
     implements MainSettingsPresenter {
 
-  @Inject MainSettingsPresenterImpl(@NonNull Scheduler observeScheduler,
+  MainSettingsPresenterImpl(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
   }

@@ -20,18 +20,17 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.dagger.DaggerPasterinoComponent;
-import com.pyamsoft.pasterino.dagger.PasterinoComponent;
 import com.pyamsoft.pasterino.dagger.PasterinoModule;
+import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.PYDroidApplication;
 
-public class Pasterino extends PYDroidApplication implements IPasterino<PasterinoComponent> {
+public class Pasterino extends PYDroidApplication implements IPYDroidApp<PasterinoModule> {
 
-  private PasterinoComponent component;
+  private PasterinoModule pasterinoModule;
 
-  @NonNull @CheckResult public static IPasterino<PasterinoComponent> get(@NonNull Context context) {
+  @NonNull @CheckResult public static IPYDroidApp<PasterinoModule> get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
-    if (appContext instanceof IPasterino) {
+    if (appContext instanceof Pasterino) {
       return Pasterino.class.cast(appContext);
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPasterino");
@@ -40,16 +39,14 @@ public class Pasterino extends PYDroidApplication implements IPasterino<Pasterin
 
   @Override protected void createApplicationComponents() {
     super.createApplicationComponents();
-    component = DaggerPasterinoComponent.builder()
-        .pasterinoModule(new PasterinoModule(getApplicationContext()))
-        .build();
+    pasterinoModule = new PasterinoModule(this);
   }
 
-  @NonNull @Override public PasterinoComponent provideComponent() {
-    if (component == null) {
-      throw new NullPointerException("Pasterino component is NULL");
+  @NonNull @Override public PasterinoModule provideComponent() {
+    if (pasterinoModule == null) {
+      throw new NullPointerException("Pasterino module is NULL");
     }
-    return component;
+    return pasterinoModule;
   }
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses() {

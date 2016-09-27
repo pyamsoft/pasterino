@@ -20,30 +20,24 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
 import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
-import com.pyamsoft.pydroid.presenter.PresenterBase;
-import javax.inject.Inject;
-import javax.inject.Named;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class MainSettingsPreferencePresenterImpl
-    extends PresenterBase<MainSettingsPreferencePresenter.MainSettingsView>
+    extends SchedulerPresenter<MainSettingsPreferencePresenter.MainSettingsView>
     implements MainSettingsPreferencePresenter {
 
   @NonNull private final MainSettingsPreferenceInteractor interactor;
-  @NonNull private final Scheduler subScheduler;
-  @NonNull private final Scheduler obsScheduler;
   @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
 
-  @Inject MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor,
-      @NonNull @Named("io") Scheduler subScheduler,
-      @NonNull @Named("obs") Scheduler obsScheduler) {
+  MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor,
+      @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
+    super(obsScheduler, subScheduler);
     this.interactor = interactor;
-    this.subScheduler = subScheduler;
-    this.obsScheduler = obsScheduler;
   }
 
   @Override protected void onBind() {
@@ -78,8 +72,8 @@ class MainSettingsPreferencePresenterImpl
     confirmBusSubscription = ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
       unsubscribeConfirm();
       confirmedSubscription = interactor.clearAll()
-          .subscribeOn(subScheduler)
-          .observeOn(obsScheduler)
+          .subscribeOn(getSubscribeScheduler())
+          .observeOn(getObserveScheduler())
           .subscribe(aBoolean -> {
             getView(MainSettingsView::onClearAll);
           }, throwable -> {

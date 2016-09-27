@@ -19,14 +19,13 @@ package com.pyamsoft.pasterino.dagger.service;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import javax.inject.Inject;
 
 class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.SinglePasteProvider>
     implements SinglePastePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasteServiceInteractor interactor;
 
-  @Inject SinglePastePresenterImpl(@NonNull PasteServiceInteractor interactor) {
+  SinglePastePresenterImpl(@NonNull PasteServiceInteractor interactor) {
     this.interactor = interactor;
   }
 

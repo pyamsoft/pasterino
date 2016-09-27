@@ -24,14 +24,13 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.Pasterino;
-import javax.inject.Inject;
 import timber.log.Timber;
 
 public class SinglePasteService extends Service
     implements SinglePastePresenter.SinglePasteProvider {
 
   @NonNull final Handler handler;
-  @Inject SinglePastePresenter presenter;
+  private SinglePastePresenter presenter;
 
   public SinglePasteService() {
     handler = new Handler(Looper.getMainLooper());
@@ -41,7 +40,8 @@ public class SinglePasteService extends Service
     super.onCreate();
     Timber.d("onCreate");
     if (presenter == null) {
-      Pasterino.get(this).provideComponent().plusPasteServiceComponent().inject(this);
+      presenter =
+          Pasterino.get(this).provideComponent().providePasteServiceModule().getSinglePresenter();
     }
     presenter.bindView(this);
   }

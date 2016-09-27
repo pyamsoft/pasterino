@@ -18,14 +18,13 @@ package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
-import javax.inject.Inject;
 import rx.Observable;
 
 class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
 
-  @Inject MainSettingsPreferenceInteractorImpl(@NonNull PasterinoPreferences preferences) {
+  MainSettingsPreferenceInteractorImpl(@NonNull PasterinoPreferences preferences) {
     this.preferences = preferences;
   }
 
