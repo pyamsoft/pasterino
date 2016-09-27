@@ -90,7 +90,7 @@ dependencies {
   compile "com.google.firebase:firebase-crash:$firebase"
 
   // Butterknife
-  annotationProcessor"com.jakewharton:butterknife-compiler:$butterknife"
+  annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
   // Android Framework Testing
   androidTestCompile "com.android.support:support-annotations:$supportLib"

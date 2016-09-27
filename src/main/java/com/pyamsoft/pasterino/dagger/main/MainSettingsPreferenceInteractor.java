@@ -23,5 +23,6 @@ import com.pyamsoft.pydroid.ActionSingle;
 
 interface MainSettingsPreferenceInteractor {
 
-  @CheckResult @NonNull AsyncTask<Void, Void, Boolean> clearAll(@NonNull ActionSingle<Boolean> onLoaded);
+  @CheckResult @NonNull AsyncTask<Void, Void, Boolean> clearAll(
+      @NonNull ActionSingle<Boolean> onLoaded);
 }
