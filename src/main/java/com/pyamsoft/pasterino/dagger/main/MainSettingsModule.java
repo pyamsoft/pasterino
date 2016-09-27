@@ -30,11 +30,8 @@ public class MainSettingsModule {
 
   public MainSettingsModule(@NonNull PasterinoModule.Provider provider) {
     interactor = new MainSettingsPreferenceInteractorImpl(provider.providePreferences());
-    settingsPresenter = new MainSettingsPresenterImpl(provider.provideObsScheduler(),
-        provider.provideSubScheduler());
-    settingsPreferencePresenter =
-        new MainSettingsPreferencePresenterImpl(interactor, provider.provideObsScheduler(),
-            provider.provideSubScheduler());
+    settingsPresenter = new MainSettingsPresenterImpl();
+    settingsPreferencePresenter = new MainSettingsPreferencePresenterImpl(interactor);
   }
 
   @NonNull @CheckResult public MainSettingsPreferencePresenter getSettingsPreferencePresenter() {

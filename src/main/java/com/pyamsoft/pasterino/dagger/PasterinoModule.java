@@ -22,9 +22,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
 import com.pyamsoft.pasterino.dagger.main.MainSettingsModule;
 import com.pyamsoft.pasterino.dagger.service.PasteServiceModule;
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class PasterinoModule {
 
@@ -44,28 +41,14 @@ public class PasterinoModule {
 
   public static class Provider {
 
-    @NonNull private final Context appContext;
     @NonNull private final PasterinoPreferences preferences;
 
     Provider(final @NonNull Context context) {
-      appContext = context.getApplicationContext();
-      preferences = new PasterinoPreferencesImpl(appContext);
-    }
-
-    @CheckResult @NonNull public final Context provideContext() {
-      return appContext;
+      preferences = new PasterinoPreferencesImpl(context.getApplicationContext());
     }
 
     @CheckResult @NonNull public final PasterinoPreferences providePreferences() {
       return preferences;
-    }
-
-    @CheckResult @NonNull public final Scheduler provideSubScheduler() {
-      return Schedulers.io();
-    }
-
-    @CheckResult @NonNull public final Scheduler provideObsScheduler() {
-      return AndroidSchedulers.mainThread();
     }
   }
 }
