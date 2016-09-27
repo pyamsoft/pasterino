@@ -16,11 +16,12 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
+import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.pydroid.ActionSingle;
 
 interface MainSettingsPreferenceInteractor {
 
-  @CheckResult @NonNull Observable<Boolean> clearAll();
+  @CheckResult @NonNull AsyncTask<Void, Void, Boolean> clearAll(@NonNull ActionSingle<Boolean> onLoaded);
 }

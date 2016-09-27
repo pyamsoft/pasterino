@@ -16,9 +16,13 @@
 
 package com.pyamsoft.pasterino.dagger.service;
 
+import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.ActionSingle;
 
 interface PasteServiceInteractor {
 
-  @CheckResult long getPasteDelayTime();
+  @CheckResult @NonNull AsyncTask<Void, Void, Long> getPasteDelayTime(
+      @NonNull ActionSingle<Long> onLoaded);
 }

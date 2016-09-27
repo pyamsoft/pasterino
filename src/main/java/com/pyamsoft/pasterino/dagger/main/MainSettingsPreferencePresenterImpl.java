@@ -16,27 +16,26 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
 import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import com.pyamsoft.pasterino.model.event.ConfirmationEvent;
+import com.pyamsoft.pydroid.Bus;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
 import timber.log.Timber;
 
 class MainSettingsPreferencePresenterImpl
-    extends SchedulerPresenter<MainSettingsPreferencePresenter.MainSettingsView>
+    extends PresenterBase<MainSettingsPreferencePresenter.MainSettingsView>
     implements MainSettingsPreferencePresenter {
 
-  @NonNull private final MainSettingsPreferenceInteractor interactor;
-  @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
-  @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @Nullable AsyncTask confirmedSubscription;
+  @Nullable private Bus.Event<ConfirmationEvent> confirmBusSubscription;
 
-  MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor,
-      @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
-    super(obsScheduler, subScheduler);
+  MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor) {
     this.interactor = interactor;
   }
 
@@ -56,31 +55,22 @@ class MainSettingsPreferencePresenterImpl
   }
 
   @SuppressWarnings("WeakerAccess") void unsubscribeConfirm() {
-    if (!confirmedSubscription.isUnsubscribed()) {
-      confirmedSubscription.unsubscribe();
+    if (confirmedSubscription != null) {
+      if (!confirmedSubscription.isCancelled()) {
+        confirmedSubscription.cancel(true);
+      }
     }
   }
 
   private void unregisterFromConfirmEventBus() {
-    if (!confirmBusSubscription.isUnsubscribed()) {
-      confirmBusSubscription.unsubscribe();
-    }
+    ConfirmationDialogBus.get().unregister(confirmBusSubscription);
   }
 
   @SuppressWarnings("WeakerAccess") @VisibleForTesting void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
-    confirmBusSubscription = ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
+    confirmBusSubscription = ConfirmationDialogBus.get().register(item -> {
       unsubscribeConfirm();
-      confirmedSubscription = interactor.clearAll()
-          .subscribeOn(getSubscribeScheduler())
-          .observeOn(getObserveScheduler())
-          .subscribe(aBoolean -> {
-            getView(MainSettingsView::onClearAll);
-          }, throwable -> {
-            Timber.e(throwable, "onError");
-          });
-    }, throwable -> {
-      Timber.e(throwable, "onError");
-    });
+      confirmedSubscription = interactor.clearAll(item1 -> getView(MainSettingsView::onClearAll));
+    }, item -> Timber.e(item, "onError"));
   }
 }

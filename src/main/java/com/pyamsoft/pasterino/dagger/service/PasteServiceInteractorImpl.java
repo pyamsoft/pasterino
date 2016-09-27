@@ -16,8 +16,11 @@
 
 package com.pyamsoft.pasterino.dagger.service;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
+import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.tool.AsyncCallbackTask;
 
 class PasteServiceInteractorImpl implements PasteServiceInteractor {
 
@@ -27,7 +30,12 @@ class PasteServiceInteractorImpl implements PasteServiceInteractor {
     this.preferences = preferences;
   }
 
-  @Override public long getPasteDelayTime() {
-    return preferences.getPasteDelayTime();
+  @NonNull @Override
+  public AsyncTask<Void, Void, Long> getPasteDelayTime(@NonNull ActionSingle<Long> onLoaded) {
+    return new AsyncCallbackTask<Void, Long>(onLoaded) {
+      @Override protected Long doInBackground(Void... params) {
+        return preferences.getPasteDelayTime();
+      }
+    };
   }
 }

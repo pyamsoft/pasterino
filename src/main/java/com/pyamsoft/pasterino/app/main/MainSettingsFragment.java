@@ -28,19 +28,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.util.AsyncDrawable;
+import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import rx.Subscription;
 
 public class MainSettingsFragment extends ActionBarFragment implements MainSettingsPresenter.View {
 
   @NonNull public static final String TAG = "MainSettingsFragment";
   @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
-  @NonNull private final AsyncDrawable.Mapper
-      drawableMap = new AsyncDrawable.Mapper();
+  @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
   @BindView(R.id.main_settings_fab) FloatingActionButton floatingActionButton;
   MainSettingsPresenter presenter;
   private Unbinder unbinder;
@@ -126,13 +125,13 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   @Override public void onFABEnabled() {
-    final Subscription task =
+    final AsyncMap.Entry task =
         AsyncDrawable.with(getContext()).load(R.drawable.ic_help_24dp).into(floatingActionButton);
     drawableMap.put("fab", task);
   }
 
   @Override public void onFABDisabled() {
-    final Subscription task = AsyncDrawable.with(getContext())
+    final AsyncMap.Entry task = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_service_start_24dp)
         .into(floatingActionButton);
     drawableMap.put("fab", task);

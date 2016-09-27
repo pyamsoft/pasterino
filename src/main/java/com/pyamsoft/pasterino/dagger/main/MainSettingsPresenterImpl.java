@@ -16,18 +16,14 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
-import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
 import com.pyamsoft.pasterino.app.service.PasteService;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import rx.Scheduler;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
 
-class MainSettingsPresenterImpl extends SchedulerPresenter<MainSettingsPresenter.View>
+class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.View>
     implements MainSettingsPresenter {
 
-  MainSettingsPresenterImpl(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
-    super(observeScheduler, subscribeScheduler);
+  MainSettingsPresenterImpl() {
   }
 
   @Override public void setFABFromState() {

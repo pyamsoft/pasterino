@@ -16,7 +16,9 @@
 
 package com.pyamsoft.pasterino.dagger.service;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 
@@ -24,13 +26,28 @@ class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.Single
     implements SinglePastePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasteServiceInteractor interactor;
+  @Nullable private AsyncTask<Void, Void, Long> pasteTime;
 
   SinglePastePresenterImpl(@NonNull PasteServiceInteractor interactor) {
     this.interactor = interactor;
   }
 
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubPasteTime();
+  }
+
   @Override public void onPostDelayedEvent() {
-    getView(singlePasteProvider -> singlePasteProvider.postDelayedEvent(
-        interactor.getPasteDelayTime()));
+    unsubPasteTime();
+    pasteTime = interactor.getPasteDelayTime(
+        item -> getView((BoundView<SinglePasteProvider>) view -> view.postDelayedEvent(item)));
+  }
+
+  private void unsubPasteTime() {
+    if (pasteTime != null) {
+      if (!pasteTime.isCancelled()) {
+        pasteTime.cancel(true);
+      }
+    }
   }
 }
