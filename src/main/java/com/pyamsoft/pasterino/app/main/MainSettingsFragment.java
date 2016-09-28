@@ -16,18 +16,16 @@
 
 package com.pyamsoft.pasterino.app.main;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.pasterino.R;
+import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -40,10 +38,9 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   @NonNull public static final String TAG = "MainSettingsFragment";
   @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
-  @BindView(R.id.main_settings_fab) FloatingActionButton floatingActionButton;
   MainSettingsPresenter presenter;
-  private Unbinder unbinder;
   private long loadedKey;
+  private FragmentMainBinding binding;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -64,9 +61,8 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_main, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
+    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
+    return binding.getRoot();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -75,13 +71,13 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   private void setupFAB() {
-    floatingActionButton.setOnClickListener(view -> presenter.clickFab());
+    binding.mainSettingsFab.setOnClickListener(view -> presenter.clickFab());
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
     drawableMap.clear();
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @Override public void onDestroy() {
@@ -125,15 +121,16 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   @Override public void onFABEnabled() {
-    final AsyncMap.Entry task =
-        AsyncDrawable.with(getContext()).load(R.drawable.ic_help_24dp).into(floatingActionButton);
+    final AsyncMap.Entry task = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_help_24dp)
+        .into(binding.mainSettingsFab);
     drawableMap.put("fab", task);
   }
 
   @Override public void onFABDisabled() {
     final AsyncMap.Entry task = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_service_start_24dp)
-        .into(floatingActionButton);
+        .into(binding.mainSettingsFab);
     drawableMap.put("fab", task);
   }
 
