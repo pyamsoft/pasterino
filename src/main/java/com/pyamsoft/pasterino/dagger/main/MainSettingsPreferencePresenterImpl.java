@@ -32,7 +32,7 @@ class MainSettingsPreferencePresenterImpl
     implements MainSettingsPreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
-  @NonNull private Offloader<Boolean> confirmedSubscription;
+  @NonNull private Offloader<Boolean> confirmedSubscription = new Offloader.Empty<>();
   @Nullable private Bus.Event<ConfirmationEvent> confirmBusSubscription;
 
   MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor) {
