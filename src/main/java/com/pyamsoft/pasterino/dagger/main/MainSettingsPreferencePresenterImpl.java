@@ -16,16 +16,15 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.os.AsyncTaskCompat;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
 import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
 import com.pyamsoft.pasterino.model.event.ConfirmationEvent;
-import com.pyamsoft.pydroid.Bus;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
+import com.pyamsoft.pydroid.tool.Bus;
+import com.pyamsoft.pydroid.tool.Offloader;
 import timber.log.Timber;
 
 class MainSettingsPreferencePresenterImpl
@@ -33,7 +32,7 @@ class MainSettingsPreferencePresenterImpl
     implements MainSettingsPreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @Nullable AsyncTask confirmedSubscription;
+  @NonNull private Offloader<Boolean> confirmedSubscription;
   @Nullable private Bus.Event<ConfirmationEvent> confirmBusSubscription;
 
   MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor) {
@@ -55,11 +54,9 @@ class MainSettingsPreferencePresenterImpl
     getView(MainSettingsView::showConfirmDialog);
   }
 
-  @SuppressWarnings("WeakerAccess") void unsubscribeConfirm() {
-    if (confirmedSubscription != null) {
-      if (!confirmedSubscription.isCancelled()) {
-        confirmedSubscription.cancel(true);
-      }
+  private void unsubscribeConfirm() {
+    if (!confirmedSubscription.isCancelled()) {
+      confirmedSubscription.cancel();
     }
   }
 
@@ -71,8 +68,10 @@ class MainSettingsPreferencePresenterImpl
     unregisterFromConfirmEventBus();
     confirmBusSubscription = ConfirmationDialogBus.get().register(item -> {
       unsubscribeConfirm();
-      confirmedSubscription = AsyncTaskCompat.executeParallel(
-          interactor.clearAll(item1 -> getView(MainSettingsView::onClearAll)));
+      confirmedSubscription = interactor.clearAll()
+          .result(item1 -> getView(MainSettingsView::onClearAll))
+          .error(throwable -> Timber.e(throwable, "onError clearAll"))
+          .execute();
     }, item -> Timber.e(item, "onError"));
   }
 }

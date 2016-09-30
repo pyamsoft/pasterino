@@ -16,13 +16,11 @@
 
 package com.pyamsoft.pasterino.dagger.main;
 
-import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.tool.Offloader;
 
 interface MainSettingsPreferenceInteractor {
 
-  @CheckResult @NonNull AsyncTask<Void, Void, Boolean> clearAll(
-      @NonNull ActionSingle<Boolean> onLoaded);
+  @CheckResult @NonNull Offloader<Boolean> clearAll();
 }
