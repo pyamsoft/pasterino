@@ -18,6 +18,7 @@ package com.pyamsoft.pasterino.app.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,6 +46,12 @@ public class PasteService extends AccessibilityService
 
   public static synchronized void setInstance(@Nullable PasteService instance) {
     PasteService.instance = instance;
+  }
+
+  public static void finish() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      getInstance().disableSelf();
+    }
   }
 
   @CheckResult public static boolean isRunning() {
@@ -97,9 +104,5 @@ public class PasteService extends AccessibilityService
     target.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
     Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",
         Toast.LENGTH_SHORT).show();
-  }
-
-  @Override public final void stopPasteService() {
-    Timber.e("API 24 only");
   }
 }
