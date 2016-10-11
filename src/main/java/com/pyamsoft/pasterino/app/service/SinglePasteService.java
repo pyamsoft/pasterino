@@ -17,6 +17,7 @@
 package com.pyamsoft.pasterino.app.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -34,6 +35,11 @@ public class SinglePasteService extends Service
 
   public SinglePasteService() {
     handler = new Handler(Looper.getMainLooper());
+  }
+
+  public static void stop(@NonNull Context context) {
+    final Intent service = new Intent(context.getApplicationContext(), SinglePasteService.class);
+    context.getApplicationContext().stopService(service);
   }
 
   @Override public void onCreate() {

@@ -25,7 +25,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.pasterino.R;
+import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.app.service.PasteServiceNotification;
+import com.pyamsoft.pasterino.app.service.SinglePasteService;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;
@@ -128,9 +130,15 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
   @Override public void onClearAll() {
     PasteServiceNotification.stop(getContext());
+    SinglePasteService.stop(getContext());
+    try {
+      PasteService.finish();
+    } catch (NullPointerException e) {
+      Timber.e(e, "Expected exception when Service is NULL");
+    }
+
     final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
         .getSystemService(Context.ACTIVITY_SERVICE);
     activityManager.clearApplicationUserData();
-    android.os.Process.killProcess(android.os.Process.myPid());
   }
 }
