@@ -21,9 +21,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
-import com.pyamsoft.pasterino.model.event.ConfirmationEvent;
 
 public class ConfirmationDialog extends DialogFragment {
 
@@ -32,11 +32,23 @@ public class ConfirmationDialog extends DialogFragment {
         "Really clear all application settings?\n\nYou will have to manually restart the Accessibility Service component of Pasterino")
         .setPositiveButton("Yes", (dialogInterface, i) -> {
           dialogInterface.dismiss();
-          ConfirmationDialogBus.get().post(new ConfirmationEvent());
+          sendConfirmationEvent();
         })
         .setNegativeButton("No", (dialogInterface, i) -> {
           dialogInterface.dismiss();
         })
         .create();
+  }
+
+  void sendConfirmationEvent() {
+    final FragmentManager fragmentManager = getFragmentManager();
+    final Fragment settingsPreferenceFragment =
+        fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG);
+    if (settingsPreferenceFragment instanceof MainSettingsPreferenceFragment) {
+      ((MainSettingsPreferenceFragment) settingsPreferenceFragment).getPresenter()
+          .processClearRequest();
+    } else {
+      throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
+    }
   }
 }
