@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.dagger.main;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
 import com.pyamsoft.pydroid.tool.Offloader;
-import com.pyamsoft.pydroid.tool.OffloaderAsyncTask;
+import com.pyamsoft.pydroid.tool.AsyncOffloader;
 
 class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
 
@@ -30,7 +30,7 @@ class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInte
   }
 
   @NonNull @Override public Offloader<Boolean> clearAll() {
-    return new OffloaderAsyncTask<Boolean>().background(() -> {
+    return new AsyncOffloader<Boolean>().background(() -> {
       preferences.clearAll();
       return true;
     });
