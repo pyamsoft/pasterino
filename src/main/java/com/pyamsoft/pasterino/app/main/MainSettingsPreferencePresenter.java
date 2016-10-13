@@ -23,6 +23,8 @@ public interface MainSettingsPreferencePresenter
 
   void clearAll();
 
+  void processClearRequest();
+
   interface MainSettingsView {
 
     void showConfirmDialog();

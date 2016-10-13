@@ -17,13 +17,8 @@
 package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
-import com.pyamsoft.pasterino.bus.ConfirmationDialogBus;
-import com.pyamsoft.pasterino.model.event.ConfirmationEvent;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.tool.Bus;
 import com.pyamsoft.pydroid.tool.Offloader;
 import timber.log.Timber;
 
@@ -33,20 +28,13 @@ class MainSettingsPreferencePresenterImpl
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
   @NonNull private Offloader<Boolean> confirmedSubscription = new Offloader.Empty<>();
-  @Nullable private Bus.Event<ConfirmationEvent> confirmBusSubscription;
 
   MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor) {
     this.interactor = interactor;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    registerOnConfirmEventBus();
-  }
-
   @Override protected void onUnbind() {
     super.onUnbind();
-    unregisterFromConfirmEventBus();
     unsubscribeConfirm();
   }
 
@@ -60,18 +48,11 @@ class MainSettingsPreferencePresenterImpl
     }
   }
 
-  private void unregisterFromConfirmEventBus() {
-    ConfirmationDialogBus.get().unregister(confirmBusSubscription);
-  }
-
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting void registerOnConfirmEventBus() {
-    unregisterFromConfirmEventBus();
-    confirmBusSubscription = ConfirmationDialogBus.get().register(item -> {
-      unsubscribeConfirm();
-      confirmedSubscription = interactor.clearAll()
-          .result(item1 -> getView(MainSettingsView::onClearAll))
-          .error(throwable -> Timber.e(throwable, "onError clearAll"))
-          .execute();
-    }, item -> Timber.e(item, "onError"));
+  @Override public void processClearRequest() {
+    unsubscribeConfirm();
+    confirmedSubscription = interactor.clearAll()
+        .result(item1 -> getView(MainSettingsView::onClearAll))
+        .error(throwable -> Timber.e(throwable, "onError clearAll"))
+        .execute();
   }
 }
