@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.app.main;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
@@ -42,6 +43,14 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
   @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
   MainSettingsPreferencePresenter presenter;
   private long loadedKey;
+
+  @CheckResult @NonNull MainSettingsPreferencePresenter getPresenter() {
+    if (presenter == null) {
+      throw new NullPointerException("Presenter is NULL");
+    }
+
+    return presenter;
+  }
 
   @NonNull @Override protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
     return AboutLibrariesFragment.BackStackState.LAST;
