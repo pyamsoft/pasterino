@@ -99,7 +99,7 @@ public class MainActivity extends RatingActivity {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "CHANGE: Removed Advertisements and Analytics tracking";
+    final String line1 = "CHANGE: Smaller APK size";
     return new String[] { line1 };
   }
 
