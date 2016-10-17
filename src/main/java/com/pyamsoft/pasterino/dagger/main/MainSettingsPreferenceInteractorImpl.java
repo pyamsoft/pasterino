@@ -30,7 +30,7 @@ class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInte
   }
 
   @NonNull @Override public Offloader<Boolean> clearAll() {
-    return new AsyncOffloader<Boolean>().background(() -> {
+    return new AsyncOffloader<Boolean>().onProcess(() -> {
       preferences.clearAll();
       return true;
     });

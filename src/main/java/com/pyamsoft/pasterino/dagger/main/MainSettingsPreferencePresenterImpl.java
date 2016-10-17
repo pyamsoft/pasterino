@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.dagger.main;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import timber.log.Timber;
 
 class MainSettingsPreferencePresenterImpl
@@ -27,7 +27,7 @@ class MainSettingsPreferencePresenterImpl
     implements MainSettingsPreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
-  @NonNull private Offloader<Boolean> confirmedSubscription = new Offloader.Empty<>();
+  @NonNull private ExecutedOffloader confirmedSubscription = new ExecutedOffloader.Empty();
 
   MainSettingsPreferencePresenterImpl(@NonNull MainSettingsPreferenceInteractor interactor) {
     this.interactor = interactor;
@@ -51,8 +51,8 @@ class MainSettingsPreferencePresenterImpl
   @Override public void processClearRequest() {
     unsubscribeConfirm();
     confirmedSubscription = interactor.clearAll()
-        .result(item1 -> getView(MainSettingsView::onClearAll))
-        .error(throwable -> Timber.e(throwable, "onError clearAll"))
+        .onError(throwable -> Timber.e(throwable, "onError clearAll"))
+        .onResult(item -> getView(MainSettingsView::onClearAll))
         .execute();
   }
 }

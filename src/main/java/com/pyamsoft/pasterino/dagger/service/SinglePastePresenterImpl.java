@@ -19,14 +19,14 @@ package com.pyamsoft.pasterino.dagger.service;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import timber.log.Timber;
 
 class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.SinglePasteProvider>
     implements SinglePastePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasteServiceInteractor interactor;
-  @NonNull private Offloader<Long> pasteTime = new Offloader.Empty<>();
+  @NonNull private ExecutedOffloader pasteTime = new ExecutedOffloader.Empty();
 
   SinglePastePresenterImpl(@NonNull PasteServiceInteractor interactor) {
     this.interactor = interactor;
@@ -40,8 +40,8 @@ class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.Single
   @Override public void onPostDelayedEvent() {
     unsubPasteTime();
     pasteTime = interactor.getPasteDelayTime()
-        .result(delay -> getView(view -> view.postDelayedEvent(delay)))
-        .error(throwable -> Timber.e(throwable, "onError onPostDelayedEvent"))
+        .onError(throwable -> Timber.e(throwable, "onError onPostDelayedEvent"))
+        .onResult(delay -> getView(view -> view.postDelayedEvent(delay)))
         .execute();
   }
 
