@@ -29,9 +29,7 @@ public class HowToDialog extends DialogFragment {
     return new AlertDialog.Builder(getActivity()).setMessage(
         "When you want to paste into a text input field, simply click the notification and wait a little.")
         .setTitle("How to Use")
-        .setNeutralButton("Got It", (dialog, which) -> {
-          dialog.dismiss();
-        })
+        .setNeutralButton("Got It", (dialog, which) -> dialog.dismiss())
         .create();
   }
 }
