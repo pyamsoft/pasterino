@@ -16,7 +16,6 @@
 
 <resources>
   <string name="app_name">Pasterino</string>
-  <string name="enable_accessibility_service">Enable Accessibility Service</string>
   <string name="explain_accessibility_service">
     In order to run correctly, Pasterino needs to enable a system Accessibility Service.
     This service will monitor when you select a text input field so it can paste text on your command.
