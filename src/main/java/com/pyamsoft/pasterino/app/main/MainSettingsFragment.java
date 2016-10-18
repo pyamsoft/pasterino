@@ -110,7 +110,6 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   private void displayPreferenceFragment() {
-    // KLUDGE child fragment, not the nicest
     final FragmentManager fragmentManager = getChildFragmentManager();
     if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null) {
       fragmentManager.beginTransaction()
