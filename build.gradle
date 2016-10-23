@@ -107,8 +107,6 @@ dependencies {
   // PYDroid 4.8.0
   debugCompile project(path: ":PYDroid", configuration: "debug")
   releaseCompile project(path: ":PYDroid", configuration: "release")
-  debugCompile project(path: ":PYDroidDesign", configuration: "debug")
-  releaseCompile project(path: ":PYDroidDesign", configuration: "release")
 }
 
 // AdView
