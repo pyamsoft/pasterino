@@ -26,7 +26,7 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
-import com.pyamsoft.pasterino.Pasterino;
+import com.pyamsoft.pasterino.PasterinoSingleInitProvider;
 import timber.log.Timber;
 
 public class PasteService extends AccessibilityService
@@ -77,8 +77,10 @@ public class PasteService extends AccessibilityService
     Timber.d("onServiceConnected");
 
     if (presenter == null) {
-      presenter =
-          Pasterino.get(this).provideComponent().providePasteServiceModule().getServicePresenter();
+      presenter = PasterinoSingleInitProvider.get()
+          .provideComponent()
+          .providePasteServiceModule()
+          .getServicePresenter();
     }
 
     presenter.bindView(this);
