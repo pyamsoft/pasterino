@@ -30,7 +30,7 @@ public class PasterinoSingleInitProvider extends SingleInitContentProvider
   @Nullable private static volatile PasterinoSingleInitProvider instance = null;
   @Nullable private PasterinoModule pasterinoModule;
 
-  @NonNull @CheckResult public static PasterinoSingleInitProvider get() {
+  @NonNull @CheckResult public static IPYDroidApp<PasterinoModule> get() {
     if (instance == null) {
       throw new NullPointerException("Instance is NULL");
     }
