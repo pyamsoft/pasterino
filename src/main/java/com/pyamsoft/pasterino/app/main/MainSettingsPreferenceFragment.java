@@ -63,7 +63,7 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
             new PersistLoader.Callback<MainSettingsPreferencePresenter>() {
               @NonNull @Override
               public PersistLoader<MainSettingsPreferencePresenter> createLoader() {
-                return new MainSettingsPreferencePresenterLoader(getContext());
+                return new MainSettingsPreferencePresenterLoader();
               }
 
               @Override

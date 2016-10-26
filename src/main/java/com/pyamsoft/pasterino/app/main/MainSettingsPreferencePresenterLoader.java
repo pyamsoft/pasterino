@@ -16,20 +16,17 @@
 
 package com.pyamsoft.pasterino.app.main;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.Pasterino;
+import com.pyamsoft.pasterino.PasterinoSingleInitProvider;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class MainSettingsPreferencePresenterLoader
-    extends PersistLoader<MainSettingsPreferencePresenter> {
+class MainSettingsPreferencePresenterLoader extends PersistLoader<MainSettingsPreferencePresenter> {
 
-  MainSettingsPreferencePresenterLoader(@NonNull Context context) {
-    super(context);
+  MainSettingsPreferencePresenterLoader() {
   }
 
   @NonNull @Override public MainSettingsPreferencePresenter loadPersistent() {
-    return Pasterino.get(getContext())
+    return PasterinoSingleInitProvider.get()
         .provideComponent()
         .provideMainSettingsModule()
         .getSettingsPreferencePresenter();

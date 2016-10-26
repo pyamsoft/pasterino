@@ -16,44 +16,8 @@
 
 package com.pyamsoft.pasterino;
 
-import android.content.Context;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.dagger.PasterinoModule;
-import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.PYDroidApplication;
 
-public class Pasterino extends PYDroidApplication implements IPYDroidApp<PasterinoModule> {
-
-  private PasterinoModule pasterinoModule;
-
-  @NonNull @CheckResult public static IPYDroidApp<PasterinoModule> get(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    if (appContext instanceof Pasterino) {
-      return Pasterino.class.cast(appContext);
-    } else {
-      throw new ClassCastException("Cannot cast Application Context to IPasterino");
-    }
-  }
-
-  @Override protected void createApplicationComponents() {
-    super.createApplicationComponents();
-    pasterinoModule = new PasterinoModule(this);
-  }
-
-  @NonNull @Override public PasterinoModule provideComponent() {
-    if (pasterinoModule == null) {
-      throw new NullPointerException("Pasterino module is NULL");
-    }
-    return pasterinoModule;
-  }
-
-  @Nullable @Override public String provideGoogleOpenSourceLicenses() {
-    return null;
-  }
-
-  @Override public void insertCustomLicensesIntoMap() {
-
-  }
+public class Pasterino extends PYDroidApplication {
 }
+
