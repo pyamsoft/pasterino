@@ -29,9 +29,9 @@ import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.util.PersistentCache;
 
 public class MainSettingsFragment extends ActionBarFragment implements MainSettingsPresenter.View {
@@ -50,7 +50,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
             new PersistLoader.Callback<MainSettingsPresenter>() {
 
               @NonNull @Override public PersistLoader<MainSettingsPresenter> createLoader() {
-                return new MainSettingsPresenterLoader(getContext());
+                return new MainSettingsPresenterLoader();
               }
 
               @Override public void onPersistentLoaded(@NonNull MainSettingsPresenter persist) {
