@@ -27,7 +27,8 @@ class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.Single
     implements SinglePastePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasteServiceInteractor interactor;
-  @NonNull private ExecutedOffloader pasteTime = new ExecutedOffloader.Empty();
+  @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader pasteTime =
+      new ExecutedOffloader.Empty();
 
   SinglePastePresenterImpl(@NonNull PasteServiceInteractor interactor) {
     this.interactor = interactor;
