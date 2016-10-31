@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
 class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.SinglePasteProvider>
@@ -34,20 +35,15 @@ class SinglePastePresenterImpl extends PresenterBase<SinglePastePresenter.Single
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubPasteTime();
+    OffloaderHelper.cancel(pasteTime);
   }
 
   @Override public void onPostDelayedEvent() {
-    unsubPasteTime();
+    OffloaderHelper.cancel(pasteTime);
     pasteTime = interactor.getPasteDelayTime()
         .onError(throwable -> Timber.e(throwable, "onError onPostDelayedEvent"))
         .onResult(delay -> getView(view -> view.postDelayedEvent(delay)))
+        .onFinish(() -> OffloaderHelper.cancel(pasteTime))
         .execute();
-  }
-
-  private void unsubPasteTime() {
-    if (!pasteTime.isCancelled()) {
-      pasteTime.cancel();
-    }
   }
 }
