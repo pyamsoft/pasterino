@@ -16,40 +16,38 @@
 
 package com.pyamsoft.pasterino;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.dagger.PasterinoModule;
 import com.pyamsoft.pydroid.IPYDroidApp;
-import com.pyamsoft.pydroid.SingleInitContentProvider;
 
-public class PasterinoSingleInitProvider extends SingleInitContentProvider
-    implements IPYDroidApp<PasterinoModule> {
+public class Injector implements IPYDroidApp<PasterinoModule> {
 
-  @Nullable private PasterinoModule pasterinoModule;
+  @Nullable private static volatile Injector instance = null;
+  @NonNull private final PasterinoModule component;
 
-  @Override protected void onInstanceCreated(@NonNull Context context) {
-    Injector.set(pasterinoModule);
+  private Injector(@NonNull PasterinoModule component) {
+    this.component = component;
   }
 
-  @Override protected void onFirstCreate(@NonNull Context context) {
-    super.onFirstCreate(context);
-    pasterinoModule = new PasterinoModule(context);
+  static void set(@Nullable PasterinoModule component) {
+    if (component == null) {
+      throw new NullPointerException("Cannot set a NULL component");
+    }
+    instance = new Injector(component);
   }
 
-  @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
-    return null;
-  }
+  @NonNull @CheckResult public static Injector get() {
+    if (instance == null) {
+      throw new NullPointerException("Instance is NULL");
+    }
 
-  @Override public void insertCustomLicensesIntoMap() {
-
+    //noinspection ConstantConditions
+    return instance;
   }
 
   @NonNull @Override public PasterinoModule provideComponent() {
-    if (pasterinoModule == null) {
-      throw new NullPointerException("Pasterino module is NULL");
-    }
-
-    return pasterinoModule;
+    return component;
   }
 }
