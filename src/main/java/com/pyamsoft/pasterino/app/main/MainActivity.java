@@ -102,8 +102,9 @@ public class MainActivity extends RatingActivity {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "FEATURE: Support latest Android 7.1 (API 25)";
-    return new String[] { line1 };
+    final String line1 = "BUGFIX: Fix crash in donation page";
+    final String line2 = "BUGFIX: Fix crash in image loading on KitKat";
+    return new String[] { line1, line2 };
   }
 
   @NonNull @Override protected String getVersionName() {
