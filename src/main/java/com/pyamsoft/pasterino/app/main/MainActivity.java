@@ -27,11 +27,12 @@ import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.sec.TamperActivity;
 import com.pyamsoft.pydroid.support.RatingActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 
-public class MainActivity extends RatingActivity {
+public class MainActivity extends TamperActivity {
 
   private ActivityMainBinding binding;
 
@@ -49,6 +50,10 @@ public class MainActivity extends RatingActivity {
   @Override protected void onPostResume() {
     super.onPostResume();
     RatingDialog.showRatingDialog(this, this);
+  }
+
+  @NonNull @Override protected String getSafePackageName() {
+    return "com.pyamsoft.pasterino";
   }
 
   @Override protected void onStart() {
