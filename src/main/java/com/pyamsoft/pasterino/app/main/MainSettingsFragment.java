@@ -121,14 +121,16 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   @Override public void onFABEnabled() {
-    final AsyncMap.Entry task =
-        AsyncDrawable.load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab);
+    final AsyncMap.Entry task = AsyncDrawable.with(getActivity())
+        .load(R.drawable.ic_help_24dp)
+        .into(binding.mainSettingsFab);
     drawableMap.put("fab", task);
   }
 
   @Override public void onFABDisabled() {
-    final AsyncMap.Entry task =
-        AsyncDrawable.load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab);
+    final AsyncMap.Entry task = AsyncDrawable.with(getActivity())
+        .load(R.drawable.ic_service_start_24dp)
+        .into(binding.mainSettingsFab);
     drawableMap.put("fab", task);
   }
 
