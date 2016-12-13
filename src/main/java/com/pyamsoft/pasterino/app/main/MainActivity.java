@@ -28,7 +28,6 @@ import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.sec.TamperActivity;
-import com.pyamsoft.pydroid.support.RatingActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 
@@ -107,9 +106,8 @@ public class MainActivity extends TamperActivity {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: Fix crash in donation page";
-    final String line2 = "BUGFIX: Fix crash in image loading on KitKat";
-    return new String[] { line1, line2 };
+    final String line1 = "BUGFIX: General stability fixes";
+    return new String[] { line1 };
   }
 
   @NonNull @Override protected String getVersionName() {
