@@ -30,8 +30,8 @@ import timber.log.Timber;
 
 public final class PasteServiceNotification {
 
-  static final int ID = 1005;
-  static final int RC = 1005;
+  private static final int ID = 1005;
+  private static final int RC = 1005;
 
   private PasteServiceNotification() {
     throw new RuntimeException("No instances");

@@ -38,10 +38,6 @@ class PasterinoPreferencesImpl extends ApplicationPreferences implements Pasteri
     return Long.parseLong(get(delayTime, delayTimeDefault));
   }
 
-  @Override public void setPasteDelayTime(long time) {
-    put(delayTime, Long.toString(time));
-  }
-
   @Override public void clearAll() {
     clear(true);
   }

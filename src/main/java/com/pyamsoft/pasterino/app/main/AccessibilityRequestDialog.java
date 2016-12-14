@@ -27,7 +27,7 @@ import com.pyamsoft.pasterino.R;
 
 public class AccessibilityRequestDialog extends DialogFragment {
 
-  @NonNull final Intent accessibilityServiceIntent =
+  @SuppressWarnings("WeakerAccess") @NonNull final Intent accessibilityServiceIntent =
       new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

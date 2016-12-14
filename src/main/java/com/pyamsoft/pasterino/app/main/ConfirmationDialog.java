@@ -38,7 +38,7 @@ public class ConfirmationDialog extends DialogFragment {
         .create();
   }
 
-  void sendConfirmationEvent() {
+  @SuppressWarnings("WeakerAccess") void sendConfirmationEvent() {
     final FragmentManager fragmentManager = getFragmentManager();
     final Fragment settingsPreferenceFragment =
         fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG);

@@ -89,13 +89,13 @@ public class MainActivity extends TamperActivity {
     return handled || super.onOptionsItemSelected(item);
   }
 
-  void setupAppBar() {
+  private void setupAppBar() {
     setSupportActionBar(binding.mainToolbar);
     binding.mainToolbar.setTitle(R.string.app_name);
     ViewCompat.setElevation(binding.mainToolbar, AppUtil.convertToDP(this, 4));
   }
 
-  void showMainFragment() {
+  private void showMainFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null
         && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {

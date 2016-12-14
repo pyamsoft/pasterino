@@ -22,6 +22,7 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -32,7 +33,7 @@ import timber.log.Timber;
 public class PasteService extends AccessibilityService
     implements PasteServicePresenter.PasteServiceProvider {
 
-  static volatile PasteService instance = null;
+  private static volatile PasteService instance = null;
   private PasteServicePresenter presenter;
 
   @NonNull @CheckResult public static synchronized PasteService getInstance() {
@@ -44,7 +45,8 @@ public class PasteService extends AccessibilityService
     }
   }
 
-  public static synchronized void setInstance(@Nullable PasteService instance) {
+  @VisibleForTesting @SuppressWarnings("WeakerAccess")
+  static synchronized void setInstance(@Nullable PasteService instance) {
     PasteService.instance = instance;
   }
 
@@ -77,10 +79,8 @@ public class PasteService extends AccessibilityService
     Timber.d("onServiceConnected");
 
     if (presenter == null) {
-      presenter = Injector.get()
-          .provideComponent()
-          .providePasteServiceModule()
-          .getServicePresenter();
+      presenter =
+          Injector.get().provideComponent().providePasteServiceModule().getServicePresenter();
     }
 
     presenter.bindView(this);
