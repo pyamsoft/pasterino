@@ -30,7 +30,7 @@ import timber.log.Timber;
 public class SinglePasteService extends Service
     implements SinglePastePresenter.SinglePasteProvider {
 
-  @NonNull final Handler handler;
+  @NonNull private final Handler handler;
   private SinglePastePresenter presenter;
 
   public SinglePasteService() {

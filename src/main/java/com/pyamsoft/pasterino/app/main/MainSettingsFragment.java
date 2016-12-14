@@ -38,7 +38,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   @NonNull public static final String TAG = "MainSettingsFragment";
   @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
-  MainSettingsPresenter presenter;
+  @SuppressWarnings("WeakerAccess") MainSettingsPresenter presenter;
   private long loadedKey;
   private FragmentMainBinding binding;
 
