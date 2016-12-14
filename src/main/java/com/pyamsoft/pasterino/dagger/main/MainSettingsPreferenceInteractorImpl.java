@@ -18,8 +18,8 @@ package com.pyamsoft.pasterino.dagger.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.PasterinoPreferences;
-import com.pyamsoft.pydroid.tool.Offloader;
 import com.pyamsoft.pydroid.tool.AsyncOffloader;
+import com.pyamsoft.pydroid.tool.Offloader;
 
 class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
 

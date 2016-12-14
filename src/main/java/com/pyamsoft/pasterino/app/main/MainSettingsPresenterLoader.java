@@ -26,9 +26,6 @@ class MainSettingsPresenterLoader extends PersistLoader<MainSettingsPresenter> {
   }
 
   @NonNull @Override public MainSettingsPresenter loadPersistent() {
-    return Injector.get()
-        .provideComponent()
-        .provideMainSettingsModule()
-        .getSettingsPresenter();
+    return Injector.get().provideComponent().provideMainSettingsModule().getSettingsPresenter();
   }
 }
