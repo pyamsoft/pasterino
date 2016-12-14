@@ -46,10 +46,8 @@ public class SinglePasteService extends Service
     super.onCreate();
     Timber.d("onCreate");
     if (presenter == null) {
-      presenter = Injector.get()
-          .provideComponent()
-          .providePasteServiceModule()
-          .getSinglePresenter();
+      presenter =
+          Injector.get().provideComponent().providePasteServiceModule().getSinglePresenter();
     }
     presenter.bindView(this);
   }
