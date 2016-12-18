@@ -23,7 +23,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.service.PasteService;
@@ -56,6 +55,18 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
     return AboutLibrariesFragment.BackStackState.LAST;
   }
 
+  @Override protected int getRootViewContainer() {
+    return R.id.main_container;
+  }
+
+  @NonNull @Override protected String getApplicationName() {
+    return getString(R.string.app_name);
+  }
+
+  @Override protected int getPreferenceXmlResId() {
+    return R.xml.preferences;
+  }
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     loadedKey = PersistentCache.get()
@@ -73,10 +84,6 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
             });
   }
 
-  @Override public void onCreatePreferences(Bundle bundle, String s) {
-    addPreferencesFromResource(R.xml.preferences);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -85,29 +92,6 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
       AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new HowToDialog(), "howto");
       return true;
     });
-
-    final Preference resetAll = findPreference(getString(R.string.clear_all_key));
-    resetAll.setOnPreferenceClickListener(preference -> {
-      Timber.d("Reset settings onClick");
-      assert presenter != null;
-      presenter.clearAll();
-      return true;
-    });
-
-    final Preference upgradeInfo = findPreference(getString(R.string.upgrade_info_key));
-    upgradeInfo.setOnPreferenceClickListener(preference -> showChangelog());
-
-    final SwitchPreferenceCompat showAds =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
-    showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
-
-    final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
-    showAboutLicenses.setOnPreferenceClickListener(
-        preference -> showAboutLicensesFragment(R.id.main_container,
-            AboutLibrariesFragment.Styling.LIGHT));
-
-    final Preference checkVersion = findPreference(getString(R.string.check_version_key));
-    checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
   }
 
   @Override public void onStart() {
@@ -125,6 +109,11 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
+  }
+
+  @Override protected boolean onClearAllPreferenceClicked() {
+    presenter.clearAll();
+    return super.onClearAllPreferenceClicked();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
