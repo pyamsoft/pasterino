@@ -30,6 +30,6 @@ class PasteServiceInteractorImpl implements PasteServiceInteractor {
   }
 
   @NonNull @Override public Offloader<Long> getPasteDelayTime() {
-    return new AsyncOffloader<Long>().onProcess(preferences::getPasteDelayTime);
+    return AsyncOffloader.newInstance(preferences::getPasteDelayTime);
   }
 }
