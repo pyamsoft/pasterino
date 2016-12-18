@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
@@ -38,6 +39,7 @@ public class MainActivity extends TamperActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_Pasterino_Light);
     super.onCreate(savedInstanceState);
+    PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     setupAppBar();
   }
 
