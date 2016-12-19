@@ -90,7 +90,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, MainSettingsPresenter.class);
     super.onSaveInstanceState(outState);
   }
 

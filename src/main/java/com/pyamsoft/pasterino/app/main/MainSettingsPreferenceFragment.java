@@ -117,7 +117,8 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get()
+        .saveKey(outState, KEY_PRESENTER, loadedKey, MainSettingsPreferencePresenter.class);
     super.onSaveInstanceState(outState);
   }
 
