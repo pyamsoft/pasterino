@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterino.main;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -26,9 +26,9 @@ import android.support.v7.preference.Preference;
 import android.view.View;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.service.PasteService;
-import com.pyamsoft.pasterino.app.service.PasteServiceNotification;
-import com.pyamsoft.pasterino.app.service.SinglePasteService;
+import com.pyamsoft.pasterino.service.PasteService;
+import com.pyamsoft.pasterino.service.PasteServiceNotification;
+import com.pyamsoft.pasterino.service.SinglePasteService;
 import com.pyamsoft.pasterinopresenter.main.MainSettingsPreferencePresenter;
 import com.pyamsoft.pasterinopresenter.main.MainSettingsPreferencePresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;

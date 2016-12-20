@@ -28,7 +28,7 @@
 
     <!-- Main Activity -->
     <activity
-        android:name=".app.main.MainActivity"
+        android:name=".main.MainActivity"
         android:excludeFromRecents="false"
         android:exported="true"
         android:label="@string/app_name"
@@ -42,7 +42,7 @@
 
     <!-- Accessibility Service -->
     <service
-        android:name=".app.service.PasteService"
+        android:name=".service.PasteService"
         android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
       <intent-filter>
         <action android:name="android.accessibilityservice.AccessibilityService"/>
@@ -53,7 +53,7 @@
     </service>
 
     <service
-        android:name=".app.service.SinglePasteService"
+        android:name=".service.SinglePasteService"
         android:exported="false"/>
 
     <provider

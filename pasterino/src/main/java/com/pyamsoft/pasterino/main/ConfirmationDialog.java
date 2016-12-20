@@ -14,24 +14,41 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterino.main;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pasterino.Pasterino;
 
-public class HowToDialog extends DialogFragment {
+public class ConfirmationDialog extends DialogFragment {
 
   @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     return new AlertDialog.Builder(getActivity()).setMessage(
-        "When you want to paste into a text input field, simply click the notification and wait a little.")
-        .setTitle("How to Use")
-        .setNeutralButton("Got It", (dialog, which) -> dialog.dismiss())
+        "Really clear all application settings?\n\nYou will have to manually restart the Accessibility Service component of Pasterino")
+        .setPositiveButton("Yes", (dialogInterface, i) -> {
+          dialogInterface.dismiss();
+          sendConfirmationEvent();
+        })
+        .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss())
         .create();
+  }
+
+  @SuppressWarnings("WeakerAccess") void sendConfirmationEvent() {
+    final FragmentManager fragmentManager = getFragmentManager();
+    final Fragment settingsPreferenceFragment =
+        fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG);
+    if (settingsPreferenceFragment instanceof MainSettingsPreferenceFragment) {
+      ((MainSettingsPreferenceFragment) settingsPreferenceFragment).getPresenter()
+          .processClearRequest();
+    } else {
+      throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
+    }
   }
 
   @Override public void onDestroy() {

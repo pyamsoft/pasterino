@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterino.main;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
