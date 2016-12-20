@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterinopresenter.main;
 
-import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
-import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 
 class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.View>
@@ -26,9 +24,9 @@ class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.View
   MainSettingsPresenterImpl() {
   }
 
-  @Override public void setFABFromState() {
+  @Override public void setFABFromState(boolean serviceRunning) {
     getView(view -> {
-      if (PasteService.isRunning()) {
+      if (serviceRunning) {
         view.onFABEnabled();
       } else {
         view.onFABDisabled();
@@ -36,13 +34,11 @@ class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.View
     });
   }
 
-  @Override public void clickFab() {
-    getView(view -> {
-      if (PasteService.isRunning()) {
-        view.onDisplayServiceInfo();
-      } else {
-        view.onCreateAccessibilityDialog();
-      }
-    });
+  @Override public void clickFabServiceRunning() {
+    getView(View::onDisplayServiceInfo);
+  }
+
+  @Override public void clickFabServiceIdle() {
+    getView(View::onCreateAccessibilityDialog);
   }
 }

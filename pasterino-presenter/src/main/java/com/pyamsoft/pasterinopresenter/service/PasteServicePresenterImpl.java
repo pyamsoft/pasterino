@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.service;
+package com.pyamsoft.pasterinopresenter.service;
 
 import android.support.annotation.Nullable;
 import android.view.accessibility.AccessibilityNodeInfo;
-import com.pyamsoft.pasterino.app.service.PasteServicePresenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import timber.log.Timber;
 

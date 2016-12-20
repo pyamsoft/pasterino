@@ -1,1 +1,1 @@
-include ':pasterino'
+include ':pasterino', ':pasterino-presenter'

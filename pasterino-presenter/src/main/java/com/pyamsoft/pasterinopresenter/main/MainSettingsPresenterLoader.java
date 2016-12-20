@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterinopresenter.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.Injector;
+import com.pyamsoft.pasterinopresenter.Injector;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-class MainSettingsPresenterLoader extends PersistLoader<MainSettingsPresenter> {
+public class MainSettingsPresenterLoader extends PersistLoader<MainSettingsPresenter> {
 
-  MainSettingsPresenterLoader() {
+  public MainSettingsPresenterLoader() {
   }
 
   @NonNull @Override public MainSettingsPresenter loadPersistent() {

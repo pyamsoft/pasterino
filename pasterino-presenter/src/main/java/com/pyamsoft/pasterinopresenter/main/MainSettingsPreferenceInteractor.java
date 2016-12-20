@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterinopresenter.main;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import com.pyamsoft.pydroid.tool.Offloader;
 
-class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
+interface MainSettingsPreferenceInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
-
-  MainSettingsPreferenceInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
-  }
-
-  @NonNull @Override public Offloader<Boolean> clearAll() {
-    return AsyncOffloader.newInstance(() -> {
-      preferences.clearAll();
-      return true;
-    });
-  }
+  @CheckResult @NonNull Offloader<Boolean> clearAll();
 }

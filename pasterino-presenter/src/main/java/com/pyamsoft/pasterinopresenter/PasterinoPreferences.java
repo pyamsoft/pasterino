@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterinopresenter;
 
-import com.pyamsoft.pydroid.presenter.Presenter;
+import android.support.annotation.CheckResult;
 
-public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.View> {
+public interface PasterinoPreferences {
 
-  void setFABFromState();
+  @CheckResult long getPasteDelayTime();
 
-  void clickFab();
-
-  interface View {
-
-    void onFABEnabled();
-
-    void onFABDisabled();
-
-    void onCreateAccessibilityDialog();
-
-    void onDisplayServiceInfo();
-  }
+  void clearAll();
 }

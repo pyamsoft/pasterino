@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger;
+package com.pyamsoft.pasterinopresenter;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import com.pyamsoft.pasterino.dagger.main.MainSettingsModule;
-import com.pyamsoft.pasterino.dagger.service.PasteServiceModule;
+import com.pyamsoft.pasterinopresenter.main.MainSettingsModule;
+import com.pyamsoft.pasterinopresenter.service.PasteServiceModule;
 
 public class PasterinoModule {
 

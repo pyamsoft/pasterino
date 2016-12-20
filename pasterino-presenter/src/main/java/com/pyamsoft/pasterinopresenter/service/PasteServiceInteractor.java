@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino;
+package com.pyamsoft.pasterinopresenter.service;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.tool.Offloader;
 
-public interface PasterinoPreferences {
+interface PasteServiceInteractor {
 
-  @CheckResult long getPasteDelayTime();
-
-  void clearAll();
+  @CheckResult @NonNull Offloader<Long> getPasteDelayTime();
 }

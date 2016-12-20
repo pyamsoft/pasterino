@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterinopresenter.main;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.app.main.MainSettingsPreferencePresenter;
-import com.pyamsoft.pasterino.app.main.MainSettingsPresenter;
-import com.pyamsoft.pasterino.dagger.PasterinoModule;
+import com.pyamsoft.pasterinopresenter.PasterinoModule;
 
 public class MainSettingsModule {
 
@@ -34,11 +32,11 @@ public class MainSettingsModule {
     settingsPreferencePresenter = new MainSettingsPreferencePresenterImpl(interactor);
   }
 
-  @NonNull @CheckResult public MainSettingsPreferencePresenter getSettingsPreferencePresenter() {
+  @NonNull @CheckResult MainSettingsPreferencePresenter getSettingsPreferencePresenter() {
     return settingsPreferencePresenter;
   }
 
-  @NonNull @CheckResult public MainSettingsPresenter getSettingsPresenter() {
+  @NonNull @CheckResult MainSettingsPresenter getSettingsPresenter() {
     return settingsPresenter;
   }
 }

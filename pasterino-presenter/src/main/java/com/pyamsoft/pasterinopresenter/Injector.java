@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino;
+package com.pyamsoft.pasterinopresenter;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.dagger.PasterinoModule;
 import com.pyamsoft.pydroid.IPYDroidApp;
 
 public class Injector implements IPYDroidApp<PasterinoModule> {
@@ -31,7 +30,7 @@ public class Injector implements IPYDroidApp<PasterinoModule> {
     this.component = component;
   }
 
-  static void set(@Nullable PasterinoModule component) {
+  public static void set(@Nullable PasterinoModule component) {
     if (component == null) {
       throw new NullPointerException("Cannot set a NULL component");
     }

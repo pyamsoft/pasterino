@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.service;
+package com.pyamsoft.pasterinopresenter.main;
 
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
+public interface MainSettingsPreferencePresenter
+    extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
 
-  void onPostDelayedEvent();
+  void clearAll();
 
-  interface SinglePasteProvider {
+  void processClearRequest();
 
-    void postDelayedEvent(long delay);
+  interface MainSettingsView {
+
+    void showConfirmDialog();
+
+    void onClearAll();
   }
 }
