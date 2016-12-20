@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterinopresenter.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pasterinopresenter.PasterinoPreferences;
+import com.pyamsoft.pydroid.tool.AsyncOffloader;
+import com.pyamsoft.pydroid.tool.Offloader;
 
-class MainSettingsPreferencePresenterLoader extends PersistLoader<MainSettingsPreferencePresenter> {
+class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
 
-  MainSettingsPreferencePresenterLoader() {
+  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
+
+  MainSettingsPreferenceInteractorImpl(@NonNull PasterinoPreferences preferences) {
+    this.preferences = preferences;
   }
 
-  @NonNull @Override public MainSettingsPreferencePresenter loadPersistent() {
-    return Injector.get()
-        .provideComponent()
-        .provideMainSettingsModule()
-        .getSettingsPreferencePresenter();
+  @NonNull @Override public Offloader<Boolean> clearAll() {
+    return AsyncOffloader.newInstance(() -> {
+      preferences.clearAll();
+      return true;
+    });
   }
 }

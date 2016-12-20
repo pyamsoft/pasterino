@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger;
+package com.pyamsoft.pasterinopresenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pydroid.app.ApplicationPreferences;
 
 class PasterinoPreferencesImpl extends ApplicationPreferences implements PasterinoPreferences {

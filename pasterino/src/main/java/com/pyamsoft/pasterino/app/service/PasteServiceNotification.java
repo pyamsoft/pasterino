@@ -37,7 +37,7 @@ public final class PasteServiceNotification {
     throw new RuntimeException("No instances");
   }
 
-  public static void start(@NonNull Context context) {
+  static void start(@NonNull Context context) {
     if (PasteService.isRunning()) {
       Timber.d("Start notification %d", ID);
       getNotificationManager(context).notify(ID, createNotification(context));

@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterinopresenter.main;
 
-import com.pyamsoft.pydroid.presenter.Presenter;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pasterinopresenter.Injector;
+import com.pyamsoft.pydroid.app.PersistLoader;
 
-public interface MainSettingsPreferencePresenter
-    extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
+public class MainSettingsPreferencePresenterLoader
+    extends PersistLoader<MainSettingsPreferencePresenter> {
 
-  void clearAll();
+  public MainSettingsPreferencePresenterLoader() {
+  }
 
-  void processClearRequest();
-
-  interface MainSettingsView {
-
-    void showConfirmDialog();
-
-    void onClearAll();
+  @NonNull @Override public MainSettingsPreferencePresenter loadPersistent() {
+    return Injector.get()
+        .provideComponent()
+        .provideMainSettingsModule()
+        .getSettingsPreferencePresenter();
   }
 }

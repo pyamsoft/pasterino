@@ -25,7 +25,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
+import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
+import com.pyamsoft.pasterinopresenter.main.MainSettingsPresenter;
+import com.pyamsoft.pasterinopresenter.main.MainSettingsPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -73,7 +76,13 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   }
 
   private void setupFAB() {
-    binding.mainSettingsFab.setOnClickListener(view -> presenter.clickFab());
+    binding.mainSettingsFab.setOnClickListener(view -> {
+      if (PasteService.isRunning()) {
+        presenter.clickFabServiceRunning();
+      } else {
+        presenter.clickFabServiceIdle();
+      }
+    });
     FABUtil.setupFABBehavior(binding.mainSettingsFab, new HideScrollFABBehavior(10));
   }
 
@@ -99,7 +108,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   @Override public void onResume() {
     super.onResume();
     setActionBarUpEnabled(false);
-    presenter.setFABFromState();
+    presenter.setFABFromState(PasteService.isRunning());
     displayPreferenceFragment();
   }
 

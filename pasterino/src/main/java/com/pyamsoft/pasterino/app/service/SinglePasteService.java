@@ -24,7 +24,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.Injector;
+import com.pyamsoft.pasterinopresenter.Injector;
+import com.pyamsoft.pasterinopresenter.service.SinglePastePresenter;
 import timber.log.Timber;
 
 public class SinglePasteService extends Service

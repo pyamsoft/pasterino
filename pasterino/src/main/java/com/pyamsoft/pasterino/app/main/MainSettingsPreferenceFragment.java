@@ -29,6 +29,8 @@ import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.app.service.PasteService;
 import com.pyamsoft.pasterino.app.service.PasteServiceNotification;
 import com.pyamsoft.pasterino.app.service.SinglePasteService;
+import com.pyamsoft.pasterinopresenter.main.MainSettingsPreferencePresenter;
+import com.pyamsoft.pasterinopresenter.main.MainSettingsPreferencePresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;

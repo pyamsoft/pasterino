@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.main;
+package com.pyamsoft.pasterinopresenter.service;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface MainSettingsPreferenceInteractor {
+public interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
 
-  @CheckResult @NonNull Offloader<Boolean> clearAll();
+  void onPostDelayedEvent();
+
+  interface SinglePasteProvider {
+
+    void postDelayedEvent(long delay);
+  }
 }

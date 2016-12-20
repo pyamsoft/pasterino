@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.service;
+package com.pyamsoft.pasterinopresenter.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.app.service.SinglePastePresenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;

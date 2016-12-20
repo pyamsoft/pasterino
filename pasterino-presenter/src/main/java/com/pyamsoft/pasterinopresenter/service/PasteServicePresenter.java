@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.dagger.service;
+package com.pyamsoft.pasterinopresenter.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.PasterinoPreferences;
-import com.pyamsoft.pydroid.tool.AsyncOffloader;
-import com.pyamsoft.pydroid.tool.Offloader;
+import android.support.annotation.Nullable;
+import android.view.accessibility.AccessibilityNodeInfo;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-class PasteServiceInteractorImpl implements PasteServiceInteractor {
+public interface PasteServicePresenter
+    extends Presenter<PasteServicePresenter.PasteServiceProvider> {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
+  void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target);
 
-  PasteServiceInteractorImpl(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
-  }
+  interface PasteServiceProvider {
 
-  @NonNull @Override public Offloader<Long> getPasteDelayTime() {
-    return AsyncOffloader.newInstance(preferences::getPasteDelayTime);
+    void onPaste(@NonNull AccessibilityNodeInfo target);
   }
 }
