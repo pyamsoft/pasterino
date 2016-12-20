@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.main;
+package com.pyamsoft.pasterino.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.app.service.PasteService;
+import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pasterinopresenter.main.MainSettingsPresenter;
 import com.pyamsoft.pasterinopresenter.main.MainSettingsPresenterLoader;

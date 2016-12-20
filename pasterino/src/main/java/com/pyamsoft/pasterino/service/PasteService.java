@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.app.service;
+package com.pyamsoft.pasterino.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
