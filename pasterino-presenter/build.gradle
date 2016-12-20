@@ -53,7 +53,7 @@ dependencies {
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
 
   // PYDroid
-  compile("com.github.pyamsoft.pydroid:pydroid:5.1.0@aar") {
+  compile("com.github.pyamsoft.pydroid:pydroid:$pydroid@aar") {
     transitive = true
   }
 }

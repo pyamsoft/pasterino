@@ -72,10 +72,6 @@ android {
   }
 }
 
-ext {
-  leakCanary = "1.4-beta2"
-}
-
 dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
 
@@ -90,10 +86,10 @@ dependencies {
   compile "com.google.firebase:firebase-crash:$firebase"
 
   // PYDroid
-  compile("com.github.pyamsoft.pydroid:pydroidui:5.1.0@aar") {
+  compile("com.github.pyamsoft.pydroid:pydroidui:$pydroid@aar") {
     transitive = true
   }
-  compile("com.github.pyamsoft.pydroid:pydroiddesign:5.1.0@aar") {
+  compile("com.github.pyamsoft.pydroid:pydroiddesign:$pydroid@aar") {
     transitive = true
   }
 
