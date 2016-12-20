@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Pasterino.iml" filepath="$PROJECT_DIR$/Pasterino.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pasterino/pasterino.iml" filepath="$PROJECT_DIR$/pasterino/pasterino.iml" />
+    </modules>
+  </component>
+</project>
