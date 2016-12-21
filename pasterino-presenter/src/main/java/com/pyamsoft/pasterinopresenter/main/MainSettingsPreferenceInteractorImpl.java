@@ -32,7 +32,7 @@ class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInte
   @NonNull @Override public Offloader<Boolean> clearAll() {
     return AsyncOffloader.newInstance(() -> {
       preferences.clearAll();
-      return true;
+      return Boolean.TRUE;
     });
   }
 }
