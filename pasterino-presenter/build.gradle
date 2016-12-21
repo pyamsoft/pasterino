@@ -26,10 +26,12 @@ apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
 apply plugin: "me.tatarka.retrolambda"
 
+//noinspection GroovyMissingReturnStatement
 android {
   compileSdkVersion 25
   buildToolsVersion "$buildTools"
 
+  //noinspection GroovyMissingReturnStatement
   defaultConfig {
     minSdkVersion 19
     targetSdkVersion 25
