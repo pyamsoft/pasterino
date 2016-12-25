@@ -28,9 +28,9 @@ import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroidui.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroidui.rating.RatingDialog;
-import com.pyamsoft.pydroidui.sec.TamperActivity;
+import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.ui.rating.RatingDialog;
+import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 
 public class MainActivity extends TamperActivity {
 
