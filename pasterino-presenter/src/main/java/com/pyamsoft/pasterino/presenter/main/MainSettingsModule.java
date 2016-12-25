@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.main;
+package com.pyamsoft.pasterino.presenter.main;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterinopresenter.PasterinoModule;
+import com.pyamsoft.pasterino.presenter.PasterinoModule;
 
 public class MainSettingsModule {
 

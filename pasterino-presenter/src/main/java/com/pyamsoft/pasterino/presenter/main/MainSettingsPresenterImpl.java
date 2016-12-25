@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.main;
+package com.pyamsoft.pasterino.presenter.main;
 
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 

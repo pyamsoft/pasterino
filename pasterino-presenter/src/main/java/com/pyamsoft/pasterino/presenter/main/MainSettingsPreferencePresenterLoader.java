@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.main;
+package com.pyamsoft.pasterino.presenter.main;
 
-import com.pyamsoft.pydroid.presenter.Presenter;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.presenter.Injector;
+import com.pyamsoft.pydroid.app.PersistLoader;
 
-public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.View> {
+public class MainSettingsPreferencePresenterLoader
+    extends PersistLoader<MainSettingsPreferencePresenter> {
 
-  void setFABFromState(boolean serviceRunning);
+  public MainSettingsPreferencePresenterLoader() {
+  }
 
-  void clickFabServiceRunning();
-
-  void clickFabServiceIdle();
-
-  interface View {
-
-    void onFABEnabled();
-
-    void onFABDisabled();
-
-    void onCreateAccessibilityDialog();
-
-    void onDisplayServiceInfo();
+  @NonNull @Override public MainSettingsPreferencePresenter loadPersistent() {
+    return Injector.get()
+        .provideComponent()
+        .provideMainSettingsModule()
+        .getSettingsPreferencePresenter();
   }
 }

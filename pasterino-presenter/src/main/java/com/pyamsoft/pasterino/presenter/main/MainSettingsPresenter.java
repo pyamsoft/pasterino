@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.main;
+package com.pyamsoft.pasterino.presenter.main;
 
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface MainSettingsPreferencePresenter
-    extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
+public interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.View> {
 
-  void clearAll();
+  void setFABFromState(boolean serviceRunning);
 
-  void processClearRequest();
+  void clickFabServiceRunning();
 
-  interface MainSettingsView {
+  void clickFabServiceIdle();
 
-    void showConfirmDialog();
+  interface View {
 
-    void onClearAll();
+    void onFABEnabled();
+
+    void onFABDisabled();
+
+    void onCreateAccessibilityDialog();
+
+    void onDisplayServiceInfo();
   }
 }

@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter;
+package com.pyamsoft.pasterino.presenter.main;
 
-import android.support.annotation.CheckResult;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface PasterinoPreferences {
-
-  @CheckResult long getPasteDelayTime();
+public interface MainSettingsPreferencePresenter
+    extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
 
   void clearAll();
+
+  void processClearRequest();
+
+  interface MainSettingsView {
+
+    void showConfirmDialog();
+
+    void onClearAll();
+  }
 }
