@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.main;
+package com.pyamsoft.pasterino.presenter.main;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pasterino.presenter.Injector;
+import com.pyamsoft.pydroid.app.PersistLoader;
 
-interface MainSettingsPreferenceInteractor {
+public class MainSettingsPresenterLoader extends PersistLoader<MainSettingsPresenter> {
 
-  @CheckResult @NonNull Offloader<Boolean> clearAll();
+  public MainSettingsPresenterLoader() {
+  }
+
+  @NonNull @Override public MainSettingsPresenter loadPersistent() {
+    return Injector.get().provideComponent().provideMainSettingsModule().getSettingsPresenter();
+  }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter;
+package com.pyamsoft.pasterino.presenter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.service;
+package com.pyamsoft.pasterino.presenter.service;
 
 import android.support.annotation.Nullable;
 import android.view.accessibility.AccessibilityNodeInfo;

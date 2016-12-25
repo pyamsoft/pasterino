@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.service;
+package com.pyamsoft.pasterino.presenter.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterinopresenter.PasterinoPreferences;
+import com.pyamsoft.pasterino.presenter.PasterinoPreferences;
 import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import com.pyamsoft.pydroid.tool.Offloader;
 
-class PasteServiceInteractorImpl implements PasteServiceInteractor {
+class MainSettingsPreferenceInteractorImpl implements MainSettingsPreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
 
-  PasteServiceInteractorImpl(@NonNull PasterinoPreferences preferences) {
+  MainSettingsPreferenceInteractorImpl(@NonNull PasterinoPreferences preferences) {
     this.preferences = preferences;
   }
 
-  @NonNull @Override public Offloader<Long> getPasteDelayTime() {
-    return AsyncOffloader.newInstance(preferences::getPasteDelayTime);
+  @NonNull @Override public Offloader<Boolean> clearAll() {
+    return AsyncOffloader.newInstance(() -> {
+      preferences.clearAll();
+      return Boolean.TRUE;
+    });
   }
 }

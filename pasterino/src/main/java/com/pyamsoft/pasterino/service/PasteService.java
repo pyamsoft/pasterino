@@ -27,8 +27,8 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
-import com.pyamsoft.pasterinopresenter.Injector;
-import com.pyamsoft.pasterinopresenter.service.PasteServicePresenter;
+import com.pyamsoft.pasterino.presenter.Injector;
+import com.pyamsoft.pasterino.presenter.service.PasteServicePresenter;
 import timber.log.Timber;
 
 public class PasteService extends AccessibilityService

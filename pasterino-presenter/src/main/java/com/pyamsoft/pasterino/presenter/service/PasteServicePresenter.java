@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter.service;
+package com.pyamsoft.pasterino.presenter.service;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.accessibility.AccessibilityNodeInfo;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
+public interface PasteServicePresenter
+    extends Presenter<PasteServicePresenter.PasteServiceProvider> {
 
-  void onPostDelayedEvent();
+  void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target);
 
-  interface SinglePasteProvider {
+  interface PasteServiceProvider {
 
-    void postDelayedEvent(long delay);
+    void onPaste(@NonNull AccessibilityNodeInfo target);
   }
 }

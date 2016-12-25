@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterinopresenter;
+package com.pyamsoft.pasterino.presenter;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterinopresenter.main.MainSettingsModule;
-import com.pyamsoft.pasterinopresenter.service.PasteServiceModule;
+import com.pyamsoft.pasterino.presenter.main.MainSettingsModule;
+import com.pyamsoft.pasterino.presenter.service.PasteServiceModule;
 
 public class PasterinoModule {
 
