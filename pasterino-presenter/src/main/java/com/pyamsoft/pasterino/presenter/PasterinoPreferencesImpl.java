@@ -20,23 +20,24 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.ApplicationPreferences;
 
-class PasterinoPreferencesImpl extends ApplicationPreferences implements PasterinoPreferences {
+class PasterinoPreferencesImpl implements PasterinoPreferences {
 
   @NonNull private final String delayTime;
   @NonNull private final String delayTimeDefault;
+  @NonNull private final ApplicationPreferences preferences;
 
   PasterinoPreferencesImpl(@NonNull Context context) {
-    super(context);
     final Context appContext = context.getApplicationContext();
+    preferences = ApplicationPreferences.getInstance(appContext);
     delayTime = appContext.getString(R.string.delay_time_key);
     delayTimeDefault = appContext.getString(R.string.delay_time_default);
   }
 
   @Override public long getPasteDelayTime() {
-    return Long.parseLong(get(delayTime, delayTimeDefault));
+    return Long.parseLong(preferences.get(delayTime, delayTimeDefault));
   }
 
   @Override public void clearAll() {
-    clear(true);
+    preferences.clear(true);
   }
 }
