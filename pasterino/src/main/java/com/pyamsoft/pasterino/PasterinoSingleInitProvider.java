@@ -24,6 +24,7 @@ import com.pyamsoft.pasterino.presenter.PasterinoModule;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
+import com.pyamsoft.pydroid.ui.UiLicenses;
 
 public class PasterinoSingleInitProvider extends SingleInitContentProvider
     implements IPYDroidApp<PasterinoModule> {
@@ -52,7 +53,7 @@ public class PasterinoSingleInitProvider extends SingleInitContentProvider
   }
 
   @Override public void insertCustomLicensesIntoMap() {
-
+    UiLicenses.addLicenses();
   }
 
   @NonNull @Override public PasterinoModule provideComponent() {
