@@ -27,10 +27,10 @@ import android.view.MenuItem;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
+import com.pyamsoft.pydroid.util.AppUtil;
 
 public class MainActivity extends TamperActivity {
 
@@ -108,8 +108,9 @@ public class MainActivity extends TamperActivity {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "CHANGE: Some new settings to play with";
-    return new String[] { line1 };
+    final String line1 = "BUGFIX: Fix some code related to in app billing";
+    final String line2 = "BUGFIX: Smaller memory footprint";
+    return new String[] { line1, line2 };
   }
 
   @NonNull @Override protected String getVersionName() {
