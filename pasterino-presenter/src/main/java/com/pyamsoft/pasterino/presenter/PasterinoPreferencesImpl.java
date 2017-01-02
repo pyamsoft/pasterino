@@ -16,28 +16,31 @@
 
 package com.pyamsoft.pasterino.presenter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.ApplicationPreferences;
+import android.support.v7.preference.PreferenceManager;
 
 class PasterinoPreferencesImpl implements PasterinoPreferences {
 
   @NonNull private final String delayTime;
   @NonNull private final String delayTimeDefault;
-  @NonNull private final ApplicationPreferences preferences;
+  @NonNull private final SharedPreferences preferences;
 
   PasterinoPreferencesImpl(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
-    preferences = ApplicationPreferences.getInstance(appContext);
+    preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
     delayTime = appContext.getString(R.string.delay_time_key);
     delayTimeDefault = appContext.getString(R.string.delay_time_default);
   }
 
   @Override public long getPasteDelayTime() {
-    return Long.parseLong(preferences.get(delayTime, delayTimeDefault));
+    return Long.parseLong(preferences.getString(delayTime, delayTimeDefault));
   }
 
-  @Override public void clearAll() {
-    preferences.clear(true);
+  @SuppressLint("CommitPrefEdits") @Override public void clearAll() {
+    // Make sure we commit so that they are cleared
+    preferences.edit().clear().commit();
   }
 }

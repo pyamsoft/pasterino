@@ -40,12 +40,19 @@ public class MainActivity extends TamperActivity {
     setTheme(R.style.Theme_Pasterino_Light);
     super.onCreate(savedInstanceState);
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
     setupAppBar();
+    showMainFragment();
   }
 
   @Override protected int bindActivityToView() {
     binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
     return R.id.ad_view;
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    binding.unbind();
   }
 
   @Override protected void onPostResume() {
@@ -55,16 +62,6 @@ public class MainActivity extends TamperActivity {
 
   @NonNull @Override protected String getSafePackageName() {
     return "com.pyamsoft.pasterino";
-  }
-
-  @Override protected void onStart() {
-    super.onStart();
-    showMainFragment();
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    binding.unbind();
   }
 
   @Override public void onBackPressed() {
