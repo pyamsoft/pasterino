@@ -25,18 +25,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
-import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pasterino.presenter.main.MainSettingsPresenter;
 import com.pyamsoft.pasterino.presenter.main.MainSettingsPresenterLoader;
+import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior;
 import com.pyamsoft.pydroid.design.util.FABUtil;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 
 public class MainSettingsFragment extends ActionBarFragment implements MainSettingsPresenter.View {
 
@@ -73,6 +73,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     setupFAB();
+    displayPreferenceFragment();
   }
 
   private void setupFAB() {
@@ -109,7 +110,6 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
     super.onResume();
     setActionBarUpEnabled(false);
     presenter.setFABFromState(PasteService.isRunning());
-    displayPreferenceFragment();
   }
 
   @Override public void onStop() {
@@ -126,7 +126,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
     final FragmentManager fragmentManager = getChildFragmentManager();
     if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .replace(R.id.main_container, new MainSettingsPreferenceFragment(),
+          .replace(R.id.fragment_container, new MainSettingsPreferenceFragment(),
               MainSettingsPreferenceFragment.TAG)
           .commit();
     }
