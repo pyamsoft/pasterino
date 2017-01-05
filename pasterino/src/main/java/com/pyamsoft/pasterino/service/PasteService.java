@@ -27,8 +27,6 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
-import com.pyamsoft.pasterino.presenter.Injector;
-import com.pyamsoft.pasterino.presenter.service.PasteServicePresenter;
 import timber.log.Timber;
 
 public class PasteService extends AccessibilityService
@@ -80,8 +78,7 @@ public class PasteService extends AccessibilityService
     Timber.d("onServiceConnected");
 
     if (presenter == null) {
-      presenter =
-          Injector.get().provideComponent().providePasteServiceModule().getServicePresenter();
+      presenter = new PasteServicePresenterLoader().loadPersistent();
     }
 
     presenter.bindView(this);

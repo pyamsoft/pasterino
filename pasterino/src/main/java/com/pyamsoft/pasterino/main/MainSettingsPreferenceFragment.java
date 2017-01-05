@@ -29,13 +29,11 @@ import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pasterino.service.PasteServiceNotification;
 import com.pyamsoft.pasterino.service.SinglePasteService;
-import com.pyamsoft.pasterino.presenter.main.MainSettingsPreferencePresenter;
-import com.pyamsoft.pasterino.presenter.main.MainSettingsPreferencePresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
+import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment

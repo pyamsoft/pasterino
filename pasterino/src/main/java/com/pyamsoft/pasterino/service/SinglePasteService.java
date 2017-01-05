@@ -24,8 +24,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.presenter.Injector;
-import com.pyamsoft.pasterino.presenter.service.SinglePastePresenter;
 import timber.log.Timber;
 
 public class SinglePasteService extends Service
@@ -47,8 +45,7 @@ public class SinglePasteService extends Service
     super.onCreate();
     Timber.d("onCreate");
     if (presenter == null) {
-      presenter =
-          Injector.get().provideComponent().providePasteServiceModule().getSinglePresenter();
+      presenter = new SinglePastePresenterLoader().loadPersistent();
     }
     presenter.bindView(this);
   }

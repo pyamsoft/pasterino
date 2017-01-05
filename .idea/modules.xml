@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Pasterino.iml" filepath="$PROJECT_DIR$/Pasterino.iml" />
       <module fileurl="file://$PROJECT_DIR$/pasterino/pasterino.iml" filepath="$PROJECT_DIR$/pasterino/pasterino.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pasterino-presenter/pasterino-presenter.iml" filepath="$PROJECT_DIR$/pasterino-presenter/pasterino-presenter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pasterino-base/pasterino-base.iml" filepath="$PROJECT_DIR$/pasterino-base/pasterino-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pasterino-main/pasterino-main.iml" filepath="$PROJECT_DIR$/pasterino-main/pasterino-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pasterino-service/pasterino-service.iml" filepath="$PROJECT_DIR$/pasterino-service/pasterino-service.iml" />
     </modules>
   </component>
 </project>

@@ -14,5 +14,16 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.service;
+
+import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.base.Injector;
+import com.pyamsoft.pydroid.app.PersistLoader;
+
+class SinglePastePresenterLoader extends PersistLoader<SinglePastePresenter> {
+
+  @NonNull @Override public SinglePastePresenter loadPersistent() {
+    return new PasteServiceModule(
+        Injector.get().provideComponent().getProvider()).getSinglePresenter();
+  }
+}
