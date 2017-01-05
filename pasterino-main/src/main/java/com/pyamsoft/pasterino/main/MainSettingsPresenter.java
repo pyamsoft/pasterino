@@ -14,5 +14,26 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.main;
+
+import com.pyamsoft.pydroid.presenter.Presenter;
+
+interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.View> {
+
+  void setFABFromState(boolean serviceRunning);
+
+  void clickFabServiceRunning();
+
+  void clickFabServiceIdle();
+
+  interface View {
+
+    void onFABEnabled();
+
+    void onFABDisabled();
+
+    void onCreateAccessibilityDialog();
+
+    void onDisplayServiceInfo();
+  }
+}

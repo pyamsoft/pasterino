@@ -9,7 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pasterino" />
-            <option value="$PROJECT_DIR$/pasterino-presenter" />
+            <option value="$PROJECT_DIR$/pasterino-base" />
+            <option value="$PROJECT_DIR$/pasterino-main" />
+            <option value="$PROJECT_DIR$/pasterino-service" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

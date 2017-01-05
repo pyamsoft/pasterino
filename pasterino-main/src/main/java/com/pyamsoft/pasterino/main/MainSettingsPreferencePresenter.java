@@ -14,5 +14,21 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.main;
+
+import com.pyamsoft.pydroid.presenter.Presenter;
+
+interface MainSettingsPreferencePresenter
+    extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
+
+  void clearAll();
+
+  void processClearRequest();
+
+  interface MainSettingsView {
+
+    void showConfirmDialog();
+
+    void onClearAll();
+  }
+}

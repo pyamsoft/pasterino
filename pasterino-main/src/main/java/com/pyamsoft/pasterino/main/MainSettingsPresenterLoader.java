@@ -14,5 +14,16 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.main;
+
+import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.base.Injector;
+import com.pyamsoft.pydroid.app.PersistLoader;
+
+class MainSettingsPresenterLoader extends PersistLoader<MainSettingsPresenter> {
+
+  @NonNull @Override public MainSettingsPresenter loadPersistent() {
+    return new MainSettingsModule(
+        Injector.get().provideComponent().getProvider()).getSettingsPresenter();
+  }
+}

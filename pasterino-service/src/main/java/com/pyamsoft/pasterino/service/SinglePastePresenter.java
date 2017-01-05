@@ -14,5 +14,16 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.service;
+
+import com.pyamsoft.pydroid.presenter.Presenter;
+
+interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
+
+  void onPostDelayedEvent();
+
+  interface SinglePasteProvider {
+
+    void postDelayedEvent(long delay);
+  }
+}

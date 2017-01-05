@@ -14,5 +14,13 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.main;
+
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.tool.Offloader;
+
+interface MainSettingsPreferenceInteractor {
+
+  @CheckResult @NonNull Offloader<Boolean> clearAll();
+}

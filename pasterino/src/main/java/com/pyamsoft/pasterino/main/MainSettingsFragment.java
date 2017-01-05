@@ -26,8 +26,6 @@ import android.view.ViewGroup;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
-import com.pyamsoft.pasterino.presenter.main.MainSettingsPresenter;
-import com.pyamsoft.pasterino.presenter.main.MainSettingsPresenterLoader;
 import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior;

@@ -14,5 +14,13 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.base;
+
+import android.support.annotation.CheckResult;
+
+public interface PasterinoPreferences {
+
+  @CheckResult long getPasteDelayTime();
+
+  void clearAll();
+}

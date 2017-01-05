@@ -19,17 +19,11 @@ package com.pyamsoft.pasterino;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.presenter.Injector;
-import com.pyamsoft.pasterino.presenter.PasterinoModule;
+import com.pyamsoft.pasterino.base.BaseInitProvider;
 import com.pyamsoft.pydroid.BuildConfigChecker;
-import com.pyamsoft.pydroid.IPYDroidApp;
-import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ui.UiLicenses;
 
-public class PasterinoSingleInitProvider extends SingleInitContentProvider
-    implements IPYDroidApp<PasterinoModule> {
-
-  @Nullable private PasterinoModule pasterinoModule;
+public class PasterinoSingleInitProvider extends BaseInitProvider {
 
   @NonNull @Override protected BuildConfigChecker initializeBuildConfigChecker() {
     return new BuildConfigChecker() {
@@ -39,28 +33,11 @@ public class PasterinoSingleInitProvider extends SingleInitContentProvider
     };
   }
 
-  @Override protected void onInstanceCreated(@NonNull Context context) {
-    Injector.set(pasterinoModule);
-  }
-
-  @Override protected void onFirstCreate(@NonNull Context context) {
-    super.onFirstCreate(context);
-    pasterinoModule = new PasterinoModule(context);
-  }
-
   @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
     return null;
   }
 
   @Override public void insertCustomLicensesIntoMap() {
     UiLicenses.addLicenses();
-  }
-
-  @NonNull @Override public PasterinoModule provideComponent() {
-    if (pasterinoModule == null) {
-      throw new NullPointerException("Pasterino module is NULL");
-    }
-
-    return pasterinoModule;
   }
 }
