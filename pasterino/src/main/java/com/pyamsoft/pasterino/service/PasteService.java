@@ -78,7 +78,7 @@ public class PasteService extends AccessibilityService
     Timber.d("onServiceConnected");
 
     if (presenter == null) {
-      presenter = new PasteServicePresenterLoader().loadPersistent();
+      presenter = new PasteServicePresenterLoader().call();
     }
 
     presenter.bindView(this);

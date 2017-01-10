@@ -29,18 +29,17 @@ import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pasterino.service.PasteServiceNotification;
 import com.pyamsoft.pasterino.service.SinglePasteService;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment
     implements MainSettingsPreferencePresenter.MainSettingsView {
 
   @NonNull public static final String TAG = "MainSettingsPreferenceFragment";
-  @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_main_presenter";
   @SuppressWarnings("WeakerAccess") MainSettingsPreferencePresenter presenter;
   private long loadedKey;
 
@@ -70,19 +69,8 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<MainSettingsPreferencePresenter>() {
-              @NonNull @Override
-              public PersistLoader<MainSettingsPreferencePresenter> createLoader() {
-                return new MainSettingsPreferencePresenterLoader();
-              }
-
-              @Override
-              public void onPersistentLoaded(@NonNull MainSettingsPreferencePresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER,
+        new MainSettingsPreferencePresenterLoader());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -107,21 +95,12 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-    }
     Pasterino.getRefWatcher(this).watch(this);
   }
 
   @Override protected boolean onClearAllPreferenceClicked() {
     presenter.clearAll();
     return super.onClearAllPreferenceClicked();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_PRESENTER, loadedKey, MainSettingsPreferencePresenter.class);
-    super.onSaveInstanceState(outState);
   }
 
   @Override public void showConfirmDialog() {

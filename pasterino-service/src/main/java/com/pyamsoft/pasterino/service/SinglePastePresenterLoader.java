@@ -18,11 +18,11 @@ package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 
-class SinglePastePresenterLoader extends PersistLoader<SinglePastePresenter> {
+class SinglePastePresenterLoader implements FuncNone<SinglePastePresenter> {
 
-  @NonNull @Override public SinglePastePresenter loadPersistent() {
+  @NonNull @Override public SinglePastePresenter call() {
     return new PasteServiceModule(
         Injector.get().provideComponent().getProvider()).getSinglePresenter();
   }

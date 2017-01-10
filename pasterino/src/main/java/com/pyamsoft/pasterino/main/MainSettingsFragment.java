@@ -27,38 +27,26 @@ import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pasterino.service.PasteService;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior;
 import com.pyamsoft.pydroid.design.util.FABUtil;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 
 public class MainSettingsFragment extends ActionBarFragment implements MainSettingsPresenter.View {
 
   @NonNull public static final String TAG = "MainSettingsFragment";
-  @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_settings_presenter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") MainSettingsPresenter presenter;
-  private long loadedKey;
   private FragmentMainBinding binding;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<MainSettingsPresenter>() {
-
-              @NonNull @Override public PersistLoader<MainSettingsPresenter> createLoader() {
-                return new MainSettingsPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull MainSettingsPresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter =
+        PersistentCache.load(getActivity(), KEY_PRESENTER, new MainSettingsPresenterLoader());
   }
 
   @Nullable @Override
@@ -93,15 +81,7 @@ public class MainSettingsFragment extends ActionBarFragment implements MainSetti
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-    }
     Pasterino.getRefWatcher(this).watch(this);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, MainSettingsPresenter.class);
-    super.onSaveInstanceState(outState);
   }
 
   @Override public void onResume() {

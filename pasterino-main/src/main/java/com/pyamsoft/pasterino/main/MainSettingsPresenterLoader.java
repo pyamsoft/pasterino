@@ -18,11 +18,11 @@ package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 
-class MainSettingsPresenterLoader extends PersistLoader<MainSettingsPresenter> {
+class MainSettingsPresenterLoader implements FuncNone<MainSettingsPresenter> {
 
-  @NonNull @Override public MainSettingsPresenter loadPersistent() {
+  @NonNull @Override public MainSettingsPresenter call() {
     return new MainSettingsModule(
         Injector.get().provideComponent().getProvider()).getSettingsPresenter();
   }
