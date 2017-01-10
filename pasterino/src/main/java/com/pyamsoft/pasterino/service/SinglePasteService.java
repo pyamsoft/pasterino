@@ -45,7 +45,7 @@ public class SinglePasteService extends Service
     super.onCreate();
     Timber.d("onCreate");
     if (presenter == null) {
-      presenter = new SinglePastePresenterLoader().loadPersistent();
+      presenter = new SinglePastePresenterLoader().call();
     }
     presenter.bindView(this);
   }
