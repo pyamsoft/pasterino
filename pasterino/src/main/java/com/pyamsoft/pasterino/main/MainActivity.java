@@ -57,7 +57,7 @@ public class MainActivity extends TamperActivity {
 
   @Override protected void onPostResume() {
     super.onPostResume();
-    RatingDialog.showRatingDialog(this, this);
+    RatingDialog.showRatingDialog(this, this, false);
   }
 
   @NonNull @Override protected String getSafePackageName() {

@@ -16,29 +16,30 @@
 
 package com.pyamsoft.pasterino.main;
 
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 
-class MainSettingsPresenterImpl extends PresenterBase<MainSettingsPresenter.View>
+class MainSettingsPresenterImpl extends PresenterBase<Presenter.Empty>
     implements MainSettingsPresenter {
 
   MainSettingsPresenterImpl() {
   }
 
-  @Override public void setFABFromState(boolean serviceRunning) {
-    getView(view -> {
-      if (serviceRunning) {
-        view.onFABEnabled();
-      } else {
-        view.onFABDisabled();
-      }
-    });
+  @Override
+  public void setFABFromState(boolean serviceRunning, @NonNull FABStateCallback callback) {
+    if (serviceRunning) {
+      callback.onFABEnabled();
+    } else {
+      callback.onFABDisabled();
+    }
   }
 
-  @Override public void clickFabServiceRunning() {
-    getView(View::onDisplayServiceInfo);
+  @Override public void clickFabServiceRunning(@NonNull DisplayServiceCallback callback) {
+    callback.onDisplayServiceInfo();
   }
 
-  @Override public void clickFabServiceIdle() {
-    getView(View::onCreateAccessibilityDialog);
+  @Override public void clickFabServiceIdle(@NonNull AccessibilityRequestCallback callback) {
+    callback.onCreateAccessibilityDialog();
   }
 }

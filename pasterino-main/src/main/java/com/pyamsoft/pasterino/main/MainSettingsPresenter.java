@@ -16,24 +16,31 @@
 
 package com.pyamsoft.pasterino.main;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface MainSettingsPresenter extends Presenter<MainSettingsPresenter.View> {
+interface MainSettingsPresenter extends Presenter<Presenter.Empty> {
 
-  void setFABFromState(boolean serviceRunning);
+  void setFABFromState(boolean serviceRunning, @NonNull FABStateCallback callback);
 
-  void clickFabServiceRunning();
+  void clickFabServiceRunning(@NonNull DisplayServiceCallback callback);
 
-  void clickFabServiceIdle();
+  void clickFabServiceIdle(@NonNull AccessibilityRequestCallback callback);
 
-  interface View {
+  interface FABStateCallback {
 
     void onFABEnabled();
 
     void onFABDisabled();
+  }
 
-    void onCreateAccessibilityDialog();
+  interface DisplayServiceCallback {
 
     void onDisplayServiceInfo();
+  }
+
+  interface AccessibilityRequestCallback {
+
+    void onCreateAccessibilityDialog();
   }
 }

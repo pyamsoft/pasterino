@@ -16,18 +16,21 @@
 
 package com.pyamsoft.pasterino.main;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface MainSettingsPreferencePresenter
-    extends Presenter<MainSettingsPreferencePresenter.MainSettingsView> {
+interface MainSettingsPreferencePresenter extends Presenter<Presenter.Empty> {
 
-  void clearAll();
+  void clearAll(@NonNull ConfirmCallback callback);
 
-  void processClearRequest();
+  void processClearRequest(@NonNull ClearRequestCallback callback);
 
-  interface MainSettingsView {
+  interface ConfirmCallback {
 
     void showConfirmDialog();
+  }
+
+  interface ClearRequestCallback {
 
     void onClearAll();
   }

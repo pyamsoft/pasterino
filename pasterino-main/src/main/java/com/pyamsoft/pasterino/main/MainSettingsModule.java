@@ -22,16 +22,14 @@ import com.pyamsoft.pasterino.base.PasterinoModule;
 
 class MainSettingsModule {
 
-  @NonNull private final MainSettingsPreferencePresenter settingsPreferencePresenter;
+  @NonNull private final MainSettingsPreferenceInteractor interactor;
 
-  MainSettingsModule(@NonNull PasterinoModule.Provider provider) {
-    final MainSettingsPreferenceInteractor interactor =
-        new MainSettingsPreferenceInteractorImpl(provider.providePreferences());
-    settingsPreferencePresenter = new MainSettingsPreferencePresenterImpl(interactor);
+  MainSettingsModule(@NonNull PasterinoModule module) {
+    interactor = new MainSettingsPreferenceInteractorImpl(module.providePreferences());
   }
 
   @NonNull @CheckResult MainSettingsPreferencePresenter getSettingsPreferencePresenter() {
-    return settingsPreferencePresenter;
+    return new MainSettingsPreferencePresenterImpl(interactor);
   }
 
   @NonNull @CheckResult MainSettingsPresenter getSettingsPresenter() {

@@ -16,21 +16,24 @@
 
 package com.pyamsoft.pasterino.service;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.accessibility.AccessibilityNodeInfo;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import timber.log.Timber;
 
-class PasteServicePresenterImpl extends PresenterBase<PasteServicePresenter.PasteServiceProvider>
+class PasteServicePresenterImpl extends PresenterBase<Presenter.Empty>
     implements PasteServicePresenter {
 
   PasteServicePresenterImpl() {
   }
 
-  @Override public void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target) {
+  @Override public void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target,
+      @NonNull PasteServiceCallback callback) {
     if (target != null && target.isEditable()) {
       Timber.d("Got valid paste target, attempt paste");
-      getView(pasteServiceProvider -> pasteServiceProvider.onPaste(target));
+      callback.onPaste(target);
     } else {
       Timber.e("No valid paste target exists");
     }

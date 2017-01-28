@@ -17,13 +17,21 @@
 package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.base.Injector;
-import com.pyamsoft.pydroid.FuncNone;
+import com.pyamsoft.pasterino.base.PasterinoModule;
 
-class PasteServicePresenterLoader implements FuncNone<PasteServicePresenter> {
+public class PasteComponent {
 
-  @NonNull @Override public PasteServicePresenter call() {
-    return new PasteServiceModule(
-        Injector.get().provideComponent().getProvider()).getServicePresenter();
+  @NonNull private final PasteServiceModule module;
+
+  public PasteComponent(@NonNull PasterinoModule module) {
+    this.module = new PasteServiceModule(module);
+  }
+
+  void inject(@NonNull PasteService service) {
+    service.presenter = module.getServicePresenter();
+  }
+
+  void inject(@NonNull SinglePasteService service) {
+    service.presenter = module.getSinglePresenter();
   }
 }

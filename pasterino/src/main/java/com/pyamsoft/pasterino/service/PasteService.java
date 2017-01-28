@@ -27,13 +27,13 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
+import com.pyamsoft.pasterino.Injector;
 import timber.log.Timber;
 
-public class PasteService extends AccessibilityService
-    implements PasteServicePresenter.PasteServiceProvider {
+public class PasteService extends AccessibilityService {
 
   private static volatile PasteService instance = null;
-  private PasteServicePresenter presenter;
+  PasteServicePresenter presenter;
 
   @NonNull @CheckResult public static synchronized PasteService getInstance() {
     if (instance == null) {
@@ -62,7 +62,12 @@ public class PasteService extends AccessibilityService
   public final void pasteIntoCurrentFocus() {
     final AccessibilityNodeInfo info =
         getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
-    presenter.pasteClipboardIntoFocusedView(info);
+    presenter.pasteClipboardIntoFocusedView(info, target -> {
+      Timber.d("Perform paste on target: %s", target.getViewIdResourceName());
+      target.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
+      Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",
+          Toast.LENGTH_SHORT).show();
+    });
   }
 
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -77,11 +82,8 @@ public class PasteService extends AccessibilityService
     super.onServiceConnected();
     Timber.d("onServiceConnected");
 
-    if (presenter == null) {
-      presenter = new PasteServicePresenterLoader().call();
-    }
-
-    presenter.bindView(this);
+    Injector.get().provideComponent().plusPasteComponent().inject(this);
+    presenter.bindView(null);
     setInstance(this);
     PasteServiceNotification.start(this);
   }
@@ -92,17 +94,5 @@ public class PasteService extends AccessibilityService
     presenter.unbindView();
     setInstance(null);
     return super.onUnbind(intent);
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    presenter.destroy();
-  }
-
-  @Override public void onPaste(@NonNull AccessibilityNodeInfo target) {
-    Timber.d("Perform paste on target: %s", target.getViewIdResourceName());
-    target.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
-    Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",
-        Toast.LENGTH_SHORT).show();
   }
 }

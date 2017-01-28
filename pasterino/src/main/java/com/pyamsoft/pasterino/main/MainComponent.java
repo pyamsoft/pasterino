@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.service;
+package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.base.Injector;
-import com.pyamsoft.pydroid.FuncNone;
+import com.pyamsoft.pasterino.base.PasterinoModule;
 
-class SinglePastePresenterLoader implements FuncNone<SinglePastePresenter> {
+public class MainComponent {
 
-  @NonNull @Override public SinglePastePresenter call() {
-    return new PasteServiceModule(
-        Injector.get().provideComponent().getProvider()).getSinglePresenter();
+  @NonNull private final MainSettingsModule mainSettingsModule;
+
+  public MainComponent(@NonNull PasterinoModule module) {
+    this.mainSettingsModule = new MainSettingsModule(module);
+  }
+
+  void inject(@NonNull MainSettingsFragment fragment) {
+    fragment.presenter = mainSettingsModule.getSettingsPresenter();
+  }
+
+  void inject(@NonNull MainSettingsPreferenceFragment fragment) {
+    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter();
   }
 }
