@@ -24,13 +24,13 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pasterino.Injector;
 import timber.log.Timber;
 
-public class SinglePasteService extends Service
-    implements SinglePastePresenter.SinglePasteProvider {
+public class SinglePasteService extends Service {
 
-  @NonNull private final Handler handler;
-  private SinglePastePresenter presenter;
+  @NonNull final Handler handler;
+  SinglePastePresenter presenter;
 
   public SinglePasteService() {
     handler = new Handler(Looper.getMainLooper());
@@ -44,10 +44,8 @@ public class SinglePasteService extends Service
   @Override public void onCreate() {
     super.onCreate();
     Timber.d("onCreate");
-    if (presenter == null) {
-      presenter = new SinglePastePresenterLoader().call();
-    }
-    presenter.bindView(this);
+    Injector.get().provideComponent().plusPasteComponent().inject(this);
+    presenter.bindView(null);
   }
 
   @Override public void onDestroy() {
@@ -55,7 +53,6 @@ public class SinglePasteService extends Service
     Timber.d("onDestroy");
     handler.removeCallbacksAndMessages(null);
     presenter.unbindView();
-    presenter.destroy();
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
@@ -64,15 +61,13 @@ public class SinglePasteService extends Service
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Timber.d("Attempt single paste");
-    presenter.onPostDelayedEvent();
+    presenter.onPostDelayedEvent(delay -> {
+      handler.removeCallbacksAndMessages(null);
+      handler.postDelayed(() -> {
+        PasteService.getInstance().pasteIntoCurrentFocus();
+        stopSelf();
+      }, delay);
+    });
     return START_NOT_STICKY;
-  }
-
-  @Override public void postDelayedEvent(long delay) {
-    handler.removeCallbacksAndMessages(null);
-    handler.postDelayed(() -> {
-      PasteService.getInstance().pasteIntoCurrentFocus();
-      stopSelf();
-    }, delay);
   }
 }

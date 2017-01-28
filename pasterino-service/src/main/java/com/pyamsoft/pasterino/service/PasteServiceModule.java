@@ -22,12 +22,10 @@ import com.pyamsoft.pasterino.base.PasterinoModule;
 
 class PasteServiceModule {
 
-  @NonNull private final SinglePastePresenter singlePresenter;
+  @NonNull private final PasteServiceInteractor interactor;
 
-  PasteServiceModule(@NonNull PasterinoModule.Provider pasterinoModule) {
-    final PasteServiceInteractor interactor =
-        new PasteServiceInteractorImpl(pasterinoModule.providePreferences());
-    singlePresenter = new SinglePastePresenterImpl(interactor);
+  PasteServiceModule(@NonNull PasterinoModule pasterinoModule) {
+    interactor = new PasteServiceInteractorImpl(pasterinoModule.providePreferences());
   }
 
   @NonNull @CheckResult public PasteServicePresenter getServicePresenter() {
@@ -35,6 +33,6 @@ class PasteServiceModule {
   }
 
   @NonNull @CheckResult public SinglePastePresenter getSinglePresenter() {
-    return singlePresenter;
+    return new SinglePastePresenterImpl(interactor);
   }
 }

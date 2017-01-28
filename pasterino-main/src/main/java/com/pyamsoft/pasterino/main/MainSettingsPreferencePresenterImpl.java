@@ -17,12 +17,13 @@
 package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
-class MainSettingsPreferencePresenterImpl
-    extends PresenterBase<MainSettingsPreferencePresenter.MainSettingsView>
+class MainSettingsPreferencePresenterImpl extends PresenterBase<Presenter.Empty>
     implements MainSettingsPreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
@@ -34,24 +35,18 @@ class MainSettingsPreferencePresenterImpl
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubscribeConfirm();
+    OffloaderHelper.cancel(confirmedSubscription);
   }
 
-  @Override public void clearAll() {
-    getView(MainSettingsView::showConfirmDialog);
+  @Override public void clearAll(@NonNull ConfirmCallback callback) {
+    callback.showConfirmDialog();
   }
 
-  private void unsubscribeConfirm() {
-    if (!confirmedSubscription.isCancelled()) {
-      confirmedSubscription.cancel();
-    }
-  }
-
-  @Override public void processClearRequest() {
-    unsubscribeConfirm();
+  @Override public void processClearRequest(@NonNull ClearRequestCallback callback) {
+    OffloaderHelper.cancel(confirmedSubscription);
     confirmedSubscription = interactor.clearAll()
         .onError(throwable -> Timber.e(throwable, "onError clearAll"))
-        .onResult(item -> getView(MainSettingsView::onClearAll))
+        .onResult(aBoolean -> callback.onClearAll())
         .execute();
   }
 }

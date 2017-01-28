@@ -19,11 +19,12 @@ package com.pyamsoft.pasterino;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pasterino.base.BaseInitProvider;
+import com.pyamsoft.pasterino.base.PasterinoModule;
 import com.pyamsoft.pydroid.BuildConfigChecker;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ui.UiLicenses;
 
-public class PasterinoSingleInitProvider extends BaseInitProvider {
+public class PasterinoSingleInitProvider extends SingleInitContentProvider {
 
   @NonNull @Override protected BuildConfigChecker initializeBuildConfigChecker() {
     return new BuildConfigChecker() {
@@ -31,6 +32,12 @@ public class PasterinoSingleInitProvider extends BaseInitProvider {
         return BuildConfig.DEBUG;
       }
     };
+  }
+
+  @Override protected void onInstanceCreated(@NonNull Context context) {
+    final PasterinoComponent component =
+        PasterinoComponent.builder().pasterinoModule(new PasterinoModule(context)).build();
+    Injector.set(component);
   }
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {

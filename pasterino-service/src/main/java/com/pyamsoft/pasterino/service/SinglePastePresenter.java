@@ -16,13 +16,14 @@
 
 package com.pyamsoft.pasterino.service;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface SinglePastePresenter extends Presenter<SinglePastePresenter.SinglePasteProvider> {
+interface SinglePastePresenter extends Presenter<Presenter.Empty> {
 
-  void onPostDelayedEvent();
+  void onPostDelayedEvent(@NonNull SinglePasteCallback callback);
 
-  interface SinglePasteProvider {
+  interface SinglePasteCallback {
 
     void postDelayedEvent(long delay);
   }

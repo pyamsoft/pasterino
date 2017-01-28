@@ -22,26 +22,13 @@ import android.support.annotation.NonNull;
 
 public class PasterinoModule {
 
-  @NonNull private final Provider provider;
+  @NonNull private final PasterinoPreferences preferences;
 
-  PasterinoModule(@NonNull Context context) {
-    provider = new Provider(context);
+  public PasterinoModule(@NonNull Context context) {
+    preferences = new PasterinoPreferencesImpl(context.getApplicationContext());
   }
 
-  @NonNull @CheckResult public Provider getProvider() {
-    return provider;
-  }
-
-  public static class Provider {
-
-    @NonNull private final PasterinoPreferences preferences;
-
-    Provider(final @NonNull Context context) {
-      preferences = new PasterinoPreferencesImpl(context.getApplicationContext());
-    }
-
-    @CheckResult @NonNull public final PasterinoPreferences providePreferences() {
-      return preferences;
-    }
+  @CheckResult @NonNull public final PasterinoPreferences providePreferences() {
+    return preferences;
   }
 }

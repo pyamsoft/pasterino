@@ -21,11 +21,12 @@ import android.support.annotation.Nullable;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface PasteServicePresenter extends Presenter<PasteServicePresenter.PasteServiceProvider> {
+interface PasteServicePresenter extends Presenter<Presenter.Empty> {
 
-  void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target);
+  void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target,
+      @NonNull PasteServiceCallback callback);
 
-  interface PasteServiceProvider {
+  interface PasteServiceCallback {
 
     void onPaste(@NonNull AccessibilityNodeInfo target);
   }
