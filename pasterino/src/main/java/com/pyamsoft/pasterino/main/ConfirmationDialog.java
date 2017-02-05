@@ -40,13 +40,19 @@ public class ConfirmationDialog extends DialogFragment {
   }
 
   @SuppressWarnings("WeakerAccess") void sendConfirmationEvent() {
-    final FragmentManager fragmentManager = getFragmentManager();
-    final Fragment settingsPreferenceFragment =
-        fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG);
-    if (settingsPreferenceFragment instanceof MainSettingsPreferenceFragment) {
-      ((MainSettingsPreferenceFragment) settingsPreferenceFragment).processClearRequest();
+    FragmentManager fragmentManager = getFragmentManager();
+    Fragment settingsFragment = fragmentManager.findFragmentByTag(MainSettingsFragment.TAG);
+    if (settingsFragment != null) {
+      FragmentManager childFragmentManager = settingsFragment.getChildFragmentManager();
+      Fragment settingsPreferenceFragment =
+          childFragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG);
+      if (settingsPreferenceFragment instanceof MainSettingsPreferenceFragment) {
+        ((MainSettingsPreferenceFragment) settingsPreferenceFragment).processClearRequest();
+      } else {
+        throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
+      }
     } else {
-      throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
+      throw new IllegalStateException("No SettingsFragment found!");
     }
   }
 
