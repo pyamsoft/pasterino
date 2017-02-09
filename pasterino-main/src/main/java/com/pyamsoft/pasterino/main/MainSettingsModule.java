@@ -20,11 +20,11 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
 
-class MainSettingsModule {
+public class MainSettingsModule {
 
   @NonNull private final MainSettingsPreferenceInteractor interactor;
 
-  MainSettingsModule(@NonNull PasterinoModule module) {
+  public MainSettingsModule(@NonNull PasterinoModule module) {
     interactor = new MainSettingsPreferenceInteractorImpl(module.providePreferences());
   }
 

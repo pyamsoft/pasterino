@@ -23,8 +23,8 @@ public class PasteComponent {
 
   @NonNull private final PasteServiceModule module;
 
-  public PasteComponent(@NonNull PasterinoModule module) {
-    this.module = new PasteServiceModule(module);
+  public PasteComponent(@NonNull PasteServiceModule module) {
+    this.module = module;
   }
 
   void inject(@NonNull PasteService service) {
