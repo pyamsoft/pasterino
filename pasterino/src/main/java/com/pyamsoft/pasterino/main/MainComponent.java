@@ -23,8 +23,8 @@ public class MainComponent {
 
   @NonNull private final MainSettingsModule mainSettingsModule;
 
-  public MainComponent(@NonNull PasterinoModule module) {
-    this.mainSettingsModule = new MainSettingsModule(module);
+  public MainComponent(@NonNull MainSettingsModule mainSettingsModule) {
+    this.mainSettingsModule = mainSettingsModule;
   }
 
   void inject(@NonNull MainSettingsFragment fragment) {

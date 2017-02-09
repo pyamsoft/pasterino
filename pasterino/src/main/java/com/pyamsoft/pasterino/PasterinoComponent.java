@@ -20,20 +20,24 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
 import com.pyamsoft.pasterino.main.MainComponent;
+import com.pyamsoft.pasterino.main.MainSettingsModule;
 import com.pyamsoft.pasterino.service.PasteComponent;
+import com.pyamsoft.pasterino.service.PasteServiceModule;
 
 public class PasterinoComponent {
 
   @NonNull private final MainComponent mainComponent;
   @NonNull private final PasteComponent pasteComponent;
 
-  PasterinoComponent(@NonNull PasterinoModule module) {
-    mainComponent = new MainComponent(module);
-    pasteComponent = new PasteComponent(module);
+  private PasterinoComponent(@NonNull PasterinoModule module) {
+    MainSettingsModule mainSettingsModule = new MainSettingsModule(module);
+    PasteServiceModule pasteServiceModule = new PasteServiceModule(module);
+    mainComponent = new MainComponent(mainSettingsModule);
+    pasteComponent = new PasteComponent(pasteServiceModule);
   }
 
-  @CheckResult @NonNull static Builder builder() {
-    return new Builder();
+  @CheckResult @NonNull static PasterinoComponent withModule(@NonNull PasterinoModule module) {
+    return new PasterinoComponent(module);
   }
 
   @CheckResult @NonNull public MainComponent plusMainComponent() {
@@ -42,23 +46,5 @@ public class PasterinoComponent {
 
   @CheckResult @NonNull public PasteComponent plusPasteComponent() {
     return pasteComponent;
-  }
-
-  static class Builder {
-
-    private PasterinoModule module;
-
-    @CheckResult @NonNull Builder pasterinoModule(@NonNull PasterinoModule module) {
-      this.module = module;
-      return this;
-    }
-
-    @CheckResult @NonNull PasterinoComponent build() {
-      if (module == null) {
-        throw new IllegalStateException("PasterinoModule cannot be NULL");
-      }
-
-      return new PasterinoComponent(module);
-    }
   }
 }

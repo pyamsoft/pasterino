@@ -21,8 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.base.PasterinoModule;
 import com.pyamsoft.pydroid.BuildConfigChecker;
-import com.pyamsoft.pydroid.SingleInitContentProvider;
-import com.pyamsoft.pydroid.ui.UiLicenses;
+import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 
 public class PasterinoSingleInitProvider extends SingleInitContentProvider {
 
@@ -36,15 +35,11 @@ public class PasterinoSingleInitProvider extends SingleInitContentProvider {
 
   @Override protected void onInstanceCreated(@NonNull Context context) {
     final PasterinoComponent component =
-        PasterinoComponent.builder().pasterinoModule(new PasterinoModule(context)).build();
+        PasterinoComponent.withModule(new PasterinoModule(context));
     Injector.set(component);
   }
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
     return null;
-  }
-
-  @Override public void insertCustomLicensesIntoMap() {
-    UiLicenses.addLicenses();
   }
 }

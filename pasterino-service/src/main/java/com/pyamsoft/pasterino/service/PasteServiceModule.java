@@ -20,19 +20,19 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
 
-class PasteServiceModule {
+public class PasteServiceModule {
 
   @NonNull private final PasteServiceInteractor interactor;
 
-  PasteServiceModule(@NonNull PasterinoModule pasterinoModule) {
+  public PasteServiceModule(@NonNull PasterinoModule pasterinoModule) {
     interactor = new PasteServiceInteractorImpl(pasterinoModule.providePreferences());
   }
 
-  @NonNull @CheckResult public PasteServicePresenter getServicePresenter() {
+  @NonNull @CheckResult PasteServicePresenter getServicePresenter() {
     return new PasteServicePresenterImpl();
   }
 
-  @NonNull @CheckResult public SinglePastePresenter getSinglePresenter() {
+  @NonNull @CheckResult SinglePastePresenter getSinglePresenter() {
     return new SinglePastePresenterImpl(interactor);
   }
 }
