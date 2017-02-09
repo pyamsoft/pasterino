@@ -95,8 +95,10 @@ dependencies {
     transitive = true
   }
 
-  compile project(":pasterino-main")
-  compile project(":pasterino-service")
+  debugCompile project(path: ":pasterino-main", configuration: "debug")
+  releaseCompile project(path: ":pasterino-main", configuration: "release")
+  debugCompile project(path: ":pasterino-service", configuration: "debug")
+  releaseCompile project(path: ":pasterino-service", configuration: "release")
 }
 
 // AdView
