@@ -25,7 +25,7 @@ public class PasterinoModule {
   @NonNull private final PasterinoPreferences preferences;
 
   public PasterinoModule(@NonNull Context context) {
-    preferences = new PasterinoPreferencesImpl(context.getApplicationContext());
+    preferences = new PasterinoPreferences(context.getApplicationContext());
   }
 
   @CheckResult @NonNull public final PasterinoPreferences providePreferences() {

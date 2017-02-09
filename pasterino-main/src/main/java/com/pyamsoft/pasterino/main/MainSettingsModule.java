@@ -25,14 +25,14 @@ public class MainSettingsModule {
   @NonNull private final MainSettingsPreferenceInteractor interactor;
 
   public MainSettingsModule(@NonNull PasterinoModule module) {
-    interactor = new MainSettingsPreferenceInteractorImpl(module.providePreferences());
+    interactor = new MainSettingsPreferenceInteractor(module.providePreferences());
   }
 
   @NonNull @CheckResult MainSettingsPreferencePresenter getSettingsPreferencePresenter() {
-    return new MainSettingsPreferencePresenterImpl(interactor);
+    return new MainSettingsPreferencePresenter(interactor);
   }
 
   @NonNull @CheckResult MainSettingsPresenter getSettingsPresenter() {
-    return new MainSettingsPresenterImpl();
+    return new MainSettingsPresenter();
   }
 }

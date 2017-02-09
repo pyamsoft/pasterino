@@ -25,14 +25,14 @@ public class PasteServiceModule {
   @NonNull private final PasteServiceInteractor interactor;
 
   public PasteServiceModule(@NonNull PasterinoModule pasterinoModule) {
-    interactor = new PasteServiceInteractorImpl(pasterinoModule.providePreferences());
+    interactor = new PasteServiceInteractor(pasterinoModule.providePreferences());
   }
 
   @NonNull @CheckResult PasteServicePresenter getServicePresenter() {
-    return new PasteServicePresenterImpl();
+    return new PasteServicePresenter();
   }
 
   @NonNull @CheckResult SinglePastePresenter getSinglePresenter() {
-    return new SinglePastePresenterImpl(interactor);
+    return new SinglePastePresenter(interactor);
   }
 }

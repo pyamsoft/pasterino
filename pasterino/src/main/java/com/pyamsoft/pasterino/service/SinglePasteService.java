@@ -61,7 +61,7 @@ public class SinglePasteService extends Service {
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Timber.d("Attempt single paste");
-    presenter.onPostDelayedEvent(delay -> {
+    presenter.postDelayedEvent(delay -> {
       handler.removeCallbacksAndMessages(null);
       handler.postDelayed(() -> {
         PasteService.getInstance().pasteIntoCurrentFocus();

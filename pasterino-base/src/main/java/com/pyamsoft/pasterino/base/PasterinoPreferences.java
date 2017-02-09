@@ -16,11 +16,32 @@
 
 package com.pyamsoft.pasterino.base;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.v7.preference.PreferenceManager;
 
-public interface PasterinoPreferences {
+public class PasterinoPreferences {
 
-  @CheckResult long getPasteDelayTime();
+  @NonNull private final String delayTime;
+  @NonNull private final String delayTimeDefault;
+  @NonNull private final SharedPreferences preferences;
 
-  void clearAll();
+  PasterinoPreferences(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+    delayTime = appContext.getString(R.string.delay_time_key);
+    delayTimeDefault = appContext.getString(R.string.delay_time_default);
+  }
+
+  @CheckResult public long getPasteDelayTime() {
+    return Long.parseLong(preferences.getString(delayTime, delayTimeDefault));
+  }
+
+  @SuppressLint("CommitPrefEdits") public void clearAll() {
+    // Make sure we commit so that they are cleared
+    preferences.edit().clear().commit();
+  }
 }

@@ -18,12 +18,35 @@ package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
+import timber.log.Timber;
 
-interface MainSettingsPreferencePresenter extends Presenter<Presenter.Empty> {
+class MainSettingsPreferencePresenter extends Presenter<Presenter.Empty> {
 
-  void clearAll(@NonNull ConfirmCallback callback);
+  @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
+  @NonNull private ExecutedOffloader confirmedSubscription = new ExecutedOffloader.Empty();
 
-  void processClearRequest(@NonNull ClearRequestCallback callback);
+  MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor) {
+    this.interactor = interactor;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    OffloaderHelper.cancel(confirmedSubscription);
+  }
+
+  public void clearAll(@NonNull ConfirmCallback callback) {
+    callback.showConfirmDialog();
+  }
+
+  public void processClearRequest(@NonNull ClearRequestCallback callback) {
+    OffloaderHelper.cancel(confirmedSubscription);
+    confirmedSubscription = interactor.clearAll()
+        .onError(throwable -> Timber.e(throwable, "onError clearAll"))
+        .onResult(aBoolean -> callback.onClearAll())
+        .execute();
+  }
 
   interface ConfirmCallback {
 

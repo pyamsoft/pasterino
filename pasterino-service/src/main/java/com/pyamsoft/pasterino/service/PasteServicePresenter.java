@@ -20,11 +20,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import timber.log.Timber;
 
-interface PasteServicePresenter extends Presenter<Presenter.Empty> {
+class PasteServicePresenter extends Presenter<Presenter.Empty> {
 
-  void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target,
-      @NonNull PasteServiceCallback callback);
+  PasteServicePresenter() {
+  }
+
+  public void pasteClipboardIntoFocusedView(@Nullable AccessibilityNodeInfo target,
+      @NonNull PasteServiceCallback callback) {
+    if (target != null && target.isEditable()) {
+      Timber.d("Got valid paste target, attempt paste");
+      callback.onPaste(target);
+    } else {
+      Timber.e("No valid paste target exists");
+    }
+  }
 
   interface PasteServiceCallback {
 
