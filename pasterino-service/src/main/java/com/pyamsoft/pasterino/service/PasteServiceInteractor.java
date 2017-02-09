@@ -18,9 +18,19 @@ package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.base.PasterinoPreferences;
+import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import com.pyamsoft.pydroid.tool.Offloader;
 
-interface PasteServiceInteractor {
+class PasteServiceInteractor {
 
-  @CheckResult @NonNull Offloader<Long> getPasteDelayTime();
+  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
+
+  PasteServiceInteractor(@NonNull PasterinoPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  @NonNull @CheckResult public Offloader<Long> getPasteDelayTime() {
+    return AsyncOffloader.newInstance(preferences::getPasteDelayTime);
+  }
 }

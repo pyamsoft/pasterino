@@ -18,9 +18,22 @@ package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.base.PasterinoPreferences;
+import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import com.pyamsoft.pydroid.tool.Offloader;
 
-interface MainSettingsPreferenceInteractor {
+class MainSettingsPreferenceInteractor {
 
-  @CheckResult @NonNull Offloader<Boolean> clearAll();
+  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
+
+  MainSettingsPreferenceInteractor(@NonNull PasterinoPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  @NonNull @CheckResult public Offloader<Boolean> clearAll() {
+    return AsyncOffloader.newInstance(() -> {
+      preferences.clearAll();
+      return Boolean.TRUE;
+    });
+  }
 }
