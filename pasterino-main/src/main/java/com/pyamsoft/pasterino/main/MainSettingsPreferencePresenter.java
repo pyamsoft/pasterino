@@ -17,23 +17,28 @@
 package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.tool.ExecutedOffloader;
-import com.pyamsoft.pydroid.tool.OffloaderHelper;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
-class MainSettingsPreferencePresenter extends Presenter<Presenter.Empty> {
+class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
-  @NonNull private ExecutedOffloader confirmedSubscription = new ExecutedOffloader.Empty();
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription clearSubscription;
 
-  MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor) {
+  MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    OffloaderHelper.cancel(confirmedSubscription);
+    SubscriptionHelper.unsubscribe(clearSubscription);
   }
 
   public void clearAll(@NonNull ConfirmCallback callback) {
@@ -41,11 +46,13 @@ class MainSettingsPreferencePresenter extends Presenter<Presenter.Empty> {
   }
 
   public void processClearRequest(@NonNull ClearRequestCallback callback) {
-    OffloaderHelper.cancel(confirmedSubscription);
-    confirmedSubscription = interactor.clearAll()
-        .onError(throwable -> Timber.e(throwable, "onError clearAll"))
-        .onResult(aBoolean -> callback.onClearAll())
-        .execute();
+    SubscriptionHelper.unsubscribe(clearSubscription);
+    clearSubscription = interactor.clearAll()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(aBoolean -> callback.onClearAll(),
+            throwable -> Timber.e(throwable, "onError clearAll"),
+            () -> SubscriptionHelper.unsubscribe(clearSubscription));
   }
 
   interface ConfirmCallback {

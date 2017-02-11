@@ -19,8 +19,7 @@ package com.pyamsoft.pasterino.service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoPreferences;
-import com.pyamsoft.pydroid.tool.AsyncOffloader;
-import com.pyamsoft.pydroid.tool.Offloader;
+import rx.Observable;
 
 class PasteServiceInteractor {
 
@@ -30,7 +29,7 @@ class PasteServiceInteractor {
     this.preferences = preferences;
   }
 
-  @NonNull @CheckResult public Offloader<Long> getPasteDelayTime() {
-    return AsyncOffloader.newInstance(preferences::getPasteDelayTime);
+  @NonNull @CheckResult public Observable<Long> getPasteDelayTime() {
+    return Observable.fromCallable(preferences::getPasteDelayTime);
   }
 }

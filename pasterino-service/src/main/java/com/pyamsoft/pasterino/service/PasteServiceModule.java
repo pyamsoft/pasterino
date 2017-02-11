@@ -19,13 +19,18 @@ package com.pyamsoft.pasterino.service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
+import rx.Scheduler;
 
 public class PasteServiceModule {
 
   @NonNull private final PasteServiceInteractor interactor;
+  @NonNull private final Scheduler obsScheduler;
+  @NonNull private final Scheduler subScheduler;
 
   public PasteServiceModule(@NonNull PasterinoModule pasterinoModule) {
     interactor = new PasteServiceInteractor(pasterinoModule.providePreferences());
+    obsScheduler = pasterinoModule.provideObsScheduler();
+    subScheduler = pasterinoModule.provideSubScheduler();
   }
 
   @NonNull @CheckResult PasteServicePresenter getServicePresenter() {
@@ -33,6 +38,6 @@ public class PasteServiceModule {
   }
 
   @NonNull @CheckResult SinglePastePresenter getSinglePresenter() {
-    return new SinglePastePresenter(interactor);
+    return new SinglePastePresenter(interactor, obsScheduler, subScheduler);
   }
 }

@@ -19,6 +19,9 @@ package com.pyamsoft.pasterino.base;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class PasterinoModule {
 
@@ -30,5 +33,13 @@ public class PasterinoModule {
 
   @CheckResult @NonNull public final PasterinoPreferences providePreferences() {
     return preferences;
+  }
+
+  @CheckResult @NonNull public final Scheduler provideObsScheduler() {
+    return AndroidSchedulers.mainThread();
+  }
+
+  @CheckResult @NonNull public final Scheduler provideSubScheduler() {
+    return Schedulers.io();
   }
 }
