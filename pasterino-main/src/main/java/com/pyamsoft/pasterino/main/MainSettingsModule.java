@@ -19,17 +19,22 @@ package com.pyamsoft.pasterino.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
+import rx.Scheduler;
 
 public class MainSettingsModule {
 
   @NonNull private final MainSettingsPreferenceInteractor interactor;
+  @NonNull private final Scheduler obsScheduler;
+  @NonNull private final Scheduler subScheduler;
 
   public MainSettingsModule(@NonNull PasterinoModule module) {
     interactor = new MainSettingsPreferenceInteractor(module.providePreferences());
+    obsScheduler = module.provideObsScheduler();
+    subScheduler = module.provideSubScheduler();
   }
 
   @NonNull @CheckResult MainSettingsPreferencePresenter getSettingsPreferencePresenter() {
-    return new MainSettingsPreferencePresenter(interactor);
+    return new MainSettingsPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @NonNull @CheckResult MainSettingsPresenter getSettingsPresenter() {

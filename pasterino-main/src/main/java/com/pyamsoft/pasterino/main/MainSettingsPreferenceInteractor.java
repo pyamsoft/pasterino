@@ -19,8 +19,7 @@ package com.pyamsoft.pasterino.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoPreferences;
-import com.pyamsoft.pydroid.tool.AsyncOffloader;
-import com.pyamsoft.pydroid.tool.Offloader;
+import rx.Observable;
 
 class MainSettingsPreferenceInteractor {
 
@@ -30,8 +29,8 @@ class MainSettingsPreferenceInteractor {
     this.preferences = preferences;
   }
 
-  @NonNull @CheckResult public Offloader<Boolean> clearAll() {
-    return AsyncOffloader.newInstance(() -> {
+  @NonNull @CheckResult public Observable<Boolean> clearAll() {
+    return Observable.fromCallable(() -> {
       preferences.clearAll();
       return Boolean.TRUE;
     });
