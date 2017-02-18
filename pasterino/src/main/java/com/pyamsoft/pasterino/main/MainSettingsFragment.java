@@ -30,15 +30,16 @@ import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior;
 import com.pyamsoft.pydroid.design.util.FABUtil;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncDrawable;
+import com.pyamsoft.pydroid.drawable.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 
 public class MainSettingsFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "MainSettingsFragment";
-  @NonNull final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
+  @NonNull final AsyncMap drawableMap = new AsyncMap();
   @SuppressWarnings("WeakerAccess") MainSettingsPresenter presenter;
   FragmentMainBinding binding;
 
@@ -91,13 +92,13 @@ public class MainSettingsFragment extends ActionBarFragment {
     presenter.setFABFromState(PasteService.isRunning(),
         new MainSettingsPresenter.FABStateCallback() {
           @Override public void onFABEnabled() {
-            final AsyncMap.Entry task =
+            final AsyncMapEntry task =
                 AsyncDrawable.load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab);
             drawableMap.put("fab", task);
           }
 
           @Override public void onFABDisabled() {
-            final AsyncMap.Entry task =
+            final AsyncMapEntry task =
                 AsyncDrawable.load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab);
             drawableMap.put("fab", task);
           }
