@@ -33,10 +33,6 @@ public class PasteServiceModule {
     subScheduler = pasterinoModule.provideSubScheduler();
   }
 
-  @NonNull @CheckResult PasteServicePresenter getServicePresenter() {
-    return new PasteServicePresenter();
-  }
-
   @NonNull @CheckResult SinglePastePresenter getSinglePresenter() {
     return new SinglePastePresenter(interactor, obsScheduler, subScheduler);
   }

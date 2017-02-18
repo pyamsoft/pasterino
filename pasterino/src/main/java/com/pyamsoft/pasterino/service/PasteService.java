@@ -27,13 +27,11 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
-import com.pyamsoft.pasterino.Injector;
 import timber.log.Timber;
 
 public class PasteService extends AccessibilityService {
 
-  private static volatile PasteService instance = null;
-  PasteServicePresenter presenter;
+  private static PasteService instance = null;
 
   @NonNull @CheckResult public static synchronized PasteService getInstance() {
     if (instance == null) {
@@ -62,12 +60,14 @@ public class PasteService extends AccessibilityService {
   public final void pasteIntoCurrentFocus() {
     final AccessibilityNodeInfo info =
         getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
-    presenter.pasteClipboardIntoFocusedView(info, target -> {
-      Timber.d("Perform paste on target: %s", target.getViewIdResourceName());
-      target.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
+    if (info != null && info.isEditable()) {
+      Timber.d("Perform paste on target: %s", info.getViewIdResourceName());
+      info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
       Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",
           Toast.LENGTH_SHORT).show();
-    });
+    } else {
+      Timber.e("No editable target to paste into");
+    }
   }
 
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -82,8 +82,6 @@ public class PasteService extends AccessibilityService {
     super.onServiceConnected();
     Timber.d("onServiceConnected");
 
-    Injector.get().provideComponent().plusPasteComponent().inject(this);
-    presenter.bindView(null);
     setInstance(this);
     PasteServiceNotification.start(this);
   }
@@ -91,7 +89,6 @@ public class PasteService extends AccessibilityService {
   @Override public boolean onUnbind(Intent intent) {
     Timber.d("onUnbind");
     PasteServiceNotification.stop(this);
-    presenter.unbindView();
     setInstance(null);
     return super.onUnbind(intent);
   }

@@ -17,18 +17,18 @@
 package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class SinglePastePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PasteServiceInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription postSubscription;
+  @NonNull private Subscription postSubscription = Subscriptions.empty();
 
   SinglePastePresenter(@NonNull PasteServiceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -38,16 +38,15 @@ class SinglePastePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(postSubscription);
+    postSubscription = SubscriptionHelper.unsubscribe(postSubscription);
   }
 
   public void postDelayedEvent(@NonNull SinglePasteCallback callback) {
-    SubscriptionHelper.unsubscribe(postSubscription);
+    postSubscription = SubscriptionHelper.unsubscribe(postSubscription);
     postSubscription = interactor.getPasteDelayTime()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(callback::onPost, throwable -> Timber.e(throwable, "onError postDelayedEvent"),
-            () -> SubscriptionHelper.unsubscribe(postSubscription));
+        .subscribe(callback::onPost, throwable -> Timber.e(throwable, "onError postDelayedEvent"));
   }
 
   interface SinglePasteCallback {

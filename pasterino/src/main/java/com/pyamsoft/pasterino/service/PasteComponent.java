@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.base.PasterinoModule;
 
 public class PasteComponent {
 
@@ -25,10 +24,6 @@ public class PasteComponent {
 
   public PasteComponent(@NonNull PasteServiceModule module) {
     this.module = module;
-  }
-
-  void inject(@NonNull PasteService service) {
-    service.presenter = module.getServicePresenter();
   }
 
   void inject(@NonNull SinglePasteService service) {

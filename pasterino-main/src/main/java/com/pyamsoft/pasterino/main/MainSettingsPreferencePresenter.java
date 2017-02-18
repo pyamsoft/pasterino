@@ -17,18 +17,18 @@
 package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription clearSubscription;
+  @NonNull private final MainSettingsPreferenceInteractor interactor;
+  @NonNull private Subscription clearSubscription = Subscriptions.empty();
 
   MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -38,26 +38,16 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(clearSubscription);
-  }
-
-  public void clearAll(@NonNull ConfirmCallback callback) {
-    callback.showConfirmDialog();
+    clearSubscription = SubscriptionHelper.unsubscribe(clearSubscription);
   }
 
   public void processClearRequest(@NonNull ClearRequestCallback callback) {
-    SubscriptionHelper.unsubscribe(clearSubscription);
+    clearSubscription = SubscriptionHelper.unsubscribe(clearSubscription);
     clearSubscription = interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> callback.onClearAll(),
-            throwable -> Timber.e(throwable, "onError clearAll"),
-            () -> SubscriptionHelper.unsubscribe(clearSubscription));
-  }
-
-  interface ConfirmCallback {
-
-    void showConfirmDialog();
+            throwable -> Timber.e(throwable, "onError clearAll"));
   }
 
   interface ClearRequestCallback {
