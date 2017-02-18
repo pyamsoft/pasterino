@@ -86,9 +86,7 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
   }
 
   @Override protected boolean onClearAllPreferenceClicked() {
-    presenter.clearAll(
-        () -> AppUtil.guaranteeSingleDialogFragment(getActivity(), new ConfirmationDialog(),
-            "confirm"));
+    AppUtil.guaranteeSingleDialogFragment(getActivity(), new ConfirmationDialog(), "confirm");
     return super.onClearAllPreferenceClicked();
   }
 
