@@ -19,7 +19,7 @@
 
   <string name="explain_key">explain</string>
   <string name="explain_title">How to Use</string>
-  <string name="explain_summary">The simply way to use Pasterino</string>
+  <string name="explain_summary">The simple way to use Pasterino</string>
 
   <string name="delay_time_title">Paste Delay Time</string>
   <string name="delay_time_summary">Set the amount of delay before attempting to paste text</string>
