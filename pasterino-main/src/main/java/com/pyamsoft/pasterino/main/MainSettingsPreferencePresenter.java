@@ -17,18 +17,18 @@
 package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final MainSettingsPreferenceInteractor interactor;
-  @NonNull private Subscription clearSubscription = Subscriptions.empty();
+  @NonNull private Disposable clearDisposable = Disposables.empty();
 
   MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -38,12 +38,12 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    clearSubscription = SubscriptionHelper.unsubscribe(clearSubscription);
+    clearDisposable = DisposableHelper.unsubscribe(clearDisposable);
   }
 
   public void processClearRequest(@NonNull ClearRequestCallback callback) {
-    clearSubscription = SubscriptionHelper.unsubscribe(clearSubscription);
-    clearSubscription = interactor.clearAll()
+    clearDisposable = DisposableHelper.unsubscribe(clearDisposable);
+    clearDisposable = interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> callback.onClearAll(),

@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
-import rx.Scheduler;
+import io.reactivex.Scheduler;
 
 public class MainSettingsModule {
 
