@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoPreferences;
-import rx.Observable;
+import io.reactivex.Observable;
 
 class PasteServiceInteractor {
 
