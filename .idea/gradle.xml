@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/pasterino" />
             <option value="$PROJECT_DIR$/pasterino-base" />
             <option value="$PROJECT_DIR$/pasterino-main" />
+            <option value="$PROJECT_DIR$/pasterino-model" />
             <option value="$PROJECT_DIR$/pasterino-service" />
           </set>
         </option>

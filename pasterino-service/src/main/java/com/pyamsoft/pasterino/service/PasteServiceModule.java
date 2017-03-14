@@ -36,4 +36,8 @@ public class PasteServiceModule {
   @NonNull @CheckResult SinglePastePresenter getSinglePresenter() {
     return new SinglePastePresenter(interactor, obsScheduler, subScheduler);
   }
+
+  @NonNull @CheckResult PasteServicePresenter getPasteServicePresenter() {
+    return new PasteServicePresenter(obsScheduler, subScheduler);
+  }
 }

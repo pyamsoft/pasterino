@@ -20,54 +20,34 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
+import com.pyamsoft.pasterino.Injector;
+import com.pyamsoft.pasterino.model.ServiceEvent;
+import com.pyamsoft.pydroid.bus.EventBus;
 import timber.log.Timber;
 
 public class PasteService extends AccessibilityService {
 
-  private static PasteService instance = null;
+  private static boolean running = false;
+  PasteServicePresenter presenter;
 
-  @NonNull @CheckResult public static synchronized PasteService getInstance() {
-    if (instance == null) {
-      throw new NullPointerException("PasteService instance is NULL");
-    } else {
-      //noinspection ConstantConditions
-      return instance;
-    }
+  @CheckResult public static boolean isRunning() {
+    return running;
   }
 
-  @VisibleForTesting @SuppressWarnings("WeakerAccess")
-  static synchronized void setInstance(@Nullable PasteService instance) {
-    PasteService.instance = instance;
+  private static void setRunning(boolean running) {
+    PasteService.running = running;
   }
 
   public static void finish() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      getInstance().disableSelf();
-    }
+    EventBus.get().publish(ServiceEvent.create(ServiceEvent.Type.FINISH));
   }
 
-  @CheckResult public static boolean isRunning() {
-    return instance != null;
-  }
-
-  public final void pasteIntoCurrentFocus() {
-    final AccessibilityNodeInfo info =
-        getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
-    if (info != null && info.isEditable()) {
-      Timber.d("Perform paste on target: %s", info.getViewIdResourceName());
-      info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
-      Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",
-          Toast.LENGTH_SHORT).show();
-    } else {
-      Timber.e("No editable target to paste into");
-    }
+  public static void pasteIntoCurrentFocus() {
+    EventBus.get().publish(ServiceEvent.create(ServiceEvent.Type.PASTE));
   }
 
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -82,14 +62,46 @@ public class PasteService extends AccessibilityService {
     super.onServiceConnected();
     Timber.d("onServiceConnected");
 
-    setInstance(this);
+    if (presenter == null) {
+      Injector.get().provideComponent().plusPasteComponent().inject(this);
+    }
+
+    presenter.bindView(null);
+    presenter.registerOnBus(new PasteServicePresenter.ServiceCallback() {
+      @Override public void onServiceFinishRequested() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+          disableSelf();
+        }
+      }
+
+      @Override public void onPasteRequested() {
+        final AccessibilityNodeInfo info =
+            getRootInActiveWindow().findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
+        if (info != null && info.isEditable()) {
+          Timber.d("Perform paste on target: %s", info.getViewIdResourceName());
+          info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE);
+          Toast.makeText(getApplicationContext(), "Pasting text into current input focus.",
+              Toast.LENGTH_SHORT).show();
+        } else {
+          Timber.e("No editable target to paste into");
+        }
+      }
+    });
+
+    setRunning(true);
     PasteServiceNotification.start(this);
   }
 
   @Override public boolean onUnbind(Intent intent) {
     Timber.d("onUnbind");
     PasteServiceNotification.stop(this);
-    setInstance(null);
+    presenter.unbindView();
+    setRunning(false);
     return super.onUnbind(intent);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    presenter.destroy();
   }
 }

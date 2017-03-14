@@ -21,10 +21,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pasterino.Pasterino;
+import com.pyamsoft.pasterino.model.ConfirmEvent;
+import com.pyamsoft.pydroid.bus.EventBus;
 
 public class ConfirmationDialog extends DialogFragment {
 
@@ -33,27 +33,10 @@ public class ConfirmationDialog extends DialogFragment {
         "Really clear all application settings?\n\nYou will have to manually restart the Accessibility Service component of Pasterino")
         .setPositiveButton("Yes", (dialogInterface, i) -> {
           dialogInterface.dismiss();
-          sendConfirmationEvent();
+          EventBus.get().publish(new ConfirmEvent());
         })
         .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss())
         .create();
-  }
-
-  @SuppressWarnings("WeakerAccess") void sendConfirmationEvent() {
-    FragmentManager fragmentManager = getFragmentManager();
-    Fragment settingsFragment = fragmentManager.findFragmentByTag(MainSettingsFragment.TAG);
-    if (settingsFragment != null) {
-      FragmentManager childFragmentManager = settingsFragment.getChildFragmentManager();
-      Fragment settingsPreferenceFragment =
-          childFragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG);
-      if (settingsPreferenceFragment instanceof MainSettingsPreferenceFragment) {
-        ((MainSettingsPreferenceFragment) settingsPreferenceFragment).processClearRequest();
-      } else {
-        throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
-      }
-    } else {
-      throw new IllegalStateException("No SettingsFragment found!");
-    }
   }
 
   @Override public void onDestroy() {

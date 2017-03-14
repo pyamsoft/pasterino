@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/pasterino/pasterino.iml" filepath="$PROJECT_DIR$/pasterino/pasterino.iml" />
       <module fileurl="file://$PROJECT_DIR$/pasterino-base/pasterino-base.iml" filepath="$PROJECT_DIR$/pasterino-base/pasterino-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/pasterino-main/pasterino-main.iml" filepath="$PROJECT_DIR$/pasterino-main/pasterino-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pasterino-model/pasterino-model.iml" filepath="$PROJECT_DIR$/pasterino-model/pasterino-model.iml" />
       <module fileurl="file://$PROJECT_DIR$/pasterino-service/pasterino-service.iml" filepath="$PROJECT_DIR$/pasterino-service/pasterino-service.iml" />
     </modules>
   </component>

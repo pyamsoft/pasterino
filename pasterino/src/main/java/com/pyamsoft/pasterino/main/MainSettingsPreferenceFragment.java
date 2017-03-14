@@ -73,6 +73,20 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(null);
+
+    presenter.registerOnEventBus(() -> {
+      PasteServiceNotification.stop(getContext());
+      SinglePasteService.stop(getContext());
+      try {
+        PasteService.finish();
+      } catch (NullPointerException e) {
+        Timber.e(e, "Expected exception when Service is NULL");
+      }
+
+      final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
+          .getSystemService(Context.ACTIVITY_SERVICE);
+      activityManager.clearApplicationUserData();
+    });
   }
 
   @Override public void onStop() {
@@ -88,21 +102,5 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
   @Override protected boolean onClearAllPreferenceClicked() {
     AppUtil.guaranteeSingleDialogFragment(getActivity(), new ConfirmationDialog(), "confirm");
     return super.onClearAllPreferenceClicked();
-  }
-
-  void processClearRequest() {
-    presenter.processClearRequest(() -> {
-      PasteServiceNotification.stop(getContext());
-      SinglePasteService.stop(getContext());
-      try {
-        PasteService.finish();
-      } catch (NullPointerException e) {
-        Timber.e(e, "Expected exception when Service is NULL");
-      }
-
-      final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
-          .getSystemService(Context.ACTIVITY_SERVICE);
-      activityManager.clearApplicationUserData();
-    });
   }
 }

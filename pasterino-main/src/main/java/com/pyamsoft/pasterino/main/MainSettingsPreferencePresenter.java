@@ -17,6 +17,8 @@
 package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pasterino.model.ConfirmEvent;
+import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -27,7 +29,7 @@ import timber.log.Timber;
 
 class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @NonNull private final MainSettingsPreferenceInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
   @NonNull private Disposable clearDisposable = Disposables.empty();
 
   MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor,
@@ -41,13 +43,15 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty
     clearDisposable = DisposableHelper.unsubscribe(clearDisposable);
   }
 
-  public void processClearRequest(@NonNull ClearRequestCallback callback) {
+  public void registerOnEventBus(@NonNull ClearRequestCallback callback) {
     clearDisposable = DisposableHelper.unsubscribe(clearDisposable);
-    clearDisposable = interactor.clearAll()
+    clearDisposable = EventBus.get()
+        .listen(ConfirmEvent.class)
+        .flatMap(event -> interactor.clearAll())
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(aBoolean -> callback.onClearAll(),
-            throwable -> Timber.e(throwable, "onError clearAll"));
+        .subscribe(clear -> callback.onClearAll(),
+            throwable -> Timber.e(throwable, "OnError EventBus"));
   }
 
   interface ClearRequestCallback {

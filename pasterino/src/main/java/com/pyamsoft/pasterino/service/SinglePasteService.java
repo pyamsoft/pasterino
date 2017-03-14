@@ -64,7 +64,7 @@ public class SinglePasteService extends Service {
     presenter.postDelayedEvent(delay -> {
       handler.removeCallbacksAndMessages(null);
       handler.postDelayed(() -> {
-        PasteService.getInstance().pasteIntoCurrentFocus();
+        PasteService.pasteIntoCurrentFocus();
         stopSelf();
       }, delay);
     });

@@ -29,4 +29,8 @@ public class PasteComponent {
   void inject(@NonNull SinglePasteService service) {
     service.presenter = module.getSinglePresenter();
   }
+
+  void inject(@NonNull PasteService service) {
+    service.presenter = module.getPasteServicePresenter();
+  }
 }
