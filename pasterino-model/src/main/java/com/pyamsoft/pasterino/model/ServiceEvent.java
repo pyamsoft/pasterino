@@ -14,5 +14,25 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main', ':pasterino-model',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.model;
+
+public class ServiceEvent {
+
+  private final Type type;
+
+  private ServiceEvent(Type type) {
+    this.type = type;
+  }
+
+  public static ServiceEvent create(Type type) {
+    return new ServiceEvent(type);
+  }
+
+  public Type type() {
+    return type;
+  }
+
+  public enum Type {
+    FINISH, PASTE
+  }
+}

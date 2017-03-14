@@ -14,5 +14,7 @@
  * limitations under the License.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main', ':pasterino-model',
-    ':pasterino-service'
+package com.pyamsoft.pasterino.model;
+
+public class ConfirmEvent {
+}
