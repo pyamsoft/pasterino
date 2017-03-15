@@ -36,8 +36,4 @@ public class MainSettingsModule {
   @NonNull @CheckResult MainSettingsPreferencePresenter getSettingsPreferencePresenter() {
     return new MainSettingsPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
-
-  @NonNull @CheckResult MainSettingsPresenter getSettingsPresenter() {
-    return new MainSettingsPresenter();
-  }
 }

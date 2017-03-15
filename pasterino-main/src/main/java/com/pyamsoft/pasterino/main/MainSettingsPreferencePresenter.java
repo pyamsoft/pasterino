@@ -40,11 +40,11 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    clearDisposable = DisposableHelper.unsubscribe(clearDisposable);
+    clearDisposable = DisposableHelper.dispose(clearDisposable);
   }
 
   public void registerOnEventBus(@NonNull ClearRequestCallback callback) {
-    clearDisposable = DisposableHelper.unsubscribe(clearDisposable);
+    clearDisposable = DisposableHelper.dispose(clearDisposable);
     clearDisposable = EventBus.get()
         .listen(ConfirmEvent.class)
         .flatMap(event -> interactor.clearAll())

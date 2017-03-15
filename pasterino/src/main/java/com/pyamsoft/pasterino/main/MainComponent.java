@@ -27,10 +27,6 @@ public class MainComponent {
     this.mainSettingsModule = mainSettingsModule;
   }
 
-  void inject(@NonNull MainSettingsFragment fragment) {
-    fragment.presenter = mainSettingsModule.getSettingsPresenter();
-  }
-
   void inject(@NonNull MainSettingsPreferenceFragment fragment) {
     fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter();
   }

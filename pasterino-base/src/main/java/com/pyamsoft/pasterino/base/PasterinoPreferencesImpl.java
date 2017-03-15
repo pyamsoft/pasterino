@@ -39,7 +39,7 @@ class PasterinoPreferencesImpl implements PasterinoPreferences {
     return Long.parseLong(preferences.getString(delayTime, delayTimeDefault));
   }
 
-  @Override @SuppressLint("CommitPrefEdits") public void clearAll() {
+  @SuppressLint("ApplySharedPref") @Override public void clearAll() {
     // Make sure we commit so that they are cleared
     preferences.edit().clear().commit();
   }
