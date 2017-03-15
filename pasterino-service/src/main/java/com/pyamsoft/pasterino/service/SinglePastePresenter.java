@@ -38,11 +38,11 @@ class SinglePastePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    postDisposable = DisposableHelper.unsubscribe(postDisposable);
+    postDisposable = DisposableHelper.dispose(postDisposable);
   }
 
   public void postDelayedEvent(@NonNull SinglePasteCallback callback) {
-    postDisposable = DisposableHelper.unsubscribe(postDisposable);
+    postDisposable = DisposableHelper.dispose(postDisposable);
     postDisposable = interactor.getPasteDelayTime()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

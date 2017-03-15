@@ -23,7 +23,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.pyamsoft.pasterino.Injector;
 import com.pyamsoft.pasterino.Pasterino;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
@@ -39,14 +38,8 @@ import com.pyamsoft.pydroid.util.AppUtil;
 public class MainSettingsFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "MainSettingsFragment";
-  @NonNull final AsyncMap drawableMap = new AsyncMap();
-  @SuppressWarnings("WeakerAccess") MainSettingsPresenter presenter;
-  FragmentMainBinding binding;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    Injector.get().provideComponent().plusMainComponent().inject(this);
-  }
+  @NonNull private final AsyncMap drawableMap = new AsyncMap();
+  private FragmentMainBinding binding;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -64,12 +57,11 @@ public class MainSettingsFragment extends ActionBarFragment {
   private void setupFAB() {
     binding.mainSettingsFab.setOnClickListener(view -> {
       if (PasteService.isRunning()) {
-        presenter.clickFabServiceRunning(
-            () -> AppUtil.guaranteeSingleDialogFragment(getActivity(), new ServiceInfoDialog(),
-                "servce_info"));
+        AppUtil.guaranteeSingleDialogFragment(getActivity(), new ServiceInfoDialog(),
+            "servce_info");
       } else {
-        presenter.clickFabServiceIdle(() -> AppUtil.guaranteeSingleDialogFragment(getActivity(),
-            new AccessibilityRequestDialog(), "accessibility"));
+        AppUtil.guaranteeSingleDialogFragment(getActivity(), new AccessibilityRequestDialog(),
+            "accessibility");
       }
     });
     FABUtil.setupFABBehavior(binding.mainSettingsFab, new HideScrollFABBehavior(10));
@@ -89,30 +81,16 @@ public class MainSettingsFragment extends ActionBarFragment {
   @Override public void onResume() {
     super.onResume();
     setActionBarUpEnabled(false);
-    presenter.setFABFromState(PasteService.isRunning(),
-        new MainSettingsPresenter.FABStateCallback() {
-          @Override public void onFABEnabled() {
-            final AsyncMapEntry task =
-                AsyncDrawable.load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab);
-            drawableMap.put("fab", task);
-          }
 
-          @Override public void onFABDisabled() {
-            final AsyncMapEntry task =
-                AsyncDrawable.load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab);
-            drawableMap.put("fab", task);
-          }
-        });
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-    presenter.unbindView();
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    presenter.bindView(null);
+    if (PasteService.isRunning()) {
+      final AsyncMapEntry task =
+          AsyncDrawable.load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab);
+      drawableMap.put("fab", task);
+    } else {
+      final AsyncMapEntry task =
+          AsyncDrawable.load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab);
+      drawableMap.put("fab", task);
+    }
   }
 
   private void displayPreferenceFragment() {

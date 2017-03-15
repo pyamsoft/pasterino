@@ -37,13 +37,15 @@ class PasteServicePresenter extends SchedulerPresenter<Object> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    finishDisposable = DisposableHelper.unsubscribe(finishDisposable);
+    finishDisposable = DisposableHelper.dispose(finishDisposable);
   }
 
   public void registerOnBus(@NonNull ServiceCallback callback) {
-    finishDisposable = DisposableHelper.unsubscribe(finishDisposable);
-    finishDisposable = EventBus.get().listen(ServiceEvent.class)
-        .subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler())
+    finishDisposable = DisposableHelper.dispose(finishDisposable);
+    finishDisposable = EventBus.get()
+        .listen(ServiceEvent.class)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
         .subscribe(serviceEvent -> {
           switch (serviceEvent.type()) {
             case FINISH:

@@ -16,19 +16,22 @@
 
 package com.pyamsoft.pasterino.model;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+
 public class ServiceEvent {
 
-  private final Type type;
+  @NonNull private final Type type;
 
-  private ServiceEvent(Type type) {
+  private ServiceEvent(@NonNull Type type) {
     this.type = type;
   }
 
-  public static ServiceEvent create(Type type) {
+  @CheckResult public static ServiceEvent create(@NonNull Type type) {
     return new ServiceEvent(type);
   }
 
-  public Type type() {
+  @CheckResult @NonNull public Type type() {
     return type;
   }
 
