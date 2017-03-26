@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.base.PasterinoModule;
-import com.pyamsoft.pydroid.BuildConfigChecker;
+import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 
 public class PasterinoSingleInitProvider extends SingleInitContentProvider {
