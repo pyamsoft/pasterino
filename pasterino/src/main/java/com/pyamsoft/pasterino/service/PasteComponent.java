@@ -17,13 +17,14 @@
 package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 
 public class PasteComponent {
 
   @NonNull private final PasteServiceModule module;
 
   public PasteComponent(@NonNull PasteServiceModule module) {
-    this.module = module;
+    this.module = Checker.checkNonNull(module);
   }
 
   void inject(@NonNull SinglePasteService service) {

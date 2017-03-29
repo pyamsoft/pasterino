@@ -17,14 +17,14 @@
 package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.base.PasterinoModule;
+import com.pyamsoft.pydroid.helper.Checker;
 
 public class MainComponent {
 
   @NonNull private final MainSettingsModule mainSettingsModule;
 
   public MainComponent(@NonNull MainSettingsModule mainSettingsModule) {
-    this.mainSettingsModule = mainSettingsModule;
+    this.mainSettingsModule = Checker.checkNonNull(mainSettingsModule);
   }
 
   void inject(@NonNull MainSettingsPreferenceFragment fragment) {

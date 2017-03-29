@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.IPYDroidApp;
 
 public class Injector implements IPYDroidApp<PasterinoComponent> {
@@ -27,23 +28,15 @@ public class Injector implements IPYDroidApp<PasterinoComponent> {
   @NonNull private final PasterinoComponent component;
 
   private Injector(@NonNull PasterinoComponent component) {
-    this.component = component;
+    this.component = Checker.checkNonNull(component);
   }
 
-  static void set(@Nullable PasterinoComponent component) {
-    if (component == null) {
-      throw new NullPointerException("Cannot set a NULL component");
-    }
-    instance = new Injector(component);
+  static void set(PasterinoComponent component) {
+    instance = new Injector(Checker.checkNonNull(component));
   }
 
   @NonNull @CheckResult public static Injector get() {
-    if (instance == null) {
-      throw new NullPointerException("Instance is NULL");
-    }
-
-    //noinspection ConstantConditions
-    return instance;
+    return Checker.checkNonNull(instance);
   }
 
   @NonNull @Override public PasterinoComponent provideComponent() {

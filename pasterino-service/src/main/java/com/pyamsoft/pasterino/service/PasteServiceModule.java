@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Scheduler;
 
 public class PasteServiceModule {
@@ -28,6 +29,7 @@ public class PasteServiceModule {
   @NonNull private final Scheduler subScheduler;
 
   public PasteServiceModule(@NonNull PasterinoModule pasterinoModule) {
+    pasterinoModule = Checker.checkNonNull(pasterinoModule);
     interactor = new PasteServiceInteractor(pasterinoModule.providePreferences());
     obsScheduler = pasterinoModule.provideObsScheduler();
     subScheduler = pasterinoModule.provideSubScheduler();

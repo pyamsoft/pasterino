@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoModule;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Scheduler;
 
 public class MainSettingsModule {
@@ -28,6 +29,7 @@ public class MainSettingsModule {
   @NonNull private final Scheduler subScheduler;
 
   public MainSettingsModule(@NonNull PasterinoModule module) {
+    module = Checker.checkNonNull(module);
     interactor = new MainSettingsPreferenceInteractor(module.providePreferences());
     obsScheduler = module.provideObsScheduler();
     subScheduler = module.provideSubScheduler();

@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.main;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.model.ConfirmEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -35,7 +36,7 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty
   MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
-    this.interactor = interactor;
+    this.interactor = Checker.checkNonNull(interactor);
   }
 
   @Override protected void onUnbind() {
@@ -44,13 +45,14 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty
   }
 
   public void registerOnEventBus(@NonNull ClearRequestCallback callback) {
+    ClearRequestCallback requestCallback = Checker.checkNonNull(callback);
     clearDisposable = DisposableHelper.dispose(clearDisposable);
     clearDisposable = EventBus.get()
         .listen(ConfirmEvent.class)
         .flatMap(event -> interactor.clearAll())
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(clear -> callback.onClearAll(),
+        .subscribe(clear -> requestCallback.onClearAll(),
             throwable -> Timber.e(throwable, "OnError EventBus"));
   }
 

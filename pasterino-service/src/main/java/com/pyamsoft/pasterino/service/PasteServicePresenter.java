@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.service;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.model.ServiceEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
@@ -41,6 +42,7 @@ class PasteServicePresenter extends SchedulerPresenter<Object> {
   }
 
   public void registerOnBus(@NonNull ServiceCallback callback) {
+    ServiceCallback serviceCallback = Checker.checkNonNull(callback);
     finishDisposable = DisposableHelper.dispose(finishDisposable);
     finishDisposable = EventBus.get()
         .listen(ServiceEvent.class)
@@ -49,10 +51,10 @@ class PasteServicePresenter extends SchedulerPresenter<Object> {
         .subscribe(serviceEvent -> {
           switch (serviceEvent.type()) {
             case FINISH:
-              callback.onServiceFinishRequested();
+              serviceCallback.onServiceFinishRequested();
               break;
             case PASTE:
-              callback.onPasteRequested();
+              serviceCallback.onPasteRequested();
               break;
             default:
               throw new IllegalArgumentException(

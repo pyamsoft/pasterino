@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import com.pyamsoft.pasterino.R;
+import com.pyamsoft.pydroid.helper.Checker;
 import timber.log.Timber;
 
 public final class PasteServiceNotification {
@@ -38,6 +39,7 @@ public final class PasteServiceNotification {
   }
 
   static void start(@NonNull Context context) {
+    context = Checker.checkNonNull(context);
     if (PasteService.isRunning()) {
       Timber.d("Start notification %d", ID);
       getNotificationManager(context).notify(ID, createNotification(context));
@@ -45,6 +47,7 @@ public final class PasteServiceNotification {
   }
 
   public static void stop(@NonNull Context context) {
+    context = Checker.checkNonNull(context);
     Timber.d("Stop notification %d", ID);
     getNotificationManager(context).cancel(ID);
   }
