@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
+import com.pyamsoft.pydroid.helper.Checker;
 
 class PasterinoPreferencesImpl implements PasterinoPreferences {
 
@@ -29,6 +30,7 @@ class PasterinoPreferencesImpl implements PasterinoPreferences {
   @NonNull private final SharedPreferences preferences;
 
   PasterinoPreferencesImpl(@NonNull Context context) {
+    context = Checker.checkNonNull(context);
     final Context appContext = context.getApplicationContext();
     preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
     delayTime = appContext.getString(R.string.delay_time_key);

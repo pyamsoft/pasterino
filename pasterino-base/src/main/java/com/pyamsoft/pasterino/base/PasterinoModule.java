@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.base;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -28,7 +29,8 @@ public class PasterinoModule {
   @NonNull private final PasterinoPreferences preferences;
 
   public PasterinoModule(@NonNull Context context) {
-    preferences = new PasterinoPreferencesImpl(context.getApplicationContext());
+    preferences =
+        new PasterinoPreferencesImpl(Checker.checkNonNull(context).getApplicationContext());
   }
 
   @CheckResult @NonNull public final PasterinoPreferences providePreferences() {

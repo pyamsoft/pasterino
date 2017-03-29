@@ -25,6 +25,7 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.Injector;
+import com.pyamsoft.pydroid.helper.Checker;
 import timber.log.Timber;
 
 public class SinglePasteService extends Service {
@@ -37,6 +38,7 @@ public class SinglePasteService extends Service {
   }
 
   public static void stop(@NonNull Context context) {
+    context = Checker.checkNonNull(context);
     final Intent service = new Intent(context.getApplicationContext(), SinglePasteService.class);
     context.getApplicationContext().stopService(service);
   }

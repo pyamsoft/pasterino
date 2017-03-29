@@ -17,6 +17,7 @@
 package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -33,7 +34,7 @@ class SinglePastePresenter extends SchedulerPresenter<Presenter.Empty> {
   SinglePastePresenter(@NonNull PasteServiceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
-    this.interactor = interactor;
+    this.interactor = Checker.checkNonNull(interactor);
   }
 
   @Override protected void onUnbind() {
@@ -42,11 +43,13 @@ class SinglePastePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void postDelayedEvent(@NonNull SinglePasteCallback callback) {
+    SinglePasteCallback pasteCallback = Checker.checkNonNull(callback);
     postDisposable = DisposableHelper.dispose(postDisposable);
     postDisposable = interactor.getPasteDelayTime()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(callback::onPost, throwable -> Timber.e(throwable, "onError postDelayedEvent"));
+        .subscribe(pasteCallback::onPost,
+            throwable -> Timber.e(throwable, "onError postDelayedEvent"));
   }
 
   interface SinglePasteCallback {

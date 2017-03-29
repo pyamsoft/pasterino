@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.PasterinoPreferences;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Observable;
 
 class MainSettingsPreferenceInteractor {
@@ -26,7 +27,7 @@ class MainSettingsPreferenceInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
 
   MainSettingsPreferenceInteractor(@NonNull PasterinoPreferences preferences) {
-    this.preferences = preferences;
+    this.preferences = Checker.checkNonNull(preferences);
   }
 
   @NonNull @CheckResult public Observable<Boolean> clearAll() {

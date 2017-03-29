@@ -23,6 +23,7 @@ import com.pyamsoft.pasterino.main.MainComponent;
 import com.pyamsoft.pasterino.main.MainSettingsModule;
 import com.pyamsoft.pasterino.service.PasteComponent;
 import com.pyamsoft.pasterino.service.PasteServiceModule;
+import com.pyamsoft.pydroid.helper.Checker;
 
 public class PasterinoComponent {
 
@@ -30,6 +31,7 @@ public class PasterinoComponent {
   @NonNull private final PasteComponent pasteComponent;
 
   private PasterinoComponent(@NonNull PasterinoModule module) {
+    module = Checker.checkNonNull(module);
     MainSettingsModule mainSettingsModule = new MainSettingsModule(module);
     PasteServiceModule pasteServiceModule = new PasteServiceModule(module);
     mainComponent = new MainComponent(mainSettingsModule);
