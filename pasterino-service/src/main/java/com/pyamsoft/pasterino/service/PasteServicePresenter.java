@@ -27,7 +27,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
-class PasteServicePresenter extends SchedulerPresenter<Object> {
+class PasteServicePresenter extends SchedulerPresenter {
 
   @NonNull private Disposable finishDisposable = Disposables.empty();
 
@@ -36,8 +36,8 @@ class PasteServicePresenter extends SchedulerPresenter<Object> {
     super(observeScheduler, subscribeScheduler);
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     finishDisposable = DisposableHelper.dispose(finishDisposable);
   }
 

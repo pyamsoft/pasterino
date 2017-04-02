@@ -72,8 +72,6 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(null);
-
     presenter.registerOnEventBus(() -> {
       PasteServiceNotification.stop(getContext());
       SinglePasteService.stop(getContext());
@@ -91,11 +89,12 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
   @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
+    presenter.destroy();
     Pasterino.getRefWatcher(this).watch(this);
   }
 

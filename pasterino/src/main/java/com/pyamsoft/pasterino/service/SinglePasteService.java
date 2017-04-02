@@ -47,14 +47,14 @@ public class SinglePasteService extends Service {
     super.onCreate();
     Timber.d("onCreate");
     Injector.get().provideComponent().plusPasteComponent().inject(this);
-    presenter.bindView(null);
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     Timber.d("onDestroy");
     handler.removeCallbacksAndMessages(null);
-    presenter.unbindView();
+    presenter.stop();
+    presenter.destroy();
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {

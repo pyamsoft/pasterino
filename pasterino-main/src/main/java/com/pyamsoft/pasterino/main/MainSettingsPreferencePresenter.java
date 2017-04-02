@@ -21,14 +21,13 @@ import com.pyamsoft.pasterino.model.ConfirmEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
-class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
+class MainSettingsPreferencePresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
   @NonNull private Disposable clearDisposable = Disposables.empty();
@@ -39,8 +38,8 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty
     this.interactor = Checker.checkNonNull(interactor);
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     clearDisposable = DisposableHelper.dispose(clearDisposable);
   }
 
