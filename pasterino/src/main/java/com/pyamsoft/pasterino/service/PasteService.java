@@ -66,7 +66,6 @@ public class PasteService extends AccessibilityService {
       Injector.get().provideComponent().plusPasteComponent().inject(this);
     }
 
-    presenter.bindView(null);
     presenter.registerOnBus(new PasteServicePresenter.ServiceCallback() {
       @Override public void onServiceFinishRequested() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -95,8 +94,8 @@ public class PasteService extends AccessibilityService {
   @Override public boolean onUnbind(Intent intent) {
     Timber.d("onUnbind");
     PasteServiceNotification.stop(this);
-    presenter.unbindView();
     setRunning(false);
+    presenter.stop();
     return super.onUnbind(intent);
   }
 
