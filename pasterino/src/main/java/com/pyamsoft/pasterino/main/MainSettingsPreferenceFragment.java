@@ -81,10 +81,12 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
         Timber.e(e, "Expected exception when Service is NULL");
       }
 
+      Timber.d("Clear application data");
       final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
           .getSystemService(Context.ACTIVITY_SERVICE);
       activityManager.clearApplicationUserData();
     });
+
   }
 
   @Override public void onStop() {
