@@ -18,19 +18,22 @@ package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.base.PasterinoPreferences;
+import com.pyamsoft.pasterino.base.preference.PastePreferences;
 import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 class PasteServiceInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PastePreferences preferences;
 
-  PasteServiceInteractor(@NonNull PasterinoPreferences preferences) {
+  PasteServiceInteractor(@NonNull PastePreferences preferences) {
     this.preferences = Checker.checkNonNull(preferences);
   }
 
-  @NonNull @CheckResult public Observable<Long> getPasteDelayTime() {
-    return Observable.fromCallable(preferences::getPasteDelayTime);
+  /**
+   * public
+   */
+  @NonNull @CheckResult Single<Long> getPasteDelayTime() {
+    return Single.fromCallable(preferences::getPasteDelayTime);
   }
 }

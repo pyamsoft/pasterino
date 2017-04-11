@@ -29,16 +29,15 @@ import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior;
 import com.pyamsoft.pydroid.design.util.FABUtil;
-import com.pyamsoft.pydroid.drawable.AsyncDrawable;
-import com.pyamsoft.pydroid.drawable.AsyncMap;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
+import com.pyamsoft.pydroid.ui.loader.DrawableMap;
+import com.pyamsoft.pydroid.util.DialogUtil;
 
 public class MainSettingsFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "MainSettingsFragment";
-  @NonNull private final AsyncMap drawableMap = new AsyncMap();
+  @NonNull private final DrawableMap drawableMap = new DrawableMap();
   private FragmentMainBinding binding;
 
   @Nullable @Override
@@ -57,10 +56,10 @@ public class MainSettingsFragment extends ActionBarFragment {
   private void setupFAB() {
     binding.mainSettingsFab.setOnClickListener(view -> {
       if (PasteService.isRunning()) {
-        AppUtil.guaranteeSingleDialogFragment(getActivity(), new ServiceInfoDialog(),
+        DialogUtil.guaranteeSingleDialogFragment(getActivity(), new ServiceInfoDialog(),
             "servce_info");
       } else {
-        AppUtil.guaranteeSingleDialogFragment(getActivity(), new AccessibilityRequestDialog(),
+        DialogUtil.guaranteeSingleDialogFragment(getActivity(), new AccessibilityRequestDialog(),
             "accessibility");
       }
     });
@@ -83,12 +82,12 @@ public class MainSettingsFragment extends ActionBarFragment {
     setActionBarUpEnabled(false);
 
     if (PasteService.isRunning()) {
-      final AsyncMapEntry task =
-          AsyncDrawable.load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab);
+      final DrawableLoader.Loaded task =
+          DrawableLoader.load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab);
       drawableMap.put("fab", task);
     } else {
-      final AsyncMapEntry task =
-          AsyncDrawable.load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab);
+      final DrawableLoader.Loaded task =
+          DrawableLoader.load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab);
       drawableMap.put("fab", task);
     }
   }

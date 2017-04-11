@@ -21,9 +21,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
+import com.pyamsoft.pasterino.base.preference.ClearPreferences;
+import com.pyamsoft.pasterino.base.preference.PastePreferences;
 import com.pyamsoft.pydroid.helper.Checker;
 
-class PasterinoPreferencesImpl implements PasterinoPreferences {
+class PasterinoPreferencesImpl implements PastePreferences, ClearPreferences {
 
   @NonNull private final String delayTime;
   @NonNull private final String delayTimeDefault;

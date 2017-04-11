@@ -43,15 +43,18 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter {
     clearDisposable = DisposableHelper.dispose(clearDisposable);
   }
 
-  public void registerOnEventBus(@NonNull ClearRequestCallback callback) {
+  /**
+   * public
+   */
+  void registerOnEventBus(@NonNull ClearRequestCallback callback) {
     ClearRequestCallback requestCallback = Checker.checkNonNull(callback);
     clearDisposable = DisposableHelper.dispose(clearDisposable);
     clearDisposable = EventBus.get()
         .listen(ConfirmEvent.class)
-        .flatMap(event -> interactor.clearAll())
+        .flatMapCompletable(confirmEvent -> interactor.clearAll())
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(clear -> requestCallback.onClearAll(),
+        .subscribe(requestCallback::onClearAll,
             throwable -> Timber.e(throwable, "OnError EventBus"));
   }
 

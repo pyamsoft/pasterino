@@ -18,22 +18,22 @@ package com.pyamsoft.pasterino.main;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pasterino.base.PasterinoPreferences;
+import com.pyamsoft.pasterino.base.preference.ClearPreferences;
 import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.Observable;
+import io.reactivex.Completable;
 
 class MainSettingsPreferenceInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PasterinoPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final ClearPreferences preferences;
 
-  MainSettingsPreferenceInteractor(@NonNull PasterinoPreferences preferences) {
+  MainSettingsPreferenceInteractor(@NonNull ClearPreferences preferences) {
     this.preferences = Checker.checkNonNull(preferences);
   }
 
-  @NonNull @CheckResult public Observable<Boolean> clearAll() {
-    return Observable.fromCallable(() -> {
-      preferences.clearAll();
-      return Boolean.TRUE;
-    });
+  /**
+   * public
+   */
+  @NonNull @CheckResult Completable clearAll() {
+    return Completable.fromAction(preferences::clearAll);
   }
 }
