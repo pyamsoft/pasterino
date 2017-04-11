@@ -41,7 +41,10 @@ class PasteServicePresenter extends SchedulerPresenter {
     finishDisposable = DisposableHelper.dispose(finishDisposable);
   }
 
-  public void registerOnBus(@NonNull ServiceCallback callback) {
+  /**
+   * public
+   */
+  void registerOnBus(@NonNull ServiceCallback callback) {
     ServiceCallback serviceCallback = Checker.checkNonNull(callback);
     finishDisposable = DisposableHelper.dispose(finishDisposable);
     finishDisposable = EventBus.get()
@@ -63,7 +66,7 @@ class PasteServicePresenter extends SchedulerPresenter {
         }, throwable -> Timber.e(throwable, "onError event bus"));
   }
 
-  public interface ServiceCallback {
+  interface ServiceCallback {
 
     void onServiceFinishRequested();
 

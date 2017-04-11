@@ -31,7 +31,7 @@ import com.pyamsoft.pasterino.service.PasteServiceNotification;
 import com.pyamsoft.pasterino.service.SinglePasteService;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import timber.log.Timber;
 
 public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment {
@@ -65,7 +65,7 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
 
     final Preference explain = findPreference(getString(R.string.explain_key));
     explain.setOnPreferenceClickListener(preference -> {
-      AppUtil.guaranteeSingleDialogFragment(getActivity(), new HowToDialog(), "howto");
+      DialogUtil.guaranteeSingleDialogFragment(getActivity(), new HowToDialog(), "howto");
       return true;
     });
   }
@@ -98,8 +98,7 @@ public class MainSettingsPreferenceFragment extends ActionBarSettingsPreferenceF
     Pasterino.getRefWatcher(this).watch(this);
   }
 
-  @Override protected boolean onClearAllPreferenceClicked() {
-    AppUtil.guaranteeSingleDialogFragment(getActivity(), new ConfirmationDialog(), "confirm");
-    return super.onClearAllPreferenceClicked();
+  @Override protected void onClearAllClicked() {
+    DialogUtil.guaranteeSingleDialogFragment(getActivity(), new ConfirmationDialog(), "confirm");
   }
 }

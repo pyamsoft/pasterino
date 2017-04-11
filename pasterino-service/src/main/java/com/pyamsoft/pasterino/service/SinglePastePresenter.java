@@ -41,7 +41,10 @@ class SinglePastePresenter extends SchedulerPresenter {
     postDisposable = DisposableHelper.dispose(postDisposable);
   }
 
-  public void postDelayedEvent(@NonNull SinglePasteCallback callback) {
+  /**
+   * public
+   */
+  void postDelayedEvent(@NonNull SinglePasteCallback callback) {
     SinglePasteCallback pasteCallback = Checker.checkNonNull(callback);
     postDisposable = DisposableHelper.dispose(postDisposable);
     postDisposable = interactor.getPasteDelayTime()

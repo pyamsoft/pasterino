@@ -30,7 +30,7 @@ public class MainSettingsModule {
 
   public MainSettingsModule(@NonNull PasterinoModule module) {
     module = Checker.checkNonNull(module);
-    interactor = new MainSettingsPreferenceInteractor(module.providePreferences());
+    interactor = new MainSettingsPreferenceInteractor(module.provideClearPreferences());
     obsScheduler = module.provideObsScheduler();
     subScheduler = module.provideSubScheduler();
   }
