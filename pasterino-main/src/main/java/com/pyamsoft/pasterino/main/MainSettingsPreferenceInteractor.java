@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.base.preference.ClearPreferences;
 import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.Completable;
+import io.reactivex.Single;
 
 class MainSettingsPreferenceInteractor {
 
@@ -33,7 +33,11 @@ class MainSettingsPreferenceInteractor {
   /**
    * public
    */
-  @NonNull @CheckResult Completable clearAll() {
-    return Completable.fromAction(preferences::clearAll);
+  @NonNull @CheckResult Single<Boolean> clearAll() {
+    return Single.fromCallable(() -> {
+      // We must use Single or Observable here as in order for the Bus to work it needs to flow via onNext events
+      preferences.clearAll();
+      return Boolean.TRUE;
+    });
   }
 }
