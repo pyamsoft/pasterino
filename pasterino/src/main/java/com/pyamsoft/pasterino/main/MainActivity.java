@@ -27,9 +27,7 @@ import android.view.MenuItem;
 import com.pyamsoft.pasterino.BuildConfig;
 import com.pyamsoft.pasterino.R;
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding;
-import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.ui.ads.OnlineAdSource;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -41,15 +39,11 @@ public class MainActivity extends TamperActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_Pasterino_Light);
     super.onCreate(savedInstanceState);
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
     setupAppBar();
     showMainFragment();
-  }
-
-  @Override protected int bindActivityToView() {
-    binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-    return R.id.ad_view;
   }
 
   @Override protected void onDestroy() {
@@ -126,11 +120,5 @@ public class MainActivity extends TamperActivity {
 
   @Override public int getCurrentApplicationVersion() {
     return BuildConfig.VERSION_CODE;
-  }
-
-  @Nullable @Override protected AdSource provideOnlineAdSource() {
-    OnlineAdSource source = new OnlineAdSource(R.string.banner_main_ad_id);
-    source.addTestAdIds("E1241303FDC266381AD6C9FF6FAD056B");
-    return source;
   }
 }
