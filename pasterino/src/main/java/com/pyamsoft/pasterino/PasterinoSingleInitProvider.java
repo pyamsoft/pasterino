@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.base.PasterinoModule;
+import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 
@@ -41,5 +42,9 @@ public class PasterinoSingleInitProvider extends SingleInitContentProvider {
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
     return null;
+  }
+
+  @Override public void insertCustomLicensesIntoMap() {
+    Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase");
   }
 }
