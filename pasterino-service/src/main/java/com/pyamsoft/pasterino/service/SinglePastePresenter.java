@@ -18,17 +18,13 @@ package com.pyamsoft.pasterino.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 class SinglePastePresenter extends SchedulerPresenter {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PasteServiceInteractor interactor;
-  @NonNull private Disposable postDisposable = Disposables.empty();
+  @NonNull private final PasteServiceInteractor interactor;
 
   SinglePastePresenter(@NonNull PasteServiceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -38,7 +34,6 @@ class SinglePastePresenter extends SchedulerPresenter {
 
   @Override protected void onStop() {
     super.onStop();
-    postDisposable = DisposableHelper.dispose(postDisposable);
   }
 
   /**
@@ -46,12 +41,11 @@ class SinglePastePresenter extends SchedulerPresenter {
    */
   void postDelayedEvent(@NonNull SinglePasteCallback callback) {
     SinglePasteCallback pasteCallback = Checker.checkNonNull(callback);
-    postDisposable = DisposableHelper.dispose(postDisposable);
-    postDisposable = interactor.getPasteDelayTime()
+    disposeOnStop(interactor.getPasteDelayTime()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(pasteCallback::onPost,
-            throwable -> Timber.e(throwable, "onError postDelayedEvent"));
+            throwable -> Timber.e(throwable, "onError postDelayedEvent")));
   }
 
   interface SinglePasteCallback {
