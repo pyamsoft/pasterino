@@ -20,17 +20,13 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.model.ConfirmEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 class MainSettingsPreferencePresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainSettingsPreferenceInteractor interactor;
-  @NonNull private Disposable clearDisposable = Disposables.empty();
 
   MainSettingsPreferencePresenter(@NonNull MainSettingsPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -38,22 +34,19 @@ class MainSettingsPreferencePresenter extends SchedulerPresenter {
     this.interactor = Checker.checkNonNull(interactor);
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    clearDisposable = DisposableHelper.dispose(clearDisposable);
-  }
-
   /**
    * public
    */
   void registerOnEventBus(@NonNull ClearRequestCallback callback) {
     ClearRequestCallback requestCallback = Checker.checkNonNull(callback);
-    clearDisposable = DisposableHelper.dispose(clearDisposable);
-    clearDisposable = EventBus.get().listen(ConfirmEvent.class).flatMapSingle(confirmEvent -> {
-      return interactor.clearAll();
-    }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(ignore -> {
-      requestCallback.onClearAll();
-    }, throwable -> Timber.e(throwable, "OnError EventBus"));
+    disposeOnStop(EventBus.get()
+        .listen(ConfirmEvent.class)
+        .flatMapSingle(confirmEvent -> interactor.clearAll())
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(ignore -> {
+          requestCallback.onClearAll();
+        }, throwable -> Timber.e(throwable, "OnError EventBus")));
   }
 
   interface ClearRequestCallback {

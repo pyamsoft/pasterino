@@ -20,25 +20,15 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pasterino.model.ServiceEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 class PasteServicePresenter extends SchedulerPresenter {
 
-  @NonNull private Disposable finishDisposable = Disposables.empty();
-
   PasteServicePresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
-    finishDisposable = DisposableHelper.dispose(finishDisposable);
   }
 
   /**
@@ -46,8 +36,7 @@ class PasteServicePresenter extends SchedulerPresenter {
    */
   void registerOnBus(@NonNull ServiceCallback callback) {
     ServiceCallback serviceCallback = Checker.checkNonNull(callback);
-    finishDisposable = DisposableHelper.dispose(finishDisposable);
-    finishDisposable = EventBus.get()
+    disposeOnStop(EventBus.get()
         .listen(ServiceEvent.class)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -63,7 +52,7 @@ class PasteServicePresenter extends SchedulerPresenter {
               throw new IllegalArgumentException(
                   "Invalid ServiceEvent.Type: " + serviceEvent.type());
           }
-        }, throwable -> Timber.e(throwable, "onError event bus"));
+        }, throwable -> Timber.e(throwable, "onError event bus")));
   }
 
   interface ServiceCallback {
