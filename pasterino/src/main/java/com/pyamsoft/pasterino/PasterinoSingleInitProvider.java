@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Peter Kenji Yamanaka
+ * Copyright 2017 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.pyamsoft.pasterino;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.pasterino.base.PasterinoModule;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
@@ -40,11 +39,8 @@ public class PasterinoSingleInitProvider extends SingleInitContentProvider {
     Injector.set(component);
   }
 
-  @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
-    return null;
-  }
-
-  @Override public void insertCustomLicensesIntoMap() {
+  @Override public void insertCustomLicensesIntoMap(@NonNull Context context) {
+    super.insertCustomLicensesIntoMap(context);
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase");
   }
 }
