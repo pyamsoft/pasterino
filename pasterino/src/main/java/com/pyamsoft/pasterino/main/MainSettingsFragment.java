@@ -29,10 +29,10 @@ import com.pyamsoft.pasterino.databinding.FragmentMainBinding;
 import com.pyamsoft.pasterino.service.PasteService;
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior;
 import com.pyamsoft.pydroid.design.util.FABUtil;
+import com.pyamsoft.pydroid.loader.ImageLoader;
+import com.pyamsoft.pydroid.loader.LoaderMap;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
-import com.pyamsoft.pydroid.ui.loader.ImageLoader;
-import com.pyamsoft.pydroid.ui.loader.LoaderMap;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.util.DialogUtil;
 
 public class MainSettingsFragment extends ActionBarFragment {
@@ -83,12 +83,12 @@ public class MainSettingsFragment extends ActionBarFragment {
     setActionBarUpEnabled(false);
 
     if (PasteService.isRunning()) {
-      final Loaded task =
-          ImageLoader.fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab);
+      final Loaded task = ImageLoader.fromResource(getActivity(), R.drawable.ic_help_24dp)
+          .into(binding.mainSettingsFab);
       drawableMap.put("fab", task);
     } else {
-      final Loaded task =
-          ImageLoader.fromResource(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab);
+      final Loaded task = ImageLoader.fromResource(getActivity(), R.drawable.ic_service_start_24dp)
+          .into(binding.mainSettingsFab);
       drawableMap.put("fab", task);
     }
   }
