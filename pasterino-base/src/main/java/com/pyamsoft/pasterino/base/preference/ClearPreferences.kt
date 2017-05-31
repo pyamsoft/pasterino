@@ -14,24 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.service;
+package com.pyamsoft.pasterino.base.preference
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.Checker;
+interface ClearPreferences {
 
-public class PasteComponent {
-
-  @NonNull private final PasteServiceModule module;
-
-  public PasteComponent(@NonNull PasteServiceModule module) {
-    this.module = Checker.checkNonNull(module);
-  }
-
-  void inject(@NonNull SinglePasteService service) {
-    service.presenter = module.getSinglePresenter();
-  }
-
-  void inject(@NonNull PasteService service) {
-    service.presenter = module.getPasteServicePresenter();
-  }
+  fun clearAll()
 }

@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.base.preference;
+package com.pyamsoft.pasterino.uicore
 
-import android.support.annotation.CheckResult;
+import android.support.annotation.CallSuper
+import android.support.v4.app.DialogFragment
+import com.pyamsoft.pasterino.Pasterino
 
-public interface PastePreferences {
 
-  @CheckResult long getPasteDelayTime();
+abstract class CanaryDialog : DialogFragment() {
+
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    Pasterino.getRefWatcher(this).watch(this)
+  }
 
 }

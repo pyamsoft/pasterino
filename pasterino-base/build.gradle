@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
-}
-
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
-apply plugin: "me.tatarka.retrolambda"
 
 //noinspection GroovyMissingReturnStatement
 android {
@@ -42,25 +36,15 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-    }
-  }
-
-  dexOptions {
-    javaMaxHeapSize "${rootProject.ext.heapSize}"
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
   }
 }
 
 dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
 
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
+  compile "com.android.support:preference-v14:$supportLib"
 
   // PYDroid
   compile("com.github.pyamsoft.pydroid:pydroid:$pydroid@aar") {
@@ -69,5 +53,7 @@ dependencies {
 
   debugCompile project(path: ":pasterino-model", configuration: "debug")
   releaseCompile project(path: ":pasterino-model", configuration: "release")
+
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

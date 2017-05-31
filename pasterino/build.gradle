@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
-}
-
 apply plugin: "com.android.application"
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
-apply plugin: "me.tatarka.retrolambda"
+apply plugin: "com.google.gms.google-services"
 
 //noinspection GroovyMissingReturnStatement
 android {
@@ -44,13 +40,9 @@ android {
     resConfigs "en"
   }
 
-  dataBinding {
-    enabled true
-  }
-
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
   }
 
   signingConfigs {
@@ -74,16 +66,10 @@ android {
       versionNameSuffix "-dev"
     }
   }
-
-  dexOptions {
-    javaMaxHeapSize "${rootProject.ext.heapSize}"
-  }
 }
 
 dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
-
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
   // Leak Canary
   debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
@@ -105,8 +91,6 @@ dependencies {
   releaseCompile project(path: ":pasterino-main", configuration: "release")
   debugCompile project(path: ":pasterino-service", configuration: "debug")
   releaseCompile project(path: ":pasterino-service", configuration: "release")
+
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
-
-// AdView
-apply plugin: "com.google.gms.google-services"
-

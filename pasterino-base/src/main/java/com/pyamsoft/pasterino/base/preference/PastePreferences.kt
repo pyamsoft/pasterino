@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.model;
+package com.pyamsoft.pasterino.base.preference
 
-public class ConfirmEvent {
+import android.support.annotation.CheckResult
+
+interface PastePreferences {
+
+  @get:CheckResult val pasteDelayTime: Long
+
 }
