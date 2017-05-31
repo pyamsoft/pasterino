@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.base.preference;
+package com.pyamsoft.pasterino.service
 
-public interface ClearPreferences {
+import com.pyamsoft.pasterino.base.preference.PastePreferences
+import io.reactivex.Single
 
-  void clearAll();
+internal class PasteServiceInteractor(internal val preferences: PastePreferences) {
+
+  /**
+   * public
+   */
+  fun getPasteDelayTime(): Single<Long> {
+    return Single.fromCallable { preferences.pasteDelayTime }
+  }
 }

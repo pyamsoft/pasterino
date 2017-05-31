@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.model;
+package com.pyamsoft.pasterino.main
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+import android.support.annotation.CheckResult
+import com.pyamsoft.pasterino.base.preference.ClearPreferences
+import io.reactivex.Single
 
-@AutoValue public abstract class ServiceEvent {
+internal class MainSettingsPreferenceInteractor internal constructor(
+    internal val preferences: ClearPreferences) {
 
-  @CheckResult public static ServiceEvent create(@NonNull Type type) {
-    return new AutoValue_ServiceEvent(type);
-  }
-
-  @CheckResult public abstract Type type();
-
-  public enum Type {
-    FINISH, PASTE
+  /**
+   * public
+   */
+  @CheckResult fun clearAll(): Single<Boolean> {
+    return Single.fromCallable {
+      // We must use Single or Observable here as in order for the Bus to work it
+      // needs to flow via onNext events
+      preferences.clearAll()
+      java.lang.Boolean.TRUE
+    }
   }
 }

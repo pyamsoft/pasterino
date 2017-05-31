@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.main;
+package com.pyamsoft.pasterino.uicore
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.Checker;
+import android.support.annotation.CallSuper
+import com.pyamsoft.pasterino.Pasterino
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment
 
-public class MainComponent {
 
-  @NonNull private final MainSettingsModule mainSettingsModule;
+abstract class CanaryFragment : ActionBarFragment() {
 
-  public MainComponent(@NonNull MainSettingsModule mainSettingsModule) {
-    this.mainSettingsModule = Checker.checkNonNull(mainSettingsModule);
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    Pasterino.getRefWatcher(this).watch(this)
   }
 
-  void inject(@NonNull MainSettingsPreferenceFragment fragment) {
-    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter();
-  }
 }

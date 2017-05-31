@@ -14,28 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.main;
+package com.pyamsoft.pasterino.main
 
-import android.app.Dialog;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pasterino.Pasterino;
+import android.app.Dialog
+import android.os.Bundle
+import android.support.v7.app.AlertDialog
+import com.pyamsoft.pasterino.uicore.CanaryDialog
 
-public class HowToDialog extends DialogFragment {
+class HowToDialog : CanaryDialog() {
 
-  @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-    return new AlertDialog.Builder(getActivity()).setMessage(
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return AlertDialog.Builder(activity).setMessage(
         "When you want to paste into a text input field, simply click the notification and wait a little.")
         .setTitle("How to Use")
-        .setNeutralButton("Got It", (dialog, which) -> dialog.dismiss())
-        .create();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    Pasterino.getRefWatcher(this).watch(this);
+        .setNeutralButton("Got It") { _, _ -> dismiss() }
+        .create()
   }
 }
