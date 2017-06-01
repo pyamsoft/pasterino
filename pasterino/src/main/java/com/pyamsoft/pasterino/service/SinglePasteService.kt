@@ -23,7 +23,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import com.pyamsoft.pasterino.Injector
-import com.pyamsoft.pasterino.service.SinglePastePresenter.SinglePasteCallback
 import timber.log.Timber
 
 class SinglePasteService : Service() {
@@ -49,15 +48,13 @@ class SinglePasteService : Service() {
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     Timber.d("Attempt single paste")
-    presenter.postDelayedEvent(object : SinglePasteCallback {
-      override fun onPost(delay: Long) {
-        handler.removeCallbacksAndMessages(null)
-        handler.postDelayed({
-          PasteService.pasteIntoCurrentFocus()
-          stopSelf()
-        }, delay)
-      }
-    })
+    presenter.postDelayedEvent {
+      handler.removeCallbacksAndMessages(null)
+      handler.postDelayed({
+        PasteService.pasteIntoCurrentFocus()
+        stopSelf()
+      }, it)
+    }
     return Service.START_NOT_STICKY
   }
 

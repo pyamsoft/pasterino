@@ -19,6 +19,6 @@ package com.pyamsoft.pasterino.main
 class MainComponent(private val mainSettingsModule: MainSettingsModule) {
 
   internal fun inject(fragment: MainSettingsPreferenceFragment) {
-    fragment.presenter = mainSettingsModule.settingsPreferencePresenter
+    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
   }
 }

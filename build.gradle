@@ -41,7 +41,7 @@ buildscript {
     supportLib = "25.3.1"
     firebase = "10.2.6"
     leakCanary = "1.5"
-    pydroid = "10.2.1"
+    pydroid = "10.3.1"
     autoValue = "1.4.1"
   }
 
@@ -52,7 +52,7 @@ buildscript {
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
 
     // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
 
     // Google services
     classpath 'com.google.gms:google-services:3.0.0'

@@ -27,6 +27,7 @@ class MainSettingsModule(module: PasterinoModule) {
   private val obsScheduler: Scheduler = module.provideObsScheduler()
   private val subScheduler: Scheduler = module.provideSubScheduler()
 
-  val settingsPreferencePresenter: MainSettingsPreferencePresenter
-    @CheckResult get() = MainSettingsPreferencePresenter(interactor, obsScheduler, subScheduler)
+  @CheckResult fun getSettingsPreferencePresenter(): MainSettingsPreferencePresenter {
+    return MainSettingsPreferencePresenter(interactor, obsScheduler, subScheduler)
+  }
 }

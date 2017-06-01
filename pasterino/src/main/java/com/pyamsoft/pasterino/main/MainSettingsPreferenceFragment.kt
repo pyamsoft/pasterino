@@ -23,7 +23,6 @@ import android.view.View
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.ClearRequestCallback
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
@@ -65,22 +64,20 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onStart() {
     super.onStart()
-    presenter.registerOnEventBus(object : ClearRequestCallback {
-      override fun onClearAll() {
-        PasteServiceNotification.stop(context)
-        SinglePasteService.stop(context)
-        try {
-          PasteService.finish()
-        } catch (e: NullPointerException) {
-          Timber.e(e, "Expected exception when Service is NULL")
-        }
-
-        Timber.d("Clear application data")
-        val activityManager = context.applicationContext
-            .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        activityManager.clearApplicationUserData()
+    presenter.registerOnEventBus {
+      PasteServiceNotification.stop(context)
+      SinglePasteService.stop(context)
+      try {
+        PasteService.finish()
+      } catch (e: NullPointerException) {
+        Timber.e(e, "Expected exception when Service is NULL")
       }
-    })
+
+      Timber.d("Clear application data")
+      val activityManager = context.applicationContext
+          .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+      activityManager.clearApplicationUserData()
+    }
   }
 
   override fun onStop() {
