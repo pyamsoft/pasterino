@@ -28,25 +28,18 @@ class PasteServicePresenter internal constructor(observeScheduler: Scheduler,
   /**
    * public
    */
-  fun registerOnBus(callback: ServiceCallback) {
+  fun registerOnBus(onPasteRequested: () -> Unit, onServiceFinishRequested: () -> Unit) {
     disposeOnStop(EventBus.get()
         .listen(ServiceEvent::class.java)
         .subscribeOn(subscribeScheduler)
         .observeOn(observeScheduler)
         .subscribe({ (type) ->
           when (type) {
-            ServiceEvent.Type.FINISH -> callback.onServiceFinishRequested()
-            ServiceEvent.Type.PASTE -> callback.onPasteRequested()
+            ServiceEvent.Type.FINISH -> onServiceFinishRequested()
+            ServiceEvent.Type.PASTE -> onPasteRequested()
             else -> throw IllegalArgumentException(
                 "Invalid ServiceEvent.Type: " + type)
           }
         }, { Timber.e(it, "onError event bus") }))
-  }
-
-  interface ServiceCallback {
-
-    fun onServiceFinishRequested()
-
-    fun onPasteRequested()
   }
 }

@@ -27,16 +27,11 @@ class SinglePastePresenter internal constructor(private val interactor: PasteSer
   /**
    * public
    */
-  fun postDelayedEvent(callback: SinglePasteCallback) {
+  fun postDelayedEvent(onPost: (Long) -> Unit) {
     disposeOnStop(interactor.getPasteDelayTime()
         .subscribeOn(subscribeScheduler)
         .observeOn(observeScheduler)
-        .subscribe({ callback.onPost(it) },
+        .subscribe({ onPost(it) },
             { Timber.e(it, "onError postDelayedEvent") }))
-  }
-
-  interface SinglePasteCallback {
-
-    fun onPost(delay: Long)
   }
 }

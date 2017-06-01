@@ -26,12 +26,11 @@ internal class MainSettingsPreferenceInteractor internal constructor(
   /**
    * public
    */
-  @CheckResult fun clearAll(): Single<Boolean> {
+  @CheckResult internal fun clearAll(): Single<Unit> {
+    // This must be a Single or the stream will not continue
     return Single.fromCallable {
-      // We must use Single or Observable here as in order for the Bus to work it
-      // needs to flow via onNext events
       preferences.clearAll()
-      java.lang.Boolean.TRUE
+      return@fromCallable Unit
     }
   }
 }

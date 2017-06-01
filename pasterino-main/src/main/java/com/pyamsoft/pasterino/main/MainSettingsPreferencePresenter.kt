@@ -30,18 +30,13 @@ class MainSettingsPreferencePresenter internal constructor(
   /**
    * public
    */
-  fun registerOnEventBus(callback: ClearRequestCallback) {
+  fun registerOnEventBus(onClearAll: () -> Unit) {
     disposeOnStop(EventBus.get()
         .listen(ConfirmEvent::class.java)
         .flatMapSingle { interactor.clearAll() }
         .subscribeOn(subscribeScheduler)
         .observeOn(observeScheduler)
-        .subscribe({ callback.onClearAll() }
-            , { throwable -> Timber.e(throwable, "OnError EventBus") }))
-  }
-
-  interface ClearRequestCallback {
-
-    fun onClearAll()
+        .subscribe({ onClearAll() }
+            , { Timber.e(it, "OnError EventBus") }))
   }
 }
