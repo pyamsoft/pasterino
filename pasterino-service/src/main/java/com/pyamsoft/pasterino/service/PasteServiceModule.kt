@@ -27,11 +27,11 @@ class PasteServiceModule(pasterinoModule: PasterinoModule) {
   private val obsScheduler: Scheduler = pasterinoModule.provideObsScheduler()
   private val subScheduler: Scheduler = pasterinoModule.provideSubScheduler()
 
-  @CheckResult internal fun getSinglePresenter(): SinglePastePresenter {
+  @CheckResult fun getSinglePresenter(): SinglePastePresenter {
     return SinglePastePresenter(interactor, obsScheduler, subScheduler)
   }
 
-  @CheckResult internal fun getPasteServicePresenter(): PasteServicePresenter {
+  @CheckResult fun getPasteServicePresenter(): PasteServicePresenter {
     return PasteServicePresenter(obsScheduler, subScheduler)
   }
 }
