@@ -21,7 +21,7 @@ import com.pyamsoft.pasterino.base.preference.ClearPreferences
 import io.reactivex.Single
 
 internal class MainSettingsPreferenceInteractor internal constructor(
-    internal val preferences: ClearPreferences) {
+    private val preferences: ClearPreferences) {
 
   /**
    * public

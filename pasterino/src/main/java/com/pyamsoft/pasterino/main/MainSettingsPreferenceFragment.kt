@@ -97,6 +97,6 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   companion object {
 
-    val TAG = "MainSettingsPreferenceFragment"
+    const val TAG = "MainSettingsPreferenceFragment"
   }
 }

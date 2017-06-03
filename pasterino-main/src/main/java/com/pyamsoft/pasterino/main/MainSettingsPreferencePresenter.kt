@@ -23,7 +23,7 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class MainSettingsPreferencePresenter internal constructor(
-    internal val interactor: MainSettingsPreferenceInteractor,
+    private val interactor: MainSettingsPreferenceInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
     observeScheduler, subscribeScheduler) {
 

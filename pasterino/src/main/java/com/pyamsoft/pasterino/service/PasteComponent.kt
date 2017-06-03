@@ -18,11 +18,11 @@ package com.pyamsoft.pasterino.service
 
 class PasteComponent(private val module: PasteServiceModule) {
 
-  fun inject(service: SinglePasteService) {
+  internal fun inject(service: SinglePasteService) {
     service.presenter = module.getSinglePresenter()
   }
 
-  fun inject(service: PasteService) {
+  internal fun inject(service: PasteService) {
     service.presenter = module.getPasteServicePresenter()
   }
 }

@@ -27,7 +27,7 @@ import timber.log.Timber
 
 class SinglePasteService : Service() {
 
-  internal val handler: Handler = Handler(Looper.getMainLooper())
+  private val handler: Handler = Handler(Looper.getMainLooper())
   internal lateinit var presenter: SinglePastePresenter
 
   override fun onCreate() {
