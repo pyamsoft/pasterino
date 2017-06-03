@@ -20,12 +20,12 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.base.preference.PastePreferences
 import io.reactivex.Single
 
-internal class PasteServiceInteractor(internal val preferences: PastePreferences) {
+internal class PasteServiceInteractor(private val preferences: PastePreferences) {
 
   /**
    * public
    */
   @CheckResult internal fun getPasteDelayTime(): Single<Long> {
-    return Single.fromCallable { preferences.pasteDelayTime }
+    return Single.fromCallable(preferences::pasteDelayTime)
   }
 }

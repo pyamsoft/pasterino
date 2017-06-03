@@ -27,54 +27,47 @@ import android.support.v4.content.ContextCompat
 import com.pyamsoft.pasterino.R
 import timber.log.Timber
 
-class PasteServiceNotification private constructor() {
+object PasteServiceNotification {
 
-  init {
-    throw RuntimeException("No instances")
+  private const val ID = 1005
+  private const val RC = 1005
+
+  @JvmStatic
+  internal fun start(context: Context) {
+    if (PasteService.isRunning) {
+      Timber.d("Start notification %d", ID)
+      getNotificationManager(context).notify(ID, createNotification(context))
+    }
   }
 
-  companion object {
+  @JvmStatic
+  internal fun stop(context: Context) {
+    Timber.d("Stop notification %d", ID)
+    getNotificationManager(context).cancel(ID)
+  }
 
-    private const val ID = 1005
-    private const val RC = 1005
+  @JvmStatic
+  @CheckResult
+  private fun getNotificationManager(context: Context): NotificationManager {
+    val appContext = context.applicationContext
+    return appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+  }
 
-    @JvmStatic
-    internal fun start(context: Context) {
-      if (PasteService.isRunning) {
-        Timber.d("Start notification %d", ID)
-        getNotificationManager(context).notify(ID, createNotification(context))
-      }
-    }
-
-    @JvmStatic
-    fun stop(context: Context) {
-      Timber.d("Stop notification %d", ID)
-      getNotificationManager(context).cancel(ID)
-    }
-
-    @JvmStatic
-    @CheckResult
-    private fun getNotificationManager(context: Context): NotificationManager {
-      val appContext = context.applicationContext
-      return appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    @JvmStatic
-    @CheckResult private fun createNotification(context: Context): Notification {
-      val appContext = context.applicationContext
-      val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
-      return NotificationCompat.Builder(appContext).setContentTitle(
-          appContext.getString(R.string.app_name))
-          .setSmallIcon(R.drawable.ic_notification)
-          .setContentText("Pasterino Plzarino")
-          .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
-          .setPriority(NotificationCompat.PRIORITY_MIN)
-          .setWhen(0)
-          .setOngoing(true)
-          .setAutoCancel(false)
-          .setColor(ContextCompat.getColor(appContext, R.color.green500))
-          .setNumber(0)
-          .build()
-    }
+  @JvmStatic
+  @CheckResult private fun createNotification(context: Context): Notification {
+    val appContext = context.applicationContext
+    val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
+    return NotificationCompat.Builder(appContext).setContentTitle(
+        appContext.getString(R.string.app_name))
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentText("Pasterino Plzarino")
+        .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
+        .setPriority(NotificationCompat.PRIORITY_MIN)
+        .setWhen(0)
+        .setOngoing(true)
+        .setAutoCancel(false)
+        .setColor(ContextCompat.getColor(appContext, R.color.green500))
+        .setNumber(0)
+        .build()
   }
 }

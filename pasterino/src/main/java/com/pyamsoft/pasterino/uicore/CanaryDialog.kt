@@ -19,9 +19,10 @@ package com.pyamsoft.pasterino.uicore
 import android.support.annotation.CallSuper
 import android.support.v4.app.DialogFragment
 import com.pyamsoft.pasterino.Pasterino
+import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 
 
-abstract class CanaryDialog : DialogFragment() {
+abstract class CanaryDialog : DialogFragmentBase() {
 
   @CallSuper
   override fun onDestroy() {

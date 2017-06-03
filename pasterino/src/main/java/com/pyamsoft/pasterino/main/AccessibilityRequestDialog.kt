@@ -26,7 +26,7 @@ import com.pyamsoft.pasterino.uicore.CanaryDialog
 
 class AccessibilityRequestDialog : CanaryDialog() {
 
-  internal val accessibilityServiceIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+  private val accessibilityServiceIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(activity).setTitle("Enable Pasterino AccessibilityService")

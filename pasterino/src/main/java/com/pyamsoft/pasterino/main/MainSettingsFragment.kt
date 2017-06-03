@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.ui.util.DialogUtil
 import kotlinx.android.synthetic.main.fragment_main.main_settings_fab
 
 class MainSettingsFragment : CanaryFragment() {
+
   private val drawableMap = LoaderMap()
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
