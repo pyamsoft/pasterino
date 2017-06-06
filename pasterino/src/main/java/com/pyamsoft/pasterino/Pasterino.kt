@@ -41,7 +41,7 @@ class Pasterino : Application() {
     PYDroid.initialize(this, BuildConfig.DEBUG)
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
 
-    Injector.set(PasterinoComponent.withModule(PasterinoModule(this)))
+    Injector.set(this)
 
     if (BuildConfig.DEBUG) {
       refWatcher = LeakCanary.install(this)

@@ -16,7 +16,10 @@
 
 package com.pyamsoft.pasterino
 
+import android.content.Context
 import android.support.annotation.CheckResult
+import com.pyamsoft.pasterino.base.PasterinoModule
+import com.pyamsoft.pydroid.helper.ThreadSafe.MutableSingleton
 
 class Injector private constructor(private val component: PasterinoComponent) {
 
@@ -26,26 +29,17 @@ class Injector private constructor(private val component: PasterinoComponent) {
 
   companion object {
 
-    @Volatile private var instance: Injector? = null
+    private val singleton = MutableSingleton<Injector>(null)
 
     @JvmStatic
-    internal fun set(component: PasterinoComponent) {
-      synchronized(Injector::class.java) {
-        instance = Injector(component)
-      }
+    internal fun set(context: Context) {
+      singleton.assign(
+          Injector(PasterinoComponent.withModule(PasterinoModule(context.applicationContext))))
     }
 
     @JvmStatic
     @CheckResult fun get(): Injector {
-      if (instance == null) {
-        synchronized(Injector::class.java) {
-          if (instance == null) {
-            throw IllegalStateException("Injector component is NULL")
-          }
-        }
-      }
-
-      return instance!!
+      return singleton.access()
     }
   }
 }
