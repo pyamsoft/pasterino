@@ -17,29 +17,13 @@
 package com.pyamsoft.pasterino
 
 import android.content.Context
-import android.support.annotation.CheckResult
-import com.pyamsoft.pasterino.base.PasterinoModule
-import com.pyamsoft.pydroid.helper.ThreadSafe.MutableSingleton
 
-class Injector private constructor(private val component: PasterinoComponent) {
+object Injector {
 
-  @CheckResult fun provideComponent(): PasterinoComponent {
-    return component
-  }
-
-  companion object {
-
-    private val singleton = MutableSingleton<Injector>(null)
-
-    @JvmStatic
-    internal fun set(context: Context) {
-      singleton.assign(
-          Injector(PasterinoComponent.withModule(PasterinoModule(context.applicationContext))))
-    }
-
-    @JvmStatic
-    @CheckResult fun get(): Injector {
-      return singleton.access()
+  fun with(context: Context, func: (PasterinoComponent) -> Unit) {
+    val app = context.applicationContext
+    if (app is Pasterino) {
+      func(app.getComponent())
     }
   }
 }
