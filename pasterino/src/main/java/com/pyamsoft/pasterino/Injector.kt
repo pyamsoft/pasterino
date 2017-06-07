@@ -24,6 +24,8 @@ object Injector {
     val app = context.applicationContext
     if (app is Pasterino) {
       func(app.getComponent())
+    } else {
+      throw ClassCastException("Application is not Pasterino")
     }
   }
 }
