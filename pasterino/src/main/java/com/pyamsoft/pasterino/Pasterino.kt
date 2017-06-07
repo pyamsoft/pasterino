@@ -32,6 +32,18 @@ class Pasterino : Application() {
 
   private lateinit var refWatcher: RefWatcher
 
+  private var component: PasterinoComponent? = null
+
+  @CheckResult internal fun getComponent(): PasterinoComponent {
+    val obj = component
+    if (obj == null) {
+      throw IllegalStateException("PasterinoComponent must be initialized before use")
+    } else {
+      return obj
+    }
+  }
+
+
   override fun onCreate() {
     super.onCreate()
     if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -40,8 +52,7 @@ class Pasterino : Application() {
 
     PYDroid.initialize(this, BuildConfig.DEBUG)
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
-
-    Injector.set(this)
+    component = PasterinoComponent.withModule(PasterinoModule(applicationContext))
 
     if (BuildConfig.DEBUG) {
       refWatcher = LeakCanary.install(this)

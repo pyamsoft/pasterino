@@ -32,7 +32,9 @@ class SinglePasteService : Service() {
 
   override fun onCreate() {
     super.onCreate()
-    Injector.get().provideComponent().plusPasteComponent().inject(this)
+    Injector.with(this) {
+      it.plusPasteComponent().inject(this)
+    }
   }
 
   override fun onDestroy() {

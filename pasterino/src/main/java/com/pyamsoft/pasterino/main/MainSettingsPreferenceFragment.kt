@@ -49,7 +49,9 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.get().provideComponent().plusMainComponent().inject(this)
+    Injector.with(context) {
+      it.plusMainComponent().inject(this)
+    }
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

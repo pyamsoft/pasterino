@@ -45,7 +45,10 @@ class PasteService : AccessibilityService() {
     super.onServiceConnected()
     Timber.d("onServiceConnected")
 
-    Injector.get().provideComponent().plusPasteComponent().inject(this)
+    Injector.with(this) {
+      it.plusPasteComponent().inject(this)
+    }
+
     presenter.registerOnBus(onPasteRequested = {
       val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
       if (info != null && info.isEditable) {
