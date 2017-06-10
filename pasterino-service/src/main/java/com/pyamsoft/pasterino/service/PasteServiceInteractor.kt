@@ -26,6 +26,6 @@ internal class PasteServiceInteractor(private val preferences: PastePreferences)
    * public
    */
   @CheckResult internal fun getPasteDelayTime(): Single<Long> {
-    return Single.fromCallable(preferences::pasteDelayTime)
+    return Single.fromCallable { preferences.pasteDelayTime }
   }
 }
