@@ -40,6 +40,10 @@ android {
     resConfigs "en"
   }
 
+  packagingOptions {
+    exclude 'META-INF/rxjava.properties'
+  }
+
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_7
     targetCompatibility JavaVersion.VERSION_1_7
