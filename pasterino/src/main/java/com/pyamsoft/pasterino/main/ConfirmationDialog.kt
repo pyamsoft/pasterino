@@ -27,7 +27,9 @@ class ConfirmationDialog : CanaryDialog() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(activity).setMessage(
-        "Really clear all application settings?\n\nYou will have to manually restart the Accessibility Service component of Pasterino")
+        """
+        |Really clear all application settings?
+        |You will have to manually restart the Accessibility Service component of Pasterino""".trimMargin())
         .setPositiveButton("Yes") { _, _ ->
           dismiss()
           EventBus.get().publish(ConfirmEvent)

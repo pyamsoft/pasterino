@@ -31,12 +31,14 @@ class MainSettingsPreferencePresenter internal constructor(
    * public
    */
   fun registerOnEventBus(onClearAll: () -> Unit) {
-    disposeOnStop(EventBus.get()
-        .listen(ConfirmEvent::class.java)
-        .flatMapSingle { interactor.clearAll() }
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ onClearAll() }
-            , { Timber.e(it, "OnError EventBus") }))
+    disposeOnStop {
+      EventBus.get()
+          .listen(ConfirmEvent::class.java)
+          .flatMapSingle { interactor.clearAll() }
+          .subscribeOn(subscribeScheduler)
+          .observeOn(observeScheduler)
+          .subscribe({ onClearAll() }
+              , { Timber.e(it, "OnError EventBus") })
+    }
   }
 }
