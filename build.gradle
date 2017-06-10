@@ -35,13 +35,13 @@ buildscript {
   ext {
 
     minSdk = 19
-    maxSdk = 26
+    maxSdk = 25
     buildTools = "26.0.0"
 
     supportLib = "25.4.0"
     firebase = "11.0.0"
     leakCanary = "1.5.1"
-    pydroid = "10.4.2"
+    pydroid = "10.4.3"
   }
 
   dependencies {

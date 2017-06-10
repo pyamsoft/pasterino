@@ -20,7 +20,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
-apply plugin: "com.google.gms.google-services"
 
 //noinspection GroovyMissingReturnStatement
 android {
@@ -98,3 +97,6 @@ dependencies {
 
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
+
+// Firebase
+apply plugin: "com.google.gms.google-services"
