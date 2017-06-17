@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.base
 
-class MainComponent(private val mainSettingsModule: MainSettingsModule) {
+import com.pyamsoft.pasterino.model.ServiceEvent
 
-  internal fun inject(fragment: MainSettingsPreferenceFragment) {
-    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
-    fragment.publisher = mainSettingsModule.getPastePublisher()
-  }
+class PasteServicePublisher (private val bus: PasteBus) {
 
-  internal fun inject(dialog: ConfirmationDialog) {
-    dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
+  fun publish(event: ServiceEvent) {
+    bus.publish(event)
   }
 }

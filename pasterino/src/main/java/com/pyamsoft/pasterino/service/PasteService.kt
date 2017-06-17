@@ -24,8 +24,6 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.pyamsoft.pasterino.Injector
-import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import timber.log.Timber
 
@@ -88,15 +86,5 @@ class PasteService : AccessibilityService() {
     var isRunning = false
       @get:CheckResult get
       private set
-
-    @JvmStatic
-    fun finish() {
-      EventBus.get().publish(ServiceEvent(ServiceEvent.Type.FINISH))
-    }
-
-    @JvmStatic
-    fun pasteIntoCurrentFocus() {
-      EventBus.get().publish(ServiceEvent(ServiceEvent.Type.PASTE))
-    }
   }
 }

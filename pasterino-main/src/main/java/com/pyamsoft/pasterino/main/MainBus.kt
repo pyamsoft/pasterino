@@ -16,14 +16,22 @@
 
 package com.pyamsoft.pasterino.main
 
-class MainComponent(private val mainSettingsModule: MainSettingsModule) {
+import com.pyamsoft.pasterino.model.ConfirmEvent
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.RxBus
+import io.reactivex.Observable
 
-  internal fun inject(fragment: MainSettingsPreferenceFragment) {
-    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
-    fragment.publisher = mainSettingsModule.getPastePublisher()
+internal class MainBus internal constructor() : EventBus<ConfirmEvent> {
+
+  private val bus = RxBus.create<ConfirmEvent>()
+
+  override fun publish(event: ConfirmEvent) {
+    bus.publish(event)
   }
 
-  internal fun inject(dialog: ConfirmationDialog) {
-    dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
+  override fun listen(): Observable<ConfirmEvent> {
+    return bus.listen()
   }
+
 }
+

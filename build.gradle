@@ -17,7 +17,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-  ext.kotlin_version = '1.1.2-3'
+  ext.kotlin_version = '1.1.2-5'
   repositories {
     jcenter()
 
@@ -41,20 +41,20 @@ buildscript {
     supportLib = "25.4.0"
     firebase = "11.0.0"
     leakCanary = "1.5.1"
-    pydroid = "10.4.3"
+    pydroid = "10.5.1"
   }
 
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.3'
 
     // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.0'
 
     // Gradle version checker
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
 
     // Google services
-    classpath 'com.google.gms:google-services:3.0.0'
+    classpath 'com.google.gms:google-services:3.1.0'
 
     // Error prone compiler
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"

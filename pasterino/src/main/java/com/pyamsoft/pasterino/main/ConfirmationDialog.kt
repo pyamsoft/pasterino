@@ -19,11 +19,20 @@ package com.pyamsoft.pasterino.main
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pasterino.uicore.CanaryDialog
-import com.pyamsoft.pydroid.bus.EventBus
 
 class ConfirmationDialog : CanaryDialog() {
+
+  internal lateinit var publisher: MainSettingsPreferencePublisher
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.with(context) {
+      it.plusMainComponent().inject(this)
+    }
+  }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(activity).setMessage(
@@ -32,7 +41,7 @@ class ConfirmationDialog : CanaryDialog() {
         |You will have to manually restart the Accessibility Service component of Pasterino""".trimMargin())
         .setPositiveButton("Yes") { _, _ ->
           dismiss()
-          EventBus.get().publish(ConfirmEvent)
+          publisher.publish(ConfirmEvent)
         }
         .setNegativeButton("No") { _, _ -> dismiss() }
         .create()
