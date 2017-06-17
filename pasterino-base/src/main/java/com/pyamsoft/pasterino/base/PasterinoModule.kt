@@ -28,6 +28,11 @@ class PasterinoModule(context: Context) {
 
   private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
       context.applicationContext)
+  private val pasteBus = PasteBus()
+
+  @CheckResult fun providePasteBus() : PasteBus {
+    return pasteBus
+  }
 
   @CheckResult fun providePreferences(): PastePreferences {
     return preferences

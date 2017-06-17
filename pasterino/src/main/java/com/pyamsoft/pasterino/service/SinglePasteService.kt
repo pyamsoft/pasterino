@@ -23,12 +23,15 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import com.pyamsoft.pasterino.Injector
+import com.pyamsoft.pasterino.base.PasteServicePublisher
+import com.pyamsoft.pasterino.model.ServiceEvent
 import timber.log.Timber
 
 class SinglePasteService : Service() {
 
   private val handler: Handler = Handler(Looper.getMainLooper())
   internal lateinit var presenter: SinglePastePresenter
+  internal lateinit var publisher: PasteServicePublisher
 
   override fun onCreate() {
     super.onCreate()
@@ -53,7 +56,7 @@ class SinglePasteService : Service() {
     presenter.postDelayedEvent {
       handler.removeCallbacksAndMessages(null)
       handler.postDelayed({
-        PasteService.pasteIntoCurrentFocus()
+        publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
         stopSelf()
       }, it)
     }

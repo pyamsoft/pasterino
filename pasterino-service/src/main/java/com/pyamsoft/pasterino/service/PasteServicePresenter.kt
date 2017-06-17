@@ -16,22 +16,22 @@
 
 package com.pyamsoft.pasterino.service
 
+import com.pyamsoft.pasterino.base.PasteBus
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class PasteServicePresenter internal constructor(observeScheduler: Scheduler,
-    subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {
+    subscribeScheduler: Scheduler, private val bus: PasteBus) : SchedulerPresenter(observeScheduler,
+    subscribeScheduler) {
 
   /**
    * public
    */
   fun registerOnBus(onPasteRequested: () -> Unit, onServiceFinishRequested: () -> Unit) {
     disposeOnStop {
-      EventBus.get()
-          .listen(ServiceEvent::class.java)
+      bus.listen()
           .subscribeOn(subscribeScheduler)
           .observeOn(observeScheduler)
           .subscribe({ (type) ->

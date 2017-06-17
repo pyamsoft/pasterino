@@ -16,14 +16,12 @@
 
 package com.pyamsoft.pasterino.main
 
-class MainComponent(private val mainSettingsModule: MainSettingsModule) {
+import com.pyamsoft.pasterino.model.ConfirmEvent
 
-  internal fun inject(fragment: MainSettingsPreferenceFragment) {
-    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
-    fragment.publisher = mainSettingsModule.getPastePublisher()
-  }
+class MainSettingsPreferencePublisher internal constructor(
+    private val bus: MainBus) {
 
-  internal fun inject(dialog: ConfirmationDialog) {
-    dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
+  fun publish(event: ConfirmEvent) {
+    bus.publish(event)
   }
 }

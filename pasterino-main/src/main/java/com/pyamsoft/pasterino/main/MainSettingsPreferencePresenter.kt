@@ -16,14 +16,13 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pasterino.model.ConfirmEvent
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class MainSettingsPreferencePresenter internal constructor(
     private val interactor: MainSettingsPreferenceInteractor,
+    private val bus: MainBus,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
     observeScheduler, subscribeScheduler) {
 
@@ -32,13 +31,11 @@ class MainSettingsPreferencePresenter internal constructor(
    */
   fun registerOnEventBus(onClearAll: () -> Unit) {
     disposeOnStop {
-      EventBus.get()
-          .listen(ConfirmEvent::class.java)
+      bus.listen()
           .flatMapSingle { interactor.clearAll() }
           .subscribeOn(subscribeScheduler)
           .observeOn(observeScheduler)
-          .subscribe({ onClearAll() }
-              , { Timber.e(it, "OnError EventBus") })
+          .subscribe({ onClearAll() }, { Timber.e(it, "OnError EventBus") })
     }
   }
 }
