@@ -16,24 +16,27 @@
 
 package com.pyamsoft.pasterino.main
 
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.preference.PreferenceManager
 import android.view.MenuItem
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.databinding.ActivityMainBinding
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.util.AppUtil
-import kotlinx.android.synthetic.main.activity_main.main_toolbar
 
 class MainActivity : TamperActivity() {
+
+  private lateinit var binding: ActivityMainBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.Theme_Pasterino_Light)
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
     setupAppBar()
@@ -72,9 +75,9 @@ class MainActivity : TamperActivity() {
   }
 
   private fun setupAppBar() {
-    setSupportActionBar(main_toolbar)
-    main_toolbar.setTitle(R.string.app_name)
-    ViewCompat.setElevation(main_toolbar, AppUtil.convertToDP(this, 4f))
+    setSupportActionBar(binding.mainToolbar)
+    binding.mainToolbar.setTitle(R.string.app_name)
+    ViewCompat.setElevation(binding.mainToolbar, AppUtil.convertToDP(this, 4f))
   }
 
   private fun showMainFragment() {
