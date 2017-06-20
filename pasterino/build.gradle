@@ -16,7 +16,7 @@
 
 apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
@@ -57,6 +57,10 @@ android {
     }
   }
 
+  dataBinding {
+    enabled true
+  }
+
   buildTypes {
     release {
       signingConfig signingConfigs.release
@@ -73,6 +77,8 @@ android {
 
 dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
+
+  kapt "com.android.databinding:compiler:$plugin_version"
 
   // Leak Canary
   debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"

@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.uicore.CanaryFragment
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior
@@ -28,15 +29,16 @@ import com.pyamsoft.pydroid.design.util.FABUtil
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.util.DialogUtil
-import kotlinx.android.synthetic.main.fragment_main.main_settings_fab
 
 class MainSettingsFragment : CanaryFragment() {
 
+  private lateinit var binding: FragmentMainBinding
   private val drawableMap = LoaderMap()
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    return inflater?.inflate(R.layout.fragment_main, container, false)
+    binding = FragmentMainBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -46,7 +48,7 @@ class MainSettingsFragment : CanaryFragment() {
   }
 
   private fun setupFAB() {
-    main_settings_fab.setOnClickListener {
+    binding.mainSettingsFab.setOnClickListener {
       if (PasteService.isRunning) {
         DialogUtil.guaranteeSingleDialogFragment(activity, ServiceInfoDialog(),
             "servce_info")
@@ -55,7 +57,7 @@ class MainSettingsFragment : CanaryFragment() {
             "accessibility")
       }
     }
-    FABUtil.setupFABBehavior(main_settings_fab, HideScrollFABBehavior(10))
+    FABUtil.setupFABBehavior(binding.mainSettingsFab, HideScrollFABBehavior(10))
   }
 
   override fun onDestroyView() {
@@ -69,11 +71,11 @@ class MainSettingsFragment : CanaryFragment() {
 
     if (PasteService.isRunning) {
       val task = ImageLoader.fromResource(activity, R.drawable.ic_help_24dp)
-          .into(main_settings_fab)
+          .into(binding.mainSettingsFab)
       drawableMap.put("fab", task)
     } else {
       val task = ImageLoader.fromResource(activity, R.drawable.ic_service_start_24dp)
-          .into(main_settings_fab)
+          .into(binding.mainSettingsFab)
       drawableMap.put("fab", task)
     }
   }
