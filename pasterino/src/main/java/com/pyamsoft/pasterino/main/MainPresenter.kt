@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.main
 
-class PasteComponent(private val module: PasteServiceModule) {
+import com.pyamsoft.pydroid.presenter.ViewPresenter
 
-  internal fun inject(service: SinglePasteService) {
-    service.presenter = module.getSinglePresenter()
-  }
+internal class MainPresenter : ViewPresenter()
 
-  internal fun inject(service: PasteService) {
-    service.presenter = module.getPasteServicePresenter()
-  }
-}

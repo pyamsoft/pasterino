@@ -18,29 +18,40 @@ package com.pyamsoft.pasterino
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.base.PasterinoModule
-import com.pyamsoft.pasterino.main.MainComponent
+import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainPresenter
+import com.pyamsoft.pasterino.main.MainSettingsFragment
 import com.pyamsoft.pasterino.main.MainSettingsModule
-import com.pyamsoft.pasterino.service.PasteComponent
+import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
+import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceModule
+import com.pyamsoft.pasterino.service.SinglePasteService
 
 class PasterinoComponent private constructor(module: PasterinoModule) {
 
-  private val mainComponent: MainComponent
-  private val pasteComponent: PasteComponent
+  private val mainSettingsModule: MainSettingsModule = MainSettingsModule(module)
+  private val pasteServiceModule: PasteServiceModule = PasteServiceModule(module)
 
-  init {
-    val mainSettingsModule = MainSettingsModule(module)
-    val pasteServiceModule = PasteServiceModule(module)
-    mainComponent = MainComponent(mainSettingsModule)
-    pasteComponent = PasteComponent(pasteServiceModule)
+
+  fun inject(service: SinglePasteService) {
+    service.presenter = pasteServiceModule.getSinglePresenter()
   }
 
-  @CheckResult fun plusMainComponent(): MainComponent {
-    return mainComponent
+  fun inject(service: PasteService) {
+    service.presenter = pasteServiceModule.getPasteServicePresenter()
   }
 
-  @CheckResult fun plusPasteComponent(): PasteComponent {
-    return pasteComponent
+  fun inject(fragment: MainSettingsFragment) {
+    fragment.presenter = MainPresenter()
+  }
+
+  fun inject(fragment: MainSettingsPreferenceFragment) {
+    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
+    fragment.publisher = mainSettingsModule.getPastePublisher()
+  }
+
+  fun inject(dialog: ConfirmationDialog) {
+    dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
   }
 
   companion object {

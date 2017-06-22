@@ -16,14 +16,14 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.presenter.SchedulerPreferencePresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class MainSettingsPreferencePresenter internal constructor(
     private val interactor: MainSettingsPreferenceInteractor,
     private val bus: MainBus,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPreferencePresenter(
     observeScheduler, subscribeScheduler) {
 
   /**
@@ -33,8 +33,8 @@ class MainSettingsPreferencePresenter internal constructor(
     disposeOnStop {
       bus.listen()
           .flatMapSingle { interactor.clearAll() }
-          .subscribeOn(subscribeScheduler)
-          .observeOn(observeScheduler)
+          .subscribeOn(backgroundScheduler)
+          .observeOn(foregroundScheduler)
           .subscribe({ onClearAll() }, { Timber.e(it, "OnError EventBus") })
     }
   }
