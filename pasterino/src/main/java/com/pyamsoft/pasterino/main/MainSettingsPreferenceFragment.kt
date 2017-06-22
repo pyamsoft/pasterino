@@ -19,13 +19,14 @@ package com.pyamsoft.pasterino.main
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.preference.Preference
 import android.view.View
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.base.PasteServicePublisher
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
-import com.pyamsoft.pasterino.base.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
@@ -36,6 +37,7 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   internal lateinit var presenter: MainSettingsPreferencePresenter
   internal lateinit var publisher: PasteServicePublisher
+  private lateinit var explain: Preference
 
   override val isLastOnBackStack: AboutLibrariesFragment.BackStackState
     get() = AboutLibrariesFragment.BackStackState.LAST
@@ -52,18 +54,13 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Injector.with(context) {
-      it.plusMainComponent().inject(this)
+      it.inject(this)
     }
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    val explain = findPreference(getString(R.string.explain_key))
-    explain.setOnPreferenceClickListener { _ ->
-      DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
-      true
-    }
+    explain = findPreference(getString(R.string.explain_key))
   }
 
   override fun onStart() {
@@ -82,6 +79,10 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
           .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
       activityManager.clearApplicationUserData()
     }
+
+    presenter.clickEvent(explain, {
+      DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
+    })
   }
 
   override fun onStop() {

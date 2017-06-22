@@ -36,7 +36,7 @@ class SinglePasteService : Service() {
   override fun onCreate() {
     super.onCreate()
     Injector.with(this) {
-      it.plusPasteComponent().inject(this)
+      it.inject(this)
     }
   }
 

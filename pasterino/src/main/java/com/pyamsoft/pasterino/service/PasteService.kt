@@ -44,7 +44,7 @@ class PasteService : AccessibilityService() {
     Timber.d("onServiceConnected")
 
     Injector.with(this) {
-      it.plusPasteComponent().inject(this)
+      it.inject(this)
     }
 
     presenter.registerOnBus(onPasteRequested = {

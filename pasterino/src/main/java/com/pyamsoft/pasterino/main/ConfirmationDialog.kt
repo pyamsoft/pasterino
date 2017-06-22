@@ -30,7 +30,7 @@ class ConfirmationDialog : CanaryDialog() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Injector.with(context) {
-      it.plusMainComponent().inject(this)
+      it.inject(this)
     }
   }
 
