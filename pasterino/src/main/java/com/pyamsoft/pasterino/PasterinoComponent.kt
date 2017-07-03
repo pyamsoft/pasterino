@@ -35,6 +35,7 @@ class PasterinoComponent private constructor(module: PasterinoModule) {
 
   fun inject(service: SinglePasteService) {
     service.presenter = pasteServiceModule.getSinglePresenter()
+    service.publisher = pasteServiceModule.getPasteServicePublisher()
   }
 
   fun inject(service: PasteService) {
