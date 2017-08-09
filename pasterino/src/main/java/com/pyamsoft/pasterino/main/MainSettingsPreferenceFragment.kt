@@ -25,6 +25,7 @@ import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.base.PasteServicePublisher
+import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.Callback
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
@@ -65,20 +66,22 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onStart() {
     super.onStart()
-    presenter.registerOnEventBus {
-      PasteServiceNotification.stop(context)
-      SinglePasteService.stop(context)
-      try {
-        publisher.publish(ServiceEvent(ServiceEvent.Type.FINISH))
-      } catch (e: NullPointerException) {
-        Timber.e(e, "Expected exception when Service is NULL")
-      }
+    presenter.start(object : Callback {
+      override fun onClearAll() {
+        PasteServiceNotification.stop(context)
+        SinglePasteService.stop(context)
+        try {
+          publisher.publish(ServiceEvent(ServiceEvent.Type.FINISH))
+        } catch (e: NullPointerException) {
+          Timber.e(e, "Expected exception when Service is NULL")
+        }
 
-      Timber.d("Clear application data")
-      val activityManager = context.applicationContext
-          .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-      activityManager.clearApplicationUserData()
-    }
+        Timber.d("Clear application data")
+        val activityManager = context.applicationContext
+            .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        activityManager.clearApplicationUserData()
+      }
+    })
 
     presenter.clickEvent(explain, {
       DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
@@ -92,7 +95,6 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onDestroy() {
     super.onDestroy()
-    presenter.destroy()
     Pasterino.getRefWatcher(this).watch(this)
   }
 

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.presenter.ViewPresenter
+import com.pyamsoft.pydroid.util.presenter.ViewPresenter
 
-internal class MainPresenter : ViewPresenter()
+class MainPresenter internal constructor() : ViewPresenter<Unit>()
 

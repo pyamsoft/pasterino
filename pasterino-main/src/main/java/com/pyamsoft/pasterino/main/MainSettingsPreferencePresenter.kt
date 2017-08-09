@@ -16,20 +16,24 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.presenter.SchedulerPreferencePresenter
+import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.Callback
+import com.pyamsoft.pydroid.util.presenter.SchedulerPreferencePresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class MainSettingsPreferencePresenter internal constructor(
     private val interactor: MainSettingsPreferenceInteractor,
     private val bus: MainBus,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPreferencePresenter(
+    observeScheduler: Scheduler,
+    subscribeScheduler: Scheduler) : SchedulerPreferencePresenter<Callback>(
     observeScheduler, subscribeScheduler) {
 
-  /**
-   * public
-   */
-  fun registerOnEventBus(onClearAll: () -> Unit) {
+  override fun onStart(bound: Callback) {
+    super.onStart(bound)
+    registerOnEventBus(bound::onClearAll)
+  }
+
+  private fun registerOnEventBus(onClearAll: () -> Unit) {
     disposeOnStop {
       bus.listen()
           .flatMapSingle { interactor.clearAll() }
@@ -37,5 +41,10 @@ class MainSettingsPreferencePresenter internal constructor(
           .observeOn(foregroundScheduler)
           .subscribe({ onClearAll() }, { Timber.e(it, "OnError EventBus") })
     }
+  }
+
+  interface Callback {
+
+    fun onClearAll()
   }
 }

@@ -62,6 +62,7 @@ class MainSettingsFragment : CanaryFragment() {
 
   override fun onStart() {
     super.onStart()
+    presenter.start(Unit)
     presenter.clickEvent(binding.mainSettingsFab, {
       if (PasteService.isRunning) {
         DialogUtil.guaranteeSingleDialogFragment(activity, ServiceInfoDialog(),
@@ -76,11 +77,6 @@ class MainSettingsFragment : CanaryFragment() {
   override fun onStop() {
     super.onStop()
     presenter.stop()
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    presenter.destroy()
   }
 
   override fun onResume() {

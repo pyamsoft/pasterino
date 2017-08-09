@@ -38,6 +38,8 @@ class SinglePasteService : Service() {
     Injector.with(this) {
       it.inject(this)
     }
+
+    presenter.start(Unit)
   }
 
   override fun onDestroy() {
