@@ -17,14 +17,12 @@
 package com.pyamsoft.pasterino.main
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pasterino.base.PasteServicePublisher
 import com.pyamsoft.pasterino.base.PasterinoModule
 import io.reactivex.Scheduler
 
 class MainSettingsModule(module: PasterinoModule) {
 
   private val mainBus = MainBus()
-  private val pasteBus = module.providePasteBus()
   private val interactor: MainSettingsPreferenceInteractor = MainSettingsPreferenceInteractor(
       module.provideClearPreferences())
   private val obsScheduler: Scheduler = module.provideObsScheduler()
@@ -38,7 +36,7 @@ class MainSettingsModule(module: PasterinoModule) {
     return MainSettingsPreferencePublisher(mainBus)
   }
 
-  fun getPastePublisher(): PasteServicePublisher {
-    return PasteServicePublisher(pasteBus)
+  fun getPresenter(): MainPresenter {
+    return MainPresenter()
   }
 }

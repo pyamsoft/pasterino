@@ -43,11 +43,6 @@ class MainActivity : TamperActivity() {
     showMainFragment()
   }
 
-  override fun onPostResume() {
-    super.onPostResume()
-    RatingDialog.showRatingDialog(this, this, false)
-  }
-
   override val safePackageName: String
     get() = "com.pyamsoft.pasterino"
 

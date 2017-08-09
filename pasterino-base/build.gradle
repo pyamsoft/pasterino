@@ -46,7 +46,7 @@ dependencies {
   compile "com.android.support:preference-v14:$supportLib"
 
   // PYDroid
-  compile("com.github.pyamsoft.pydroid:pydroid:$pydroid@aar") {
+  compile("com.github.pyamsoft.pydroid:pydroid-util:$pydroid@aar") {
     transitive = true
   }
 

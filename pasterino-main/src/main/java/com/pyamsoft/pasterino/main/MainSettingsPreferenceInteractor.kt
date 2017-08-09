@@ -25,8 +25,6 @@ internal class MainSettingsPreferenceInteractor internal constructor(
 
   @CheckResult internal fun clearAll(): Single<Unit> {
     // This must be a Single or the stream will not continue
-    return Single.fromCallable {
-      preferences.clearAll()
-    }
+    return Single.fromCallable(preferences::clearAll)
   }
 }
