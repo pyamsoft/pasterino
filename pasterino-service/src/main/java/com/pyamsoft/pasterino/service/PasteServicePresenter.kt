@@ -23,13 +23,17 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class PasteServicePresenter internal constructor(observeScheduler: Scheduler,
-    subscribeScheduler: Scheduler, private val bus: PasteBus) : SchedulerPresenter(observeScheduler,
+    subscribeScheduler: Scheduler,
+    private val bus: PasteBus) : SchedulerPresenter<PasteServicePresenter.Callback>(
+    observeScheduler,
     subscribeScheduler) {
 
-  /**
-   * public
-   */
-  fun registerOnBus(onPasteRequested: () -> Unit, onServiceFinishRequested: () -> Unit) {
+  override fun onStart(bound: Callback) {
+    super.onStart(bound)
+    registerOnBus(bound::onPasteRequested, bound::onServiceFinishRequested)
+  }
+
+  private fun registerOnBus(onPasteRequested: () -> Unit, onServiceFinishRequested: () -> Unit) {
     disposeOnStop {
       bus.listen()
           .subscribeOn(backgroundScheduler)
@@ -42,5 +46,12 @@ class PasteServicePresenter internal constructor(observeScheduler: Scheduler,
             }
           }, { Timber.e(it, "onError event bus") })
     }
+  }
+
+  interface Callback {
+
+    fun onPasteRequested()
+
+    fun onServiceFinishRequested()
   }
 }

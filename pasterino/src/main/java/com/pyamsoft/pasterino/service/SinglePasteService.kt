@@ -44,7 +44,6 @@ class SinglePasteService : Service() {
     super.onDestroy()
     handler.removeCallbacksAndMessages(null)
     presenter.stop()
-    presenter.destroy()
   }
 
   override fun onBind(intent: Intent): IBinder? {

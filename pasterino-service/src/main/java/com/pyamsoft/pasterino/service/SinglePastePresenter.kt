@@ -21,12 +21,9 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class SinglePastePresenter internal constructor(private val interactor: PasteServiceInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Unit>(
     observeScheduler, subscribeScheduler) {
 
-  /**
-   * public
-   */
   fun postDelayedEvent(onPost: (Long) -> Unit) {
     disposeOnStop {
       interactor.getPasteDelayTime()
