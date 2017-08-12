@@ -17,16 +17,18 @@
 package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.Callback
-import com.pyamsoft.pydroid.util.presenter.SchedulerPreferencePresenter
+import com.pyamsoft.pasterino.model.ConfirmEvent
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class MainSettingsPreferencePresenter internal constructor(
     private val interactor: MainSettingsPreferenceInteractor,
-    private val bus: MainBus,
-    observeScheduler: Scheduler,
-    subscribeScheduler: Scheduler) : SchedulerPreferencePresenter<Callback>(
-    observeScheduler, subscribeScheduler) {
+    private val bus: EventBus<ConfirmEvent>,
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainScheduler: Scheduler) : SchedulerPresenter<Callback>(
+    computationScheduler, ioScheduler, mainScheduler) {
 
   override fun onStart(bound: Callback) {
     super.onStart(bound)
@@ -37,8 +39,8 @@ class MainSettingsPreferencePresenter internal constructor(
     disposeOnStop {
       bus.listen()
           .flatMapSingle { interactor.clearAll() }
-          .subscribeOn(backgroundScheduler)
-          .observeOn(foregroundScheduler)
+          .subscribeOn(ioScheduler)
+          .observeOn(mainThreadScheduler)
           .subscribe({ onClearAll() }, { Timber.e(it, "OnError EventBus") })
     }
   }

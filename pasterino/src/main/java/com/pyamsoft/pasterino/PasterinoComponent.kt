@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.base.PasterinoModule
 import com.pyamsoft.pasterino.main.ConfirmationDialog
-import com.pyamsoft.pasterino.main.MainSettingsFragment
 import com.pyamsoft.pasterino.main.MainSettingsModule
 import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
 import com.pyamsoft.pasterino.service.PasteService
@@ -39,10 +38,6 @@ class PasterinoComponent private constructor(module: PasterinoModule) {
 
   fun inject(service: PasteService) {
     service.presenter = pasteServiceModule.getPasteServicePresenter()
-  }
-
-  fun inject(fragment: MainSettingsFragment) {
-    fragment.presenter = mainSettingsModule.getPresenter()
   }
 
   fun inject(fragment: MainSettingsPreferenceFragment) {

@@ -23,7 +23,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import com.pyamsoft.pasterino.Injector
-import com.pyamsoft.pasterino.base.PasteServicePublisher
 import com.pyamsoft.pasterino.model.ServiceEvent
 import timber.log.Timber
 

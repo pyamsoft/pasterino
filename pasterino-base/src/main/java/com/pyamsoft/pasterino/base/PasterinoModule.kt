@@ -20,6 +20,8 @@ import android.content.Context
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.base.preference.ClearPreferences
 import com.pyamsoft.pasterino.base.preference.PastePreferences
+import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -30,7 +32,7 @@ class PasterinoModule(context: Context) {
       context.applicationContext)
   private val pasteBus = PasteBus()
 
-  @CheckResult fun providePasteBus() : PasteBus {
+  @CheckResult fun providePasteBus(): EventBus<ServiceEvent> {
     return pasteBus
   }
 
@@ -42,11 +44,15 @@ class PasterinoModule(context: Context) {
     return preferences
   }
 
-  @CheckResult fun provideObsScheduler(): Scheduler {
+  @CheckResult fun provideMainScheduler(): Scheduler {
     return AndroidSchedulers.mainThread()
   }
 
-  @CheckResult fun provideSubScheduler(): Scheduler {
+  @CheckResult fun provideIoScheduler(): Scheduler {
     return Schedulers.io()
+  }
+
+  @CheckResult fun provideComputationScheduler(): Scheduler {
+    return Schedulers.computation()
   }
 }

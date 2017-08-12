@@ -24,21 +24,20 @@ import android.view.View
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.base.PasteServicePublisher
 import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.Callback
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
+import com.pyamsoft.pasterino.service.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
-class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
+class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Callback {
 
   internal lateinit var presenter: MainSettingsPreferencePresenter
   internal lateinit var publisher: PasteServicePublisher
-  private lateinit var explain: Preference
 
   override val isLastOnBackStack: AboutLibrariesFragment.BackStackState
     get() = AboutLibrariesFragment.BackStackState.LAST
@@ -61,31 +60,32 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    explain = findPreference(getString(R.string.explain_key))
+    val explain: Preference = findPreference(getString(R.string.explain_key))
+    explain.setOnPreferenceClickListener {
+      DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
+      return@setOnPreferenceClickListener true
+    }
   }
 
   override fun onStart() {
     super.onStart()
-    presenter.start(object : Callback {
-      override fun onClearAll() {
-        PasteServiceNotification.stop(context)
-        SinglePasteService.stop(context)
-        try {
-          publisher.publish(ServiceEvent(ServiceEvent.Type.FINISH))
-        } catch (e: NullPointerException) {
-          Timber.e(e, "Expected exception when Service is NULL")
-        }
+    presenter.start(this)
 
-        Timber.d("Clear application data")
-        val activityManager = context.applicationContext
-            .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        activityManager.clearApplicationUserData()
-      }
-    })
+  }
 
-    presenter.clickEvent(explain, {
-      DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
-    })
+  override fun onClearAll() {
+    PasteServiceNotification.stop(context)
+    SinglePasteService.stop(context)
+    try {
+      publisher.publish(ServiceEvent(ServiceEvent.Type.FINISH))
+    } catch (e: NullPointerException) {
+      Timber.e(e, "Expected exception when Service is NULL")
+    }
+
+    Timber.d("Clear application data")
+    val activityManager = context.applicationContext
+        .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    activityManager.clearApplicationUserData()
   }
 
   override fun onStop() {

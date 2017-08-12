@@ -27,7 +27,7 @@ import io.reactivex.Observable
  *
  * We do not use an object so that creation of buses is controlled, but access and usage is public
  */
-class PasteBus internal constructor() : EventBus<ServiceEvent> {
+internal class PasteBus internal constructor() : EventBus<ServiceEvent> {
 
   private val bus = RxBus.create<ServiceEvent>()
 
