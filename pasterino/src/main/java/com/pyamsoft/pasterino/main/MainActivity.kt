@@ -25,7 +25,6 @@ import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.util.AppUtil
 
@@ -42,9 +41,6 @@ class MainActivity : TamperActivity() {
     setupAppBar()
     showMainFragment()
   }
-
-  override val safePackageName: String
-    get() = "com.pyamsoft.pasterino"
 
   override fun onBackPressed() {
     val fragmentManager = supportFragmentManager
@@ -93,15 +89,17 @@ class MainActivity : TamperActivity() {
       return arrayOf(line1, line2, line3)
     }
 
+  override val safePackageName: String
+    get() = "com.pyamsoft.pasterino"
+
   override val versionName: String
     get() = BuildConfig.VERSION_NAME
 
   override val applicationIcon: Int
     get() = R.mipmap.ic_launcher
 
-  override fun provideApplicationName(): String {
-    return "Pasterino"
-  }
+  override val applicationName: String
+    get() = getString(R.string.app_name)
 
   override val currentApplicationVersion: Int
     get() = BuildConfig.VERSION_CODE

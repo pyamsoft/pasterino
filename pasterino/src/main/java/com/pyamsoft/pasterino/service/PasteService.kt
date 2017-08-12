@@ -28,7 +28,7 @@ import com.pyamsoft.pasterino.service.PasteServicePresenter.Callback
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import timber.log.Timber
 
-class PasteService : AccessibilityService() {
+class PasteService : AccessibilityService(), Callback {
 
   internal lateinit var presenter: PasteServicePresenter
 
@@ -48,29 +48,27 @@ class PasteService : AccessibilityService() {
       it.inject(this)
     }
 
-    presenter.start(object : Callback {
-      override fun onPasteRequested() {
-        val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-        if (info != null && info.isEditable) {
-          Timber.d("Perform paste on target: %s", info.viewIdResourceName)
-          info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
-          Toasty.makeText(applicationContext, "Pasting text into current input focus.",
-              Toasty.LENGTH_SHORT).show()
-        } else {
-          Timber.e("No editable target to paste into")
-        }
-      }
-
-      override fun onServiceFinishRequested() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-          disableSelf()
-        }
-      }
-
-    })
-
+    presenter.start(this)
     isRunning = true
     PasteServiceNotification.start(this)
+  }
+
+  override fun onPasteRequested() {
+    val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+    if (info != null && info.isEditable) {
+      Timber.d("Perform paste on target: %s", info.viewIdResourceName)
+      info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
+      Toasty.makeText(applicationContext, "Pasting text into current input focus.",
+          Toasty.LENGTH_SHORT).show()
+    } else {
+      Timber.e("No editable target to paste into")
+    }
+  }
+
+  override fun onServiceFinishRequested() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      disableSelf()
+    }
   }
 
   override fun onUnbind(intent: Intent): Boolean {

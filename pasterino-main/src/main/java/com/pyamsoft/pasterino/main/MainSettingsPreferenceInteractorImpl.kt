@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.base
+package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pasterino.base.preference.ClearPreferences
+import io.reactivex.Single
 
-class PasteServicePublisher (private val bus: PasteBus) {
+internal class MainSettingsPreferenceInteractorImpl internal constructor(
+    private val preferences: ClearPreferences) : MainSettingsPreferenceInteractor {
 
-  fun publish(event: ServiceEvent) {
-    bus.publish(event)
+  override fun clearAll(): Single<Unit> {
+    // This must be a Single or the stream will not continue
+    return Single.fromCallable(preferences::clearAll)
   }
 }

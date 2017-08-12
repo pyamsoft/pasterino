@@ -18,25 +18,28 @@ package com.pyamsoft.pasterino.main
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.base.PasterinoModule
+import com.pyamsoft.pasterino.model.ConfirmEvent
+import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Scheduler
 
 class MainSettingsModule(module: PasterinoModule) {
 
-  private val mainBus = MainBus()
-  private val interactor: MainSettingsPreferenceInteractor = MainSettingsPreferenceInteractor(
-      module.provideClearPreferences())
-  private val obsScheduler: Scheduler = module.provideObsScheduler()
-  private val subScheduler: Scheduler = module.provideSubScheduler()
+  private val interactor: MainSettingsPreferenceInteractor
+  private val mainBus: EventBus<ConfirmEvent> = MainBus()
+  private val computationScheduler: Scheduler = module.provideComputationScheduler()
+  private val ioScheduler: Scheduler = module.provideIoScheduler()
+  private val mainScheduler: Scheduler = module.provideMainScheduler()
+
+  init {
+    interactor = MainSettingsPreferenceInteractorImpl(module.provideClearPreferences())
+  }
 
   @CheckResult fun getSettingsPreferencePresenter(): MainSettingsPreferencePresenter {
-    return MainSettingsPreferencePresenter(interactor, mainBus, obsScheduler, subScheduler)
+    return MainSettingsPreferencePresenter(interactor, mainBus, computationScheduler, ioScheduler,
+        mainScheduler)
   }
 
   @CheckResult fun getSettingsPreferencePublisher(): MainSettingsPreferencePublisher {
     return MainSettingsPreferencePublisher(mainBus)
-  }
-
-  fun getPresenter(): MainPresenter {
-    return MainPresenter()
   }
 }

@@ -17,24 +17,27 @@
 package com.pyamsoft.pasterino.service
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pasterino.base.PasteServicePublisher
 import com.pyamsoft.pasterino.base.PasterinoModule
 import io.reactivex.Scheduler
 
 class PasteServiceModule(pasterinoModule: PasterinoModule) {
 
+  private val interactor: PasteServiceInteractor
   private val pasteBus = pasterinoModule.providePasteBus()
-  private val interactor: PasteServiceInteractor = PasteServiceInteractor(
-      pasterinoModule.providePreferences())
-  private val obsScheduler: Scheduler = pasterinoModule.provideObsScheduler()
-  private val subScheduler: Scheduler = pasterinoModule.provideSubScheduler()
+  private val computationScheduler: Scheduler = pasterinoModule.provideComputationScheduler()
+  private val ioScheduler: Scheduler = pasterinoModule.provideIoScheduler()
+  private val mainScheduler: Scheduler = pasterinoModule.provideMainScheduler()
+
+  init {
+    interactor = PasteServiceInteractorImpl(pasterinoModule.providePreferences())
+  }
 
   @CheckResult fun getSinglePresenter(): SinglePastePresenter {
-    return SinglePastePresenter(interactor, obsScheduler, subScheduler)
+    return SinglePastePresenter(interactor, computationScheduler, ioScheduler, mainScheduler)
   }
 
   @CheckResult fun getPasteServicePresenter(): PasteServicePresenter {
-    return PasteServicePresenter(obsScheduler, subScheduler, pasteBus)
+    return PasteServicePresenter(pasteBus, computationScheduler, ioScheduler, mainScheduler)
   }
 
   @CheckResult fun getPasteServicePublisher(): PasteServicePublisher {

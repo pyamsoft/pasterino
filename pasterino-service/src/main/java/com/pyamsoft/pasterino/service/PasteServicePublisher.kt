@@ -16,11 +16,12 @@
 
 package com.pyamsoft.pasterino.service
 
-import android.support.annotation.CheckResult
-import io.reactivex.Single
+import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.bus.EventBus
 
-internal interface PasteServiceInteractor {
+class PasteServicePublisher(private val bus: EventBus<ServiceEvent>) {
 
-  @CheckResult fun getPasteDelayTime(): Single<Long>
-
+  fun publish(event: ServiceEvent) {
+    bus.publish(event)
+  }
 }

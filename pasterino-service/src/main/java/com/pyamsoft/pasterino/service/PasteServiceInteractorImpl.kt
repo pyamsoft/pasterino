@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.util.presenter.ViewPresenter
+import com.pyamsoft.pasterino.base.preference.PastePreferences
+import io.reactivex.Single
 
-class MainPresenter internal constructor() : ViewPresenter<Unit>()
+internal class PasteServiceInteractorImpl internal constructor(
+    private val preferences: PastePreferences) : PasteServiceInteractor {
 
+  override fun getPasteDelayTime(): Single<Long> {
+    return Single.fromCallable(preferences::pasteDelayTime)
+  }
+}

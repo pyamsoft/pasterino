@@ -17,14 +17,10 @@
 package com.pyamsoft.pasterino.main
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pasterino.base.preference.ClearPreferences
 import io.reactivex.Single
 
-internal class MainSettingsPreferenceInteractor internal constructor(
-    private val preferences: ClearPreferences) {
+internal interface MainSettingsPreferenceInteractor {
 
-  @CheckResult internal fun clearAll(): Single<Unit> {
-    // This must be a Single or the stream will not continue
-    return Single.fromCallable(preferences::clearAll)
-  }
+  @CheckResult fun clearAll(): Single<Unit>
+
 }

@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
@@ -35,14 +34,6 @@ class MainSettingsFragment : CanaryFragment() {
 
   private lateinit var binding: FragmentMainBinding
   private val drawableMap = LoaderMap()
-  internal lateinit var presenter: MainPresenter
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Injector.with(context) {
-      it.inject(this)
-    }
-  }
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
@@ -58,12 +49,7 @@ class MainSettingsFragment : CanaryFragment() {
 
   private fun setupFAB() {
     FABUtil.setupFABBehavior(binding.mainSettingsFab, HideScrollFABBehavior(10))
-  }
-
-  override fun onStart() {
-    super.onStart()
-    presenter.start(Unit)
-    presenter.clickEvent(binding.mainSettingsFab, {
+    binding.mainSettingsFab.setOnClickListener {
       if (PasteService.isRunning) {
         DialogUtil.guaranteeSingleDialogFragment(activity, ServiceInfoDialog(),
             "servce_info")
@@ -71,12 +57,7 @@ class MainSettingsFragment : CanaryFragment() {
         DialogUtil.guaranteeSingleDialogFragment(activity, AccessibilityRequestDialog(),
             "accessibility")
       }
-    })
-  }
-
-  override fun onStop() {
-    super.onStop()
-    presenter.stop()
+    }
   }
 
   override fun onResume() {
