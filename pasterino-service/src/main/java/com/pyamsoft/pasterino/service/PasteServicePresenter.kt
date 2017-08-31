@@ -34,7 +34,7 @@ class PasteServicePresenter internal constructor(
   }
 
   private fun registerOnBus(onPasteRequested: () -> Unit, onServiceFinishRequested: () -> Unit) {
-    disposeOnStop {
+    disposeOnDestroy {
       bus.listen()
           .subscribeOn(ioScheduler)
           .observeOn(mainThreadScheduler)

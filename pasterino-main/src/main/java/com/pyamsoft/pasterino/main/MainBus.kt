@@ -29,9 +29,7 @@ internal class MainBus internal constructor() : EventBus<ConfirmEvent> {
     bus.publish(event)
   }
 
-  override fun listen(): Observable<ConfirmEvent> {
-    return bus.listen()
-  }
+  override fun listen(): Observable<ConfirmEvent> = bus.listen()
 
 }
 

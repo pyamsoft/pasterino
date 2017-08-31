@@ -22,8 +22,6 @@ import io.reactivex.Single
 internal class MainSettingsPreferenceInteractorImpl internal constructor(
     private val preferences: ClearPreferences) : MainSettingsPreferenceInteractor {
 
-  override fun clearAll(): Single<Unit> {
-    // This must be a Single or the stream will not continue
-    return Single.fromCallable(preferences::clearAll)
-  }
+  // This must be a Single or the stream will not continue
+  override fun clearAll(): Single<Unit> = Single.fromCallable(preferences::clearAll)
 }

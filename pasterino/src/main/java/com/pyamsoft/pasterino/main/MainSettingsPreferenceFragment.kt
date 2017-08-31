@@ -29,12 +29,16 @@ import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Callback {
+
+  override fun provideBoundPresenters(): List<Presenter<*, *>> =
+      super.provideBoundPresenters() + listOf(presenter)
 
   internal lateinit var presenter: MainSettingsPreferencePresenter
   internal lateinit var publisher: PasteServicePublisher
@@ -56,6 +60,8 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Ca
     Injector.with(context) {
       it.inject(this)
     }
+
+    presenter.create(this)
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -69,7 +75,7 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Ca
 
   override fun onStart() {
     super.onStart()
-    presenter.start(this)
+    presenter.start(Unit)
 
   }
 
@@ -86,11 +92,6 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Ca
     val activityManager = context.applicationContext
         .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     activityManager.clearApplicationUserData()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    presenter.stop()
   }
 
   override fun onDestroy() {

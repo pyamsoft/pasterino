@@ -35,9 +35,7 @@ internal class PasteBus internal constructor() : EventBus<ServiceEvent> {
     bus.publish(event)
   }
 
-  override fun listen(): Observable<ServiceEvent> {
-    return bus.listen()
-  }
+  override fun listen(): Observable<ServiceEvent> = bus.listen()
 
 }
 

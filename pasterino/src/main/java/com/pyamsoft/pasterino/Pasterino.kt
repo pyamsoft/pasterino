@@ -54,29 +54,25 @@ class Pasterino : Application() {
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
     component = PasterinoComponent.withModule(PasterinoModule(applicationContext))
 
-    if (BuildConfig.DEBUG) {
-      refWatcher = LeakCanary.install(this)
+    refWatcher = if (BuildConfig.DEBUG) {
+      LeakCanary.install(this)
     } else {
-      refWatcher = RefWatcher.DISABLED
+      RefWatcher.DISABLED
     }
   }
 
   companion object {
 
     @JvmStatic
-    @CheckResult fun getRefWatcher(fragment: ActionBarSettingsPreferenceFragment): RefWatcher {
-      return getRefWatcherInternal(fragment)
-    }
+    @CheckResult fun getRefWatcher(fragment: ActionBarSettingsPreferenceFragment): RefWatcher =
+        getRefWatcherInternal(fragment)
 
     @JvmStatic
-    @CheckResult fun getRefWatcher(fragment: CanaryFragment): RefWatcher {
-      return getRefWatcherInternal(fragment)
-    }
+    @CheckResult fun getRefWatcher(fragment: CanaryFragment): RefWatcher =
+        getRefWatcherInternal(fragment)
 
     @JvmStatic
-    @CheckResult fun getRefWatcher(dialog: CanaryDialog): RefWatcher {
-      return getRefWatcherInternal(dialog)
-    }
+    @CheckResult fun getRefWatcher(dialog: CanaryDialog): RefWatcher = getRefWatcherInternal(dialog)
 
     @JvmStatic
     @CheckResult private fun getRefWatcherInternal(fragment: Fragment): RefWatcher {

@@ -54,13 +54,14 @@ class MainActivity : TamperActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     val itemId = item.itemId
-    val handled: Boolean
-    when (itemId) {
+    val handled: Boolean = when (itemId) {
       android.R.id.home -> {
         onBackPressed()
-        handled = true
+
+        // Assign
+        true
       }
-      else -> handled = false
+      else -> false
     }
     return handled || super.onOptionsItemSelected(item)
   }

@@ -27,16 +27,16 @@ class MainSettingsPreferencePresenter internal constructor(
     private val interactor: MainSettingsPreferenceInteractor,
     private val bus: EventBus<ConfirmEvent>,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainScheduler: Scheduler) : SchedulerPresenter<Callback>(
+    mainScheduler: Scheduler) : SchedulerPresenter<Callback, Unit>(
     computationScheduler, ioScheduler, mainScheduler) {
 
-  override fun onStart(bound: Callback) {
-    super.onStart(bound)
+  override fun onCreate(bound: Callback) {
+    super.onCreate(bound)
     registerOnEventBus(bound::onClearAll)
   }
 
   private fun registerOnEventBus(onClearAll: () -> Unit) {
-    disposeOnStop {
+    disposeOnDestroy {
       bus.listen()
           .flatMapSingle { interactor.clearAll() }
           .subscribeOn(ioScheduler)
