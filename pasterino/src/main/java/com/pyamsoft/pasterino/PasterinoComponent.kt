@@ -52,8 +52,7 @@ class PasterinoComponent private constructor(module: PasterinoModule) {
   companion object {
 
     @JvmStatic
-    @CheckResult internal fun withModule(module: PasterinoModule): PasterinoComponent {
-      return PasterinoComponent(module)
-    }
+    @CheckResult internal fun withModule(module: PasterinoModule): PasterinoComponent =
+        PasterinoComponent(module)
   }
 }

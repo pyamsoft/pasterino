@@ -32,27 +32,15 @@ class PasterinoModule(context: Context) {
       context.applicationContext)
   private val pasteBus = PasteBus()
 
-  @CheckResult fun providePasteBus(): EventBus<ServiceEvent> {
-    return pasteBus
-  }
+  @CheckResult fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
 
-  @CheckResult fun providePreferences(): PastePreferences {
-    return preferences
-  }
+  @CheckResult fun providePreferences(): PastePreferences = preferences
 
-  @CheckResult fun provideClearPreferences(): ClearPreferences {
-    return preferences
-  }
+  @CheckResult fun provideClearPreferences(): ClearPreferences = preferences
 
-  @CheckResult fun provideMainScheduler(): Scheduler {
-    return AndroidSchedulers.mainThread()
-  }
+  @CheckResult fun provideMainScheduler(): Scheduler = AndroidSchedulers.mainThread()
 
-  @CheckResult fun provideIoScheduler(): Scheduler {
-    return Schedulers.io()
-  }
+  @CheckResult fun provideIoScheduler(): Scheduler = Schedulers.io()
 
-  @CheckResult fun provideComputationScheduler(): Scheduler {
-    return Schedulers.computation()
-  }
+  @CheckResult fun provideComputationScheduler(): Scheduler = Schedulers.computation()
 }

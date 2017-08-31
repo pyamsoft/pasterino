@@ -63,6 +63,7 @@ class MainSettingsFragment : CanaryFragment() {
   override fun onResume() {
     super.onResume()
     setActionBarUpEnabled(false)
+    setActionBarTitle(R.string.app_name)
 
     if (PasteService.isRunning) {
       val task = ImageLoader.fromResource(activity, R.drawable.ic_help_24dp)
