@@ -25,11 +25,11 @@ import timber.log.Timber
 class PasteServicePresenter internal constructor(
     private val bus: EventBus<ServiceEvent>, computationScheduler: Scheduler,
     ioScheduler: Scheduler,
-    mainScheduler: Scheduler) : SchedulerPresenter<PasteServicePresenter.Callback>(
+    mainScheduler: Scheduler) : SchedulerPresenter<PasteServicePresenter.Callback, Unit>(
     computationScheduler, ioScheduler, mainScheduler) {
 
-  override fun onStart(bound: Callback) {
-    super.onStart(bound)
+  override fun onCreate(bound: Callback) {
+    super.onCreate(bound)
     registerOnBus(bound::onPasteRequested, bound::onServiceFinishRequested)
   }
 
