@@ -62,7 +62,7 @@ object PasteServiceNotification {
   @CheckResult private fun createNotification(context: Context): Notification {
     val appContext = context.applicationContext
     val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
-    val notificationChannelId: String = "pasterino_foreground"
+    val notificationChannelId = "pasterino_foreground"
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       setupNotificationChannel(appContext, notificationChannelId)
     }
