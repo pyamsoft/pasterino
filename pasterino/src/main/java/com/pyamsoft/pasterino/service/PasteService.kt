@@ -46,14 +46,13 @@ class PasteService : AccessibilityService(), Callback {
       it.inject(this)
     }
 
-    presenter.create(this)
+    presenter.bind(this)
   }
 
   override fun onServiceConnected() {
     super.onServiceConnected()
     Timber.d("onServiceConnected")
 
-    presenter.start(Unit)
     isRunning = true
     PasteServiceNotification.start(this)
   }
@@ -80,13 +79,12 @@ class PasteService : AccessibilityService(), Callback {
     Timber.d("onUnbind")
     PasteServiceNotification.stop(this)
     isRunning = false
-    presenter.stop()
     return super.onUnbind(intent)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    presenter.destroy()
+    presenter.unbind()
   }
 
   companion object {

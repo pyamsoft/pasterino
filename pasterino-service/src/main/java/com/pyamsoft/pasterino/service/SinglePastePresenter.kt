@@ -22,11 +22,11 @@ import timber.log.Timber
 
 class SinglePastePresenter internal constructor(private val interactor: PasteServiceInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainScheduler: Scheduler) : SchedulerPresenter<Unit, Unit>(
+    mainScheduler: Scheduler) : SchedulerPresenter<Unit>(
     computationScheduler, ioScheduler, mainScheduler) {
 
   fun postDelayedEvent(onPost: (Long) -> Unit) {
-    disposeOnStop {
+    dispose {
       interactor.getPasteDelayTime()
           .subscribeOn(ioScheduler)
           .observeOn(mainThreadScheduler)
