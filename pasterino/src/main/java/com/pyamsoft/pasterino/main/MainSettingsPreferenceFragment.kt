@@ -37,7 +37,7 @@ import timber.log.Timber
 
 class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Callback {
 
-  override fun provideBoundPresenters(): List<Presenter<*, *>> =
+  override fun provideBoundPresenters(): List<Presenter<*>> =
       super.provideBoundPresenters() + listOf(presenter)
 
   internal lateinit var presenter: MainSettingsPreferencePresenter
@@ -61,7 +61,7 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Ca
       it.inject(this)
     }
 
-    presenter.create(this)
+    presenter.bind(this)
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -71,12 +71,6 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Ca
       DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
       return@setOnPreferenceClickListener true
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    presenter.start(Unit)
-
   }
 
   override fun onClearAll() {
