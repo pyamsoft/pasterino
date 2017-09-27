@@ -16,8 +16,10 @@
 
 package com.pyamsoft.pasterino.service
 
+import com.pyamsoft.pydroid.helper.clear
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class SinglePastePresenter internal constructor(private val interactor: PasteServiceInteractor,
@@ -25,13 +27,19 @@ class SinglePastePresenter internal constructor(private val interactor: PasteSer
     mainScheduler: Scheduler) : SchedulerPresenter<Unit>(
     computationScheduler, ioScheduler, mainScheduler) {
 
+  private var postDisposable: Disposable = null.clear()
+
+  override fun onUnbind() {
+    super.onUnbind()
+    postDisposable = postDisposable.clear()
+  }
+
   fun postDelayedEvent(onPost: (Long) -> Unit) {
-    dispose {
-      interactor.getPasteDelayTime()
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
-          .subscribe({ onPost(it) },
-              { Timber.e(it, "onError postDelayedEvent") })
-    }
+    postDisposable = postDisposable.clear()
+    postDisposable = interactor.getPasteDelayTime()
+        .subscribeOn(ioScheduler)
+        .observeOn(mainThreadScheduler)
+        .subscribe({ onPost(it) },
+            { Timber.e(it, "onError postDelayedEvent") })
   }
 }
