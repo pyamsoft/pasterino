@@ -25,6 +25,7 @@ import android.support.v7.preference.Preference
 import android.view.View
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
+import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.Callback
 import com.pyamsoft.pasterino.model.ServiceEvent
@@ -59,9 +60,7 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Ca
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.with(context) {
-      it.inject(this)
-    }
+    (Injector.obtain(context.applicationContext) as PasterinoComponent).inject(this)
 
     presenter.bind(this)
   }

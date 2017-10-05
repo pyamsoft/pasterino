@@ -33,18 +33,7 @@ import com.squareup.leakcanary.RefWatcher
 class Pasterino : Application() {
 
   private lateinit var refWatcher: RefWatcher
-
   private var component: PasterinoComponent? = null
-
-  @CheckResult internal fun getComponent(): PasterinoComponent {
-    val obj = component
-    if (obj == null) {
-      throw IllegalStateException("PasterinoComponent must be initialized before use")
-    } else {
-      return obj
-    }
-  }
-
 
   override fun onCreate() {
     super.onCreate()
@@ -63,18 +52,32 @@ class Pasterino : Application() {
     }
   }
 
+  override fun getSystemService(name: String?): Any {
+    return if (Injector.name == name) {
+      // Return
+      component ?: throw IllegalStateException("PadLock component is NULL")
+    } else {
+
+      // Return
+      super.getSystemService(name)
+    }
+  }
+
   companion object {
 
     @JvmStatic
-    @CheckResult fun getRefWatcher(fragment: ActionBarSettingsPreferenceFragment): RefWatcher =
+    @CheckResult
+    fun getRefWatcher(fragment: ActionBarSettingsPreferenceFragment): RefWatcher =
         getRefWatcherInternal(fragment)
 
     @JvmStatic
-    @CheckResult fun getRefWatcher(fragment: CanaryFragment): RefWatcher =
+    @CheckResult
+    fun getRefWatcher(fragment: CanaryFragment): RefWatcher =
         getRefWatcherInternal(fragment)
 
     @JvmStatic
-    @CheckResult fun getRefWatcher(dialog: CanaryDialog): RefWatcher = getRefWatcherInternal(dialog)
+    @CheckResult
+    fun getRefWatcher(dialog: CanaryDialog): RefWatcher = getRefWatcherInternal(dialog)
 
     @JvmStatic
     @CheckResult private fun getRefWatcherInternal(fragment: Fragment): RefWatcher {

@@ -19,15 +19,19 @@
 package com.pyamsoft.pasterino
 
 import android.content.Context
+import com.pyamsoft.pydroid.SimpleInjector
 
-object Injector {
+object Injector : SimpleInjector {
 
-  fun with(context: Context, func: (PasterinoComponent) -> Unit) {
-    val app = context.applicationContext
-    if (app is Pasterino) {
-      func(app.getComponent())
+  override val name: String = "com.pyamsoft.pasterino.INJECTOR"
+
+  override fun obtain(context: Context): Any {
+    val service: Any? = context.getSystemService(name)
+    if (service == null) {
+      throw IllegalStateException("Injector obtained NULL")
     } else {
-      throw ClassCastException("Application is not Pasterino")
+      return service
     }
   }
+
 }

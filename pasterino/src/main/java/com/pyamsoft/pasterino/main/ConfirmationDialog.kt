@@ -22,6 +22,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.pyamsoft.pasterino.Injector
+import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pasterino.uicore.CanaryDialog
 
@@ -31,9 +32,7 @@ class ConfirmationDialog : CanaryDialog() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.with(context) {
-      it.inject(this)
-    }
+    (Injector.obtain(context.applicationContext) as PasterinoComponent).inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
