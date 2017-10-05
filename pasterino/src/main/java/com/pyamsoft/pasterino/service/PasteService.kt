@@ -26,6 +26,7 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.pyamsoft.pasterino.Injector
+import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.service.PasteServicePresenter.Callback
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import timber.log.Timber
@@ -44,10 +45,7 @@ class PasteService : AccessibilityService(), Callback {
 
   override fun onCreate() {
     super.onCreate()
-    Injector.with(this) {
-      it.inject(this)
-    }
-
+    (Injector.obtain(applicationContext) as PasterinoComponent).inject(this)
     presenter.bind(this)
   }
 
