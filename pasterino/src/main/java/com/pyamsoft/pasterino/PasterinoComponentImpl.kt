@@ -18,18 +18,35 @@
 
 package com.pyamsoft.pasterino
 
+import com.pyamsoft.pasterino.base.PasterinoModule
 import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainSettingsModule
 import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
 import com.pyamsoft.pasterino.service.PasteService
+import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.SinglePasteService
 
-interface PasterinoComponent {
+class PasterinoComponentImpl(module: PasterinoModule) : PasterinoComponent {
 
-  fun inject(service: SinglePasteService)
+  private val mainSettingsModule: MainSettingsModule = MainSettingsModule(module)
+  private val pasteServiceModule: PasteServiceModule = PasteServiceModule(module)
 
-  fun inject(service: PasteService)
+  override fun inject(service: SinglePasteService) {
+    service.presenter = pasteServiceModule.getSinglePresenter()
+    service.publisher = pasteServiceModule.getPasteServicePublisher()
+  }
 
-  fun inject(fragment: MainSettingsPreferenceFragment)
+  override fun inject(service: PasteService) {
+    service.presenter = pasteServiceModule.getPasteServicePresenter()
+  }
 
-  fun inject(dialog: ConfirmationDialog)
+  override fun inject(fragment: MainSettingsPreferenceFragment) {
+    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
+    fragment.publisher = pasteServiceModule.getPasteServicePublisher()
+  }
+
+  override fun inject(dialog: ConfirmationDialog) {
+    dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
+  }
+
 }

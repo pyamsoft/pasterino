@@ -60,7 +60,7 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Ca
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    (Injector.obtain(context.applicationContext) as PasterinoComponent).inject(this)
+    Injector.obtain<PasterinoComponent>(context.applicationContext).inject(this)
 
     presenter.bind(this)
   }

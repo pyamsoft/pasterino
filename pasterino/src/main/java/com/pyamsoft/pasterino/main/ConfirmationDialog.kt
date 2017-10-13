@@ -32,7 +32,7 @@ class ConfirmationDialog : CanaryDialog() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    (Injector.obtain(context.applicationContext) as PasterinoComponent).inject(this)
+    Injector.obtain<PasterinoComponent>(context.applicationContext).inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

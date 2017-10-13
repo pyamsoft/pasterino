@@ -37,7 +37,7 @@ class SinglePasteService : Service() {
 
   override fun onCreate() {
     super.onCreate()
-    (Injector.obtain(applicationContext) as PasterinoComponent).inject(this)
+    Injector.obtain<PasterinoComponent>(applicationContext).inject(this)
 
     presenter.bind(Unit)
   }
