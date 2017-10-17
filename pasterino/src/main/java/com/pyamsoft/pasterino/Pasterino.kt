@@ -41,9 +41,8 @@ class Pasterino : Application() {
       return
     }
 
-    PYDroid.initialize(this, BuildConfig.DEBUG)
+    PYDroid.init(this, BuildConfig.DEBUG)
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
-    component = PasterinoComponentImpl(PasterinoModule(applicationContext))
 
     refWatcher = if (BuildConfig.DEBUG) {
       LeakCanary.install(this)
@@ -52,10 +51,22 @@ class Pasterino : Application() {
     }
   }
 
+  private fun buildComponent(): PasterinoComponent =
+      PasterinoComponentImpl(PasterinoModule(applicationContext))
+
   override fun getSystemService(name: String?): Any {
     return if (Injector.name == name) {
+      val pasterino: PasterinoComponent
+      val obj = component
+      if (obj == null) {
+        pasterino = buildComponent()
+        component = pasterino
+      } else {
+        pasterino = obj
+      }
+
       // Return
-      component ?: throw IllegalStateException("PadLock component is NULL")
+      pasterino
     } else {
 
       // Return
