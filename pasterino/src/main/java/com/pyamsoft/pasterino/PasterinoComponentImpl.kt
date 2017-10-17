@@ -26,7 +26,8 @@ import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.SinglePasteService
 
-class PasterinoComponentImpl(module: PasterinoModule) : PasterinoComponent {
+internal class PasterinoComponentImpl internal constructor(
+    module: PasterinoModule) : PasterinoComponent {
 
   private val mainSettingsModule: MainSettingsModule = MainSettingsModule(module)
   private val pasteServiceModule: PasteServiceModule = PasteServiceModule(module)
