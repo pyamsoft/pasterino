@@ -85,12 +85,9 @@ class MainActivity : TamperActivity() {
   }
 
   override val changeLogLines: Array<String>
-    get() {
-      val line1 = "BUGFIX: Bugfixes and improvements"
-      val line2 = "BUGFIX: Removed all Advertisements"
-      val line3 = "BUGFIX: Faster loading of Open Source Licenses page"
-      return arrayOf(line1, line2, line3)
-    }
+    get() = arrayOf(
+        "BUGFIX: Faster application startup"
+    )
 
   override val safePackageName: String
     get() = "com.pyamsoft.pasterino"
