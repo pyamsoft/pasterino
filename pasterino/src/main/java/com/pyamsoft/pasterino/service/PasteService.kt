@@ -27,11 +27,10 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.service.PasteServicePresenter.Callback
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import timber.log.Timber
 
-class PasteService : AccessibilityService(), Callback {
+class PasteService : AccessibilityService(), PasteServicePresenter.View {
 
   internal lateinit var presenter: PasteServicePresenter
 

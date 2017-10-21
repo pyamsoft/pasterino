@@ -27,7 +27,6 @@ import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.Callback
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.PasteServicePublisher
@@ -38,7 +37,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
-class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), Callback {
+class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), MainSettingsPreferencePresenter.View {
 
   override fun provideBoundPresenters(): List<Presenter<*>> =
       super.provideBoundPresenters() + listOf(presenter)

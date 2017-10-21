@@ -18,7 +18,7 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.Callback
+import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.View
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
@@ -29,25 +29,27 @@ class MainSettingsPreferencePresenter internal constructor(
     private val interactor: MainSettingsPreferenceInteractor,
     private val bus: EventBus<ConfirmEvent>,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainScheduler: Scheduler) : SchedulerPresenter<Callback>(
+    mainScheduler: Scheduler) : SchedulerPresenter<View>(
     computationScheduler, ioScheduler, mainScheduler) {
 
-  override fun onBind(v: Callback) {
+  override fun onBind(v: View) {
     super.onBind(v)
-    registerOnEventBus(v::onClearAll)
+    registerOnEventBus(v)
   }
 
-  private fun registerOnEventBus(onClearAll: () -> Unit) {
+  private fun registerOnEventBus(v: ClearCallback) {
     dispose {
       bus.listen()
           .flatMapSingle { interactor.clearAll() }
           .subscribeOn(ioScheduler)
           .observeOn(mainThreadScheduler)
-          .subscribe({ onClearAll() }, { Timber.e(it, "OnError EventBus") })
+          .subscribe({ v.onClearAll() }, { Timber.e(it, "OnError EventBus") })
     }
   }
 
-  interface Callback {
+  interface View : ClearCallback
+
+  interface ClearCallback {
 
     fun onClearAll()
   }
