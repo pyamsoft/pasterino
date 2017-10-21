@@ -27,9 +27,10 @@ import android.os.Looper
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pasterino.service.SinglePastePresenter.View
 import timber.log.Timber
 
-class SinglePasteService : Service() {
+class SinglePasteService : Service(), View {
 
   private val handler: Handler = Handler(Looper.getMainLooper())
   internal lateinit var presenter: SinglePastePresenter
@@ -38,8 +39,7 @@ class SinglePasteService : Service() {
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext).inject(this)
-
-    presenter.bind(Unit)
+    presenter.bind(this)
   }
 
   override fun onDestroy() {
@@ -52,14 +52,16 @@ class SinglePasteService : Service() {
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     Timber.d("Attempt single paste")
-    presenter.postDelayedEvent {
-      handler.removeCallbacksAndMessages(null)
-      handler.postDelayed({
-        publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
-        stopSelf()
-      }, it)
-    }
+    presenter.postDelayedEvent()
     return Service.START_NOT_STICKY
+  }
+
+  override fun onPost(delay: Long) {
+    handler.removeCallbacksAndMessages(null)
+    handler.postDelayed({
+      publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
+      stopSelf()
+    }, delay)
   }
 
   companion object {

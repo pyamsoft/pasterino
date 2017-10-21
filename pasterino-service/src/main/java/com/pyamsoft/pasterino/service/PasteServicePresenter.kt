@@ -19,6 +19,7 @@
 package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pasterino.service.PasteServicePresenter.View
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
@@ -27,30 +28,32 @@ import timber.log.Timber
 class PasteServicePresenter internal constructor(
     private val bus: EventBus<ServiceEvent>, computationScheduler: Scheduler,
     ioScheduler: Scheduler,
-    mainScheduler: Scheduler) : SchedulerPresenter<PasteServicePresenter.Callback>(
+    mainScheduler: Scheduler) : SchedulerPresenter<View>(
     computationScheduler, ioScheduler, mainScheduler) {
 
-  override fun onBind(v: Callback) {
+  override fun onBind(v: View) {
     super.onBind(v)
-    registerOnBus(v::onPasteRequested, v::onServiceFinishRequested)
+    registerOnBus(v)
   }
 
-  private fun registerOnBus(onPasteRequested: () -> Unit, onServiceFinishRequested: () -> Unit) {
+  private fun registerOnBus(v: ServiceCallback) {
     dispose {
       bus.listen()
           .subscribeOn(ioScheduler)
           .observeOn(mainThreadScheduler)
           .subscribe({ (type) ->
             when (type) {
-              ServiceEvent.Type.FINISH -> onServiceFinishRequested()
-              ServiceEvent.Type.PASTE -> onPasteRequested()
+              ServiceEvent.Type.FINISH -> v.onServiceFinishRequested()
+              ServiceEvent.Type.PASTE -> v.onPasteRequested()
               else -> throw IllegalArgumentException("Invalid ServiceEvent.Type: $type")
             }
           }, { Timber.e(it, "onError event bus") })
     }
   }
 
-  interface Callback {
+  interface View : ServiceCallback
+
+  interface ServiceCallback {
 
     fun onPasteRequested()
 
