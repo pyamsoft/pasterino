@@ -19,6 +19,8 @@
 package com.pyamsoft.pasterino
 
 import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainActivity
+import com.pyamsoft.pasterino.main.MainSettingsFragment
 import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.SinglePasteService
@@ -30,6 +32,8 @@ interface PasterinoComponent {
   fun inject(service: PasteService)
 
   fun inject(fragment: MainSettingsPreferenceFragment)
+
+  fun inject(fragment: MainSettingsFragment)
 
   fun inject(dialog: ConfirmationDialog)
 }

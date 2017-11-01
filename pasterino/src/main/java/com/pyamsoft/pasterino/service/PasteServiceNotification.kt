@@ -86,7 +86,7 @@ object PasteServiceNotification {
       notificationChannelId: String) {
     val name = "Paste Service"
     val description = "Notification related to the Pasterino service"
-    val importance = NotificationManagerCompat.IMPORTANCE_MIN
+    val importance = NotificationManager.IMPORTANCE_MIN
     val notificationChannel = NotificationChannel(notificationChannelId, name, importance)
     notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
     notificationChannel.description = description

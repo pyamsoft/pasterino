@@ -20,6 +20,7 @@ package com.pyamsoft.pasterino
 
 import com.pyamsoft.pasterino.base.PasterinoModule
 import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainSettingsFragment
 import com.pyamsoft.pasterino.main.MainSettingsModule
 import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
 import com.pyamsoft.pasterino.service.PasteService
@@ -27,10 +28,14 @@ import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.SinglePasteService
 
 internal class PasterinoComponentImpl internal constructor(
-    module: PasterinoModule) : PasterinoComponent {
+    private val module: PasterinoModule) : PasterinoComponent {
 
   private val mainSettingsModule: MainSettingsModule = MainSettingsModule(module)
   private val pasteServiceModule: PasteServiceModule = PasteServiceModule(module)
+
+  override fun inject(fragment: MainSettingsFragment) {
+    fragment.imageLoader = module.provideImageLoader()
+  }
 
   override fun inject(service: SinglePasteService) {
     service.presenter = pasteServiceModule.getSinglePresenter()

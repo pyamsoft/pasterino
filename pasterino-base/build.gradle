@@ -24,14 +24,11 @@ apply plugin: "com.getkeepsafe.dexcount"
 //noinspection GroovyMissingReturnStatement
 android {
   compileSdkVersion rootProject.ext.maxSdk
-  buildToolsVersion "$buildTools"
 
   //noinspection GroovyMissingReturnStatement
   defaultConfig {
     minSdkVersion rootProject.ext.minSdk
     targetSdkVersion rootProject.ext.maxSdk
-
-    publishNonDefault true
 
     resConfigs "en"
   }
@@ -43,18 +40,17 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: "libs", include: ["*.jar"])
-
-  compile "com.android.support:preference-v14:$supportLib"
+  api "com.android.support:preference-v14:$supportLib"
 
   // PYDroid
-  compile("com.github.pyamsoft.pydroid:pydroid-util:$pydroid@aar") {
+  api("com.github.pyamsoft.pydroid:pydroid-loader:$pydroid@aar") {
+    transitive = true
+  }
+  api("com.github.pyamsoft.pydroid:pydroid-util:$pydroid@aar") {
     transitive = true
   }
 
-  debugCompile project(path: ":pasterino-model", configuration: "debug")
-  releaseCompile project(path: ":pasterino-model", configuration: "release")
-
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+  api project(":pasterino-model")
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
