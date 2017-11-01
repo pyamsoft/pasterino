@@ -24,14 +24,11 @@ apply plugin: "com.getkeepsafe.dexcount"
 //noinspection GroovyMissingReturnStatement
 android {
   compileSdkVersion rootProject.ext.maxSdk
-  buildToolsVersion "$buildTools"
 
   //noinspection GroovyMissingReturnStatement
   defaultConfig {
     minSdkVersion rootProject.ext.minSdk
     targetSdkVersion rootProject.ext.maxSdk
-
-    publishNonDefault true
 
     resConfigs "en"
   }
@@ -43,11 +40,7 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: "libs", include: ["*.jar"])
-
-  debugCompile project(path: ":pasterino-base", configuration: "debug")
-  releaseCompile project(path: ":pasterino-base", configuration: "release")
-
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+  api project(":pasterino-base")
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

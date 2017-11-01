@@ -24,7 +24,9 @@ import android.support.v4.app.Fragment
 import com.pyamsoft.pasterino.base.PasterinoModule
 import com.pyamsoft.pasterino.uicore.CanaryDialog
 import com.pyamsoft.pasterino.uicore.CanaryFragment
+import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.Licenses
+import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.squareup.leakcanary.LeakCanary
@@ -34,6 +36,8 @@ class Pasterino : Application() {
 
   private lateinit var refWatcher: RefWatcher
   private var component: PasterinoComponent? = null
+  private lateinit var pydroidModule: PYDroidModule
+  private lateinit var loaderModule: LoaderModule
 
   override fun onCreate() {
     super.onCreate()
@@ -41,7 +45,9 @@ class Pasterino : Application() {
       return
     }
 
-    PYDroid.init(this, BuildConfig.DEBUG)
+    pydroidModule = PYDroidModule(this, BuildConfig.DEBUG)
+    loaderModule = LoaderModule(this)
+    PYDroid.init(pydroidModule, loaderModule)
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
 
     refWatcher = if (BuildConfig.DEBUG) {
@@ -51,8 +57,8 @@ class Pasterino : Application() {
     }
   }
 
-  private fun buildComponent(): PasterinoComponent =
-      PasterinoComponentImpl(PasterinoModule(applicationContext))
+  private fun buildComponent(): PasterinoComponent = PasterinoComponentImpl(
+      PasterinoModule(pydroidModule, loaderModule))
 
   override fun getSystemService(name: String?): Any {
     return if (Injector.name == name) {
@@ -92,7 +98,7 @@ class Pasterino : Application() {
 
     @JvmStatic
     @CheckResult private fun getRefWatcherInternal(fragment: Fragment): RefWatcher {
-      val application = fragment.activity.application
+      val application = fragment.activity!!.application
       if (application is Pasterino) {
         return application.refWatcher
       } else {

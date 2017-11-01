@@ -18,31 +18,41 @@
 
 package com.pyamsoft.pasterino.base
 
-import android.content.Context
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.base.preference.ClearPreferences
 import com.pyamsoft.pasterino.base.preference.PastePreferences
 import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.loader.LoaderModule
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
-class PasterinoModule(context: Context) {
+class PasterinoModule(private val pyDroidModule: PYDroidModule,
+    private val loaderModule: LoaderModule) {
 
   private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
-      context.applicationContext)
+      pyDroidModule.provideContext())
   private val pasteBus = PasteBus()
 
-  @CheckResult fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
+  @CheckResult
+  fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
 
-  @CheckResult fun providePreferences(): PastePreferences = preferences
+  @CheckResult
+  fun providePreferences(): PastePreferences = preferences
 
-  @CheckResult fun provideClearPreferences(): ClearPreferences = preferences
+  @CheckResult
+  fun provideClearPreferences(): ClearPreferences = preferences
 
-  @CheckResult fun provideMainScheduler(): Scheduler = AndroidSchedulers.mainThread()
+  @CheckResult
+  fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
 
-  @CheckResult fun provideIoScheduler(): Scheduler = Schedulers.io()
+  @CheckResult
+  fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
 
-  @CheckResult fun provideComputationScheduler(): Scheduler = Schedulers.computation()
+  @CheckResult
+  fun provideComputationScheduler(): Scheduler = pyDroidModule.provideComputationScheduler()
+
+  @CheckResult
+  fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
 }

@@ -26,7 +26,7 @@ import com.pyamsoft.pasterino.uicore.CanaryDialog
 class ServiceInfoDialog : CanaryDialog() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(activity).setMessage("Pasterino service is On")
+    return AlertDialog.Builder(activity!!).setMessage("Pasterino service is On")
         .setPositiveButton("Okay") { _, _ -> dismiss() }
         .create()
   }

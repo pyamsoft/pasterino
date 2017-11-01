@@ -34,16 +34,17 @@ import com.pyamsoft.pydroid.ui.util.DialogUtil
 
 class MainSettingsFragment : CanaryFragment() {
 
+  internal lateinit var imageLoader: ImageLoader
   private lateinit var binding: FragmentMainBinding
   private val drawableMap = LoaderMap()
 
-  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     binding = FragmentMainBinding.inflate(inflater, container, false)
     return binding.root
   }
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupFAB()
     displayPreferenceFragment()
@@ -68,12 +69,11 @@ class MainSettingsFragment : CanaryFragment() {
     setActionBarTitle(R.string.app_name)
 
     if (PasteService.isRunning) {
-      val task = ImageLoader.fromResource(activity, R.drawable.ic_help_24dp)
-          .into(binding.mainSettingsFab)
+      val task = imageLoader.fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
       drawableMap.put("fab", task)
     } else {
-      val task = ImageLoader.fromResource(activity, R.drawable.ic_service_start_24dp)
-          .into(binding.mainSettingsFab)
+      val task = imageLoader.fromResource(R.drawable.ic_service_start_24dp).into(
+          binding.mainSettingsFab)
       drawableMap.put("fab", task)
     }
   }
