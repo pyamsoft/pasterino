@@ -22,6 +22,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pyamsoft.pasterino.Injector
+import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
@@ -37,6 +39,11 @@ class MainSettingsFragment : CanaryFragment() {
   internal lateinit var imageLoader: ImageLoader
   private lateinit var binding: FragmentMainBinding
   private val drawableMap = LoaderMap()
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
+  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
