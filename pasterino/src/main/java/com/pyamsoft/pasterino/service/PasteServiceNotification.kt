@@ -29,7 +29,6 @@ import android.os.Build.VERSION_CODES
 import android.support.annotation.CheckResult
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.content.ContextCompat
 import com.pyamsoft.pasterino.R
 import timber.log.Timber
@@ -82,6 +81,7 @@ object PasteServiceNotification {
         .build()
   }
 
+  @JvmStatic
   @RequiresApi(VERSION_CODES.O) private fun setupNotificationChannel(context: Context,
       notificationChannelId: String) {
     val name = "Paste Service"
