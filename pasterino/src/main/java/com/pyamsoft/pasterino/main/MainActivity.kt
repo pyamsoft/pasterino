@@ -79,8 +79,8 @@ class MainActivity : TamperActivity() {
     if (fragmentManager.findFragmentByTag(
         MainSettingsPreferenceFragment.TAG) == null && fragmentManager.findFragmentByTag(
         AboutLibrariesFragment.TAG) == null) {
-      fragmentManager.beginTransaction().replace(R.id.main_container, MainSettingsFragment(),
-          MainSettingsFragment.TAG).commit()
+      fragmentManager.beginTransaction().replace(R.id.main_container, MainFragment(),
+          MainFragment.TAG).commit()
     }
   }
 
