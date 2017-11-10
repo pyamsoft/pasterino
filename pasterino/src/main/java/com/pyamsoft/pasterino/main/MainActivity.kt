@@ -34,6 +34,21 @@ class MainActivity : TamperActivity() {
 
   private lateinit var binding: ActivityMainBinding
 
+  override val changeLogLines: Array<String> = arrayOf(
+      "BUGFIX: Better support for small screen devices"
+  )
+
+  override val safePackageName: String = "com.pyamsoft.pasterino"
+
+  override val versionName: String = BuildConfig.VERSION_NAME
+
+  override val applicationIcon: Int = R.mipmap.ic_launcher
+
+  override val currentApplicationVersion: Int = BuildConfig.VERSION_CODE
+
+  override val applicationName: String
+    get() = getString(R.string.app_name)
+
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.Theme_Pasterino_Light)
     super.onCreate(savedInstanceState)
@@ -84,23 +99,4 @@ class MainActivity : TamperActivity() {
     }
   }
 
-  override val changeLogLines: Array<String>
-    get() = arrayOf(
-        "BUGFIX: Faster application startup"
-    )
-
-  override val safePackageName: String
-    get() = "com.pyamsoft.pasterino"
-
-  override val versionName: String
-    get() = BuildConfig.VERSION_NAME
-
-  override val applicationIcon: Int
-    get() = R.mipmap.ic_launcher
-
-  override val applicationName: String
-    get() = getString(R.string.app_name)
-
-  override val currentApplicationVersion: Int
-    get() = BuildConfig.VERSION_CODE
 }
