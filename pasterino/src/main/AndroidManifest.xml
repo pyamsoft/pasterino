@@ -26,6 +26,7 @@
       android:name=".Pasterino"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
+      android:roundIcon="@mipmap/ic_launcher"
       android:theme="@style/Theme.Pasterino.Light">
 
     <!-- Support super wide screen -->
