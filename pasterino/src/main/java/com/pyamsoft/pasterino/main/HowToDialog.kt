@@ -25,11 +25,11 @@ import com.pyamsoft.pasterino.uicore.CanaryDialog
 
 class HowToDialog : CanaryDialog() {
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(activity!!).setMessage(
-        "When you want to paste into a text input field, simply click the notification and wait a little.")
-        .setTitle("How to Use")
-        .setNeutralButton("Got It") { _, _ -> dismiss() }
-        .create()
-  }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return AlertDialog.Builder(activity!!).setMessage(
+                "When you want to paste into a text input field, simply click the notification and wait a little.")
+                .setTitle("How to Use")
+                .setNeutralButton("Got It") { _, _ -> dismiss() }
+                .create()
+    }
 }

@@ -32,65 +32,65 @@ import timber.log.Timber
 
 class PasteService : AccessibilityService(), PasteServicePresenter.View {
 
-  internal lateinit var presenter: PasteServicePresenter
+    internal lateinit var presenter: PasteServicePresenter
 
-  override fun onAccessibilityEvent(event: AccessibilityEvent) {
-    Timber.d("onAccessibilityEvent")
-  }
-
-  override fun onInterrupt() {
-    Timber.e("onInterrupt")
-  }
-
-  override fun onCreate() {
-    super.onCreate()
-    Injector.obtain<PasterinoComponent>(applicationContext).inject(this)
-    presenter.bind(this)
-  }
-
-  override fun onServiceConnected() {
-    super.onServiceConnected()
-    Timber.d("onServiceConnected")
-
-    isRunning = true
-    PasteServiceNotification.start(this)
-  }
-
-  override fun onPasteRequested() {
-    val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-    if (info != null && info.isEditable) {
-      Timber.d("Perform paste on target: %s", info.viewIdResourceName)
-      info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
-      Toasty.makeText(applicationContext, "Pasting text into current input focus.",
-          Toasty.LENGTH_SHORT).show()
-    } else {
-      Timber.e("No editable target to paste into")
+    override fun onAccessibilityEvent(event: AccessibilityEvent) {
+        Timber.d("onAccessibilityEvent")
     }
-  }
 
-  override fun onServiceFinishRequested() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      disableSelf()
+    override fun onInterrupt() {
+        Timber.e("onInterrupt")
     }
-  }
 
-  override fun onUnbind(intent: Intent): Boolean {
-    Timber.d("onUnbind")
-    PasteServiceNotification.stop(this)
-    isRunning = false
-    return super.onUnbind(intent)
-  }
+    override fun onCreate() {
+        super.onCreate()
+        Injector.obtain<PasterinoComponent>(applicationContext).inject(this)
+        presenter.bind(this)
+    }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    presenter.unbind()
-  }
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        Timber.d("onServiceConnected")
 
-  companion object {
+        isRunning = true
+        PasteServiceNotification.start(this)
+    }
 
-    @JvmStatic
-    var isRunning = false
-      @get:CheckResult get
-      private set
-  }
+    override fun onPasteRequested() {
+        val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+        if (info != null && info.isEditable) {
+            Timber.d("Perform paste on target: %s", info.viewIdResourceName)
+            info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
+            Toasty.makeText(applicationContext, "Pasting text into current input focus.",
+                    Toasty.LENGTH_SHORT).show()
+        } else {
+            Timber.e("No editable target to paste into")
+        }
+    }
+
+    override fun onServiceFinishRequested() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            disableSelf()
+        }
+    }
+
+    override fun onUnbind(intent: Intent): Boolean {
+        Timber.d("onUnbind")
+        PasteServiceNotification.stop(this)
+        isRunning = false
+        return super.onUnbind(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.unbind()
+    }
+
+    companion object {
+
+        @JvmStatic
+        var isRunning = false
+            @get:CheckResult get
+            private set
+    }
 }

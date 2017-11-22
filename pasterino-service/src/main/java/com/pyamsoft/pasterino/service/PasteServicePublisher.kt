@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.bus.EventBus
 
 class PasteServicePublisher(private val bus: EventBus<ServiceEvent>) {
 
-  fun publish(event: ServiceEvent) {
-    bus.publish(event)
-  }
+    fun publish(event: ServiceEvent) {
+        bus.publish(event)
+    }
 }

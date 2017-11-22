@@ -22,8 +22,8 @@ import com.pyamsoft.pasterino.base.preference.ClearPreferences
 import io.reactivex.Single
 
 internal class MainSettingsPreferenceInteractorImpl internal constructor(
-    private val preferences: ClearPreferences) : MainSettingsPreferenceInteractor {
+        private val preferences: ClearPreferences) : MainSettingsPreferenceInteractor {
 
-  // This must be a Single or the stream will not continue
-  override fun clearAll(): Single<Unit> = Single.fromCallable(preferences::clearAll)
+    // This must be a Single or the stream will not continue
+    override fun clearAll(): Single<Unit> = Single.fromCallable(preferences::clearAll)
 }

@@ -28,18 +28,18 @@ import com.pyamsoft.pasterino.uicore.CanaryDialog
 
 class AccessibilityRequestDialog : CanaryDialog() {
 
-  private val accessibilityServiceIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+    private val accessibilityServiceIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    activity!!.let {
-      return AlertDialog.Builder(it).setTitle("Enable Pasterino AccessibilityService")
-          .setMessage(R.string.explain_accessibility_service)
-          .setPositiveButton("Let's Go") { _, _ ->
-            it.startActivity(accessibilityServiceIntent)
-            dismiss()
-          }
-          .setNegativeButton("No Thanks") { _, _ -> dismiss() }
-          .create()
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        activity!!.let {
+            return AlertDialog.Builder(it).setTitle("Enable Pasterino AccessibilityService")
+                    .setMessage(R.string.explain_accessibility_service)
+                    .setPositiveButton("Let's Go") { _, _ ->
+                        it.startActivity(accessibilityServiceIntent)
+                        dismiss()
+                    }
+                    .setNegativeButton("No Thanks") { _, _ -> dismiss() }
+                    .create()
+        }
     }
-  }
 }

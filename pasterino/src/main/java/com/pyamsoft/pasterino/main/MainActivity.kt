@@ -32,71 +32,71 @@ import com.pyamsoft.pydroid.util.AppUtil
 
 class MainActivity : TamperActivity() {
 
-  private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
-  override val changeLogLines: Array<String> = arrayOf(
-      "BUGFIX: Better support for small screen devices"
-  )
+    override val changeLogLines: Array<String> = arrayOf(
+            "BUGFIX: Better support for small screen devices"
+    )
 
-  override val safePackageName: String = "com.pyamsoft.pasterino"
+    override val safePackageName: String = "com.pyamsoft.pasterino"
 
-  override val versionName: String = BuildConfig.VERSION_NAME
+    override val versionName: String = BuildConfig.VERSION_NAME
 
-  override val applicationIcon: Int = R.mipmap.ic_launcher
+    override val applicationIcon: Int = R.mipmap.ic_launcher
 
-  override val currentApplicationVersion: Int = BuildConfig.VERSION_CODE
+    override val currentApplicationVersion: Int = BuildConfig.VERSION_CODE
 
-  override val applicationName: String
-    get() = getString(R.string.app_name)
+    override val applicationName: String
+        get() = getString(R.string.app_name)
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    setTheme(R.style.Theme_Pasterino_Light)
-    super.onCreate(savedInstanceState)
-    binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-    PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_Pasterino_Light)
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
-    setupAppBar()
-    showMainFragment()
-  }
-
-  override fun onBackPressed() {
-    val fragmentManager = supportFragmentManager
-    val backStackCount = fragmentManager.backStackEntryCount
-    if (backStackCount > 0) {
-      fragmentManager.popBackStack()
-    } else {
-      super.onBackPressed()
+        setupAppBar()
+        showMainFragment()
     }
-  }
 
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    val itemId = item.itemId
-    val handled: Boolean = when (itemId) {
-      android.R.id.home -> {
-        onBackPressed()
-
-        // Assign
-        true
-      }
-      else -> false
+    override fun onBackPressed() {
+        val fragmentManager = supportFragmentManager
+        val backStackCount = fragmentManager.backStackEntryCount
+        if (backStackCount > 0) {
+            fragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
     }
-    return handled || super.onOptionsItemSelected(item)
-  }
 
-  private fun setupAppBar() {
-    setSupportActionBar(binding.mainToolbar)
-    binding.mainToolbar.setTitle(R.string.app_name)
-    ViewCompat.setElevation(binding.mainToolbar, AppUtil.convertToDP(this, 4f))
-  }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item.itemId
+        val handled: Boolean = when (itemId) {
+            android.R.id.home -> {
+                onBackPressed()
 
-  private fun showMainFragment() {
-    val fragmentManager = supportFragmentManager
-    if (fragmentManager.findFragmentByTag(
-        MainSettingsPreferenceFragment.TAG) == null && fragmentManager.findFragmentByTag(
-        AboutLibrariesFragment.TAG) == null) {
-      fragmentManager.beginTransaction().replace(R.id.main_container, MainFragment(),
-          MainFragment.TAG).commit()
+                // Assign
+                true
+            }
+            else -> false
+        }
+        return handled || super.onOptionsItemSelected(item)
     }
-  }
+
+    private fun setupAppBar() {
+        setSupportActionBar(binding.mainToolbar)
+        binding.mainToolbar.setTitle(R.string.app_name)
+        ViewCompat.setElevation(binding.mainToolbar, AppUtil.convertToDP(this, 4f))
+    }
+
+    private fun showMainFragment() {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.findFragmentByTag(
+                MainSettingsPreferenceFragment.TAG) == null && fragmentManager.findFragmentByTag(
+                AboutLibrariesFragment.TAG) == null) {
+            fragmentManager.beginTransaction().replace(R.id.main_container, MainFragment(),
+                    MainFragment.TAG).commit()
+        }
+    }
 
 }

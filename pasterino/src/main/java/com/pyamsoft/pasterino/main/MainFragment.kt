@@ -37,70 +37,72 @@ import com.pyamsoft.pydroid.ui.util.DialogUtil
 
 class MainFragment : CanaryFragment() {
 
-  internal lateinit var imageLoader: ImageLoader
-  private lateinit var binding: FragmentMainBinding
-  private val drawableMap = LoaderMap()
+    internal lateinit var imageLoader: ImageLoader
+    private lateinit var binding: FragmentMainBinding
+    private val drawableMap = LoaderMap()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
-  }
-
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-      savedInstanceState: Bundle?): View? {
-    binding = FragmentMainBinding.inflate(inflater, container, false)
-    return binding.root
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    setupFAB()
-    displayPreferenceFragment()
-  }
-
-  private fun setupFAB() {
-    FABUtil.setupFABBehavior(binding.mainSettingsFab, HideScrollFABBehavior(10))
-    binding.mainSettingsFab.setOnDebouncedClickListener {
-      if (PasteService.isRunning) {
-        DialogUtil.guaranteeSingleDialogFragment(activity, ServiceInfoDialog(),
-            "servce_info")
-      } else {
-        DialogUtil.guaranteeSingleDialogFragment(activity, AccessibilityRequestDialog(),
-            "accessibility")
-      }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
     }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    setActionBarUpEnabled(false)
-    setActionBarTitle(R.string.app_name)
-
-    if (PasteService.isRunning) {
-      val task = imageLoader.fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
-      drawableMap.put("fab", task)
-    } else {
-      val task = imageLoader.fromResource(R.drawable.ic_service_start_24dp).into(
-          binding.mainSettingsFab)
-      drawableMap.put("fab", task)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?): View? {
+        binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
     }
-  }
 
-  override fun onPause() {
-    super.onPause()
-    drawableMap.clear()
-  }
-
-  private fun displayPreferenceFragment() {
-    val fragmentManager = childFragmentManager
-    if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null) {
-      fragmentManager.beginTransaction().replace(R.id.fragment_container, MainSettingsFragment(),
-          MainSettingsFragment.TAG).commit()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupFAB()
+        displayPreferenceFragment()
     }
-  }
 
-  companion object {
+    private fun setupFAB() {
+        FABUtil.setupFABBehavior(binding.mainSettingsFab, HideScrollFABBehavior(10))
+        binding.mainSettingsFab.setOnDebouncedClickListener {
+            if (PasteService.isRunning) {
+                DialogUtil.guaranteeSingleDialogFragment(activity, ServiceInfoDialog(),
+                        "servce_info")
+            } else {
+                DialogUtil.guaranteeSingleDialogFragment(activity, AccessibilityRequestDialog(),
+                        "accessibility")
+            }
+        }
+    }
 
-    const val TAG = "MainFragment"
-  }
+    override fun onResume() {
+        super.onResume()
+        setActionBarUpEnabled(false)
+        setActionBarTitle(R.string.app_name)
+
+        if (PasteService.isRunning) {
+            val task = imageLoader.fromResource(R.drawable.ic_help_24dp).into(
+                    binding.mainSettingsFab)
+            drawableMap.put("fab", task)
+        } else {
+            val task = imageLoader.fromResource(R.drawable.ic_service_start_24dp).into(
+                    binding.mainSettingsFab)
+            drawableMap.put("fab", task)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        drawableMap.clear()
+    }
+
+    private fun displayPreferenceFragment() {
+        val fragmentManager = childFragmentManager
+        if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                    MainSettingsFragment(),
+                    MainSettingsFragment.TAG).commit()
+        }
+    }
+
+    companion object {
+
+        const val TAG = "MainFragment"
+    }
 }
