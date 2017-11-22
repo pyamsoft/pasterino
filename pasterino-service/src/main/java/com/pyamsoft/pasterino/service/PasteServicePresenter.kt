@@ -26,37 +26,38 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class PasteServicePresenter internal constructor(
-    private val bus: EventBus<ServiceEvent>, computationScheduler: Scheduler,
-    ioScheduler: Scheduler,
-    mainScheduler: Scheduler) : SchedulerPresenter<View>(
-    computationScheduler, ioScheduler, mainScheduler) {
+        private val bus: EventBus<ServiceEvent>, computationScheduler: Scheduler,
+        ioScheduler: Scheduler,
+        mainScheduler: Scheduler) : SchedulerPresenter<View>(
+        computationScheduler, ioScheduler, mainScheduler) {
 
-  override fun onBind(v: View) {
-    super.onBind(v)
-    registerOnBus(v)
-  }
-
-  private fun registerOnBus(v: ServiceCallback) {
-    dispose {
-      bus.listen()
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
-          .subscribe({ (type) ->
-            when (type) {
-              ServiceEvent.Type.FINISH -> v.onServiceFinishRequested()
-              ServiceEvent.Type.PASTE -> v.onPasteRequested()
-              else -> throw IllegalArgumentException("Invalid ServiceEvent.Type: $type")
-            }
-          }, { Timber.e(it, "onError event bus") })
+    override fun onBind(v: View) {
+        super.onBind(v)
+        registerOnBus(v)
     }
-  }
 
-  interface View : ServiceCallback
+    private fun registerOnBus(v: ServiceCallback) {
+        dispose {
+            bus.listen()
+                    .subscribeOn(ioScheduler)
+                    .observeOn(mainThreadScheduler)
+                    .subscribe({ (type) ->
+                        when (type) {
+                            ServiceEvent.Type.FINISH -> v.onServiceFinishRequested()
+                            ServiceEvent.Type.PASTE -> v.onPasteRequested()
+                            else -> throw IllegalArgumentException(
+                                    "Invalid ServiceEvent.Type: $type")
+                        }
+                    }, { Timber.e(it, "onError event bus") })
+        }
+    }
 
-  interface ServiceCallback {
+    interface View : ServiceCallback
 
-    fun onPasteRequested()
+    interface ServiceCallback {
 
-    fun onServiceFinishRequested()
-  }
+        fun onPasteRequested()
+
+        fun onServiceFinishRequested()
+    }
 }

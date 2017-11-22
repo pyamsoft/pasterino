@@ -29,30 +29,30 @@ import com.pyamsoft.pydroid.loader.LoaderModule
 import io.reactivex.Scheduler
 
 class PasterinoModule(private val pyDroidModule: PYDroidModule,
-    private val loaderModule: LoaderModule) {
+        private val loaderModule: LoaderModule) {
 
-  private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
-      pyDroidModule.provideContext())
-  private val pasteBus = PasteBus()
+    private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
+            pyDroidModule.provideContext())
+    private val pasteBus = PasteBus()
 
-  @CheckResult
-  fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
+    @CheckResult
+    fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
 
-  @CheckResult
-  fun providePreferences(): PastePreferences = preferences
+    @CheckResult
+    fun providePreferences(): PastePreferences = preferences
 
-  @CheckResult
-  fun provideClearPreferences(): ClearPreferences = preferences
+    @CheckResult
+    fun provideClearPreferences(): ClearPreferences = preferences
 
-  @CheckResult
-  fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
+    @CheckResult
+    fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
 
-  @CheckResult
-  fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
+    @CheckResult
+    fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
 
-  @CheckResult
-  fun provideComputationScheduler(): Scheduler = pyDroidModule.provideComputationScheduler()
+    @CheckResult
+    fun provideComputationScheduler(): Scheduler = pyDroidModule.provideComputationScheduler()
 
-  @CheckResult
-  fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
+    @CheckResult
+    fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
 }

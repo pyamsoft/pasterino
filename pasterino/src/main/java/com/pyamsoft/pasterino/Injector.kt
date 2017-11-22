@@ -24,16 +24,16 @@ import android.support.annotation.CheckResult
 
 object Injector {
 
-  const val name: String = "com.pyamsoft.pasterino.INJECTOR"
+    const val name: String = "com.pyamsoft.pasterino.INJECTOR"
 
-  @SuppressLint("WrongConstant")
-  @CheckResult
-  @JvmStatic
-  fun <T : Any> obtain(context: Context): T {
-    val service: Any? = context.getSystemService(name)
+    @SuppressLint("WrongConstant")
+    @CheckResult
+    @JvmStatic
+    fun <T : Any> obtain(context: Context): T {
+        val service: Any? = context.getSystemService(name)
 
-    @Suppress("UNCHECKED_CAST")
-    return service as T
-  }
+        @Suppress("UNCHECKED_CAST")
+        return service as T
+    }
 
 }

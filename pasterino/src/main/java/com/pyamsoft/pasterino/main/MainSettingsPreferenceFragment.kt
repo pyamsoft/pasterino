@@ -37,66 +37,67 @@ import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
-class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(), MainSettingsPreferencePresenter.View {
+class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(),
+        MainSettingsPreferencePresenter.View {
 
-  override fun provideBoundPresenters(): List<Presenter<*>> =
-      super.provideBoundPresenters() + listOf(presenter)
+    override fun provideBoundPresenters(): List<Presenter<*>> =
+            super.provideBoundPresenters() + listOf(presenter)
 
-  internal lateinit var presenter: MainSettingsPreferencePresenter
-  internal lateinit var publisher: PasteServicePublisher
+    internal lateinit var presenter: MainSettingsPreferencePresenter
+    internal lateinit var publisher: PasteServicePublisher
 
-  override val isLastOnBackStack: AboutLibrariesFragment.BackStackState = AboutLibrariesFragment.BackStackState.LAST
+    override val isLastOnBackStack: AboutLibrariesFragment.BackStackState = AboutLibrariesFragment.BackStackState.LAST
 
-  override val rootViewContainer: Int = R.id.main_container
+    override val rootViewContainer: Int = R.id.main_container
 
-  override val preferenceXmlResId: Int = R.xml.preferences
+    override val preferenceXmlResId: Int = R.xml.preferences
 
-  override val applicationName: String
-    get() = getString(R.string.app_name)
+    override val applicationName: String
+        get() = getString(R.string.app_name)
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
-    presenter.bind(this)
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    val explain: Preference = findPreference(getString(R.string.explain_key))
-    explain.setOnPreferenceClickListener {
-      DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
-      return@setOnPreferenceClickListener true
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
+        presenter.bind(this)
     }
-  }
 
-  override fun onClearAll() {
-    context?.let {
-      PasteServiceNotification.stop(it)
-      SinglePasteService.stop(it)
-      try {
-        publisher.publish(ServiceEvent(ServiceEvent.Type.FINISH))
-      } catch (e: NullPointerException) {
-        Timber.e(e, "Expected exception when Service is NULL")
-      }
-
-      Timber.d("Clear application data")
-      val activityManager = it.applicationContext
-          .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-      activityManager.clearApplicationUserData()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val explain: Preference = findPreference(getString(R.string.explain_key))
+        explain.setOnPreferenceClickListener {
+            DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
+            return@setOnPreferenceClickListener true
+        }
     }
-  }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    Pasterino.getRefWatcher(this).watch(this)
-  }
+    override fun onClearAll() {
+        context?.let {
+            PasteServiceNotification.stop(it)
+            SinglePasteService.stop(it)
+            try {
+                publisher.publish(ServiceEvent(ServiceEvent.Type.FINISH))
+            } catch (e: NullPointerException) {
+                Timber.e(e, "Expected exception when Service is NULL")
+            }
 
-  override fun onClearAllClicked() {
-    DialogUtil.guaranteeSingleDialogFragment(activity, ConfirmationDialog(), "confirm")
-  }
+            Timber.d("Clear application data")
+            val activityManager = it.applicationContext
+                    .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            activityManager.clearApplicationUserData()
+        }
+    }
 
-  companion object {
+    override fun onDestroy() {
+        super.onDestroy()
+        Pasterino.getRefWatcher(this).watch(this)
+    }
 
-    const val TAG = "MainSettingsPreferenceFragment"
-  }
+    override fun onClearAllClicked() {
+        DialogUtil.guaranteeSingleDialogFragment(activity, ConfirmationDialog(), "confirm")
+    }
+
+    companion object {
+
+        const val TAG = "MainSettingsPreferenceFragment"
+    }
 }

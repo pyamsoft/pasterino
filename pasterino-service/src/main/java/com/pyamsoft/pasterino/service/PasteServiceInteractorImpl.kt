@@ -22,7 +22,8 @@ import com.pyamsoft.pasterino.base.preference.PastePreferences
 import io.reactivex.Single
 
 internal class PasteServiceInteractorImpl internal constructor(
-    private val preferences: PastePreferences) : PasteServiceInteractor {
+        private val preferences: PastePreferences) : PasteServiceInteractor {
 
-  override fun getPasteDelayTime(): Single<Long> = Single.fromCallable(preferences::pasteDelayTime)
+    override fun getPasteDelayTime(): Single<Long> = Single.fromCallable(
+            preferences::pasteDelayTime)
 }

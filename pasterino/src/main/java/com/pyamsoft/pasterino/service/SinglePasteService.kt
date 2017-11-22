@@ -32,44 +32,44 @@ import timber.log.Timber
 
 class SinglePasteService : Service(), View {
 
-  private val handler: Handler = Handler(Looper.getMainLooper())
-  internal lateinit var presenter: SinglePastePresenter
-  internal lateinit var publisher: PasteServicePublisher
+    private val handler: Handler = Handler(Looper.getMainLooper())
+    internal lateinit var presenter: SinglePastePresenter
+    internal lateinit var publisher: PasteServicePublisher
 
-  override fun onCreate() {
-    super.onCreate()
-    Injector.obtain<PasterinoComponent>(applicationContext).inject(this)
-    presenter.bind(this)
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    handler.removeCallbacksAndMessages(null)
-    presenter.unbind()
-  }
-
-  override fun onBind(intent: Intent): IBinder? = null
-
-  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    Timber.d("Attempt single paste")
-    presenter.postDelayedEvent()
-    return Service.START_NOT_STICKY
-  }
-
-  override fun onPost(delay: Long) {
-    handler.removeCallbacksAndMessages(null)
-    handler.postDelayed({
-      publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
-      stopSelf()
-    }, delay)
-  }
-
-  companion object {
-
-    @JvmStatic
-    fun stop(context: Context) {
-      val service = Intent(context.applicationContext, SinglePasteService::class.java)
-      context.applicationContext.stopService(service)
+    override fun onCreate() {
+        super.onCreate()
+        Injector.obtain<PasterinoComponent>(applicationContext).inject(this)
+        presenter.bind(this)
     }
-  }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        presenter.unbind()
+    }
+
+    override fun onBind(intent: Intent): IBinder? = null
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Timber.d("Attempt single paste")
+        presenter.postDelayedEvent()
+        return Service.START_NOT_STICKY
+    }
+
+    override fun onPost(delay: Long) {
+        handler.removeCallbacksAndMessages(null)
+        handler.postDelayed({
+            publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
+            stopSelf()
+        }, delay)
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun stop(context: Context) {
+            val service = Intent(context.applicationContext, SinglePasteService::class.java)
+            context.applicationContext.stopService(service)
+        }
+    }
 }

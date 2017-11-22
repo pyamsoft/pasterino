@@ -22,13 +22,12 @@ import android.support.annotation.CallSuper
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment
 
-
 abstract class CanaryFragment : ActionBarFragment() {
 
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    Pasterino.getRefWatcher(this).watch(this)
-  }
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        Pasterino.getRefWatcher(this).watch(this)
+    }
 
 }

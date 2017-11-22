@@ -22,6 +22,7 @@ import android.support.annotation.CheckResult
 
 interface PastePreferences {
 
-  @get:CheckResult val pasteDelayTime: Long
+    @get:CheckResult
+    val pasteDelayTime: Long
 
 }

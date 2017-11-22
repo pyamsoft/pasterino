@@ -24,25 +24,25 @@ import io.reactivex.Scheduler
 
 class PasteServiceModule(pasterinoModule: PasterinoModule) {
 
-  private val interactor: PasteServiceInteractor
-  private val pasteBus = pasterinoModule.providePasteBus()
-  private val computationScheduler: Scheduler = pasterinoModule.provideComputationScheduler()
-  private val ioScheduler: Scheduler = pasterinoModule.provideIoScheduler()
-  private val mainScheduler: Scheduler = pasterinoModule.provideMainScheduler()
+    private val interactor: PasteServiceInteractor
+    private val pasteBus = pasterinoModule.providePasteBus()
+    private val computationScheduler: Scheduler = pasterinoModule.provideComputationScheduler()
+    private val ioScheduler: Scheduler = pasterinoModule.provideIoScheduler()
+    private val mainScheduler: Scheduler = pasterinoModule.provideMainScheduler()
 
-  init {
-    interactor = PasteServiceInteractorImpl(pasterinoModule.providePreferences())
-  }
+    init {
+        interactor = PasteServiceInteractorImpl(pasterinoModule.providePreferences())
+    }
 
-  @CheckResult
-  fun getSinglePresenter(): SinglePastePresenter =
-      SinglePastePresenter(interactor, computationScheduler, ioScheduler, mainScheduler)
+    @CheckResult
+    fun getSinglePresenter(): SinglePastePresenter =
+            SinglePastePresenter(interactor, computationScheduler, ioScheduler, mainScheduler)
 
-  @CheckResult
-  fun getPasteServicePresenter(): PasteServicePresenter =
-      PasteServicePresenter(pasteBus, computationScheduler, ioScheduler, mainScheduler)
+    @CheckResult
+    fun getPasteServicePresenter(): PasteServicePresenter =
+            PasteServicePresenter(pasteBus, computationScheduler, ioScheduler, mainScheduler)
 
-  @CheckResult
-  fun getPasteServicePublisher(): PasteServicePublisher =
-      PasteServicePublisher(pasteBus)
+    @CheckResult
+    fun getPasteServicePublisher(): PasteServicePublisher =
+            PasteServicePublisher(pasteBus)
 }

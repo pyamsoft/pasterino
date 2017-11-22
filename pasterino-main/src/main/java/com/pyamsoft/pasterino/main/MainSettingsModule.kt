@@ -26,22 +26,22 @@ import io.reactivex.Scheduler
 
 class MainSettingsModule(module: PasterinoModule) {
 
-  private val interactor: MainSettingsPreferenceInteractor
-  private val mainBus: EventBus<ConfirmEvent> = MainBus()
-  private val computationScheduler: Scheduler = module.provideComputationScheduler()
-  private val ioScheduler: Scheduler = module.provideIoScheduler()
-  private val mainScheduler: Scheduler = module.provideMainScheduler()
+    private val interactor: MainSettingsPreferenceInteractor
+    private val mainBus: EventBus<ConfirmEvent> = MainBus()
+    private val computationScheduler: Scheduler = module.provideComputationScheduler()
+    private val ioScheduler: Scheduler = module.provideIoScheduler()
+    private val mainScheduler: Scheduler = module.provideMainScheduler()
 
-  init {
-    interactor = MainSettingsPreferenceInteractorImpl(module.provideClearPreferences())
-  }
+    init {
+        interactor = MainSettingsPreferenceInteractorImpl(module.provideClearPreferences())
+    }
 
-  @CheckResult
-  fun getSettingsPreferencePresenter(): MainSettingsPreferencePresenter = MainSettingsPreferencePresenter(
-      interactor, mainBus, computationScheduler, ioScheduler,
-      mainScheduler)
+    @CheckResult
+    fun getSettingsPreferencePresenter(): MainSettingsPreferencePresenter = MainSettingsPreferencePresenter(
+            interactor, mainBus, computationScheduler, ioScheduler,
+            mainScheduler)
 
-  @CheckResult
-  fun getSettingsPreferencePublisher(): MainSettingsPreferencePublisher =
-      MainSettingsPreferencePublisher(mainBus)
+    @CheckResult
+    fun getSettingsPreferencePublisher(): MainSettingsPreferencePublisher =
+            MainSettingsPreferencePublisher(mainBus)
 }

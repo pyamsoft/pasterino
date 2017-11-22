@@ -26,31 +26,31 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class MainSettingsPreferencePresenter internal constructor(
-    private val interactor: MainSettingsPreferenceInteractor,
-    private val bus: EventBus<ConfirmEvent>,
-    computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainScheduler: Scheduler) : SchedulerPresenter<View>(
-    computationScheduler, ioScheduler, mainScheduler) {
+        private val interactor: MainSettingsPreferenceInteractor,
+        private val bus: EventBus<ConfirmEvent>,
+        computationScheduler: Scheduler, ioScheduler: Scheduler,
+        mainScheduler: Scheduler) : SchedulerPresenter<View>(
+        computationScheduler, ioScheduler, mainScheduler) {
 
-  override fun onBind(v: View) {
-    super.onBind(v)
-    registerOnEventBus(v)
-  }
-
-  private fun registerOnEventBus(v: ClearCallback) {
-    dispose {
-      bus.listen()
-          .flatMapSingle { interactor.clearAll() }
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
-          .subscribe({ v.onClearAll() }, { Timber.e(it, "OnError EventBus") })
+    override fun onBind(v: View) {
+        super.onBind(v)
+        registerOnEventBus(v)
     }
-  }
 
-  interface View : ClearCallback
+    private fun registerOnEventBus(v: ClearCallback) {
+        dispose {
+            bus.listen()
+                    .flatMapSingle { interactor.clearAll() }
+                    .subscribeOn(ioScheduler)
+                    .observeOn(mainThreadScheduler)
+                    .subscribe({ v.onClearAll() }, { Timber.e(it, "OnError EventBus") })
+        }
+    }
 
-  interface ClearCallback {
+    interface View : ClearCallback
 
-    fun onClearAll()
-  }
+    interface ClearCallback {
+
+        fun onClearAll()
+    }
 }

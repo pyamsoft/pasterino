@@ -23,6 +23,7 @@ import io.reactivex.Single
 
 internal interface PasteServiceInteractor {
 
-  @CheckResult fun getPasteDelayTime(): Single<Long>
+    @CheckResult
+    fun getPasteDelayTime(): Single<Long>
 
 }
