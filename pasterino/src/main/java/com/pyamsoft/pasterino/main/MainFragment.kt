@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pyamsoft.backstack.BackStack
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
@@ -40,6 +41,7 @@ class MainFragment : CanaryFragment() {
     internal lateinit var imageLoader: ImageLoader
     private lateinit var binding: FragmentMainBinding
     private val drawableMap = LoaderMap()
+    private lateinit var backstack: BackStack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,7 @@ class MainFragment : CanaryFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
+        backstack = BackStack.create(this, R.id.fragment_container)
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -95,10 +98,12 @@ class MainFragment : CanaryFragment() {
     private fun displayPreferenceFragment() {
         val fragmentManager = childFragmentManager
         if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null) {
-            fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                    MainSettingsFragment(),
-                    MainSettingsFragment.TAG).commit()
+            backstack.set(MainSettingsFragment.TAG) { MainSettingsFragment() }
         }
+    }
+
+    override fun handleBackPress(): Boolean {
+        return backstack.back()
     }
 
     companion object {
