@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.Licenses
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 
@@ -84,7 +84,7 @@ class Pasterino : Application() {
 
         @JvmStatic
         @CheckResult
-        fun getRefWatcher(fragment: ActionBarSettingsPreferenceFragment): RefWatcher =
+        fun getRefWatcher(fragment: SettingsPreferenceFragment): RefWatcher =
                 getRefWatcherInternal(fragment)
 
         @JvmStatic
