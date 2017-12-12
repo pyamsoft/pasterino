@@ -20,9 +20,12 @@ package com.pyamsoft.pasterino.uicore
 
 import android.support.annotation.CallSuper
 import com.pyamsoft.pasterino.Pasterino
-import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
+import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.ui.app.fragment.DisposableDialogFragment
 
-abstract class CanaryDialog : DialogFragmentBase() {
+abstract class CanaryDialog : DisposableDialogFragment() {
+
+    override fun provideBoundPresenters(): List<Presenter<*>> = emptyList()
 
     @CallSuper
     override fun onDestroy() {

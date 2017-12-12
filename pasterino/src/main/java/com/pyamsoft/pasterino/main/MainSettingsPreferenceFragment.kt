@@ -32,12 +32,11 @@ import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.presenter.Presenter
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
-class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(),
+class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
         MainSettingsPreferencePresenter.View {
 
     override fun provideBoundPresenters(): List<Presenter<*>> =
@@ -45,8 +44,6 @@ class MainSettingsPreferenceFragment : ActionBarSettingsPreferenceFragment(),
 
     internal lateinit var presenter: MainSettingsPreferencePresenter
     internal lateinit var publisher: PasteServicePublisher
-
-    override val isLastOnBackStack: AboutLibrariesFragment.BackStackState = AboutLibrariesFragment.BackStackState.LAST
 
     override val rootViewContainer: Int = R.id.main_container
 

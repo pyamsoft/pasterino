@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
 class MainFragment : CanaryFragment() {
 
@@ -76,8 +77,10 @@ class MainFragment : CanaryFragment() {
 
     override fun onResume() {
         super.onResume()
-        setActionBarUpEnabled(false)
-        setActionBarTitle(R.string.app_name)
+        toolbarActivity.withToolbar {
+            it.setTitle(R.string.app_name)
+            it.setUpEnabled(false)
+        }
 
         if (PasteService.isRunning) {
             val task = imageLoader.fromResource(R.drawable.ic_help_24dp).into(
@@ -102,7 +105,7 @@ class MainFragment : CanaryFragment() {
         }
     }
 
-    override fun handleBackPress(): Boolean {
+    override fun onBackPressed(): Boolean {
         return backstack.back()
     }
 
