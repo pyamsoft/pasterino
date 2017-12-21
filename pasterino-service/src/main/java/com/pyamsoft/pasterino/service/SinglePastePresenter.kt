@@ -32,8 +32,8 @@ class SinglePastePresenter internal constructor(private val interactor: PasteSer
 
     private var postDisposable: Disposable = null.clear()
 
-    override fun onUnbind() {
-        super.onUnbind()
+    override fun onDestroy() {
+        super.onDestroy()
         postDisposable = postDisposable.clear()
     }
 

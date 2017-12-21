@@ -31,20 +31,20 @@ class PasteServicePresenter internal constructor(
         mainScheduler: Scheduler) : SchedulerPresenter<View>(
         computationScheduler, ioScheduler, mainScheduler) {
 
-    override fun onBind(v: View) {
-        super.onBind(v)
-        registerOnBus(v)
+    override fun onCreate() {
+        super.onCreate()
+        registerOnBus()
     }
 
-    private fun registerOnBus(v: ServiceCallback) {
+    private fun registerOnBus() {
         dispose {
             bus.listen()
                     .subscribeOn(ioScheduler)
                     .observeOn(mainThreadScheduler)
                     .subscribe({ (type) ->
                         when (type) {
-                            ServiceEvent.Type.FINISH -> v.onServiceFinishRequested()
-                            ServiceEvent.Type.PASTE -> v.onPasteRequested()
+                            ServiceEvent.Type.FINISH -> view?.onServiceFinishRequested()
+                            ServiceEvent.Type.PASTE -> view?.onPasteRequested()
                             else -> throw IllegalArgumentException(
                                     "Invalid ServiceEvent.Type: $type")
                         }

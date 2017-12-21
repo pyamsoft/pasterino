@@ -19,6 +19,9 @@
 package com.pyamsoft.pasterino.service
 
 import android.app.Service
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LifecycleRegistry
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -26,26 +29,33 @@ import android.os.IBinder
 import android.os.Looper
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
+import com.pyamsoft.pasterino.lifecycle.fakeBind
+import com.pyamsoft.pasterino.lifecycle.fakeRelease
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pasterino.service.SinglePastePresenter.View
 import timber.log.Timber
 
-class SinglePasteService : Service(), View {
+class SinglePasteService : Service(), SinglePastePresenter.View, LifecycleOwner {
 
+    private val lifecycle = LifecycleRegistry(this)
     private val handler: Handler = Handler(Looper.getMainLooper())
     internal lateinit var presenter: SinglePastePresenter
     internal lateinit var publisher: PasteServicePublisher
 
+    override fun getLifecycle(): Lifecycle {
+        return lifecycle
+    }
+
     override fun onCreate() {
         super.onCreate()
         Injector.obtain<PasterinoComponent>(applicationContext).inject(this)
-        presenter.bind(this)
+        presenter.bind(this, this)
+        lifecycle.fakeBind()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
-        presenter.unbind()
+        lifecycle.fakeRelease()
     }
 
     override fun onBind(intent: Intent): IBinder? = null
