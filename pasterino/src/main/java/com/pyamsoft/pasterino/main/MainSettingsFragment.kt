@@ -18,13 +18,10 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.app.fragment.AppSettingsFragment
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 
 class MainSettingsFragment : AppSettingsFragment() {
-
-    override fun provideBoundPresenters(): List<Presenter<*>> = emptyList()
 
     override fun provideSettingsFragment(): SettingsPreferenceFragment = MainSettingsPreferenceFragment()
 

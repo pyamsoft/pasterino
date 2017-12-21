@@ -31,16 +31,12 @@ import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
-import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
         MainSettingsPreferencePresenter.View {
-
-    override fun provideBoundPresenters(): List<Presenter<*>> =
-            super.provideBoundPresenters() + listOf(presenter)
 
     internal lateinit var presenter: MainSettingsPreferencePresenter
     internal lateinit var publisher: PasteServicePublisher
@@ -55,7 +51,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
-        presenter.bind(this)
+        presenter.bind(viewLifecycle, this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

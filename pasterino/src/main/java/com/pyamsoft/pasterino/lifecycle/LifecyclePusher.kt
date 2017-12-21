@@ -16,18 +16,25 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pasterino.uicore
+package com.pyamsoft.pasterino.lifecycle
 
-import android.support.annotation.CallSuper
-import com.pyamsoft.pasterino.Pasterino
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
+import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
+import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
+import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
+import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
+import android.arch.lifecycle.Lifecycle.Event.ON_START
+import android.arch.lifecycle.Lifecycle.Event.ON_STOP
+import android.arch.lifecycle.LifecycleRegistry
 
-abstract class CanaryDialog : ToolbarDialog() {
-
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
-        Pasterino.getRefWatcher(this).watch(this)
-    }
-
+fun LifecycleRegistry.fakeBind() {
+    handleLifecycleEvent(ON_CREATE)
+    handleLifecycleEvent(ON_START)
+    handleLifecycleEvent(ON_RESUME)
 }
+
+fun LifecycleRegistry.fakeRelease() {
+    handleLifecycleEvent(ON_PAUSE)
+    handleLifecycleEvent(ON_STOP)
+    handleLifecycleEvent(ON_DESTROY)
+}
+

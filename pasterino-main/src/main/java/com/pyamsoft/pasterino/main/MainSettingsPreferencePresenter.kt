@@ -32,18 +32,18 @@ class MainSettingsPreferencePresenter internal constructor(
         mainScheduler: Scheduler) : SchedulerPresenter<View>(
         computationScheduler, ioScheduler, mainScheduler) {
 
-    override fun onBind(v: View) {
-        super.onBind(v)
-        registerOnEventBus(v)
+    override fun onCreate() {
+        super.onCreate()
+        registerOnEventBus()
     }
 
-    private fun registerOnEventBus(v: ClearCallback) {
+    private fun registerOnEventBus() {
         dispose {
             bus.listen()
                     .flatMapSingle { interactor.clearAll() }
                     .subscribeOn(ioScheduler)
                     .observeOn(mainThreadScheduler)
-                    .subscribe({ v.onClearAll() }, { Timber.e(it, "OnError EventBus") })
+                    .subscribe({ view?.onClearAll() }, { Timber.e(it, "OnError EventBus") })
         }
     }
 
