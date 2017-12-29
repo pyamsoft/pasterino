@@ -31,4 +31,3 @@ class MainSettingsFragment : AppSettingsFragment() {
         const val TAG = "MainSettingsFragment"
     }
 }
-

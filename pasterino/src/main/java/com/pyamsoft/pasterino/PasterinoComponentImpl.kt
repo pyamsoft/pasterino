@@ -54,5 +54,4 @@ internal class PasterinoComponentImpl internal constructor(
     override fun inject(dialog: ConfirmationDialog) {
         dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
     }
-
 }

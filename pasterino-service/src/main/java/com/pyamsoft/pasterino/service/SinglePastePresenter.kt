@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.helper.clear
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
 import timber.log.Timber
 
 class SinglePastePresenter internal constructor(private val interactor: PasteServiceInteractor,
@@ -30,7 +31,7 @@ class SinglePastePresenter internal constructor(private val interactor: PasteSer
         mainScheduler: Scheduler) : SchedulerPresenter<View>(
         computationScheduler, ioScheduler, mainScheduler) {
 
-    private var postDisposable: Disposable = null.clear()
+    private var postDisposable: Disposable = Disposables.empty()
 
     override fun onDestroy() {
         super.onDestroy()

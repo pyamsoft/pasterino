@@ -24,8 +24,8 @@ import android.support.v4.app.Fragment
 import com.pyamsoft.pasterino.base.PasterinoModule
 import com.pyamsoft.pasterino.uicore.CanaryDialog
 import com.pyamsoft.pasterino.uicore.CanaryFragment
-import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.about.Licenses
+import com.pyamsoft.pydroid.base.PYDroidModule
+import com.pyamsoft.pydroid.base.about.Licenses
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
@@ -107,4 +107,3 @@ class Pasterino : Application() {
         }
     }
 }
-

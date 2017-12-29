@@ -22,7 +22,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.base.preference.ClearPreferences
 import com.pyamsoft.pasterino.base.preference.PastePreferences
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.base.PYDroidModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule

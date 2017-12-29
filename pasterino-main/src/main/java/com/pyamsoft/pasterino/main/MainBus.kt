@@ -32,6 +32,4 @@ internal class MainBus internal constructor() : EventBus<ConfirmEvent> {
     }
 
     override fun listen(): Observable<ConfirmEvent> = bus.listen()
-
 }
-

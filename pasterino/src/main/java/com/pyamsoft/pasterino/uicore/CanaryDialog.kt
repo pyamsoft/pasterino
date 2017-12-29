@@ -29,5 +29,4 @@ abstract class CanaryDialog : ToolbarDialog() {
         super.onDestroy()
         Pasterino.getRefWatcher(this).watch(this)
     }
-
 }
