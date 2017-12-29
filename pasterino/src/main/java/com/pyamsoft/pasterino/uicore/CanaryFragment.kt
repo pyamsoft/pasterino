@@ -29,5 +29,4 @@ abstract class CanaryFragment : ToolbarFragment() {
         super.onDestroy()
         Pasterino.getRefWatcher(this).watch(this)
     }
-
 }

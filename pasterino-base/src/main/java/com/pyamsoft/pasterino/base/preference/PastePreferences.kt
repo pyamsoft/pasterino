@@ -24,5 +24,4 @@ interface PastePreferences {
 
     @get:CheckResult
     val pasteDelayTime: Long
-
 }

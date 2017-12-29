@@ -25,5 +25,4 @@ internal interface MainSettingsPreferenceInteractor {
 
     @CheckResult
     fun clearAll(): Single<Unit>
-
 }

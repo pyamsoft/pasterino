@@ -25,5 +25,4 @@ internal interface PasteServiceInteractor {
 
     @CheckResult
     fun getPasteDelayTime(): Single<Long>
-
 }

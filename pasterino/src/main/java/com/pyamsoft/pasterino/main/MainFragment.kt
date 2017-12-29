@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.backstack.BackStack
+import com.pyamsoft.backstack.BackStacks
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
@@ -51,7 +52,7 @@ class MainFragment : CanaryFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        backstack = BackStack.create(this, R.id.fragment_container)
+        backstack = BackStacks.create(this, viewLifecycle, R.id.fragment_container)
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
