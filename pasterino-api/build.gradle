@@ -16,13 +16,38 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pasterino.service
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: "com.getkeepsafe.dexcount"
 
-import android.support.annotation.CheckResult
-import io.reactivex.Single
+//noinspection GroovyMissingReturnStatement
+android {
+  compileSdkVersion rootProject.ext.maxSdk
 
-internal interface PasteServiceInteractor {
+  //noinspection GroovyMissingReturnStatement
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdk
+    targetSdkVersion rootProject.ext.maxSdk
 
-    @CheckResult
-    fun getPasteDelayTime(): Single<Long>
+    resConfigs "en"
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
 }
+
+dependencies {
+  // PYDroid
+  api("com.github.pyamsoft.pydroid:pydroid:$pydroid@aar") {
+    transitive = true
+  }
+  api("com.github.pyamsoft.pydroid:pydroid-loader:$pydroid@aar") {
+    transitive = true
+  }
+
+  api project(":pasterino-model")
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+

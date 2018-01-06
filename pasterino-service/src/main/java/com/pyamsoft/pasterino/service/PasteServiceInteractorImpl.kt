@@ -18,7 +18,8 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pasterino.base.preference.PastePreferences
+import com.pyamsoft.pasterino.api.PastePreferences
+import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import io.reactivex.Single
 
 internal class PasteServiceInteractorImpl internal constructor(

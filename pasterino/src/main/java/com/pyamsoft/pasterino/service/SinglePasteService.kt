@@ -28,6 +28,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import com.pyamsoft.pasterino.Injector
+import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.lifecycle.fakeBind
 import com.pyamsoft.pasterino.lifecycle.fakeRelease
@@ -56,6 +57,7 @@ class SinglePasteService : Service(), SinglePastePresenter.View, LifecycleOwner 
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
         lifecycle.fakeRelease()
+        Pasterino.getRefWatcher(this).watch(this)
     }
 
     override fun onBind(intent: Intent): IBinder? = null

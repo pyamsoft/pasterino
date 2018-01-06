@@ -16,30 +16,34 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: "com.getkeepsafe.dexcount"
+package com.pyamsoft.pasterino.api
 
-//noinspection GroovyMissingReturnStatement
-android {
-  compileSdkVersion rootProject.ext.maxSdk
+import android.support.annotation.CheckResult
+import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.loader.ImageLoader
+import io.reactivex.Scheduler
 
-  //noinspection GroovyMissingReturnStatement
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdk
-    targetSdkVersion rootProject.ext.maxSdk
+interface PasterinoModule {
 
-    resConfigs "en"
-  }
+    @CheckResult
+    fun providePasteBus(): EventBus<ServiceEvent>
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
+    @CheckResult
+    fun providePreferences(): PastePreferences
+
+    @CheckResult
+    fun provideClearPreferences(): ClearPreferences
+
+    @CheckResult
+    fun provideMainScheduler(): Scheduler
+
+    @CheckResult
+    fun provideIoScheduler(): Scheduler
+
+    @CheckResult
+    fun provideComputationScheduler(): Scheduler
+
+    @CheckResult
+    fun provideImageLoader(): ImageLoader
 }
-
-dependencies {
-  api project(":pasterino-api")
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-}
-

@@ -19,7 +19,8 @@
 package com.pyamsoft.pasterino.main
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pasterino.base.PasterinoModule
+import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
+import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Scheduler

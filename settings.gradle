@@ -16,5 +16,5 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main', ':pasterino-model',
+include ':pasterino', ':pasterino-base', ':pasterino-main', ':pasterino-model', ':pasterino-api',
     ':pasterino-service'

@@ -16,9 +16,13 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pasterino.base.preference
+package com.pyamsoft.pasterino.api
 
-interface ClearPreferences {
+import android.support.annotation.CheckResult
+import io.reactivex.Single
 
-    fun clearAll()
+interface MainSettingsPreferenceInteractor {
+
+    @CheckResult
+    fun clearAll(): Single<Unit>
 }

@@ -16,30 +16,9 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: "com.getkeepsafe.dexcount"
+package com.pyamsoft.pasterino.api
 
-//noinspection GroovyMissingReturnStatement
-android {
-  compileSdkVersion rootProject.ext.maxSdk
+interface ClearPreferences {
 
-  //noinspection GroovyMissingReturnStatement
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdk
-    targetSdkVersion rootProject.ext.maxSdk
-
-    resConfigs "en"
-  }
-
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
+    fun clearAll()
 }
-
-dependencies {
-  api project(":pasterino-api")
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-}
-

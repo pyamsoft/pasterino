@@ -16,7 +16,7 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pasterino.base.preference
+package com.pyamsoft.pasterino.api
 
 import android.support.annotation.CheckResult
 

@@ -18,6 +18,7 @@
 
 package com.pyamsoft.pasterino.service
 
+import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.SinglePastePresenter.View
 import com.pyamsoft.pydroid.helper.clear
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
