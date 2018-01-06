@@ -19,8 +19,9 @@
 package com.pyamsoft.pasterino.base
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pasterino.base.preference.ClearPreferences
-import com.pyamsoft.pasterino.base.preference.PastePreferences
+import com.pyamsoft.pasterino.api.ClearPreferences
+import com.pyamsoft.pasterino.api.PastePreferences
+import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.base.PYDroidModule
 import com.pyamsoft.pydroid.bus.EventBus
@@ -28,31 +29,31 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import io.reactivex.Scheduler
 
-class PasterinoModule(private val pyDroidModule: PYDroidModule,
-        private val loaderModule: LoaderModule) {
+class PasterinoModuleImpl(private val pyDroidModule: PYDroidModule,
+        private val loaderModule: LoaderModule) : PasterinoModule {
 
     private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
             pyDroidModule.provideContext())
     private val pasteBus = PasteBus()
 
     @CheckResult
-    fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
+    override fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
 
     @CheckResult
-    fun providePreferences(): PastePreferences = preferences
+    override fun providePreferences(): PastePreferences = preferences
 
     @CheckResult
-    fun provideClearPreferences(): ClearPreferences = preferences
+    override fun provideClearPreferences(): ClearPreferences = preferences
 
     @CheckResult
-    fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
+    override fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
 
     @CheckResult
-    fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
+    override fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
 
     @CheckResult
-    fun provideComputationScheduler(): Scheduler = pyDroidModule.provideComputationScheduler()
+    override fun provideComputationScheduler(): Scheduler = pyDroidModule.provideComputationScheduler()
 
     @CheckResult
-    fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
+    override fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
 }

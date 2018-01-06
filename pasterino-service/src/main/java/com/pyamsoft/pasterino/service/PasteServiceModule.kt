@@ -19,7 +19,8 @@
 package com.pyamsoft.pasterino.service
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pasterino.base.PasterinoModule
+import com.pyamsoft.pasterino.api.PasteServiceInteractor
+import com.pyamsoft.pasterino.api.PasterinoModule
 import io.reactivex.Scheduler
 
 class PasteServiceModule(pasterinoModule: PasterinoModule) {

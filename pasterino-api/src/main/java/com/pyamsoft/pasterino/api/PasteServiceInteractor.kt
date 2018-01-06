@@ -16,13 +16,13 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.api
 
 import android.support.annotation.CheckResult
 import io.reactivex.Single
 
-internal interface MainSettingsPreferenceInteractor {
+interface PasteServiceInteractor {
 
     @CheckResult
-    fun clearAll(): Single<Unit>
+    fun getPasteDelayTime(): Single<Long>
 }

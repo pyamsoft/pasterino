@@ -18,7 +18,7 @@
 
 package com.pyamsoft.pasterino
 
-import com.pyamsoft.pasterino.base.PasterinoModule
+import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.main.ConfirmationDialog
 import com.pyamsoft.pasterino.main.MainFragment
 import com.pyamsoft.pasterino.main.MainSettingsModule

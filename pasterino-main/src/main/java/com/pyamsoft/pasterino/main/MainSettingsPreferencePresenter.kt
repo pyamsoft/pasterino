@@ -18,6 +18,7 @@
 
 package com.pyamsoft.pasterino.main
 
+import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
 import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.View
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.bus.EventBus

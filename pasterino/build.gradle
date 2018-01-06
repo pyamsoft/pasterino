@@ -93,6 +93,7 @@ dependencies {
     transitive = true
   }
 
+  implementation project(":pasterino-base")
   implementation project(":pasterino-main")
   implementation project(":pasterino-service")
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"

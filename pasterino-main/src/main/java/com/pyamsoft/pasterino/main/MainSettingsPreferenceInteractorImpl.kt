@@ -18,7 +18,8 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pasterino.base.preference.ClearPreferences
+import com.pyamsoft.pasterino.api.ClearPreferences
+import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
 import io.reactivex.Single
 
 internal class MainSettingsPreferenceInteractorImpl internal constructor(

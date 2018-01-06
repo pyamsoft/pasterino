@@ -29,6 +29,7 @@ import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.pyamsoft.pasterino.Injector
+import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.lifecycle.fakeBind
 import com.pyamsoft.pasterino.lifecycle.fakeRelease
@@ -95,6 +96,7 @@ class PasteService : AccessibilityService(), PasteServicePresenter.View, Lifecyc
     override fun onDestroy() {
         super.onDestroy()
         lifecycle.fakeRelease()
+        Pasterino.getRefWatcher(this).watch(this)
     }
 
     companion object {
