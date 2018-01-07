@@ -22,8 +22,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.backstack.BackStack
-import com.pyamsoft.backstack.BackStacks
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
@@ -33,7 +31,6 @@ import com.pyamsoft.pasterino.uicore.CanaryFragment
 import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior
 import com.pyamsoft.pydroid.design.util.FABUtil
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
@@ -42,8 +39,6 @@ class MainFragment : CanaryFragment() {
 
     internal lateinit var imageLoader: ImageLoader
     private lateinit var binding: FragmentMainBinding
-    private val drawableMap = LoaderMap()
-    private lateinit var backstack: BackStack
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +47,6 @@ class MainFragment : CanaryFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        backstack = BackStacks.create(this, viewLifecycle, R.id.fragment_container)
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -83,31 +77,23 @@ class MainFragment : CanaryFragment() {
             it.setUpEnabled(false)
         }
 
-        if (PasteService.isRunning) {
-            val task = imageLoader.fromResource(R.drawable.ic_help_24dp).into(
-                    binding.mainSettingsFab)
-            drawableMap.put("fab", task)
-        } else {
-            val task = imageLoader.fromResource(R.drawable.ic_service_start_24dp).into(
-                    binding.mainSettingsFab)
-            drawableMap.put("fab", task)
+        imageLoader.apply {
+            if (PasteService.isRunning) {
+                fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
+                        .bind(viewLifecycle)
+            } else {
+                fromResource(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
+                        .bind(viewLifecycle)
+            }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        drawableMap.clear()
     }
 
     private fun displayPreferenceFragment() {
         val fragmentManager = childFragmentManager
-        if (fragmentManager.findFragmentByTag(MainSettingsPreferenceFragment.TAG) == null) {
-            backstack.set(MainSettingsFragment.TAG) { MainSettingsFragment() }
+        if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
+            fragmentManager.beginTransaction().add(R.id.fragment_container, MainSettingsFragment(),
+                    MainSettingsFragment.TAG).commit()
         }
-    }
-
-    override fun onBackPressed(): Boolean {
-        return backstack.back()
     }
 
     companion object {

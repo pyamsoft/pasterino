@@ -21,6 +21,7 @@ package com.pyamsoft.pasterino.main
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.preference.Preference
 import android.view.View
 import com.pyamsoft.pasterino.Injector
@@ -47,6 +48,9 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
 
     override val applicationName: String
         get() = getString(R.string.app_name)
+
+    override val aboutReplaceFragment: Fragment?
+        get() = activity?.supportFragmentManager?.findFragmentByTag(MainFragment.TAG)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +87,10 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     override fun onDestroy() {
         super.onDestroy()
         Pasterino.getRefWatcher(this).watch(this)
+    }
+
+    override fun onLicenseItemClicked() {
+        super.onLicenseItemClicked()
     }
 
     override fun onClearAllClicked() {
