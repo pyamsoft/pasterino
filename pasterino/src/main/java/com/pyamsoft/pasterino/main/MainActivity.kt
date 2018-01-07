@@ -22,8 +22,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.preference.PreferenceManager
-import com.pyamsoft.backstack.BackStack
-import com.pyamsoft.backstack.BackStacks
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
@@ -51,23 +49,14 @@ class MainActivity : TamperActivity() {
     override val applicationName: String
         get() = getString(R.string.app_name)
 
-    private lateinit var backstack: BackStack
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Pasterino_Light)
         super.onCreate(savedInstanceState)
-        backstack = BackStacks.create(this, R.id.main_container)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
         setupAppBar()
         showMainFragment()
-    }
-
-    override fun onBackPressed() {
-        if (!backstack.back()) {
-            super.onBackPressed()
-        }
     }
 
     private fun setupAppBar() {
@@ -84,10 +73,10 @@ class MainActivity : TamperActivity() {
 
     private fun showMainFragment() {
         val fragmentManager = supportFragmentManager
-        if (fragmentManager.findFragmentByTag(
-                MainSettingsPreferenceFragment.TAG) == null && fragmentManager.findFragmentByTag(
-                AboutLibrariesFragment.TAG) == null) {
-            backstack.set(MainFragment.TAG) { MainFragment() }
+        if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null
+                && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {
+            fragmentManager.beginTransaction().add(R.id.main_container, MainFragment(),
+                    MainFragment.TAG).commit()
         }
     }
 }
