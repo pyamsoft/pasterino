@@ -23,80 +23,79 @@ apply plugin: "com.getkeepsafe.dexcount"
 
 //noinspection GroovyMissingReturnStatement
 android {
-  compileSdkVersion rootProject.ext.maxSdk
+    compileSdkVersion rootProject.ext.maxSdk
 
-  defaultConfig {
-    applicationId "com.pyamsoft.pasterino"
-    minSdkVersion rootProject.ext.minSdk
-    targetSdkVersion rootProject.ext.maxSdk
-    versionCode 62
-    versionName "1.5.10"
+    defaultConfig {
+        applicationId "com.pyamsoft.pasterino"
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.maxSdk
+        versionCode 62
+        versionName "1.5.10"
 
-    // For vector drawables
-    vectorDrawables.useSupportLibrary = true
+        // For vector drawables
+        vectorDrawables.useSupportLibrary = true
 
-    resConfigs "en"
-  }
-
-  packagingOptions {
-    exclude 'META-INF/rxjava.properties'
-  }
-
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
-
-  signingConfigs {
-    release {
-      storeFile new File(RELEASE_STORE_FILE)
-      keyAlias RELEASE_KEY_ALIAS
-      keyPassword RELEASE_KEY_PASSWD
-      storePassword RELEASE_STORE_PASSWD
-    }
-  }
-
-  dataBinding {
-    enabled true
-  }
-
-  buildTypes {
-    release {
-      signingConfig signingConfigs.release
-      minifyEnabled true
-      shrinkResources true
-      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        resConfigs "en"
     }
 
-    debug {
-      versionNameSuffix "-dev"
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
     }
-  }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    signingConfigs {
+        release {
+            storeFile new File(RELEASE_STORE_FILE)
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWD
+            storePassword RELEASE_STORE_PASSWD
+        }
+    }
+
+    dataBinding {
+        enabled true
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+
+        debug {
+            versionNameSuffix "-dev"
+        }
+    }
 }
 
 dependencies {
-  kapt "com.android.databinding:compiler:$plugin_version"
+    kapt "com.android.databinding:compiler:$plugin_version"
 
-  // Leak Canary
-  debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
-  releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
-  testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+    // Leak Canary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
-  // Firebase Crash
-  implementation "com.google.firebase:firebase-crash:$firebase"
+    // Firebase Crash
+    implementation "com.google.firebase:firebase-crash:$firebase"
 
-  // PYDroid
-  implementation("com.github.pyamsoft.pydroid:pydroid-ui:$pydroid@aar") {
-    transitive = true
-  }
-  implementation("com.github.pyamsoft.pydroid:pydroid-design:$pydroid@aar") {
-    transitive = true
-  }
+    // PYDroid
+    implementation("com.github.pyamsoft.pydroid:pydroid-ui:$pydroid@aar") {
+        transitive = true
+    }
+    implementation("com.github.pyamsoft.pydroid:pydroid-design:$pydroid@aar") {
+        transitive = true
+    }
 
-  implementation project(":pasterino-base")
-  implementation project(":pasterino-main")
-  implementation project(":pasterino-service")
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation project(":pasterino-base")
+    implementation project(":pasterino-main")
+    implementation project(":pasterino-service")
 }
 
 // Firebase

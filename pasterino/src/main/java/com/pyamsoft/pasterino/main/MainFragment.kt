@@ -45,8 +45,10 @@ class MainFragment : CanaryFragment() {
         Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -61,11 +63,15 @@ class MainFragment : CanaryFragment() {
         FABUtil.setupFABBehavior(binding.mainSettingsFab, HideScrollFABBehavior(10))
         binding.mainSettingsFab.setOnDebouncedClickListener {
             if (PasteService.isRunning) {
-                DialogUtil.guaranteeSingleDialogFragment(activity, ServiceInfoDialog(),
-                        "servce_info")
+                DialogUtil.guaranteeSingleDialogFragment(
+                    activity, ServiceInfoDialog(),
+                    "servce_info"
+                )
             } else {
-                DialogUtil.guaranteeSingleDialogFragment(activity, AccessibilityRequestDialog(),
-                        "accessibility")
+                DialogUtil.guaranteeSingleDialogFragment(
+                    activity, AccessibilityRequestDialog(),
+                    "accessibility"
+                )
             }
         }
     }
@@ -80,10 +86,10 @@ class MainFragment : CanaryFragment() {
         imageLoader.apply {
             if (PasteService.isRunning) {
                 fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
-                        .bind(viewLifecycle)
+                    .bind(viewLifecycle)
             } else {
                 fromResource(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
-                        .bind(viewLifecycle)
+                    .bind(viewLifecycle)
             }
         }
     }
@@ -91,8 +97,10 @@ class MainFragment : CanaryFragment() {
     private fun displayPreferenceFragment() {
         val fragmentManager = childFragmentManager
         if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
-            fragmentManager.beginTransaction().add(R.id.fragment_container, MainSettingsFragment(),
-                    MainSettingsFragment.TAG).commit()
+            fragmentManager.beginTransaction().add(
+                R.id.fragment_container, MainSettingsFragment(),
+                MainSettingsFragment.TAG
+            ).commit()
         }
     }
 

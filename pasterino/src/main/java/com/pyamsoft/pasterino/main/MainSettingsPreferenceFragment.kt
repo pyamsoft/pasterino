@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
-        MainSettingsPreferencePresenter.View {
+    MainSettingsPreferencePresenter.View {
 
     internal lateinit var presenter: MainSettingsPreferencePresenter
     internal lateinit var publisher: PasteServicePublisher
@@ -79,7 +79,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
 
             Timber.d("Clear application data")
             val activityManager = it.applicationContext
-                    .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             activityManager.clearApplicationUserData()
         }
     }

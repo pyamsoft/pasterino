@@ -27,10 +27,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 import timber.log.Timber
 
-class SinglePastePresenter internal constructor(private val interactor: PasteServiceInteractor,
-        computationScheduler: Scheduler, ioScheduler: Scheduler,
-        mainScheduler: Scheduler) : SchedulerPresenter<View>(
-        computationScheduler, ioScheduler, mainScheduler) {
+class SinglePastePresenter internal constructor(
+    private val interactor: PasteServiceInteractor,
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainScheduler: Scheduler
+) : SchedulerPresenter<View>(
+    computationScheduler, ioScheduler, mainScheduler
+) {
 
     private var postDisposable: Disposable = Disposables.empty()
 
@@ -42,10 +45,10 @@ class SinglePastePresenter internal constructor(private val interactor: PasteSer
     fun postDelayedEvent() {
         postDisposable = postDisposable.clear()
         postDisposable = interactor.getPasteDelayTime()
-                .subscribeOn(ioScheduler)
-                .observeOn(mainThreadScheduler)
-                .subscribe({ view?.onPost(it) },
-                        { Timber.e(it, "onError postDelayedEvent") })
+            .subscribeOn(ioScheduler)
+            .observeOn(mainThreadScheduler)
+            .subscribe({ view?.onPost(it) },
+                { Timber.e(it, "onError postDelayedEvent") })
     }
 
     interface View : PostCallback

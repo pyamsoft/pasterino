@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~     Copyright (C) 2017 Peter Kenji Yamanaka
   ~
   ~     This program is free software; you can redistribute it and/or modify
@@ -19,7 +18,7 @@
 
 <resources>
 
-  <string name="delay_time_default">600</string>
-  <string name="delay_time_key">delay_time</string>
+    <string name="delay_time_default">600</string>
+    <string name="delay_time_key">delay_time</string>
 
 </resources>
