@@ -40,6 +40,6 @@ android {
 
 dependencies {
     api "com.android.support:support-annotations:$supportLib"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
