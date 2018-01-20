@@ -29,11 +29,14 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import io.reactivex.Scheduler
 
-class PasterinoModuleImpl(private val pyDroidModule: PYDroidModule,
-        private val loaderModule: LoaderModule) : PasterinoModule {
+class PasterinoModuleImpl(
+    private val pyDroidModule: PYDroidModule,
+    private val loaderModule: LoaderModule
+) : PasterinoModule {
 
     private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
-            pyDroidModule.provideContext())
+        pyDroidModule.provideContext()
+    )
     private val pasteBus = PasteBus()
 
     @CheckResult

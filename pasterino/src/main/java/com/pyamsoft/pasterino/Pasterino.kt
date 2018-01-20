@@ -60,7 +60,8 @@ class Pasterino : Application() {
     }
 
     private fun buildComponent(): PasterinoComponent = PasterinoComponentImpl(
-            PasterinoModuleImpl(pydroidModule, loaderModule))
+        PasterinoModuleImpl(pydroidModule, loaderModule)
+    )
 
     override fun getSystemService(name: String?): Any {
         return if (Injector.name == name) {
@@ -87,24 +88,26 @@ class Pasterino : Application() {
         @JvmStatic
         @CheckResult
         fun getRefWatcher(fragment: SettingsPreferenceFragment): RefWatcher =
-                getRefWatcherInternal(fragment.activity!!.application)
+            getRefWatcherInternal(fragment.activity!!.application)
 
         @JvmStatic
         @CheckResult
         fun getRefWatcher(fragment: CanaryFragment): RefWatcher =
-                getRefWatcherInternal(fragment.activity!!.application)
+            getRefWatcherInternal(fragment.activity!!.application)
 
         @JvmStatic
         @CheckResult
         fun getRefWatcher(dialog: CanaryDialog): RefWatcher = getRefWatcherInternal(
-                dialog.activity!!.application)
+            dialog.activity!!.application
+        )
 
         @JvmStatic
         @CheckResult
         fun getRefWatcher(service: Service): RefWatcher = getRefWatcherInternal(service.application)
 
         @JvmStatic
-        @CheckResult private fun getRefWatcherInternal(application: Application): RefWatcher {
+        @CheckResult
+        private fun getRefWatcherInternal(application: Application): RefWatcher {
             if (application is Pasterino) {
                 return application.refWatcher
             } else {

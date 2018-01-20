@@ -39,10 +39,11 @@ class MainSettingsModule(module: PasterinoModule) {
 
     @CheckResult
     fun getSettingsPreferencePresenter(): MainSettingsPreferencePresenter = MainSettingsPreferencePresenter(
-            interactor, mainBus, computationScheduler, ioScheduler,
-            mainScheduler)
+        interactor, mainBus, computationScheduler, ioScheduler,
+        mainScheduler
+    )
 
     @CheckResult
     fun getSettingsPreferencePublisher(): MainSettingsPreferencePublisher =
-            MainSettingsPreferencePublisher(mainBus)
+        MainSettingsPreferencePublisher(mainBus)
 }

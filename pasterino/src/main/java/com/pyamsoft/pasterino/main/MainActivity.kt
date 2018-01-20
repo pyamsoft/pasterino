@@ -35,8 +35,8 @@ class MainActivity : TamperActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override val changeLogLines: Array<String> = arrayOf(
-            "BUGFIX: Less memory usage when running service",
-            "BUGFIX: Faster startup time"
+        "BUGFIX: Less memory usage when running service",
+        "BUGFIX: Faster startup time"
     )
 
     override val safePackageName: String = "com.pyamsoft.pasterino"
@@ -75,9 +75,11 @@ class MainActivity : TamperActivity() {
     private fun showMainFragment() {
         val fragmentManager = supportFragmentManager
         if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null
-                && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {
-            fragmentManager.beginTransaction().add(R.id.main_container, MainFragment(),
-                    MainFragment.TAG).commit()
+            && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {
+            fragmentManager.beginTransaction().add(
+                R.id.main_container, MainFragment(),
+                MainFragment.TAG
+            ).commit()
         }
     }
 }

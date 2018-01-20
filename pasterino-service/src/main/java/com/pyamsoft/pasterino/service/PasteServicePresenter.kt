@@ -26,10 +26,12 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class PasteServicePresenter internal constructor(
-        private val bus: EventBus<ServiceEvent>, computationScheduler: Scheduler,
-        ioScheduler: Scheduler,
-        mainScheduler: Scheduler) : SchedulerPresenter<View>(
-        computationScheduler, ioScheduler, mainScheduler) {
+    private val bus: EventBus<ServiceEvent>, computationScheduler: Scheduler,
+    ioScheduler: Scheduler,
+    mainScheduler: Scheduler
+) : SchedulerPresenter<View>(
+    computationScheduler, ioScheduler, mainScheduler
+) {
 
     override fun onCreate() {
         super.onCreate()
@@ -39,16 +41,17 @@ class PasteServicePresenter internal constructor(
     private fun registerOnBus() {
         dispose {
             bus.listen()
-                    .subscribeOn(ioScheduler)
-                    .observeOn(mainThreadScheduler)
-                    .subscribe({ (type) ->
-                        when (type) {
-                            ServiceEvent.Type.FINISH -> view?.onServiceFinishRequested()
-                            ServiceEvent.Type.PASTE -> view?.onPasteRequested()
-                            else -> throw IllegalArgumentException(
-                                    "Invalid ServiceEvent.Type: $type")
-                        }
-                    }, { Timber.e(it, "onError event bus") })
+                .subscribeOn(ioScheduler)
+                .observeOn(mainThreadScheduler)
+                .subscribe({ (type) ->
+                    when (type) {
+                        ServiceEvent.Type.FINISH -> view?.onServiceFinishRequested()
+                        ServiceEvent.Type.PASTE -> view?.onPasteRequested()
+                        else -> throw IllegalArgumentException(
+                            "Invalid ServiceEvent.Type: $type"
+                        )
+                    }
+                }, { Timber.e(it, "onError event bus") })
         }
     }
 

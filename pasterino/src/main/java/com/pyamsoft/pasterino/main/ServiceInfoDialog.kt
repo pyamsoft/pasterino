@@ -27,7 +27,7 @@ class ServiceInfoDialog : CanaryDialog() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(activity!!).setMessage("Pasterino service is On")
-                .setPositiveButton("Okay") { _, _ -> dismiss() }
-                .create()
+            .setPositiveButton("Okay") { _, _ -> dismiss() }
+            .create()
     }
 }

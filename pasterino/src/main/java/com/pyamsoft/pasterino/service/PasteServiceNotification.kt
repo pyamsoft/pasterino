@@ -60,7 +60,8 @@ object PasteServiceNotification {
     }
 
     @JvmStatic
-    @CheckResult private fun createNotification(context: Context): Notification {
+    @CheckResult
+    private fun createNotification(context: Context): Notification {
         val appContext = context.applicationContext
         val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
         val notificationChannelId = "pasterino_foreground"
@@ -68,22 +69,26 @@ object PasteServiceNotification {
             setupNotificationChannel(appContext, notificationChannelId)
         }
         return NotificationCompat.Builder(appContext, notificationChannelId).setContentTitle(
-                appContext.getString(R.string.app_name))
-                .setSmallIcon(R.drawable.ic_paste_notification)
-                .setContentText("Pasterino Plzarino")
-                .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
-                .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setWhen(0)
-                .setOngoing(true)
-                .setAutoCancel(false)
-                .setColor(ContextCompat.getColor(appContext, R.color.green500))
-                .setNumber(0)
-                .build()
+            appContext.getString(R.string.app_name)
+        )
+            .setSmallIcon(R.drawable.ic_paste_notification)
+            .setContentText("Pasterino Plzarino")
+            .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
+            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .setWhen(0)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .setColor(ContextCompat.getColor(appContext, R.color.green500))
+            .setNumber(0)
+            .build()
     }
 
     @JvmStatic
-    @RequiresApi(VERSION_CODES.O) private fun setupNotificationChannel(context: Context,
-            notificationChannelId: String) {
+    @RequiresApi(VERSION_CODES.O)
+    private fun setupNotificationChannel(
+        context: Context,
+        notificationChannelId: String
+    ) {
         val name = "Paste Service"
         val description = "Notification related to the Pasterino service"
         val importance = NotificationManager.IMPORTANCE_MIN
@@ -95,7 +100,8 @@ object PasteServiceNotification {
 
         Timber.d("Create notification channel with id: %s", notificationChannelId)
         val notificationManager: NotificationManager = context.applicationContext.getSystemService(
-                Context.NOTIFICATION_SERVICE) as NotificationManager
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
     }
 }

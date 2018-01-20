@@ -37,13 +37,13 @@ class PasteServiceModule(pasterinoModule: PasterinoModule) {
 
     @CheckResult
     fun getSinglePresenter(): SinglePastePresenter =
-            SinglePastePresenter(interactor, computationScheduler, ioScheduler, mainScheduler)
+        SinglePastePresenter(interactor, computationScheduler, ioScheduler, mainScheduler)
 
     @CheckResult
     fun getPasteServicePresenter(): PasteServicePresenter =
-            PasteServicePresenter(pasteBus, computationScheduler, ioScheduler, mainScheduler)
+        PasteServicePresenter(pasteBus, computationScheduler, ioScheduler, mainScheduler)
 
     @CheckResult
     fun getPasteServicePublisher(): PasteServicePublisher =
-            PasteServicePublisher(pasteBus)
+        PasteServicePublisher(pasteBus)
 }
