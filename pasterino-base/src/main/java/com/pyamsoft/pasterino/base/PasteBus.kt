@@ -31,11 +31,11 @@ import io.reactivex.Observable
  */
 internal class PasteBus internal constructor() : EventBus<ServiceEvent> {
 
-    private val bus = RxBus.create<ServiceEvent>()
+  private val bus = RxBus.create<ServiceEvent>()
 
-    override fun publish(event: ServiceEvent) {
-        bus.publish(event)
-    }
+  override fun publish(event: ServiceEvent) {
+    bus.publish(event)
+  }
 
-    override fun listen(): Observable<ServiceEvent> = bus.listen()
+  override fun listen(): Observable<ServiceEvent> = bus.listen()
 }

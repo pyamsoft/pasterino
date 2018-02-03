@@ -26,13 +26,13 @@ import com.pyamsoft.pasterino.service.SinglePasteService
 
 interface PasterinoComponent {
 
-    fun inject(service: SinglePasteService)
+  fun inject(service: SinglePasteService)
 
-    fun inject(service: PasteService)
+  fun inject(service: PasteService)
 
-    fun inject(fragment: MainSettingsPreferenceFragment)
+  fun inject(fragment: MainSettingsPreferenceFragment)
 
-    fun inject(fragment: MainFragment)
+  fun inject(fragment: MainFragment)
 
-    fun inject(dialog: ConfirmationDialog)
+  fun inject(dialog: ConfirmationDialog)
 }

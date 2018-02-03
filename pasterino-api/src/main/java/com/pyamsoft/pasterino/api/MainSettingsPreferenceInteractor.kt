@@ -23,6 +23,6 @@ import io.reactivex.Single
 
 interface MainSettingsPreferenceInteractor {
 
-    @CheckResult
-    fun clearAll(): Single<Unit>
+  @CheckResult
+  fun clearAll(): Single<Unit>
 }

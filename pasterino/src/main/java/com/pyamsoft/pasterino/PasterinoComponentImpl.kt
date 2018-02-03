@@ -28,31 +28,31 @@ import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.SinglePasteService
 
 internal class PasterinoComponentImpl internal constructor(
-    private val module: PasterinoModule
+  private val module: PasterinoModule
 ) : PasterinoComponent {
 
-    private val mainSettingsModule: MainSettingsModule = MainSettingsModule(module)
-    private val pasteServiceModule: PasteServiceModule = PasteServiceModule(module)
+  private val mainSettingsModule: MainSettingsModule = MainSettingsModule(module)
+  private val pasteServiceModule: PasteServiceModule = PasteServiceModule(module)
 
-    override fun inject(fragment: MainFragment) {
-        fragment.imageLoader = module.provideImageLoader()
-    }
+  override fun inject(fragment: MainFragment) {
+    fragment.imageLoader = module.provideImageLoader()
+  }
 
-    override fun inject(service: SinglePasteService) {
-        service.presenter = pasteServiceModule.getSinglePresenter()
-        service.publisher = pasteServiceModule.getPasteServicePublisher()
-    }
+  override fun inject(service: SinglePasteService) {
+    service.presenter = pasteServiceModule.getSinglePresenter()
+    service.publisher = pasteServiceModule.getPasteServicePublisher()
+  }
 
-    override fun inject(service: PasteService) {
-        service.presenter = pasteServiceModule.getPasteServicePresenter()
-    }
+  override fun inject(service: PasteService) {
+    service.presenter = pasteServiceModule.getPasteServicePresenter()
+  }
 
-    override fun inject(fragment: MainSettingsPreferenceFragment) {
-        fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
-        fragment.publisher = pasteServiceModule.getPasteServicePublisher()
-    }
+  override fun inject(fragment: MainSettingsPreferenceFragment) {
+    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
+    fragment.publisher = pasteServiceModule.getPasteServicePublisher()
+  }
 
-    override fun inject(dialog: ConfirmationDialog) {
-        dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
-    }
+  override fun inject(dialog: ConfirmationDialog) {
+    dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
+  }
 }

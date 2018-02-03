@@ -17,15 +17,15 @@
   -->
 
 <resources>
-    <string name="app_name">Pasterino</string>
-    <string name="explain_accessibility_service">
+  <string name="app_name">Pasterino</string>
+  <string name="explain_accessibility_service">
     In order to run correctly, Pasterino needs to enable a system Accessibility Service.
     This service will monitor when you select a text input field so it can paste text on your command.
     It will not monitor any keys nor will it collect any user information.
 
     \n\nPlease Enable Pasterino in the System Accesibility Settings.
   </string>
-    <string name="accessibility_service_description">
+  <string name="accessibility_service_description">
     Pasterino needs to observe when you select a text input field so it can paste text on your command.
 
     \n\nIt does not collect any information. It does not monitor anything else at all.

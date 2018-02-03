@@ -36,83 +36,83 @@ import com.squareup.leakcanary.RefWatcher
 
 class Pasterino : Application() {
 
-    private lateinit var refWatcher: RefWatcher
-    private var component: PasterinoComponent? = null
-    private lateinit var pydroidModule: PYDroidModule
-    private lateinit var loaderModule: LoaderModule
+  private lateinit var refWatcher: RefWatcher
+  private var component: PasterinoComponent? = null
+  private lateinit var pydroidModule: PYDroidModule
+  private lateinit var loaderModule: LoaderModule
 
-    override fun onCreate() {
-        super.onCreate()
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-
-        pydroidModule = PYDroidModuleImpl(this, BuildConfig.DEBUG)
-        loaderModule = LoaderModuleImpl(pydroidModule)
-        PYDroid.init(pydroidModule, loaderModule)
-        Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
-
-        refWatcher = if (BuildConfig.DEBUG) {
-            LeakCanary.install(this)
-        } else {
-            RefWatcher.DISABLED
-        }
+  override fun onCreate() {
+    super.onCreate()
+    if (LeakCanary.isInAnalyzerProcess(this)) {
+      return
     }
 
-    private fun buildComponent(): PasterinoComponent = PasterinoComponentImpl(
-        PasterinoModuleImpl(pydroidModule, loaderModule)
+    pydroidModule = PYDroidModuleImpl(this, BuildConfig.DEBUG)
+    loaderModule = LoaderModuleImpl(pydroidModule)
+    PYDroid.init(pydroidModule, loaderModule)
+    Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
+
+    refWatcher = if (BuildConfig.DEBUG) {
+      LeakCanary.install(this)
+    } else {
+      RefWatcher.DISABLED
+    }
+  }
+
+  private fun buildComponent(): PasterinoComponent = PasterinoComponentImpl(
+      PasterinoModuleImpl(pydroidModule, loaderModule)
+  )
+
+  override fun getSystemService(name: String?): Any {
+    return if (Injector.name == name) {
+      val pasterino: PasterinoComponent
+      val obj = component
+      if (obj == null) {
+        pasterino = buildComponent()
+        component = pasterino
+      } else {
+        pasterino = obj
+      }
+
+      // Return
+      pasterino
+    } else {
+
+      // Return
+      super.getSystemService(name)
+    }
+  }
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun getRefWatcher(fragment: SettingsPreferenceFragment): RefWatcher =
+      getRefWatcherInternal(fragment.activity!!.application)
+
+    @JvmStatic
+    @CheckResult
+    fun getRefWatcher(fragment: CanaryFragment): RefWatcher =
+      getRefWatcherInternal(fragment.activity!!.application)
+
+    @JvmStatic
+    @CheckResult
+    fun getRefWatcher(dialog: CanaryDialog): RefWatcher = getRefWatcherInternal(
+        dialog.activity!!.application
     )
 
-    override fun getSystemService(name: String?): Any {
-        return if (Injector.name == name) {
-            val pasterino: PasterinoComponent
-            val obj = component
-            if (obj == null) {
-                pasterino = buildComponent()
-                component = pasterino
-            } else {
-                pasterino = obj
-            }
+    @JvmStatic
+    @CheckResult
+    fun getRefWatcher(service: Service): RefWatcher = getRefWatcherInternal(service.application)
 
-            // Return
-            pasterino
-        } else {
-
-            // Return
-            super.getSystemService(name)
-        }
+    @JvmStatic
+    @CheckResult
+    private fun getRefWatcherInternal(application: Application): RefWatcher {
+      if (application is Pasterino) {
+        return application.refWatcher
+      } else {
+        throw IllegalStateException("Application is not Pasterino")
+      }
     }
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        fun getRefWatcher(fragment: SettingsPreferenceFragment): RefWatcher =
-            getRefWatcherInternal(fragment.activity!!.application)
-
-        @JvmStatic
-        @CheckResult
-        fun getRefWatcher(fragment: CanaryFragment): RefWatcher =
-            getRefWatcherInternal(fragment.activity!!.application)
-
-        @JvmStatic
-        @CheckResult
-        fun getRefWatcher(dialog: CanaryDialog): RefWatcher = getRefWatcherInternal(
-            dialog.activity!!.application
-        )
-
-        @JvmStatic
-        @CheckResult
-        fun getRefWatcher(service: Service): RefWatcher = getRefWatcherInternal(service.application)
-
-        @JvmStatic
-        @CheckResult
-        private fun getRefWatcherInternal(application: Application): RefWatcher {
-            if (application is Pasterino) {
-                return application.refWatcher
-            } else {
-                throw IllegalStateException("Application is not Pasterino")
-            }
-        }
-    }
+  }
 }

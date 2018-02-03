@@ -26,24 +26,24 @@ import io.reactivex.Scheduler
 
 interface PasterinoModule {
 
-    @CheckResult
-    fun providePasteBus(): EventBus<ServiceEvent>
+  @CheckResult
+  fun providePasteBus(): EventBus<ServiceEvent>
 
-    @CheckResult
-    fun providePreferences(): PastePreferences
+  @CheckResult
+  fun providePreferences(): PastePreferences
 
-    @CheckResult
-    fun provideClearPreferences(): ClearPreferences
+  @CheckResult
+  fun provideClearPreferences(): ClearPreferences
 
-    @CheckResult
-    fun provideMainScheduler(): Scheduler
+  @CheckResult
+  fun provideMainScheduler(): Scheduler
 
-    @CheckResult
-    fun provideIoScheduler(): Scheduler
+  @CheckResult
+  fun provideIoScheduler(): Scheduler
 
-    @CheckResult
-    fun provideComputationScheduler(): Scheduler
+  @CheckResult
+  fun provideComputationScheduler(): Scheduler
 
-    @CheckResult
-    fun provideImageLoader(): ImageLoader
+  @CheckResult
+  fun provideImageLoader(): ImageLoader
 }

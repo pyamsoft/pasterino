@@ -22,8 +22,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.preference.PreferenceManager
-import com.pyamsoft.pasterino.BuildConfig
-import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.helper.DebouncedOnClickListener
@@ -32,54 +30,57 @@ import com.pyamsoft.pydroid.util.AppUtil
 
 class MainActivity : TamperActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+  private lateinit var binding: ActivityMainBinding
 
-    override val changeLogLines: Array<String> = arrayOf(
-        "BUGFIX: Less memory usage when running service",
-        "BUGFIX: Faster startup time"
-    )
+  override val changeLogLines: Array<String> = arrayOf(
+      "BUGFIX: Less memory usage when running service",
+      "BUGFIX: Faster startup time"
+  )
 
-    override val safePackageName: String = "com.pyamsoft.pasterino"
+  override val safePackageName: String = "com.pyamsoft.pasterino"
 
-    override val versionName: String = BuildConfig.VERSION_NAME
+  override val versionName: String = BuildConfig.VERSION_NAME
 
-    override val applicationIcon: Int = R.mipmap.ic_launcher
+  override val applicationIcon: Int = R.mipmap.ic_launcher
 
-    override val currentApplicationVersion: Int = BuildConfig.VERSION_CODE
+  override val currentApplicationVersion: Int = BuildConfig.VERSION_CODE
 
-    override val applicationName: String
-        get() = getString(R.string.app_name)
+  override val applicationName: String
+    get() = getString(R.string.app_name)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_Pasterino_Light)
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    setTheme(R.style.Theme_Pasterino_Light)
+    super.onCreate(savedInstanceState)
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+    PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
-        setupAppBar()
-        showMainFragment()
+    setupAppBar()
+    showMainFragment()
+  }
+
+  private fun setupAppBar() {
+    binding.mainToolbar.apply {
+      setToolbar(this)
+      setTitle(R.string.app_name)
+      ViewCompat.setElevation(this, AppUtil.convertToDP(context, 4f))
+
+      setNavigationOnClickListener(DebouncedOnClickListener.create {
+        onBackPressed()
+      })
     }
+  }
 
-    private fun setupAppBar() {
-        binding.mainToolbar.apply {
-            setToolbar(this)
-            setTitle(R.string.app_name)
-            ViewCompat.setElevation(this, AppUtil.convertToDP(context, 4f))
-
-            setNavigationOnClickListener(DebouncedOnClickListener.create {
-                onBackPressed()
-            })
-        }
+  private fun showMainFragment() {
+    val fragmentManager = supportFragmentManager
+    if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null
+    ) {
+      fragmentManager.beginTransaction()
+          .add(
+              R.id.main_container, MainFragment(),
+              MainFragment.TAG
+          )
+          .commit()
     }
-
-    private fun showMainFragment() {
-        val fragmentManager = supportFragmentManager
-        if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null
-            && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null) {
-            fragmentManager.beginTransaction().add(
-                R.id.main_container, MainFragment(),
-                MainFragment.TAG
-            ).commit()
-        }
-    }
+  }
 }

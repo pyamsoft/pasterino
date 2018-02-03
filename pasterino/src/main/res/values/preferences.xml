@@ -18,23 +18,23 @@
 
 <resources>
 
-    <string name="explain_key">explain</string>
-    <string name="explain_title">How to Use</string>
-    <string name="explain_summary">The simple way to use Pasterino</string>
+  <string name="explain_key">explain</string>
+  <string name="explain_title">How to Use</string>
+  <string name="explain_summary">The simple way to use Pasterino</string>
 
-    <string name="delay_time_title">Paste Delay Time</string>
-    <string name="delay_time_summary">Set the amount of delay before attempting to paste text</string>
+  <string name="delay_time_title">Paste Delay Time</string>
+  <string name="delay_time_summary">Set the amount of delay before attempting to paste text</string>
 
-    <string-array name="delay_time_names">
-        <item name="value_small">400 ms</item>
-        <item name="value_default">600 ms</item>
-        <item name="value_large">1000 ms</item>
-    </string-array>
+  <string-array name="delay_time_names">
+    <item name="value_small">400 ms</item>
+    <item name="value_default">600 ms</item>
+    <item name="value_large">1000 ms</item>
+  </string-array>
 
-    <string-array name="delay_time_values">
-        <item name="value_small">400</item>
-        <item name="value_default">600</item>
-        <item name="value_large">1000</item>
-    </string-array>
+  <string-array name="delay_time_values">
+    <item name="value_small">400</item>
+    <item name="value_default">600</item>
+    <item name="value_large">1000</item>
+  </string-array>
 
 </resources>

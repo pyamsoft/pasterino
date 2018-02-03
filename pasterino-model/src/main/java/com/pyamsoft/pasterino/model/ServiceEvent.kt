@@ -20,7 +20,8 @@ package com.pyamsoft.pasterino.model
 
 data class ServiceEvent(val type: Type) {
 
-    enum class Type {
-        FINISH, PASTE
-    }
+  enum class Type {
+    FINISH,
+    PASTE
+  }
 }
