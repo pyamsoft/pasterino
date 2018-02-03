@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.uicore.CanaryFragment
@@ -37,75 +36,82 @@ import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
 class MainFragment : CanaryFragment() {
 
-    internal lateinit var imageLoader: ImageLoader
-    private lateinit var binding: FragmentMainBinding
+  internal lateinit var imageLoader: ImageLoader
+  private lateinit var binding: FragmentMainBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.obtain<PasterinoComponent>(context!!.applicationContext)
+        .inject(this)
+  }
+
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    binding = FragmentMainBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    setupFAB()
+    displayPreferenceFragment()
+  }
+
+  private fun setupFAB() {
+    FABUtil.setupFABBehavior(binding.mainSettingsFab, HideScrollFABBehavior(10))
+    binding.mainSettingsFab.setOnDebouncedClickListener {
+      if (PasteService.isRunning) {
+        DialogUtil.guaranteeSingleDialogFragment(
+            activity, ServiceInfoDialog(),
+            "servce_info"
+        )
+      } else {
+        DialogUtil.guaranteeSingleDialogFragment(
+            activity, AccessibilityRequestDialog(),
+            "accessibility"
+        )
+      }
+    }
+  }
+
+  override fun onResume() {
+    super.onResume()
+    toolbarActivity.withToolbar {
+      it.setTitle(R.string.app_name)
+      it.setUpEnabled(false)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
+    imageLoader.apply {
+      if (PasteService.isRunning) {
+        fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
+            .bind(viewLifecycle)
+      } else {
+        fromResource(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
+            .bind(viewLifecycle)
+      }
     }
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupFAB()
-        displayPreferenceFragment()
+  private fun displayPreferenceFragment() {
+    val fragmentManager = childFragmentManager
+    if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
+      fragmentManager.beginTransaction()
+          .add(
+              R.id.fragment_container, MainSettingsFragment(),
+              MainSettingsFragment.TAG
+          )
+          .commit()
     }
+  }
 
-    private fun setupFAB() {
-        FABUtil.setupFABBehavior(binding.mainSettingsFab, HideScrollFABBehavior(10))
-        binding.mainSettingsFab.setOnDebouncedClickListener {
-            if (PasteService.isRunning) {
-                DialogUtil.guaranteeSingleDialogFragment(
-                    activity, ServiceInfoDialog(),
-                    "servce_info"
-                )
-            } else {
-                DialogUtil.guaranteeSingleDialogFragment(
-                    activity, AccessibilityRequestDialog(),
-                    "accessibility"
-                )
-            }
-        }
-    }
+  companion object {
 
-    override fun onResume() {
-        super.onResume()
-        toolbarActivity.withToolbar {
-            it.setTitle(R.string.app_name)
-            it.setUpEnabled(false)
-        }
-
-        imageLoader.apply {
-            if (PasteService.isRunning) {
-                fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
-                    .bind(viewLifecycle)
-            } else {
-                fromResource(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
-                    .bind(viewLifecycle)
-            }
-        }
-    }
-
-    private fun displayPreferenceFragment() {
-        val fragmentManager = childFragmentManager
-        if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
-            fragmentManager.beginTransaction().add(
-                R.id.fragment_container, MainSettingsFragment(),
-                MainSettingsFragment.TAG
-            ).commit()
-        }
-    }
-
-    companion object {
-
-        const val TAG = "MainFragment"
-    }
+    const val TAG = "MainFragment"
+  }
 }

@@ -30,33 +30,34 @@ import com.pyamsoft.pydroid.loader.LoaderModule
 import io.reactivex.Scheduler
 
 class PasterinoModuleImpl(
-    private val pyDroidModule: PYDroidModule,
-    private val loaderModule: LoaderModule
+  private val pyDroidModule: PYDroidModule,
+  private val loaderModule: LoaderModule
 ) : PasterinoModule {
 
-    private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
-        pyDroidModule.provideContext()
-    )
-    private val pasteBus = PasteBus()
+  private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
+      pyDroidModule.provideContext()
+  )
+  private val pasteBus = PasteBus()
 
-    @CheckResult
-    override fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
+  @CheckResult
+  override fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
 
-    @CheckResult
-    override fun providePreferences(): PastePreferences = preferences
+  @CheckResult
+  override fun providePreferences(): PastePreferences = preferences
 
-    @CheckResult
-    override fun provideClearPreferences(): ClearPreferences = preferences
+  @CheckResult
+  override fun provideClearPreferences(): ClearPreferences = preferences
 
-    @CheckResult
-    override fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
+  @CheckResult
+  override fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
 
-    @CheckResult
-    override fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
+  @CheckResult
+  override fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
 
-    @CheckResult
-    override fun provideComputationScheduler(): Scheduler = pyDroidModule.provideComputationScheduler()
+  @CheckResult
+  override fun provideComputationScheduler(): Scheduler =
+    pyDroidModule.provideComputationScheduler()
 
-    @CheckResult
-    override fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
+  @CheckResult
+  override fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
 }

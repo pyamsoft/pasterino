@@ -28,23 +28,25 @@ import com.pyamsoft.pasterino.api.PastePreferences
 internal class PasterinoPreferencesImpl internal constructor(context: Context) : PastePreferences,
     ClearPreferences {
 
-    private val delayTime: String
-    private val delayTimeDefault: String
-    private val preferences: SharedPreferences
+  private val delayTime: String
+  private val delayTimeDefault: String
+  private val preferences: SharedPreferences
 
-    init {
-        val appContext = context.applicationContext
-        preferences = PreferenceManager.getDefaultSharedPreferences(appContext)
-        delayTime = appContext.getString(R.string.delay_time_key)
-        delayTimeDefault = appContext.getString(R.string.delay_time_default)
-    }
+  init {
+    val appContext = context.applicationContext
+    preferences = PreferenceManager.getDefaultSharedPreferences(appContext)
+    delayTime = appContext.getString(R.string.delay_time_key)
+    delayTimeDefault = appContext.getString(R.string.delay_time_default)
+  }
 
-    override val pasteDelayTime: Long
-        get() = preferences.getString(delayTime, delayTimeDefault).toLong()
+  override val pasteDelayTime: Long
+    get() = preferences.getString(delayTime, delayTimeDefault).toLong()
 
-    @SuppressLint("ApplySharedPref")
-    override fun clearAll() {
-        // Make sure we commit so that they are cleared
-        preferences.edit().clear().commit()
-    }
+  @SuppressLint("ApplySharedPref")
+  override fun clearAll() {
+    // Make sure we commit so that they are cleared
+    preferences.edit()
+        .clear()
+        .commit()
+  }
 }

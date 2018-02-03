@@ -18,19 +18,19 @@
 
 <resources>
 
-    <style name="Base.Theme.Pasterino.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/green500</item>
-        <item name="colorPrimaryDark">@color/green700</item>
-        <item name="colorAccent">@color/redA400</item>
-    </style>
+  <style name="Base.Theme.Pasterino.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/green500</item>
+    <item name="colorPrimaryDark">@color/green700</item>
+    <item name="colorAccent">@color/redA400</item>
+  </style>
 
-    <!-- Normal App Theme -->
-    <style name="Theme.Pasterino.Light" parent="@style/Base.Theme.Pasterino.Light">
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
+  <!-- Normal App Theme -->
+  <style name="Theme.Pasterino.Light" parent="@style/Base.Theme.Pasterino.Light">
+    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+  </style>
 
-    <!-- Splash screen-->
-    <style name="Theme.Pasterino.Light.Splash" parent="@style/Base.Theme.Pasterino.Light">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
-    </style>
+  <!-- Splash screen-->
+  <style name="Theme.Pasterino.Light.Splash" parent="@style/Base.Theme.Pasterino.Light">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+  </style>
 </resources>

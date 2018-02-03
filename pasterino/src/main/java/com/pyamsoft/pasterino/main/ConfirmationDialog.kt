@@ -28,24 +28,26 @@ import com.pyamsoft.pasterino.uicore.CanaryDialog
 
 class ConfirmationDialog : CanaryDialog() {
 
-    internal lateinit var publisher: MainSettingsPreferencePublisher
+  internal lateinit var publisher: MainSettingsPreferencePublisher
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Injector.obtain<PasterinoComponent>(context!!.applicationContext).inject(this)
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.obtain<PasterinoComponent>(context!!.applicationContext)
+        .inject(this)
+  }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(activity!!).setMessage(
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return AlertDialog.Builder(activity!!)
+        .setMessage(
             """
         |Really clear all application settings?
         |You will have to manually restart the Accessibility Service component of Pasterino""".trimMargin()
         )
-            .setPositiveButton("Yes") { _, _ ->
-                dismiss()
-                publisher.publish(ConfirmEvent)
-            }
-            .setNegativeButton("No") { _, _ -> dismiss() }
-            .create()
-    }
+        .setPositiveButton("Yes") { _, _ ->
+          dismiss()
+          publisher.publish(ConfirmEvent)
+        }
+        .setNegativeButton("No") { _, _ -> dismiss() }
+        .create()
+  }
 }
