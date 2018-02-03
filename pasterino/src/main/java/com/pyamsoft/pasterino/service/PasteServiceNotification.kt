@@ -30,6 +30,7 @@ import android.support.annotation.CheckResult
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
+import com.pyamsoft.pasterino.R
 import timber.log.Timber
 
 object PasteServiceNotification {
