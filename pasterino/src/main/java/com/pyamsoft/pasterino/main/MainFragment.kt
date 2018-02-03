@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
+import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.uicore.CanaryFragment

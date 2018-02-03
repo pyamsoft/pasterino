@@ -23,6 +23,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.uicore.CanaryDialog
 
 class AccessibilityRequestDialog : CanaryDialog() {

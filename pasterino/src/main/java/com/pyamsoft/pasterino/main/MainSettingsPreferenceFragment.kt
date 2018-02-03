@@ -27,6 +27,7 @@ import android.view.View
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
+import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.PasteServicePublisher
