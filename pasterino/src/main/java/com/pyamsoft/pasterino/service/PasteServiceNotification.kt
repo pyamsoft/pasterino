@@ -69,18 +69,18 @@ object PasteServiceNotification {
       setupNotificationChannel(appContext, notificationChannelId)
     }
     return NotificationCompat.Builder(appContext, notificationChannelId)
-        .setContentTitle(
-            appContext.getString(R.string.app_name)
-        )
-        .setSmallIcon(R.drawable.ic_paste_notification)
-        .setContentText("Pasterino Plzarino")
-        .setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
-        .setPriority(NotificationCompat.PRIORITY_MIN)
-        .setWhen(0)
-        .setOngoing(true)
-        .setAutoCancel(false)
-        .setColor(ContextCompat.getColor(appContext, R.color.green500))
-        .setNumber(0)
+        .apply {
+          setContentTitle(appContext.getString(R.string.app_name))
+          setSmallIcon(R.drawable.ic_paste_notification)
+          setContentText("Pasterino Plzarino")
+          setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
+          setWhen(0)
+          setOngoing(true)
+          setAutoCancel(false)
+          setNumber(0)
+          priority = NotificationCompat.PRIORITY_MIN
+          color = ContextCompat.getColor(appContext, R.color.green500)
+        }
         .build()
   }
 
@@ -91,13 +91,14 @@ object PasteServiceNotification {
     notificationChannelId: String
   ) {
     val name = "Paste Service"
-    val description = "Notification related to the Pasterino service"
+    val desc = "Notification related to the Pasterino service"
     val importance = NotificationManager.IMPORTANCE_MIN
-    val notificationChannel = NotificationChannel(notificationChannelId, name, importance)
-    notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-    notificationChannel.description = description
-    notificationChannel.enableLights(false)
-    notificationChannel.enableVibration(false)
+    val notificationChannel = NotificationChannel(notificationChannelId, name, importance).apply {
+      lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+      description = desc
+      enableLights(false)
+      enableVibration(false)
+    }
 
     Timber.d("Create notification channel with id: %s", notificationChannelId)
     val notificationManager: NotificationManager = context.applicationContext.getSystemService(
