@@ -33,8 +33,7 @@ class MainActivity : TamperActivity() {
   private lateinit var binding: ActivityMainBinding
 
   override val changeLogLines: Array<String> = arrayOf(
-      "BUGFIX: Less memory usage when running service",
-      "BUGFIX: Faster startup time"
+      "BUGFIX: Smoother animations"
   )
 
   override val safePackageName: String = "com.pyamsoft.pasterino"
