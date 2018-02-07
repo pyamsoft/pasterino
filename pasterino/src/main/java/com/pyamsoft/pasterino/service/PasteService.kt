@@ -33,7 +33,7 @@ import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.lifecycle.fakeBind
 import com.pyamsoft.pasterino.lifecycle.fakeRelease
-import com.pyamsoft.pydroid.ui.helper.Toasty
+import com.pyamsoft.pydroid.util.Toasty
 import timber.log.Timber
 
 class PasteService : AccessibilityService(), PasteServicePresenter.View, LifecycleOwner {
