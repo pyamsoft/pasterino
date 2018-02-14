@@ -34,19 +34,17 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_7
     targetCompatibility JavaVersion.VERSION_1_7
   }
+
+  // TODO replace with https://issuetracker.google.com/issues/72050365 once released.
+  libraryVariants.all {
+    it.generateBuildConfig.enabled = false
+  }
 }
 
 dependencies {
-  api "com.android.support:preference-v14:$supportLib"
+  api "com.android.support:preference-v7:$supportLib"
 
   // PYDroid
-  api("com.github.pyamsoft.pydroid:pydroid-base:$pydroid@aar") {
-    transitive = true
-  }
-  api("com.github.pyamsoft.pydroid:pydroid-loader:$pydroid@aar") {
-    transitive = true
-  }
-
   api project(":pasterino-api")
 }
 
