@@ -24,6 +24,8 @@ import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
+import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.util.toDp
@@ -32,9 +34,9 @@ class MainActivity : TamperActivity() {
 
   private lateinit var binding: ActivityMainBinding
 
-  override val changeLogLines: Array<String> = arrayOf(
-      "BUGFIX: Smoother animations"
-  )
+  override val changeLogLines: ChangeLogBuilder = buildChangeLog {
+    bugfix("Smoother animations")
+  }
 
   override val safePackageName: String = "com.pyamsoft.pasterino"
 
