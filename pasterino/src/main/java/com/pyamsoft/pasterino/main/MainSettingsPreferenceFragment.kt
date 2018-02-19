@@ -47,9 +47,6 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
   override val applicationName: String
     get() = getString(R.string.app_name)
 
-  override val aboutReplaceFragment: Fragment?
-    get() = activity?.supportFragmentManager?.findFragmentByTag(MainFragment.TAG)
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Injector.obtain<PasterinoComponent>(context!!.applicationContext)

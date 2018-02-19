@@ -72,7 +72,7 @@ class MainActivity : TamperActivity() {
   private fun showMainFragment() {
     val fragmentManager = supportFragmentManager
     if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null
+        && !AboutLibrariesFragment.isPresent(this)
     ) {
       fragmentManager.beginTransaction()
           .add(
