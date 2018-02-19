@@ -76,7 +76,6 @@ class PasteService : AccessibilityService(), PasteServicePresenter.View, Lifecyc
           applicationContext, "Pasting text into current input focus.",
           Toasty.LENGTH_SHORT
       )
-          .show()
     } else {
       Timber.e("No editable target to paste into")
     }

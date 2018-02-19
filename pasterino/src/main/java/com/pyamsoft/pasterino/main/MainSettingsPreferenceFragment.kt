@@ -77,8 +77,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
       }
 
       Timber.d("Clear application data")
-      val activityManager = it.applicationContext
-          .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+      val activityManager = it.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
       activityManager.clearApplicationUserData()
     }
   }

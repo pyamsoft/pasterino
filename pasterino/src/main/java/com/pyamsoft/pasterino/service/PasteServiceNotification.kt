@@ -53,8 +53,7 @@ object PasteServiceNotification {
   @JvmStatic
   @CheckResult
   private fun getNotificationManager(context: Context): NotificationManager {
-    val appContext = context.applicationContext
-    return appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
   }
 
   @JvmStatic
@@ -99,9 +98,8 @@ object PasteServiceNotification {
     }
 
     Timber.d("Create notification channel with id: %s", notificationChannelId)
-    val notificationManager: NotificationManager = context.applicationContext.getSystemService(
-        Context.NOTIFICATION_SERVICE
-    ) as NotificationManager
+    val notificationManager: NotificationManager =
+      context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(notificationChannel)
   }
 }
