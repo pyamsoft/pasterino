@@ -31,7 +31,7 @@ import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
-import com.pyamsoft.pydroid.ui.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
@@ -64,7 +64,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     super.onViewCreated(view, savedInstanceState)
     val explain: Preference = findPreference(getString(R.string.explain_key))
     explain.setOnPreferenceClickListener {
-      DialogUtil.guaranteeSingleDialogFragment(activity, HowToDialog(), "howto")
+      HowToDialog().show(activity, "howto")
       return@setOnPreferenceClickListener true
     }
   }
@@ -92,12 +92,8 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
         .watch(this)
   }
 
-  override fun onLicenseItemClicked() {
-    super.onLicenseItemClicked()
-  }
-
   override fun onClearAllClicked() {
-    DialogUtil.guaranteeSingleDialogFragment(activity, ConfirmationDialog(), "confirm")
+    ConfirmationDialog().show(activity, "confirm")
   }
 
   companion object {

@@ -24,9 +24,9 @@ import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.helper.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
-import com.pyamsoft.pydroid.util.AppUtil
+import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
+import com.pyamsoft.pydroid.util.toDp
 
 class MainActivity : TamperActivity() {
 
@@ -61,7 +61,7 @@ class MainActivity : TamperActivity() {
     binding.mainToolbar.apply {
       setToolbar(this)
       setTitle(R.string.app_name)
-      ViewCompat.setElevation(this, AppUtil.convertToDP(context, 4f))
+      ViewCompat.setElevation(this, 4.toDp(context).toFloat())
 
       setNavigationOnClickListener(DebouncedOnClickListener.create {
         onBackPressed()
