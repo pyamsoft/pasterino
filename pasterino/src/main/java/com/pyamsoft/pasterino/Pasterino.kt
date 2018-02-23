@@ -34,10 +34,15 @@ import com.squareup.leakcanary.RefWatcher
 
 class Pasterino : Application() {
 
+  private val component: PasterinoComponent by lazy(LazyThreadSafetyMode.NONE) { buildComponent() }
+  private val pydroidModule: PYDroidModule by lazy(LazyThreadSafetyMode.NONE) {
+    PYDroidModuleImpl(this, BuildConfig.DEBUG)
+  }
+  private val loaderModule: LoaderModule by lazy(LazyThreadSafetyMode.NONE) {
+    LoaderModuleImpl(pydroidModule)
+  }
+
   private lateinit var refWatcher: RefWatcher
-  private var component: PasterinoComponent? = null
-  private lateinit var pydroidModule: PYDroidModule
-  private lateinit var loaderModule: LoaderModule
 
   override fun onCreate() {
     super.onCreate()
@@ -45,16 +50,14 @@ class Pasterino : Application() {
       return
     }
 
-    pydroidModule = PYDroidModuleImpl(this, BuildConfig.DEBUG)
-    loaderModule = LoaderModuleImpl(pydroidModule)
-    PYDroid.init(pydroidModule, loaderModule)
-    Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
-
     refWatcher = if (BuildConfig.DEBUG) {
       LeakCanary.install(this)
     } else {
       RefWatcher.DISABLED
     }
+
+    PYDroid.init(pydroidModule, loaderModule)
+    Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
   }
 
   private fun buildComponent(): PasterinoComponent = PasterinoComponentImpl(
@@ -62,22 +65,10 @@ class Pasterino : Application() {
   )
 
   override fun getSystemService(name: String?): Any {
-    return if (Injector.name == name) {
-      val pasterino: PasterinoComponent
-      val obj = component
-      if (obj == null) {
-        pasterino = buildComponent()
-        component = pasterino
-      } else {
-        pasterino = obj
-      }
-
-      // Return
-      pasterino
+    if (Injector.name == name) {
+      return component
     } else {
-
-      // Return
-      super.getSystemService(name)
+      return super.getSystemService(name)
     }
   }
 
