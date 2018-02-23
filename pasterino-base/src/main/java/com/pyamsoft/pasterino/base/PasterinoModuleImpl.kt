@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pasterino.base
 
+import android.app.Application
+import android.content.Context
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
@@ -23,6 +25,7 @@ import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import io.reactivex.Scheduler
@@ -37,25 +40,25 @@ class PasterinoModuleImpl(
   )
   private val pasteBus = PasteBus()
 
-  @CheckResult
-  override fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
+  override fun provideApplication(): Application = pyDroidModule.provideApplication()
 
-  @CheckResult
-  override fun providePreferences(): PastePreferences = preferences
+  override fun provideContext(): Context = pyDroidModule.provideContext()
 
-  @CheckResult
-  override fun provideClearPreferences(): ClearPreferences = preferences
+  override fun provideMainThreadScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
 
-  @CheckResult
-  override fun provideMainScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
-
-  @CheckResult
   override fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
 
-  @CheckResult
   override fun provideComputationScheduler(): Scheduler =
     pyDroidModule.provideComputationScheduler()
 
   @CheckResult
   override fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
+
+  override fun provideImageLoaderCache(): Cache = loaderModule.provideImageLoaderCache()
+
+  override fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
+
+  override fun providePreferences(): PastePreferences = preferences
+
+  override fun provideClearPreferences(): ClearPreferences = preferences
 }

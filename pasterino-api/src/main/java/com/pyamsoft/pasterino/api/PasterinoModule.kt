@@ -18,11 +18,11 @@ package com.pyamsoft.pasterino.api
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.ApplicationModule
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.loader.ImageLoader
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.loader.LoaderModule
 
-interface PasterinoModule {
+interface PasterinoModule : ApplicationModule, LoaderModule {
 
   @CheckResult
   fun providePasteBus(): EventBus<ServiceEvent>
@@ -32,16 +32,4 @@ interface PasterinoModule {
 
   @CheckResult
   fun provideClearPreferences(): ClearPreferences
-
-  @CheckResult
-  fun provideMainScheduler(): Scheduler
-
-  @CheckResult
-  fun provideIoScheduler(): Scheduler
-
-  @CheckResult
-  fun provideComputationScheduler(): Scheduler
-
-  @CheckResult
-  fun provideImageLoader(): ImageLoader
 }

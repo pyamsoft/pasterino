@@ -27,7 +27,7 @@ class PasteServiceModule(pasterinoModule: PasterinoModule) {
   private val pasteBus = pasterinoModule.providePasteBus()
   private val computationScheduler: Scheduler = pasterinoModule.provideComputationScheduler()
   private val ioScheduler: Scheduler = pasterinoModule.provideIoScheduler()
-  private val mainScheduler: Scheduler = pasterinoModule.provideMainScheduler()
+  private val mainScheduler: Scheduler = pasterinoModule.provideMainThreadScheduler()
 
   init {
     interactor = PasteServiceInteractorImpl(pasterinoModule.providePreferences())
