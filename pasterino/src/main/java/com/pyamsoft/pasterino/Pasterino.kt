@@ -50,10 +50,10 @@ class Pasterino : Application() {
       return
     }
 
-    refWatcher = if (BuildConfig.DEBUG) {
-      LeakCanary.install(this)
+    if (BuildConfig.DEBUG) {
+      refWatcher = LeakCanary.install(this)
     } else {
-      RefWatcher.DISABLED
+      refWatcher = RefWatcher.DISABLED
     }
 
     PYDroid.init(pydroidModule, loaderModule)
