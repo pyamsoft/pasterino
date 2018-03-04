@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pasterino.service.PasteServicePresenter.View
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
@@ -28,7 +27,7 @@ class PasteServicePresenter internal constructor(
   computationScheduler: Scheduler,
   ioScheduler: Scheduler,
   mainScheduler: Scheduler
-) : SchedulerPresenter<View>(
+) : SchedulerPresenter<PasteServicePresenter.View>(
     computationScheduler, ioScheduler, mainScheduler
 ) {
 

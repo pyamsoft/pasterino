@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pasterino.main
 
+import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pydroid.ui.app.fragment.AppSettingsFragment
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 
@@ -25,6 +26,12 @@ class MainSettingsFragment : AppSettingsFragment() {
     MainSettingsPreferenceFragment()
 
   override fun provideSettingsTag(): String = MainSettingsPreferenceFragment.TAG
+
+  override fun onDestroy() {
+    super.onDestroy()
+    Pasterino.getRefWatcher(this)
+        .watch(this)
+  }
 
   companion object {
     const val TAG = "MainSettingsFragment"

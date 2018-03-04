@@ -24,7 +24,7 @@ import com.pyamsoft.pasterino.uicore.CanaryDialog
 class HowToDialog : CanaryDialog() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(activity!!)
+    return AlertDialog.Builder(requireActivity())
         .setMessage(
             "When you want to paste into a text input field, simply click the notification and wait a little."
         )

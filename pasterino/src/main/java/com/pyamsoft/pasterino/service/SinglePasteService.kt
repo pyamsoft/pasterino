@@ -25,6 +25,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import androidx.os.postDelayed
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
@@ -74,10 +75,10 @@ class SinglePasteService : Service(), SinglePastePresenter.View, LifecycleOwner 
 
   override fun onPost(delay: Long) {
     handler.removeCallbacksAndMessages(null)
-    handler.postDelayed({
+    handler.postDelayed(delay) {
       publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
       stopSelf()
-    }, delay)
+    }
   }
 
   companion object {

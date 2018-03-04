@@ -30,20 +30,20 @@ class ConfirmationDialog : CanaryDialog() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(context!!.applicationContext)
+    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(activity!!)
+    return AlertDialog.Builder(requireActivity())
         .setMessage(
             """
         |Really clear all application settings?
         |You will have to manually restart the Accessibility Service component of Pasterino""".trimMargin()
         )
         .setPositiveButton("Yes") { _, _ ->
-          dismiss()
           publisher.publish(ConfirmEvent)
+          dismiss()
         }
         .setNegativeButton("No") { _, _ -> dismiss() }
         .create()

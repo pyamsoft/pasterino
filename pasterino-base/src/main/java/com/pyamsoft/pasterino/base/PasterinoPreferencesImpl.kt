@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
+import androidx.content.edit
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
 
@@ -43,8 +44,8 @@ internal class PasterinoPreferencesImpl internal constructor(context: Context) :
   @SuppressLint("ApplySharedPref")
   override fun clearAll() {
     // Make sure we commit so that they are cleared
-    preferences.edit()
-        .clear()
-        .commit()
+    preferences.edit(commit = true) {
+      clear()
+    }
   }
 }

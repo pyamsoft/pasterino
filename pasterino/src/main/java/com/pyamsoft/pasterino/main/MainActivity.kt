@@ -77,10 +77,7 @@ class MainActivity : TamperActivity() {
         && !AboutLibrariesFragment.isPresent(this)
     ) {
       fragmentManager.beginTransaction()
-          .add(
-              R.id.main_container, MainFragment(),
-              MainFragment.TAG
-          )
+          .add(R.id.main_container, MainFragment(), MainFragment.TAG)
           .commit()
     }
   }

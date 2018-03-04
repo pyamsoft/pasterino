@@ -19,9 +19,9 @@ package com.pyamsoft.pasterino
 import android.app.Application
 import android.app.Service
 import android.support.annotation.CheckResult
+import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
-import com.pyamsoft.pasterino.uicore.CanaryDialog
-import com.pyamsoft.pasterino.uicore.CanaryFragment
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.PYDroidModuleImpl
 import com.pyamsoft.pydroid.base.about.Licenses
@@ -77,17 +77,17 @@ class Pasterino : Application() {
     @JvmStatic
     @CheckResult
     fun getRefWatcher(fragment: SettingsPreferenceFragment): RefWatcher =
-      getRefWatcherInternal(fragment.activity!!.application)
+      getRefWatcherInternal(fragment.requireActivity().application)
 
     @JvmStatic
     @CheckResult
-    fun getRefWatcher(fragment: CanaryFragment): RefWatcher =
-      getRefWatcherInternal(fragment.activity!!.application)
+    fun getRefWatcher(fragment: Fragment): RefWatcher =
+      getRefWatcherInternal(fragment.requireActivity().application)
 
     @JvmStatic
     @CheckResult
-    fun getRefWatcher(dialog: CanaryDialog): RefWatcher = getRefWatcherInternal(
-        dialog.activity!!.application
+    fun getRefWatcher(dialog: DialogFragment): RefWatcher = getRefWatcherInternal(
+        dialog.requireActivity().application
     )
 
     @JvmStatic

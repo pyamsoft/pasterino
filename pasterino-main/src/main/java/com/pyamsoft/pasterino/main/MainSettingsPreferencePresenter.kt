@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
-import com.pyamsoft.pasterino.main.MainSettingsPreferencePresenter.View
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
@@ -30,7 +29,7 @@ class MainSettingsPreferencePresenter internal constructor(
   computationScheduler: Scheduler,
   ioScheduler: Scheduler,
   mainScheduler: Scheduler
-) : SchedulerPresenter<View>(
+) : SchedulerPresenter<MainSettingsPreferencePresenter.View>(
     computationScheduler, ioScheduler, mainScheduler
 ) {
 

@@ -40,7 +40,7 @@ class MainFragment : CanaryFragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(context!!.applicationContext)
+    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .inject(this)
   }
 

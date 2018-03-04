@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino.main
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.preference.Preference
 import android.view.View
 import com.pyamsoft.pasterino.Injector
@@ -49,7 +48,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(context!!.applicationContext)
+    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .inject(this)
     presenter.bind(viewLifecycle, this)
   }
@@ -67,7 +66,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
   }
 
   override fun onClearAll() {
-    context?.let {
+    requireContext().also {
       PasteServiceNotification.stop(it)
       SinglePasteService.stop(it)
       try {

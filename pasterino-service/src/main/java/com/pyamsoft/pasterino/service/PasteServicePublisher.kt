@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.service
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.bus.EventBus
 
-class PasteServicePublisher(private val bus: EventBus<ServiceEvent>) {
+class PasteServicePublisher internal constructor(private val bus: EventBus<ServiceEvent>) {
 
   fun publish(event: ServiceEvent) {
     bus.publish(event)
