@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino
 import android.app.Application
 import android.app.Service
 import android.support.annotation.CheckResult
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pydroid.PYDroidModule
@@ -28,7 +27,6 @@ import com.pyamsoft.pydroid.base.about.Licenses
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.loader.LoaderModuleImpl
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 
@@ -76,19 +74,8 @@ class Pasterino : Application() {
 
     @JvmStatic
     @CheckResult
-    fun getRefWatcher(fragment: SettingsPreferenceFragment): RefWatcher =
-      getRefWatcherInternal(fragment.requireActivity().application)
-
-    @JvmStatic
-    @CheckResult
     fun getRefWatcher(fragment: Fragment): RefWatcher =
       getRefWatcherInternal(fragment.requireActivity().application)
-
-    @JvmStatic
-    @CheckResult
-    fun getRefWatcher(dialog: DialogFragment): RefWatcher = getRefWatcherInternal(
-        dialog.requireActivity().application
-    )
 
     @JvmStatic
     @CheckResult
