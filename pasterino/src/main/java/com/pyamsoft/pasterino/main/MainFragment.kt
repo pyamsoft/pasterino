@@ -68,9 +68,9 @@ class MainFragment : CanaryFragment() {
     }
     binding.mainSettingsFab.setOnDebouncedClickListener {
       if (PasteService.isRunning) {
-        ServiceInfoDialog().show(activity, "service_info")
+        ServiceInfoDialog().show(requireActivity(), "service_info")
       } else {
-        AccessibilityRequestDialog().show(activity, "accessibility");
+        AccessibilityRequestDialog().show(requireActivity(), "accessibility");
       }
     }
   }

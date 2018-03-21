@@ -60,7 +60,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     super.onViewCreated(view, savedInstanceState)
     val explain: Preference = findPreference(getString(R.string.explain_key))
     explain.setOnPreferenceClickListener {
-      HowToDialog().show(activity, "howto")
+      HowToDialog().show(requireActivity(), "howto")
       return@setOnPreferenceClickListener true
     }
   }
@@ -88,7 +88,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
   }
 
   override fun onClearAllClicked() {
-    ConfirmationDialog().show(activity, "confirm")
+    ConfirmationDialog().show(requireActivity(), "confirm")
   }
 
   companion object {
