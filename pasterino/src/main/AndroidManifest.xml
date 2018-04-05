@@ -15,10 +15,13 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.pyamsoft.pasterino">
 
   <!-- For accessibility service -->
-  <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
+  <uses-permission
+      android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
+      tools:ignore="ProtectedPermissions"/>
 
   <application
       android:name=".Pasterino"
