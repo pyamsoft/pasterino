@@ -20,6 +20,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.preference.PreferenceManager
+import android.view.View
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
@@ -48,6 +49,9 @@ class MainActivity : TamperActivity() {
 
   override val applicationName: String
     get() = getString(R.string.app_name)
+
+  override val rootView: View
+    get() = binding.root
 
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.Theme_Pasterino_Light)

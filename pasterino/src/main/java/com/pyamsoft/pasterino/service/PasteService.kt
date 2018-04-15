@@ -26,12 +26,12 @@ import android.support.annotation.CheckResult
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Toast
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.lifecycle.fakeBind
 import com.pyamsoft.pasterino.lifecycle.fakeRelease
-import com.pyamsoft.pydroid.util.Toasty
 import timber.log.Timber
 
 class PasteService : AccessibilityService(), PasteServicePresenter.View, LifecycleOwner {
@@ -72,9 +72,9 @@ class PasteService : AccessibilityService(), PasteServicePresenter.View, Lifecyc
     if (info != null && info.isEditable) {
       Timber.d("Perform paste on target: %s", info.viewIdResourceName)
       info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
-      Toasty.makeText(
+      Toast.makeText(
           applicationContext, "Pasting text into current input focus.",
-          Toasty.LENGTH_SHORT
+          Toast.LENGTH_SHORT
       )
     } else {
       Timber.e("No editable target to paste into")

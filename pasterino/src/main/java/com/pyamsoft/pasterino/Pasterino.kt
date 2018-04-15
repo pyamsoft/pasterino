@@ -23,7 +23,6 @@ import android.support.v4.app.Fragment
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.PYDroidModuleImpl
-import com.pyamsoft.pydroid.base.about.Licenses
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.loader.LoaderModuleImpl
 import com.pyamsoft.pydroid.ui.PYDroid

@@ -26,12 +26,12 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.uicore.CanaryFragment
-import com.pyamsoft.pydroid.design.fab.HideScrollFABBehavior
-import com.pyamsoft.pydroid.design.util.withBehavior
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.util.withBehavior
+import com.pyamsoft.pydroid.ui.widget.HideScrollFABBehavior
 
 class MainFragment : CanaryFragment() {
 

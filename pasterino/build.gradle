@@ -82,7 +82,6 @@ dependencies {
 
   // PYDroid
   implementation "com.github.pyamsoft.pydroid:pydroid-ui:$pydroid"
-  implementation "com.github.pyamsoft.pydroid:pydroid-design:$pydroid"
 
   implementation project(":pasterino-base")
   implementation project(":pasterino-main")
