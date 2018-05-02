@@ -16,13 +16,27 @@
 
 package com.pyamsoft.pasterino.api
 
+import android.app.Application
+import android.content.Context
 import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.ApplicationModule
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.cache.Cache
+import com.pyamsoft.pydroid.loader.ImageLoader
 
-interface PasterinoModule : ApplicationModule, LoaderModule {
+interface PasterinoModule {
+
+  @CheckResult
+  fun provideApplication(): Application
+
+  @CheckResult
+  fun provideContext(): Context
+
+  @CheckResult
+  fun provideImageLoader(): ImageLoader
+
+  @CheckResult
+  fun provideImageLoaderCache(): Cache
 
   @CheckResult
   fun providePasteBus(): EventBus<ServiceEvent>

@@ -19,19 +19,15 @@ package com.pyamsoft.pasterino.main
 import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.presenter.Presenter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class MainSettingsPreferencePresenter internal constructor(
   private val interactor: MainSettingsPreferenceInteractor,
-  private val bus: EventBus<ConfirmEvent>,
-  computationScheduler: Scheduler,
-  ioScheduler: Scheduler,
-  mainScheduler: Scheduler
-) : SchedulerPresenter<MainSettingsPreferencePresenter.View>(
-    computationScheduler, ioScheduler, mainScheduler
-) {
+  private val bus: EventBus<ConfirmEvent>
+) : Presenter<MainSettingsPreferencePresenter.View>() {
 
   override fun onCreate() {
     super.onCreate()
@@ -42,8 +38,8 @@ class MainSettingsPreferencePresenter internal constructor(
     dispose {
       bus.listen()
           .flatMapSingle { interactor.clearAll() }
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
           .subscribe({ view?.onClearAll() }, { Timber.e(it, "OnError EventBus") })
     }
   }

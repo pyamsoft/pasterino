@@ -18,43 +18,30 @@ package com.pyamsoft.pasterino.base
 
 import android.app.Application
 import android.content.Context
-import android.support.annotation.CheckResult
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.loader.LoaderModule
-import io.reactivex.Scheduler
 
 class PasterinoModuleImpl(
-  private val pyDroidModule: PYDroidModule,
-  private val loaderModule: LoaderModule
+  private val application: Application,
+  private val imageLoader: ImageLoader,
+  private val imageCache: Cache
 ) : PasterinoModule {
 
-  private val preferences: PasterinoPreferencesImpl = PasterinoPreferencesImpl(
-      pyDroidModule.provideContext()
-  )
+  private val preferences = PasterinoPreferencesImpl(application)
   private val pasteBus = PasteBus()
 
-  override fun provideApplication(): Application = pyDroidModule.provideApplication()
+  override fun provideApplication(): Application = application
 
-  override fun provideContext(): Context = pyDroidModule.provideContext()
+  override fun provideContext(): Context = provideApplication()
 
-  override fun provideMainThreadScheduler(): Scheduler = pyDroidModule.provideMainThreadScheduler()
+  override fun provideImageLoader(): ImageLoader = imageLoader
 
-  override fun provideIoScheduler(): Scheduler = pyDroidModule.provideIoScheduler()
-
-  override fun provideComputationScheduler(): Scheduler =
-    pyDroidModule.provideComputationScheduler()
-
-  @CheckResult
-  override fun provideImageLoader(): ImageLoader = loaderModule.provideImageLoader()
-
-  override fun provideImageLoaderCache(): Cache = loaderModule.provideImageLoaderCache()
+  override fun provideImageLoaderCache(): Cache = imageCache
 
   override fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
 

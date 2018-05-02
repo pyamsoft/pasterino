@@ -17,36 +17,30 @@
 package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pydroid.data.clear
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.presenter.Presenter
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class SinglePastePresenter internal constructor(
-  private val interactor: PasteServiceInteractor,
-  computationScheduler: Scheduler,
-  ioScheduler: Scheduler,
-  mainScheduler: Scheduler
-) : SchedulerPresenter<SinglePastePresenter.View>(
-    computationScheduler, ioScheduler, mainScheduler
-) {
+  private val interactor: PasteServiceInteractor
+) : Presenter<SinglePastePresenter.View>() {
 
   private var postDisposable: Disposable = Disposables.empty()
 
   override fun onDestroy() {
     super.onDestroy()
-    postDisposable = postDisposable.clear()
+    postDisposable.dispose()
   }
 
   fun postDelayedEvent() {
-    postDisposable = postDisposable.clear()
+    postDisposable.dispose()
     postDisposable = interactor.getPasteDelayTime()
-        .subscribeOn(ioScheduler)
-        .observeOn(mainThreadScheduler)
-        .subscribe({ view?.onPost(it) },
-            { Timber.e(it, "onError postDelayedEvent") })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({ view?.onPost(it) }, { Timber.e(it, "onError postDelayedEvent") })
   }
 
   interface View : PostCallback

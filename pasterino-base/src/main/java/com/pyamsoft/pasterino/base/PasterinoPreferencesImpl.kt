@@ -24,8 +24,9 @@ import androidx.core.content.edit
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
 
-internal class PasterinoPreferencesImpl internal constructor(context: Context) : PastePreferences,
-    ClearPreferences {
+internal class PasterinoPreferencesImpl internal constructor(
+  context: Context
+) : PastePreferences, ClearPreferences {
 
   private val delayTime: String
   private val delayTimeDefault: String
