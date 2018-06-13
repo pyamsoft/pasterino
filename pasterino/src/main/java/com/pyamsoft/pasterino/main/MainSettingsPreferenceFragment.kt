@@ -50,7 +50,6 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     super.onCreate(savedInstanceState)
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .inject(this)
-    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onViewCreated(
@@ -58,6 +57,8 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+    presenter.bind(viewLifecycleOwner, this)
+
     val explain: Preference = findPreference(getString(R.string.explain_key))
     explain.setOnPreferenceClickListener {
       HowToDialog().show(requireActivity(), "howto")
