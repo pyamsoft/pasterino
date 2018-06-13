@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pasterino.service
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
 

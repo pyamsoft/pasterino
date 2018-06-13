@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pasterino.uicore
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 

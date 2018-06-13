@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.main
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.preference.Preference
+import androidx.preference.Preference
 import android.view.View
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
@@ -50,7 +50,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     super.onCreate(savedInstanceState)
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .inject(this)
-    presenter.bind(viewLifecycle, this)
+    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onViewCreated(

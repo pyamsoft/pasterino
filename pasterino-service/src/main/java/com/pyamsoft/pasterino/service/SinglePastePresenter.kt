@@ -17,7 +17,7 @@
 package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.core.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables

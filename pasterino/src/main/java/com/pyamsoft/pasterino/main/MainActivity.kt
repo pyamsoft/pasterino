@@ -16,10 +16,10 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
-import android.support.v7.preference.PreferenceManager
+import androidx.core.view.ViewCompat
+import androidx.preference.PreferenceManager
 import android.view.View
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R

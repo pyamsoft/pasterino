@@ -17,8 +17,8 @@
 package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pasterino.model.ConfirmEvent
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.RxBus
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable
 
 internal class MainBus internal constructor() : EventBus<ConfirmEvent> {

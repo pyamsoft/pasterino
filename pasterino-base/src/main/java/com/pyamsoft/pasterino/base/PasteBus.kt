@@ -17,8 +17,8 @@
 package com.pyamsoft.pasterino.base
 
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.RxBus
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable
 
 /**

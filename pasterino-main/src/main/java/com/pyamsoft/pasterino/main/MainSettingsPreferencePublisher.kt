@@ -17,7 +17,7 @@
 package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pasterino.model.ConfirmEvent
-import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.EventBus
 
 class MainSettingsPreferencePublisher internal constructor(
   private val bus: EventBus<ConfirmEvent>

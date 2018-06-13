@@ -18,10 +18,10 @@ package com.pyamsoft.pasterino.api
 
 import android.app.Application
 import android.content.Context
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.cache.Cache
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.loader.ImageLoader
 
 interface PasterinoModule {

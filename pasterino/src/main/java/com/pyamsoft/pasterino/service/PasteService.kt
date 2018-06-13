@@ -17,13 +17,13 @@
 package com.pyamsoft.pasterino.service
 
 import android.accessibilityservice.AccessibilityService
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LifecycleRegistry
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.CheckResult
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.annotation.CheckResult
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast

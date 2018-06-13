@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pasterino.api
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import io.reactivex.Single
 
 interface MainSettingsPreferenceInteractor {

@@ -70,7 +70,7 @@ class MainFragment : CanaryFragment() {
       if (PasteService.isRunning) {
         ServiceInfoDialog().show(requireActivity(), "service_info")
       } else {
-        AccessibilityRequestDialog().show(requireActivity(), "accessibility");
+        AccessibilityRequestDialog().show(requireActivity(), "accessibility")
       }
     }
   }
@@ -85,10 +85,10 @@ class MainFragment : CanaryFragment() {
     imageLoader.apply {
       if (PasteService.isRunning) {
         fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
-            .bind(viewLifecycle)
+            .bind(viewLifecycleOwner)
       } else {
         fromResource(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
-            .bind(viewLifecycle)
+            .bind(viewLifecycleOwner)
       }
     }
   }

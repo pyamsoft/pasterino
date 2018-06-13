@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ConfirmEvent
-import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.EventBus
 
 class MainSettingsModule(module: PasterinoModule) {
 
