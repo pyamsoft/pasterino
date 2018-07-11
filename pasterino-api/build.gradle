@@ -38,7 +38,7 @@ android {
 
 dependencies {
   // PYDroid
-  api "com.github.pyamsoft.pydroid:loader:$pydroid"
+  api "com.pyamsoft.pydroid:loader:$pydroid"
 
   api project(":pasterino-model")
 }
