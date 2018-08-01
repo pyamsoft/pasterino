@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-  api "androidx.preference:preference:$androidx"
+  api "androidx.preference:preference:$preference"
 
   // PYDroid
   api project(":pasterino-api")
