@@ -20,6 +20,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
@@ -30,8 +32,6 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.util.withBehavior
-import com.pyamsoft.pydroid.ui.widget.HideScrollFABBehavior
 
 class MainFragment : CanaryFragment() {
 
@@ -63,9 +63,6 @@ class MainFragment : CanaryFragment() {
   }
 
   private fun setupFAB() {
-    binding.apply {
-      mainSettingsFab.withBehavior(HideScrollFABBehavior(10))
-    }
     binding.mainSettingsFab.setOnDebouncedClickListener {
       if (PasteService.isRunning) {
         ServiceInfoDialog().show(requireActivity(), "service_info")
@@ -73,6 +70,12 @@ class MainFragment : CanaryFragment() {
         AccessibilityRequestDialog().show(requireActivity(), "accessibility")
       }
     }
+  }
+
+  // Used by MainSettingsPreferenceFragment
+  @CheckResult
+  internal fun getFloatingActionButton(): FloatingActionButton {
+    return binding.mainSettingsFab
   }
 
   override fun onResume() {

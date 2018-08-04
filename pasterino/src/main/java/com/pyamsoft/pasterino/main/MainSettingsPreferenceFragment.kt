@@ -19,8 +19,8 @@ package com.pyamsoft.pasterino.main
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
-import androidx.preference.Preference
 import android.view.View
+import androidx.preference.Preference
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
@@ -30,12 +30,16 @@ import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.util.popHide
+import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.widget.HideOnScrollListener
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     MainSettingsPreferencePresenter.View {
 
+  private var hideOnScrollListener: HideOnScrollListener? = null
   internal lateinit var presenter: MainSettingsPreferencePresenter
   internal lateinit var publisher: PasteServicePublisher
 
@@ -64,6 +68,30 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
       HowToDialog().show(requireActivity(), "howto")
       return@setOnPreferenceClickListener true
     }
+
+    attachOnScrollListener()
+  }
+
+  private fun attachOnScrollListener() {
+    val mainFragment = requireActivity().supportFragmentManager.findFragmentByTag(MainFragment.TAG)
+    if (mainFragment is MainFragment) {
+      val fab = mainFragment.getFloatingActionButton()
+      val listener = HideOnScrollListener.withView(fab) {
+        if (it) {
+          fab.popShow()
+        } else {
+          fab.popHide()
+        }
+      }
+
+      listView.addOnScrollListener(listener)
+      hideOnScrollListener = listener
+    }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    hideOnScrollListener?.also { listView.removeOnScrollListener(it) }
   }
 
   override fun onClearAll() {
