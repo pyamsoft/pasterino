@@ -91,7 +91,8 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
 
   override fun onDestroyView() {
     super.onDestroyView()
-    hideOnScrollListener?.also { listView.removeOnScrollListener(it) }
+    hideOnScrollListener?.also { listView?.removeOnScrollListener(it) }
+    hideOnScrollListener = null
   }
 
   override fun onClearAll() {

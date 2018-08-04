@@ -21,14 +21,18 @@ import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-class MainSettingsModule(module: PasterinoModule) {
+class MainSettingsModule(
+  module: PasterinoModule,
+  enforcer: Enforcer
+) {
 
   private val interactor: MainSettingsPreferenceInteractor
   private val mainBus: EventBus<ConfirmEvent> = MainBus()
 
   init {
-    interactor = MainSettingsPreferenceInteractorImpl(module.provideClearPreferences())
+    interactor = MainSettingsPreferenceInteractorImpl(module.provideClearPreferences(), enforcer)
   }
 
   @CheckResult

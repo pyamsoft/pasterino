@@ -61,6 +61,7 @@ class Pasterino : Application(), PYDroid.Instance {
       val loaderModule = it.modules()
           .loaderModule()
       component = PasterinoComponentImpl(
+          it.enforcer(),
           PasterinoModuleImpl(
               this,
               loaderModule.provideImageLoader(),

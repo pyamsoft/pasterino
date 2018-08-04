@@ -24,13 +24,15 @@ import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
 internal class PasterinoComponentImpl internal constructor(
+  enforcer: Enforcer,
   private val module: PasterinoModule
 ) : PasterinoComponent {
 
-  private val mainSettingsModule: MainSettingsModule = MainSettingsModule(module)
-  private val pasteServiceModule: PasteServiceModule = PasteServiceModule(module)
+  private val mainSettingsModule = MainSettingsModule(module, enforcer)
+  private val pasteServiceModule = PasteServiceModule(module, enforcer)
 
   override fun inject(fragment: MainFragment) {
     fragment.imageLoader = module.provideImageLoader()

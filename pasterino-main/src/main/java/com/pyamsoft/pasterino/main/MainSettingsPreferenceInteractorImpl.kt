@@ -18,12 +18,17 @@ package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.MainSettingsPreferenceInteractor
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Single
 
 internal class MainSettingsPreferenceInteractorImpl internal constructor(
-  private val preferences: ClearPreferences
+  private val preferences: ClearPreferences,
+  private val enforcer: Enforcer
 ) : MainSettingsPreferenceInteractor {
 
   // This must be a Single or the stream will not continue
-  override fun clearAll(): Single<Unit> = Single.fromCallable(preferences::clearAll)
+  override fun clearAll(): Single<Unit> = Single.fromCallable {
+    enforcer.assertNotOnMainThread()
+    return@fromCallable preferences.clearAll()
+  }
 }

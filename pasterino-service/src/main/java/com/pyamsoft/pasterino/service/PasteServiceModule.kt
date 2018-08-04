@@ -19,14 +19,18 @@ package com.pyamsoft.pasterino.service
 import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-class PasteServiceModule(pasterinoModule: PasterinoModule) {
+class PasteServiceModule(
+  pasterinoModule: PasterinoModule,
+  enforcer: Enforcer
+) {
 
   private val interactor: PasteServiceInteractor
   private val pasteBus = pasterinoModule.providePasteBus()
 
   init {
-    interactor = PasteServiceInteractorImpl(pasterinoModule.providePreferences())
+    interactor = PasteServiceInteractorImpl(enforcer, pasterinoModule.providePreferences())
   }
 
   @CheckResult

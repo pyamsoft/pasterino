@@ -18,12 +18,17 @@ package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Single
 
 internal class PasteServiceInteractorImpl internal constructor(
+  private val enforcer: Enforcer,
   private val preferences: PastePreferences
 ) : PasteServiceInteractor {
 
   override fun getPasteDelayTime(): Single<Long> =
-    Single.fromCallable { preferences.pasteDelayTime }
+    Single.fromCallable {
+      enforcer.assertNotOnMainThread()
+      return@fromCallable preferences.pasteDelayTime
+    }
 }
