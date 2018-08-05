@@ -17,16 +17,16 @@
 package com.pyamsoft.pasterino.service
 
 import android.accessibilityservice.AccessibilityService
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import android.content.Intent
 import android.os.Build
-import androidx.annotation.CheckResult
-import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
+import androidx.annotation.CheckResult
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
@@ -69,13 +69,14 @@ class PasteService : AccessibilityService(), PasteServicePresenter.View, Lifecyc
 
   override fun onPasteRequested() {
     val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-    if (info != null && info.isEditable) {
-      Timber.d("Perform paste on target: %s", info.viewIdResourceName)
+    if (info != null) {
+      Timber.d("Perform paste on target: %s", info)
       info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
       Toast.makeText(
           applicationContext, "Pasting text into current input focus.",
           Toast.LENGTH_SHORT
       )
+          .show()
     } else {
       Timber.e("No editable target to paste into")
     }
