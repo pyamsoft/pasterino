@@ -19,9 +19,9 @@ package com.pyamsoft.pasterino.main
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import com.pyamsoft.pasterino.uicore.CanaryDialog
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 
-class ServiceInfoDialog : CanaryDialog() {
+class ServiceInfoDialog : ToolbarDialog() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(requireActivity())

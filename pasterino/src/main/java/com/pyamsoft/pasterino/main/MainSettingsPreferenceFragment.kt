@@ -19,16 +19,17 @@ package com.pyamsoft.pasterino.main
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.preference.Preference
 import com.pyamsoft.pasterino.Injector
-import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
-import com.pyamsoft.pasterino.service.PasteServicePublisher
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
@@ -36,12 +37,11 @@ import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.widget.HideOnScrollListener
 import timber.log.Timber
 
-class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
-    MainSettingsPreferencePresenter.View {
+class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
 
   private var hideOnScrollListener: HideOnScrollListener? = null
-  internal lateinit var presenter: MainSettingsPreferencePresenter
-  internal lateinit var publisher: PasteServicePublisher
+  internal lateinit var viewModel: MainViewModel
+  internal lateinit var publisher: Publisher<ServiceEvent>
 
   override val rootViewContainer: Int = R.id.main_container
 
@@ -56,13 +56,12 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
         .inject(this)
   }
 
-  override fun onViewCreated(
-    view: View,
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
     savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-    presenter.bind(viewLifecycleOwner, this)
-
+  ): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
     val explain: Preference = findPreference(getString(R.string.explain_key))
     explain.setOnPreferenceClickListener {
       HowToDialog().show(requireActivity(), "howto")
@@ -70,6 +69,9 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     }
 
     attachOnScrollListener()
+
+    viewModel.onClearAllEvent(viewLifecycleOwner) { onClearAll() }
+    return view
   }
 
   private fun attachOnScrollListener() {
@@ -95,7 +97,7 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
     hideOnScrollListener = null
   }
 
-  override fun onClearAll() {
+  private fun onClearAll() {
     requireContext().also {
       PasteServiceNotification.stop(it)
       SinglePasteService.stop(it)
@@ -109,12 +111,6 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment(),
       val activityManager = it.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
       activityManager.clearApplicationUserData()
     }
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    Pasterino.getRefWatcher(this)
-        .watch(this)
   }
 
   override fun onClearAllClicked() {

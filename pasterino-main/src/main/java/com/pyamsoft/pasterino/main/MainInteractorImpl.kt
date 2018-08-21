@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pasterino.uicore
+package com.pyamsoft.pasterino.main
 
-import androidx.annotation.CallSuper
-import com.pyamsoft.pasterino.Pasterino
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
+import com.pyamsoft.pasterino.api.ClearPreferences
+import com.pyamsoft.pasterino.api.MainInteractor
+import com.pyamsoft.pydroid.core.threads.Enforcer
+import io.reactivex.Single
 
-abstract class CanaryFragment : ToolbarFragment() {
+internal class MainInteractorImpl internal constructor(
+  private val preferences: ClearPreferences,
+  private val enforcer: Enforcer
+) : MainInteractor {
 
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    Pasterino.getRefWatcher(this)
-        .watch(this)
+  // This must be a Single or the stream will not continue
+  override fun clearAll(): Single<Unit> = Single.fromCallable {
+    enforcer.assertNotOnMainThread()
+    return@fromCallable preferences.clearAll()
   }
 }

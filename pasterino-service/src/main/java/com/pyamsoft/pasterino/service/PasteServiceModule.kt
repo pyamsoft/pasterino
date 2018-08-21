@@ -19,11 +19,13 @@ package com.pyamsoft.pasterino.service
 import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
+import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.core.threads.Enforcer
 
 class PasteServiceModule(
   pasterinoModule: PasterinoModule,
-  enforcer: Enforcer
+  private val enforcer: Enforcer
 ) {
 
   private val interactor: PasteServiceInteractor
@@ -34,11 +36,8 @@ class PasteServiceModule(
   }
 
   @CheckResult
-  fun getSinglePresenter(): SinglePastePresenter = SinglePastePresenter(interactor)
+  fun getViewModel(): PasteViewModel = PasteViewModel(enforcer, interactor, pasteBus)
 
   @CheckResult
-  fun getPasteServicePresenter(): PasteServicePresenter = PasteServicePresenter(pasteBus)
-
-  @CheckResult
-  fun getPasteServicePublisher(): PasteServicePublisher = PasteServicePublisher(pasteBus)
+  fun getPublisher(): Publisher<ServiceEvent> = pasteBus
 }

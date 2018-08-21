@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino
 import android.app.Application
 import android.app.Service
 import androidx.annotation.CheckResult
-import androidx.fragment.app.Fragment
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.squareup.leakcanary.LeakCanary
@@ -46,7 +45,7 @@ class Pasterino : Application(), PYDroid.Instance {
     PYDroid.init(this, this, BuildConfig.DEBUG)
   }
 
-  override fun getSystemService(name: String?): Any {
+  override fun getSystemService(name: String): Any {
     if (Injector.name == name) {
       return component
     } else {
@@ -72,11 +71,6 @@ class Pasterino : Application(), PYDroid.Instance {
   }
 
   companion object {
-
-    @JvmStatic
-    @CheckResult
-    fun getRefWatcher(fragment: Fragment): RefWatcher =
-      getRefWatcherInternal(fragment.requireActivity().application)
 
     @JvmStatic
     @CheckResult

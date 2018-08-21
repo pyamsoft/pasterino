@@ -22,9 +22,9 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AlertDialog
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.uicore.CanaryDialog
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 
-class AccessibilityRequestDialog : CanaryDialog() {
+class AccessibilityRequestDialog : ToolbarDialog() {
 
   private val accessibilityServiceIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
 

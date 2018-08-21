@@ -22,11 +22,12 @@ import androidx.appcompat.app.AlertDialog
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.model.ConfirmEvent
-import com.pyamsoft.pasterino.uicore.CanaryDialog
+import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 
-class ConfirmationDialog : CanaryDialog() {
+class ConfirmationDialog : ToolbarDialog() {
 
-  internal lateinit var publisher: MainSettingsPreferencePublisher
+  internal lateinit var publisher: Publisher<ConfirmEvent>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

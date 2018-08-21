@@ -23,6 +23,7 @@ import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.loader.ImageLoader
 
@@ -33,7 +34,7 @@ class PasterinoModuleImpl(
 ) : PasterinoModule {
 
   private val preferences = PasterinoPreferencesImpl(application)
-  private val pasteBus = PasteBus()
+  private val pasteBus = RxBus.create<ServiceEvent>()
 
   override fun provideApplication(): Application = application
 

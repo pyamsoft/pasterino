@@ -16,18 +16,29 @@
 
 package com.pyamsoft.pasterino.main
 
+import androidx.annotation.CheckResult
+import com.pyamsoft.pasterino.api.MainInteractor
+import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ConfirmEvent
-import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.core.bus.RxBus
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-internal class MainBus internal constructor() : EventBus<ConfirmEvent> {
+class MainModule(
+  module: PasterinoModule,
+  private val enforcer: Enforcer
+) {
 
-  private val bus = RxBus.create<ConfirmEvent>()
+  private val interactor: MainInteractor
+  private val mainBus = RxBus.create<ConfirmEvent>()
 
-  override fun publish(event: ConfirmEvent) {
-    bus.publish(event)
+  init {
+    interactor = MainInteractorImpl(module.provideClearPreferences(), enforcer)
   }
 
-  override fun listen(): Observable<ConfirmEvent> = bus.listen()
+  @CheckResult
+  fun getViewModel() = MainViewModel(enforcer, interactor, mainBus)
+
+  @CheckResult
+  fun getPublisher(): Publisher<ConfirmEvent> = mainBus
 }

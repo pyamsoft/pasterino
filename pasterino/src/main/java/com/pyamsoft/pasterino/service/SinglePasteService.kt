@@ -17,29 +17,26 @@
 package com.pyamsoft.pasterino.service
 
 import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.os.IBinder
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import android.content.Context
-import android.content.Intent
-import android.os.Handler
-import android.os.IBinder
-import android.os.Looper
-import androidx.core.os.postDelayed
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.lifecycle.fakeBind
 import com.pyamsoft.pasterino.lifecycle.fakeRelease
 import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.core.bus.Publisher
 import timber.log.Timber
 
-class SinglePasteService : Service(), SinglePastePresenter.View, LifecycleOwner {
+class SinglePasteService : Service(), LifecycleOwner {
 
   private val lifecycle = LifecycleRegistry(this)
-  private val handler: Handler = Handler(Looper.getMainLooper())
-  internal lateinit var presenter: SinglePastePresenter
-  internal lateinit var publisher: PasteServicePublisher
+  internal lateinit var viewModel: PasteViewModel
+  internal lateinit var publisher: Publisher<ServiceEvent>
 
   override fun getLifecycle(): Lifecycle {
     return lifecycle
@@ -49,13 +46,13 @@ class SinglePasteService : Service(), SinglePastePresenter.View, LifecycleOwner 
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-    presenter.bind(this, this)
     lifecycle.fakeBind()
+
+    viewModel.onPostEvent(this) { onPost() }
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    handler.removeCallbacksAndMessages(null)
     lifecycle.fakeRelease()
     Pasterino.getRefWatcher(this)
         .watch(this)
@@ -69,16 +66,13 @@ class SinglePasteService : Service(), SinglePastePresenter.View, LifecycleOwner 
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    presenter.postDelayedEvent()
+    viewModel.post(this)
     return Service.START_NOT_STICKY
   }
 
-  override fun onPost(delay: Long) {
-    handler.removeCallbacksAndMessages(null)
-    handler.postDelayed(delay) {
-      publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
-      stopSelf()
-    }
+  private fun onPost() {
+    publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
+    stopSelf()
   }
 
   companion object {

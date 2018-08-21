@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.main.ConfirmationDialog
 import com.pyamsoft.pasterino.main.MainFragment
-import com.pyamsoft.pasterino.main.MainSettingsModule
+import com.pyamsoft.pasterino.main.MainModule
 import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceModule
@@ -31,7 +31,7 @@ internal class PasterinoComponentImpl internal constructor(
   private val module: PasterinoModule
 ) : PasterinoComponent {
 
-  private val mainSettingsModule = MainSettingsModule(module, enforcer)
+  private val mainSettingsModule = MainModule(module, enforcer)
   private val pasteServiceModule = PasteServiceModule(module, enforcer)
 
   override fun inject(fragment: MainFragment) {
@@ -39,20 +39,20 @@ internal class PasterinoComponentImpl internal constructor(
   }
 
   override fun inject(service: SinglePasteService) {
-    service.presenter = pasteServiceModule.getSinglePresenter()
-    service.publisher = pasteServiceModule.getPasteServicePublisher()
+    service.viewModel = pasteServiceModule.getViewModel()
+    service.publisher = pasteServiceModule.getPublisher()
   }
 
   override fun inject(service: PasteService) {
-    service.presenter = pasteServiceModule.getPasteServicePresenter()
+    service.viewModel = pasteServiceModule.getViewModel()
   }
 
   override fun inject(fragment: MainSettingsPreferenceFragment) {
-    fragment.presenter = mainSettingsModule.getSettingsPreferencePresenter()
-    fragment.publisher = pasteServiceModule.getPasteServicePublisher()
+    fragment.viewModel = mainSettingsModule.getViewModel()
+    fragment.publisher = pasteServiceModule.getPublisher()
   }
 
   override fun inject(dialog: ConfirmationDialog) {
-    dialog.publisher = mainSettingsModule.getSettingsPreferencePublisher()
+    dialog.publisher = mainSettingsModule.getPublisher()
   }
 }

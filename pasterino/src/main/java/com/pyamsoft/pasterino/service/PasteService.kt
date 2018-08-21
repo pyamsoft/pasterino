@@ -34,10 +34,10 @@ import com.pyamsoft.pasterino.lifecycle.fakeBind
 import com.pyamsoft.pasterino.lifecycle.fakeRelease
 import timber.log.Timber
 
-class PasteService : AccessibilityService(), PasteServicePresenter.View, LifecycleOwner {
+class PasteService : AccessibilityService(), LifecycleOwner {
 
   private val lifecycle = LifecycleRegistry(this)
-  internal lateinit var presenter: PasteServicePresenter
+  internal lateinit var viewModel: PasteViewModel
 
   override fun getLifecycle(): Lifecycle {
     return lifecycle
@@ -55,8 +55,10 @@ class PasteService : AccessibilityService(), PasteServicePresenter.View, Lifecyc
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-    presenter.bind(this, this)
     lifecycle.fakeBind()
+
+    viewModel.onFinishEvent(this) { onServiceFinishRequested() }
+    viewModel.onPasteEvent(this) { onPasteRequested() }
   }
 
   override fun onServiceConnected() {
@@ -67,7 +69,7 @@ class PasteService : AccessibilityService(), PasteServicePresenter.View, Lifecyc
     PasteServiceNotification.start(this)
   }
 
-  override fun onPasteRequested() {
+  private fun onPasteRequested() {
     val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
     if (info != null) {
       Timber.d("Perform paste on target: %s", info)
@@ -82,7 +84,7 @@ class PasteService : AccessibilityService(), PasteServicePresenter.View, Lifecyc
     }
   }
 
-  override fun onServiceFinishRequested() {
+  private fun onServiceFinishRequested() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       disableSelf()
     }

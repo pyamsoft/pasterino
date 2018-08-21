@@ -27,13 +27,13 @@ import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
-import com.pyamsoft.pasterino.uicore.CanaryFragment
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 
-class MainFragment : CanaryFragment() {
+class MainFragment : ToolbarFragment() {
 
   internal lateinit var imageLoader: ImageLoader
   private lateinit var binding: FragmentMainBinding
@@ -50,16 +50,9 @@ class MainFragment : CanaryFragment() {
     savedInstanceState: Bundle?
   ): View? {
     binding = FragmentMainBinding.inflate(inflater, container, false)
-    return binding.root
-  }
-
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
     setupFAB()
     displayPreferenceFragment()
+    return binding.root
   }
 
   private fun setupFAB() {

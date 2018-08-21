@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.api
 import androidx.annotation.CheckResult
 import io.reactivex.Single
 
-interface MainSettingsPreferenceInteractor {
+interface MainInteractor {
 
   @CheckResult
   fun clearAll(): Single<Unit>
