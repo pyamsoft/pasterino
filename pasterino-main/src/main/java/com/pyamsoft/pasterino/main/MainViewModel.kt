@@ -16,38 +16,33 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.lifecycle.LifecycleOwner
+import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
 class MainViewModel internal constructor(
   private val enforcer: Enforcer,
   private val interactor: MainInteractor,
   private val bus: Listener<ConfirmEvent>
-) : LifecycleViewModel {
+) {
 
-  fun onClearAllEvent(
-    owner: LifecycleOwner,
-    func: () -> Unit
-  ) {
-    bus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMapSingle { _ ->
+  @CheckResult
+  fun onClearAllEvent(func: () -> Unit): Disposable {
+    return bus.listen()
+        .observeOn(Schedulers.io())
+        .flatMapSingle {
           enforcer.assertNotOnMainThread()
           return@flatMapSingle interactor.clearAll()
-              .doOnError { Timber.e(it, "Error clearing all ") }
-              .subscribeOn(Schedulers.io())
-              .observeOn(AndroidSchedulers.mainThread())
+              .observeOn(Schedulers.io())
         }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe { func() }
-        .bind(owner)
 
   }
 }

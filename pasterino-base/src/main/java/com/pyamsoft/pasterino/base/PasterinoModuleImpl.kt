@@ -29,8 +29,7 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 
 class PasterinoModuleImpl(
   private val application: Application,
-  private val imageLoader: ImageLoader,
-  private val imageCache: Cache
+  private val imageLoader: ImageLoader
 ) : PasterinoModule {
 
   private val preferences = PasterinoPreferencesImpl(application)
@@ -41,8 +40,6 @@ class PasterinoModuleImpl(
   override fun provideContext(): Context = provideApplication()
 
   override fun provideImageLoader(): ImageLoader = imageLoader
-
-  override fun provideImageLoaderCache(): Cache = imageCache
 
   override fun providePasteBus(): EventBus<ServiceEvent> = pasteBus
 

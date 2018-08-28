@@ -36,9 +36,6 @@ interface PasterinoModule {
   fun provideImageLoader(): ImageLoader
 
   @CheckResult
-  fun provideImageLoaderCache(): Cache
-
-  @CheckResult
   fun providePasteBus(): EventBus<ServiceEvent>
 
   @CheckResult

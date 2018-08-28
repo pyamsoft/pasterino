@@ -63,8 +63,7 @@ class Pasterino : Application(), PYDroid.Instance {
           it.enforcer(),
           PasterinoModuleImpl(
               this,
-              loaderModule.provideImageLoader(),
-              loaderModule.provideImageLoaderCache()
+              loaderModule.provideImageLoader()
           )
       )
     }

@@ -20,42 +20,41 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.lifecycle.fakeBind
-import com.pyamsoft.pasterino.lifecycle.fakeRelease
 import com.pyamsoft.pasterino.model.ServiceEvent
+import com.pyamsoft.pydroid.core.addTo
 import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.disposable
+import com.pyamsoft.pydroid.core.tryDispose
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-class SinglePasteService : Service(), LifecycleOwner {
+class SinglePasteService : Service() {
 
-  private val lifecycle = LifecycleRegistry(this)
   internal lateinit var viewModel: PasteViewModel
   internal lateinit var publisher: Publisher<ServiceEvent>
 
-  override fun getLifecycle(): Lifecycle {
-    return lifecycle
-  }
+  private val compositeDisposable = CompositeDisposable()
+  private var postDisposable by disposable()
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-    lifecycle.fakeBind()
 
-    viewModel.onPostEvent(this) { onPost() }
+    viewModel.onPostEvent { onPost() }
+        .addTo(compositeDisposable)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    lifecycle.fakeRelease()
     Pasterino.getRefWatcher(this)
         .watch(this)
+
+    compositeDisposable.clear()
+    postDisposable.tryDispose()
   }
 
   override fun onBind(intent: Intent): IBinder? = null
@@ -66,7 +65,7 @@ class SinglePasteService : Service(), LifecycleOwner {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    viewModel.post(this)
+    postDisposable = viewModel.post()
     return Service.START_NOT_STICKY
   }
 

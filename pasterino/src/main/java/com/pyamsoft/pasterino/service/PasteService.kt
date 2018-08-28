@@ -24,24 +24,17 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.annotation.CheckResult
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.lifecycle.fakeBind
-import com.pyamsoft.pasterino.lifecycle.fakeRelease
+import com.pyamsoft.pydroid.core.addTo
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-class PasteService : AccessibilityService(), LifecycleOwner {
+class PasteService : AccessibilityService() {
 
-  private val lifecycle = LifecycleRegistry(this)
   internal lateinit var viewModel: PasteViewModel
-
-  override fun getLifecycle(): Lifecycle {
-    return lifecycle
-  }
+  private val compositeDisposable = CompositeDisposable()
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -55,10 +48,10 @@ class PasteService : AccessibilityService(), LifecycleOwner {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-    lifecycle.fakeBind()
-
-    viewModel.onFinishEvent(this) { onServiceFinishRequested() }
-    viewModel.onPasteEvent(this) { onPasteRequested() }
+    viewModel.onFinishEvent { onServiceFinishRequested() }
+        .addTo(compositeDisposable)
+    viewModel.onPasteEvent { onPasteRequested() }
+        .addTo(compositeDisposable)
   }
 
   override fun onServiceConnected() {
@@ -99,9 +92,9 @@ class PasteService : AccessibilityService(), LifecycleOwner {
 
   override fun onDestroy() {
     super.onDestroy()
-    lifecycle.fakeRelease()
     Pasterino.getRefWatcher(this)
         .watch(this)
+    compositeDisposable.clear()
   }
 
   companion object {
