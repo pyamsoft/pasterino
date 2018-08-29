@@ -16,21 +16,23 @@
 
 package com.pyamsoft.pasterino
 
+import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragment
-import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
-import com.pyamsoft.pasterino.service.PasteService
+import com.pyamsoft.pasterino.service.ServiceComponent
 import com.pyamsoft.pasterino.service.SinglePasteService
 
 interface PasterinoComponent {
 
-  fun inject(service: SinglePasteService)
-
-  fun inject(service: PasteService)
-
-  fun inject(fragment: MainSettingsPreferenceFragment)
-
   fun inject(fragment: MainFragment)
 
   fun inject(dialog: ConfirmationDialog)
+
+  @CheckResult
+  fun plusMainComponent(owner: LifecycleOwner): MainComponent
+
+  @CheckResult
+  fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent
 }

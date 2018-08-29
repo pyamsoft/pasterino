@@ -17,6 +17,7 @@
 package com.pyamsoft.pasterino.main
 
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ConfirmEvent
@@ -37,7 +38,7 @@ class MainModule(
   }
 
   @CheckResult
-  fun getViewModel() = MainViewModel(enforcer, interactor, mainBus)
+  fun getViewModel(owner: LifecycleOwner) = MainViewModel(owner, enforcer, interactor, mainBus)
 
   @CheckResult
   fun getPublisher(): Publisher<ConfirmEvent> = mainBus

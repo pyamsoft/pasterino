@@ -29,14 +29,12 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
-import com.pyamsoft.pydroid.core.addTo
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.widget.HideOnScrollListener
-import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
@@ -52,19 +50,15 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
   override val applicationName: String
     get() = getString(R.string.app_name)
 
-  private val compositeDisposable = CompositeDisposable()
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .inject(this)
-  }
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
+        .plusMainComponent(viewLifecycleOwner)
+        .inject(this)
+
     val view = super.onCreateView(inflater, container, savedInstanceState)
     val explain: Preference = findPreference(getString(R.string.explain_key))
     explain.setOnPreferenceClickListener {
@@ -75,7 +69,6 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
     attachOnScrollListener()
 
     viewModel.onClearAllEvent { onClearAll() }
-        .addTo(compositeDisposable)
     return view
   }
 
@@ -100,7 +93,6 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
     super.onDestroyView()
     hideOnScrollListener?.also { listView?.removeOnScrollListener(it) }
     hideOnScrollListener = null
-    compositeDisposable.clear()
   }
 
   private fun onClearAll() {

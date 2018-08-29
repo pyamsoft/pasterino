@@ -19,8 +19,8 @@ package com.pyamsoft.pasterino.base
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
 
@@ -40,7 +40,7 @@ internal class PasterinoPreferencesImpl internal constructor(
   }
 
   override val pasteDelayTime: Long
-    get() = preferences.getString(delayTime, delayTimeDefault).toLong()
+    get() = preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
 
   @SuppressLint("ApplySharedPref")
   override fun clearAll() {

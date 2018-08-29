@@ -20,41 +20,44 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.core.addTo
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.core.disposable
-import com.pyamsoft.pydroid.core.tryDispose
-import io.reactivex.disposables.CompositeDisposable
+import com.pyamsoft.pydroid.core.lifecycle.fakeBind
+import com.pyamsoft.pydroid.core.lifecycle.fakeUnbind
 import timber.log.Timber
 
-class SinglePasteService : Service() {
+class SinglePasteService : Service(), LifecycleOwner {
 
+  private val registry = LifecycleRegistry(this)
   internal lateinit var viewModel: PasteViewModel
   internal lateinit var publisher: Publisher<ServiceEvent>
 
-  private val compositeDisposable = CompositeDisposable()
-  private var postDisposable by disposable()
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
+        .plusServiceComponent(this)
         .inject(this)
 
     viewModel.onPostEvent { onPost() }
-        .addTo(compositeDisposable)
+
+    registry.fakeBind()
   }
 
   override fun onDestroy() {
     super.onDestroy()
+    registry.fakeUnbind()
     Pasterino.getRefWatcher(this)
         .watch(this)
-
-    compositeDisposable.clear()
-    postDisposable.tryDispose()
   }
 
   override fun onBind(intent: Intent): IBinder? = null
@@ -65,7 +68,7 @@ class SinglePasteService : Service() {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    postDisposable = viewModel.post()
+    viewModel.post()
     return Service.START_NOT_STICKY
   }
 

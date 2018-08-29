@@ -16,14 +16,16 @@
 
 package com.pyamsoft.pasterino
 
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainComponent
+import com.pyamsoft.pasterino.main.MainComponentImpl
 import com.pyamsoft.pasterino.main.MainFragment
 import com.pyamsoft.pasterino.main.MainModule
-import com.pyamsoft.pasterino.main.MainSettingsPreferenceFragment
-import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceModule
-import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.service.ServiceComponent
+import com.pyamsoft.pasterino.service.ServiceComponentImpl
 import com.pyamsoft.pydroid.core.threads.Enforcer
 
 internal class PasterinoComponentImpl internal constructor(
@@ -38,21 +40,15 @@ internal class PasterinoComponentImpl internal constructor(
     fragment.imageLoader = module.provideImageLoader()
   }
 
-  override fun inject(service: SinglePasteService) {
-    service.viewModel = pasteServiceModule.getViewModel()
-    service.publisher = pasteServiceModule.getPublisher()
-  }
-
-  override fun inject(service: PasteService) {
-    service.viewModel = pasteServiceModule.getViewModel()
-  }
-
-  override fun inject(fragment: MainSettingsPreferenceFragment) {
-    fragment.viewModel = mainSettingsModule.getViewModel()
-    fragment.publisher = pasteServiceModule.getPublisher()
-  }
-
   override fun inject(dialog: ConfirmationDialog) {
     dialog.publisher = mainSettingsModule.getPublisher()
+  }
+
+  override fun plusMainComponent(owner: LifecycleOwner): MainComponent {
+    return MainComponentImpl(owner, mainSettingsModule, pasteServiceModule)
+  }
+
+  override fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent {
+    return ServiceComponentImpl(owner, pasteServiceModule)
   }
 }
