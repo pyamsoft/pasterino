@@ -29,6 +29,7 @@ import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
+import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
@@ -73,17 +74,17 @@ class MainFragment : ToolbarFragment() {
 
   override fun onResume() {
     super.onResume()
-    toolbarActivity.withToolbar {
+    requireToolbarActivity().withToolbar {
       it.setTitle(R.string.app_name)
       it.setUpEnabled(false)
     }
 
     imageLoader.apply {
       if (PasteService.isRunning) {
-        fromResource(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
+        load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
             .bind(viewLifecycleOwner)
       } else {
-        fromResource(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
+        load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
             .bind(viewLifecycleOwner)
       }
     }

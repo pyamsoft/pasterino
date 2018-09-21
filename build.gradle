@@ -18,8 +18,8 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.2.61'
-    plugin_version = '3.2.0-beta05'
+    kotlin_version = '1.2.70'
+    plugin_version = '3.2.0-rc03'
   }
   repositories {
     google()
@@ -36,7 +36,7 @@ buildscript {
     preference = "1.0.0-rc02"
     annotation = "1.0.0-rc02"
 
-    pydroid = "18.1.5-SNAPSHOT"
+    pydroid = "18.1.6-SNAPSHOT-1"
     leakCanary = "1.6.1"
   }
 

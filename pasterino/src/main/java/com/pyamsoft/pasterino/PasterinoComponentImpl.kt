@@ -16,8 +16,9 @@
 
 package com.pyamsoft.pasterino
 
+import android.app.Application
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.api.PasterinoModule
+import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pasterino.main.ConfirmationDialog
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainComponentImpl
@@ -26,18 +27,21 @@ import com.pyamsoft.pasterino.main.MainModule
 import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.ServiceComponent
 import com.pyamsoft.pasterino.service.ServiceComponentImpl
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.ui.ModuleProvider
 
 internal class PasterinoComponentImpl internal constructor(
-  enforcer: Enforcer,
-  private val module: PasterinoModule
+  application: Application,
+  private val moduleProvider: ModuleProvider
 ) : PasterinoComponent {
 
-  private val mainSettingsModule = MainModule(module, enforcer)
-  private val pasteServiceModule = PasteServiceModule(module, enforcer)
+  private val pasterinoModule =
+    PasterinoModuleImpl(application, moduleProvider.loaderModule().provideImageLoader())
+  private val mainSettingsModule = MainModule(pasterinoModule, moduleProvider.enforcer())
+  private val pasteServiceModule = PasteServiceModule(pasterinoModule, moduleProvider.enforcer())
 
   override fun inject(fragment: MainFragment) {
-    fragment.imageLoader = module.provideImageLoader()
+    fragment.imageLoader = moduleProvider.loaderModule()
+        .provideImageLoader()
   }
 
   override fun inject(dialog: ConfirmationDialog) {

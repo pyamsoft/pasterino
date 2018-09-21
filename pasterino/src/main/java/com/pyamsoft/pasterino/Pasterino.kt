@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino
 import android.app.Application
 import android.app.Service
 import androidx.annotation.CheckResult
-import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
@@ -57,15 +56,7 @@ class Pasterino : Application(), PYDroid.Instance {
 
   override fun setPydroid(instance: PYDroid) {
     pyDroid = instance.also {
-      val loaderModule = it.modules()
-          .loaderModule()
-      component = PasterinoComponentImpl(
-          it.enforcer(),
-          PasterinoModuleImpl(
-              this,
-              loaderModule.provideImageLoader()
-          )
-      )
+      component = PasterinoComponentImpl(this, it.modules())
     }
   }
 
