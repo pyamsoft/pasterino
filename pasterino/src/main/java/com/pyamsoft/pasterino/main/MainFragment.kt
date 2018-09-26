@@ -26,7 +26,7 @@ import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FragmentMainBinding
-import com.pyamsoft.pasterino.service.PasteService
+import com.pyamsoft.pasterino.service.PasteViewModel
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
@@ -38,30 +38,43 @@ class MainFragment : ToolbarFragment() {
 
   internal lateinit var imageLoader: ImageLoader
   private lateinit var binding: FragmentMainBinding
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .inject(this)
-  }
+  internal lateinit var pasteViewModel: PasteViewModel
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
+        .plusMainComponent(viewLifecycleOwner)
+        .inject(this)
+
     binding = FragmentMainBinding.inflate(inflater, container, false)
-    setupFAB()
     displayPreferenceFragment()
+
+    pasteViewModel.onServiceStateChanged {
+      setupFAB(it)
+    }
+
     return binding.root
   }
 
-  private fun setupFAB() {
+  private fun setupFAB(running: Boolean) {
     binding.mainSettingsFab.setOnDebouncedClickListener {
-      if (PasteService.isRunning) {
+      if (running) {
         ServiceInfoDialog().show(requireActivity(), "service_info")
       } else {
         AccessibilityRequestDialog().show(requireActivity(), "accessibility")
+      }
+    }
+
+    imageLoader.apply {
+      if (running) {
+        load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
+            .bind(viewLifecycleOwner)
+      } else {
+        load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
+            .bind(viewLifecycleOwner)
       }
     }
   }
@@ -77,16 +90,6 @@ class MainFragment : ToolbarFragment() {
     requireToolbarActivity().withToolbar {
       it.setTitle(R.string.app_name)
       it.setUpEnabled(false)
-    }
-
-    imageLoader.apply {
-      if (PasteService.isRunning) {
-        load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
-            .bind(viewLifecycleOwner)
-      } else {
-        load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
-            .bind(viewLifecycleOwner)
-      }
     }
   }
 

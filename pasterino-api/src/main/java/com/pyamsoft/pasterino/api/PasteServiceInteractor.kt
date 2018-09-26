@@ -17,10 +17,16 @@
 package com.pyamsoft.pasterino.api
 
 import androidx.annotation.CheckResult
+import io.reactivex.Observable
 import io.reactivex.Single
 
 interface PasteServiceInteractor {
 
   @CheckResult
   fun getPasteDelayTime(): Single<Long>
+
+  @CheckResult
+  fun observeServiceState(): Observable<Boolean>
+
+  fun setServiceState(changed: Boolean)
 }

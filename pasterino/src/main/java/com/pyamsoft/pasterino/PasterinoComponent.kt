@@ -20,13 +20,9 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.main.ConfirmationDialog
 import com.pyamsoft.pasterino.main.MainComponent
-import com.pyamsoft.pasterino.main.MainFragment
 import com.pyamsoft.pasterino.service.ServiceComponent
-import com.pyamsoft.pasterino.service.SinglePasteService
 
 interface PasterinoComponent {
-
-  fun inject(fragment: MainFragment)
 
   fun inject(dialog: ConfirmationDialog)
 

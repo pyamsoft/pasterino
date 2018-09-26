@@ -28,6 +28,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import com.pyamsoft.pasterino.R
 import timber.log.Timber
 
@@ -36,12 +37,12 @@ object PasteServiceNotification {
   private const val ID = 1005
   private const val RC = 1005
 
+  @Volatile private var notificationManager: NotificationManager? = null
+
   @JvmStatic
   internal fun start(context: Context) {
-    if (PasteService.isRunning) {
-      Timber.d("Start notification %d", ID)
-      getNotificationManager(context).notify(ID, createNotification(context))
-    }
+    Timber.d("Start notification %d", ID)
+    getNotificationManager(context).notify(ID, createNotification(context))
   }
 
   @JvmStatic
@@ -53,7 +54,16 @@ object PasteServiceNotification {
   @JvmStatic
   @CheckResult
   private fun getNotificationManager(context: Context): NotificationManager {
-    return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    if (notificationManager == null) {
+      synchronized(this) {
+        if (notificationManager == null) {
+          notificationManager =
+              requireNotNull(context.applicationContext.getSystemService<NotificationManager>())
+        }
+      }
+    }
+
+    return requireNotNull(notificationManager)
   }
 
   @JvmStatic
@@ -95,11 +105,10 @@ object PasteServiceNotification {
       description = desc
       enableLights(false)
       enableVibration(false)
+      setSound(null, null)
     }
 
     Timber.d("Create notification channel with id: %s", notificationChannelId)
-    val notificationManager: NotificationManager =
-      context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    notificationManager.createNotificationChannel(notificationChannel)
+    getNotificationManager(context).createNotificationChannel(notificationChannel)
   }
 }

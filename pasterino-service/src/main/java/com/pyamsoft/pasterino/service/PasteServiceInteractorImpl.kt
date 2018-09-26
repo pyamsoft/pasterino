@@ -18,13 +18,29 @@ package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import io.reactivex.Observable
 import io.reactivex.Single
 
 internal class PasteServiceInteractorImpl internal constructor(
   private val enforcer: Enforcer,
   private val preferences: PastePreferences
 ) : PasteServiceInteractor {
+
+  private var running = false
+
+  private val runningStateBus = RxBus.create<Boolean>()
+
+  override fun setServiceState(changed: Boolean) {
+    running = changed
+    runningStateBus.publish(changed)
+  }
+
+  override fun observeServiceState(): Observable<Boolean> {
+    return runningStateBus.listen()
+        .startWith(running)
+  }
 
   override fun getPasteDelayTime(): Single<Long> =
     Single.fromCallable {

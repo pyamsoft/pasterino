@@ -22,7 +22,6 @@ import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pasterino.main.ConfirmationDialog
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainComponentImpl
-import com.pyamsoft.pasterino.main.MainFragment
 import com.pyamsoft.pasterino.main.MainModule
 import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.ServiceComponent
@@ -39,17 +38,14 @@ internal class PasterinoComponentImpl internal constructor(
   private val mainSettingsModule = MainModule(pasterinoModule, moduleProvider.enforcer())
   private val pasteServiceModule = PasteServiceModule(pasterinoModule, moduleProvider.enforcer())
 
-  override fun inject(fragment: MainFragment) {
-    fragment.imageLoader = moduleProvider.loaderModule()
-        .provideImageLoader()
-  }
-
   override fun inject(dialog: ConfirmationDialog) {
     dialog.publisher = mainSettingsModule.getPublisher()
   }
 
   override fun plusMainComponent(owner: LifecycleOwner): MainComponent {
-    return MainComponentImpl(owner, mainSettingsModule, pasteServiceModule)
+    return MainComponentImpl(
+        owner, moduleProvider.loaderModule(), mainSettingsModule, pasteServiceModule
+    )
   }
 
   override fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent {

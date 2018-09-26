@@ -22,7 +22,6 @@ import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
-import androidx.annotation.CheckResult
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -65,14 +64,13 @@ class PasteService : AccessibilityService(), LifecycleOwner {
   override fun onServiceConnected() {
     super.onServiceConnected()
     Timber.d("onServiceConnected")
-
-    isRunning = true
+    viewModel.setServiceState(true)
     PasteServiceNotification.start(this)
   }
 
   private fun onPasteRequested() {
     val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-    if (info != null) {
+    if (info != null && info.isEditable) {
       Timber.d("Perform paste on target: %s", info)
       info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
       Toast.makeText(
@@ -94,7 +92,7 @@ class PasteService : AccessibilityService(), LifecycleOwner {
   override fun onUnbind(intent: Intent): Boolean {
     Timber.d("onUnbind")
     PasteServiceNotification.stop(this)
-    isRunning = false
+    viewModel.setServiceState(false)
     return super.onUnbind(intent)
   }
 
@@ -103,13 +101,5 @@ class PasteService : AccessibilityService(), LifecycleOwner {
     registry.fakeUnbind()
     Pasterino.getRefWatcher(this)
         .watch(this)
-  }
-
-  companion object {
-
-    @JvmStatic
-    var isRunning = false
-      @get:CheckResult get
-      private set
   }
 }
