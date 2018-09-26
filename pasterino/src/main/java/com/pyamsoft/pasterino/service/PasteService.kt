@@ -73,13 +73,12 @@ class PasteService : AccessibilityService(), LifecycleOwner {
     if (info != null && info.isEditable) {
       Timber.d("Perform paste on target: %s", info)
       info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
-      Toast.makeText(
-          applicationContext, "Pasting text into current input focus.",
-          Toast.LENGTH_SHORT
-      )
+      Toast.makeText(applicationContext, "Pasting text into current input.", Toast.LENGTH_SHORT)
           .show()
     } else {
       Timber.e("No editable target to paste into")
+      Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
+          .show()
     }
   }
 
