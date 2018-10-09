@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
+import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.toDp
 
 class MainActivity : RatingActivity() {
@@ -80,7 +81,7 @@ class MainActivity : RatingActivity() {
     ) {
       fragmentManager.beginTransaction()
           .add(R.id.main_container, MainFragment(), MainFragment.TAG)
-          .commit()
+          .commit(this)
     }
   }
 }

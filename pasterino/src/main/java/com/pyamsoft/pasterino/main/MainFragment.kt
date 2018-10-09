@@ -30,6 +30,7 @@ import com.pyamsoft.pasterino.service.PasteViewModel
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
+import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
@@ -97,11 +98,8 @@ class MainFragment : ToolbarFragment() {
     val fragmentManager = childFragmentManager
     if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(
-              R.id.fragment_container, MainSettingsFragment(),
-              MainSettingsFragment.TAG
-          )
-          .commit()
+          .add(R.id.fragment_container, MainSettingsFragment(), MainSettingsFragment.TAG)
+          .commit(viewLifecycleOwner)
     }
   }
 
