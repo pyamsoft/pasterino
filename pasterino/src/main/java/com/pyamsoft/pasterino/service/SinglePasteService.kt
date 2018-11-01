@@ -28,8 +28,8 @@ import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.core.lifecycle.fakeBind
-import com.pyamsoft.pydroid.core.lifecycle.fakeUnbind
+import com.pyamsoft.pydroid.util.fakeBind
+import com.pyamsoft.pydroid.util.fakeUnbind
 import timber.log.Timber
 
 class SinglePasteService : Service(), LifecycleOwner {

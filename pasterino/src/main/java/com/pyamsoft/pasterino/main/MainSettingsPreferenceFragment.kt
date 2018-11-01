@@ -50,6 +50,8 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
   override val applicationName: String
     get() = getString(R.string.app_name)
 
+  override val isDarkTheme: Boolean = false
+
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
