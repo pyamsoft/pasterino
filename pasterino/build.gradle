@@ -78,8 +78,6 @@ kapt {
 }
 
 dependencies {
-  kapt "androidx.databinding:databinding-compiler:$plugin_version"
-
   // Leak Canary
   debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanary"
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
