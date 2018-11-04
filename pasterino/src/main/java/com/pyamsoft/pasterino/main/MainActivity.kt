@@ -50,7 +50,8 @@ class MainActivity : RatingActivity() {
     get() = binding.root
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
-    bugfix("Stability updates and bugfixes")
+    change("New icon style")
+    change("Better open source license viewing experience")
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
