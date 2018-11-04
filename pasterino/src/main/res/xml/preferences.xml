@@ -14,25 +14,27 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <PreferenceCategory android:title="Service Settings">
 
-    <Preference
-        android:icon="@drawable/ic_help_24dp"
+    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
         android:key="@string/explain_key"
         android:summary="@string/explain_summary"
-        android:title="@string/explain_title"/>
+        android:title="@string/explain_title"
+        app:iconCompat="@drawable/ic_help_24dp"/>
 
-    <ListPreference
+    <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
         android:defaultValue="@string/delay_time_default"
         android:dialogTitle="@string/delay_time_title"
         android:entries="@array/delay_time_names"
         android:entryValues="@array/delay_time_values"
-        android:icon="@drawable/ic_timer_24dp"
         android:key="@string/delay_time_key"
         android:summary="@string/delay_time_summary"
-        android:title="@string/delay_time_title"/>
+        android:title="@string/delay_time_title"
+        app:iconCompat="@drawable/ic_timer_24dp"/>
     />
 
   </PreferenceCategory>

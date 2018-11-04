@@ -20,10 +20,6 @@
     <item name="colorPrimary">@color/green500</item>
     <item name="colorPrimaryDark">@color/green700</item>
     <item name="colorAccent">@color/redA400</item>
-
-    <item name="colorSecondary">?attr/colorPrimary</item>
-    <item name="scrimBackground">@color/shadow_scrim45</item>
-    <item name="snackbarButtonStyle">?attr/borderlessButtonStyle</item>
   </style>
 
   <!-- Normal App Theme -->

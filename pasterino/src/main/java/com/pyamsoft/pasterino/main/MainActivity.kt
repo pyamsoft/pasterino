@@ -25,6 +25,7 @@ import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.bugreport.BugreportDialog
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
@@ -72,6 +73,8 @@ class MainActivity : RatingActivity() {
         onBackPressed()
       })
     }
+
+    BugreportDialog.attachToToolbar(this, applicationName, currentApplicationVersion)
   }
 
   private fun showMainFragment() {

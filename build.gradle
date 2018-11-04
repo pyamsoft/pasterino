@@ -36,7 +36,7 @@ buildscript {
     preference = "1.0.0"
     annotation = "1.0.0"
 
-    pydroid = "18.1.6"
+    pydroid = "18.1.7"
     leakCanary = "1.6.1"
   }
 
