@@ -22,7 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.preference.Preference
+import androidx.core.content.ContextCompat
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.widget.HideOnScrollListener
+import com.pyamsoft.pydroid.util.tintWith
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
@@ -61,17 +62,26 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
         .plusMainComponent(viewLifecycleOwner)
         .inject(this)
 
-    val view = super.onCreateView(inflater, container, savedInstanceState)
-    val explain: Preference = findPreference(getString(R.string.explain_key))
+    val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
+
+    setupExplainButton(view)
+    attachOnScrollListener()
+
+    viewModel.onClearAllEvent { onClearAll() }
+    return view
+  }
+
+  private fun setupExplainButton(view: View) {
+    val explain = findPreference(getString(R.string.explain_key))
     explain.setOnPreferenceClickListener {
       HowToDialog().show(requireActivity(), "howto")
       return@setOnPreferenceClickListener true
     }
 
-    attachOnScrollListener()
-
-    viewModel.onClearAllEvent { onClearAll() }
-    return view
+    val icon = explain.icon
+    if (icon != null) {
+      explain.icon = icon.tintWith(ContextCompat.getColor(view.context, R.color.black))
+    }
   }
 
   private fun attachOnScrollListener() {
