@@ -53,6 +53,8 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
 
   override val isDarkTheme: Boolean = false
 
+  override val bugreportUrl: String = "https://github.com/pyamsoft/pasterino/issues"
+
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,

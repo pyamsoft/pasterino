@@ -16,16 +16,15 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.core.view.ViewCompat
-import androidx.preference.PreferenceManager
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.databinding.DataBindingUtil
+import androidx.preference.PreferenceManager
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ActivityMainBinding
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.bugreport.BugreportDialog
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
@@ -74,8 +73,6 @@ class MainActivity : RatingActivity() {
         onBackPressed()
       })
     }
-
-    BugreportDialog.attachToToolbar(this, applicationName, currentApplicationVersion)
   }
 
   private fun showMainFragment() {
