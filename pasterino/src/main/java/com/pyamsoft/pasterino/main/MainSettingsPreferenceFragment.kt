@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
@@ -31,18 +30,20 @@ import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.widget.HideOnScrollListener
-import com.pyamsoft.pydroid.util.tintWith
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
 
-  private var hideOnScrollListener: HideOnScrollListener? = null
   internal lateinit var viewModel: MainViewModel
   internal lateinit var publisher: Publisher<ServiceEvent>
+  internal lateinit var theming: Theming
+
+  private var hideOnScrollListener: HideOnScrollListener? = null
 
   override val rootViewContainer: Int = R.id.main_container
 
@@ -50,8 +51,6 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
 
   override val applicationName: String
     get() = getString(R.string.app_name)
-
-  override val isDarkTheme: Boolean = false
 
   override val bugreportUrl: String = "https://github.com/pyamsoft/pasterino/issues"
 
@@ -64,25 +63,38 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
         .plusMainComponent(viewLifecycleOwner)
         .inject(this)
 
-    val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
-
-    setupExplainButton(view)
-    attachOnScrollListener()
-
-    viewModel.onClearAllEvent { onClearAll() }
-    return view
+    return super.onCreateView(inflater, container, savedInstanceState)
   }
 
-  private fun setupExplainButton(view: View) {
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    setupExplainButton()
+    setupDarkTheme()
+    attachOnScrollListener()
+    viewModel.onClearAllEvent { onClearAll() }
+  }
+
+  private fun setupExplainButton() {
     val explain = findPreference(getString(R.string.explain_key))
     explain.setOnPreferenceClickListener {
       HowToDialog().show(requireActivity(), "howto")
       return@setOnPreferenceClickListener true
     }
+  }
 
-    val icon = explain.icon
-    if (icon != null) {
-      explain.icon = icon.tintWith(ContextCompat.getColor(view.context, R.color.black))
+  private fun setupDarkTheme() {
+    val darkTheme = findPreference(getString(R.string.dark_mode_key))
+    darkTheme.setOnPreferenceChangeListener { _, newValue ->
+      if (newValue is Boolean) {
+        theming.setDarkTheme(newValue)
+        requireActivity().recreate()
+        return@setOnPreferenceChangeListener true
+      } else {
+        return@setOnPreferenceChangeListener false
+      }
     }
   }
 

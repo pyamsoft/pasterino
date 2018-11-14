@@ -20,6 +20,7 @@ import android.app.Application
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainActivity
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainComponentImpl
 import com.pyamsoft.pasterino.main.MainModule
@@ -30,22 +31,25 @@ import com.pyamsoft.pydroid.ui.ModuleProvider
 
 internal class PasterinoComponentImpl internal constructor(
   application: Application,
-  private val moduleProvider: ModuleProvider
+  moduleProvider: ModuleProvider
 ) : PasterinoComponent {
 
-  private val pasterinoModule =
-    PasterinoModuleImpl(application, moduleProvider.loaderModule().provideImageLoader())
+  private val theming = moduleProvider.theming()
+  private val loaderModule = moduleProvider.loaderModule()
+  private val pasterinoModule = PasterinoModuleImpl(application, loaderModule)
   private val mainSettingsModule = MainModule(pasterinoModule, moduleProvider.enforcer())
   private val pasteServiceModule = PasteServiceModule(pasterinoModule, moduleProvider.enforcer())
+
+  override fun inject(mainActivity: MainActivity) {
+    mainActivity.theming = theming
+  }
 
   override fun inject(dialog: ConfirmationDialog) {
     dialog.publisher = mainSettingsModule.getPublisher()
   }
 
   override fun plusMainComponent(owner: LifecycleOwner): MainComponent {
-    return MainComponentImpl(
-        owner, moduleProvider.loaderModule(), mainSettingsModule, pasteServiceModule
-    )
+    return MainComponentImpl(owner, theming, loaderModule, mainSettingsModule, pasteServiceModule)
   }
 
   override fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent {

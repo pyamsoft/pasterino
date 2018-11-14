@@ -19,10 +19,13 @@ package com.pyamsoft.pasterino
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.main.ConfirmationDialog
+import com.pyamsoft.pasterino.main.MainActivity
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.service.ServiceComponent
 
 interface PasterinoComponent {
+
+  fun inject(mainActivity: MainActivity)
 
   fun inject(dialog: ConfirmationDialog)
 

@@ -24,14 +24,15 @@ import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.loader.LoaderModule
 
 class PasterinoModuleImpl(
   private val application: Application,
-  private val imageLoader: ImageLoader
+  loaderModule: LoaderModule
 ) : PasterinoModule {
 
+  private val imageLoader = loaderModule.provideImageLoader()
   private val preferences = PasterinoPreferencesImpl(application)
   private val pasteBus = RxBus.create<ServiceEvent>()
 
