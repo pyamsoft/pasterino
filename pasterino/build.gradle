@@ -27,8 +27,8 @@ android {
     applicationId "com.pyamsoft.pasterino"
     minSdkVersion rootProject.ext.minSdk
     targetSdkVersion rootProject.ext.maxSdk
-    versionCode 73
-    versionName "1.6.3-SNAPSHOT"
+    versionCode 74
+    versionName "1.7.0"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -54,7 +54,7 @@ android {
       signingConfig signingConfigs.release
       minifyEnabled true
       shrinkResources true
-      proguardFiles getDefaultProguardFile("proguard-android.txt"),
+      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
           "proguard-rules.pro"
     }
 
