@@ -16,34 +16,53 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.lifecycle.LifecycleOwner
+import androidx.annotation.CheckResult
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.model.ConfirmEvent
+import com.pyamsoft.pasterino.model.FabScrollListenerRequestEvent
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class MainViewModel internal constructor(
-  owner: LifecycleOwner,
   private val enforcer: Enforcer,
   private val interactor: MainInteractor,
-  private val bus: Listener<ConfirmEvent>
-) : BaseViewModel(owner) {
+  private val scrollListenerBus: EventBus<FabScrollListenerRequestEvent>,
+  private val bus: Listener<ConfirmEvent>,
+  private val tag: String
+) {
 
-  fun onClearAllEvent(func: () -> Unit) {
-    dispose {
-      bus.listen()
-          .observeOn(Schedulers.io())
-          .flatMapSingle {
-            enforcer.assertNotOnMainThread()
-            return@flatMapSingle interactor.clearAll()
-                .observeOn(Schedulers.io())
-          }
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe { func() }
-    }
+  @CheckResult
+  fun onClearAllEvent(func: () -> Unit): Disposable {
+    return bus.listen()
+        .observeOn(Schedulers.io())
+        .flatMapSingle {
+          enforcer.assertNotOnMainThread()
+          return@flatMapSingle interactor.clearAll()
+              .subscribeOn(Schedulers.io())
+              .observeOn(Schedulers.io())
+        }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { func() }
+  }
+
+  @CheckResult
+  fun onScrollListenerCreated(func: (RecyclerView.OnScrollListener) -> Unit): Disposable {
+    return scrollListenerBus.listen()
+        .filter { it.listenerResult != null }
+        .filter { it.requestTag == tag }
+        .map { requireNotNull(it.listenerResult) }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(func)
+  }
+
+  fun publishScrollListenerCreateRequest() {
+    scrollListenerBus.publish(FabScrollListenerRequestEvent(tag))
   }
 }

@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.service
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ServiceEvent
@@ -37,7 +36,7 @@ class PasteServiceModule(
   }
 
   @CheckResult
-  fun getViewModel(owner: LifecycleOwner) = PasteViewModel(owner, enforcer, interactor, pasteBus)
+  fun getViewModel() = PasteViewModel(enforcer, interactor, pasteBus)
 
   @CheckResult
   fun getPublisher(): Publisher<ServiceEvent> = pasteBus

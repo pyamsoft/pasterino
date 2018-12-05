@@ -17,16 +17,24 @@
 package com.pyamsoft.pasterino
 
 import android.app.Application
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import androidx.preference.PreferenceScreen
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
 import com.pyamsoft.pasterino.main.ConfirmationDialog
 import com.pyamsoft.pasterino.main.MainActivity
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainComponentImpl
+import com.pyamsoft.pasterino.main.MainFragmentComponent
+import com.pyamsoft.pasterino.main.MainFragmentComponentImpl
 import com.pyamsoft.pasterino.main.MainModule
+import com.pyamsoft.pasterino.main.MainViewImpl
+import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.ServiceComponent
 import com.pyamsoft.pasterino.service.ServiceComponentImpl
+import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.ui.ModuleProvider
 
 internal class PasterinoComponentImpl internal constructor(
@@ -40,19 +48,42 @@ internal class PasterinoComponentImpl internal constructor(
   private val mainSettingsModule = MainModule(pasterinoModule, moduleProvider.enforcer())
   private val pasteServiceModule = PasteServiceModule(pasterinoModule, moduleProvider.enforcer())
 
-  override fun inject(mainActivity: MainActivity) {
-    mainActivity.theming = theming
+  override fun inject(activity: MainActivity) {
+    activity.theming = theming
+    activity.mainView = MainViewImpl(activity)
   }
 
   override fun inject(dialog: ConfirmationDialog) {
     dialog.publisher = mainSettingsModule.getPublisher()
   }
 
-  override fun plusMainComponent(owner: LifecycleOwner): MainComponent {
-    return MainComponentImpl(owner, theming, loaderModule, mainSettingsModule, pasteServiceModule)
+  override fun inject(service: PasteService) {
+    service.viewModel = pasteServiceModule.getViewModel()
   }
 
-  override fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent {
-    return ServiceComponentImpl(owner, pasteServiceModule)
+  override fun inject(service: SinglePasteService) {
+    service.viewModel = pasteServiceModule.getViewModel()
+    service.publisher = pasteServiceModule.getPublisher()
   }
+
+  override fun plusMainComponent(
+    owner: LifecycleOwner,
+    preferenceScreen: PreferenceScreen,
+    tag: String
+  ): MainComponent = MainComponentImpl(
+      owner, preferenceScreen, tag,
+      mainSettingsModule, pasteServiceModule
+  )
+
+  override fun plusMainFragmentComponent(
+    owner: LifecycleOwner,
+    inflater: LayoutInflater,
+    container: ViewGroup?
+  ): MainFragmentComponent = MainFragmentComponentImpl(
+      owner, inflater, container,
+      loaderModule, pasteServiceModule, mainSettingsModule
+  )
+
+  override fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent =
+    ServiceComponentImpl(owner, pasteServiceModule)
 }

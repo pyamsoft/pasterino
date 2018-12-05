@@ -23,24 +23,19 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pydroid.util.fakeBind
-import com.pyamsoft.pydroid.util.fakeUnbind
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import timber.log.Timber
 
-class PasteService : AccessibilityService(), LifecycleOwner {
+class PasteService : AccessibilityService() {
 
-  private val registry = LifecycleRegistry(this)
   internal lateinit var viewModel: PasteViewModel
 
-  override fun getLifecycle(): Lifecycle {
-    return registry
-  }
+  private var finishDisposable by singleDisposable()
+  private var pasteDisposable by singleDisposable()
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -53,17 +48,16 @@ class PasteService : AccessibilityService(), LifecycleOwner {
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
-        .plusServiceComponent(this)
         .inject(this)
-    viewModel.onFinishEvent { onServiceFinishRequested() }
-    viewModel.onPasteEvent { onPasteRequested() }
 
-    registry.fakeBind()
+    finishDisposable = viewModel.onFinishEvent { onServiceFinishRequested() }
+    pasteDisposable = viewModel.onPasteEvent { onPasteRequested() }
   }
 
   override fun onServiceConnected() {
     super.onServiceConnected()
     Timber.d("onServiceConnected")
+
     viewModel.setServiceState(true)
     PasteServiceNotification.start(this)
   }
@@ -90,6 +84,7 @@ class PasteService : AccessibilityService(), LifecycleOwner {
 
   override fun onUnbind(intent: Intent): Boolean {
     Timber.d("onUnbind")
+
     PasteServiceNotification.stop(this)
     viewModel.setServiceState(false)
     return super.onUnbind(intent)
@@ -97,7 +92,10 @@ class PasteService : AccessibilityService(), LifecycleOwner {
 
   override fun onDestroy() {
     super.onDestroy()
-    registry.fakeUnbind()
+
+    finishDisposable.tryDispose()
+    pasteDisposable.tryDispose()
+
     Pasterino.getRefWatcher(this)
         .watch(this)
   }

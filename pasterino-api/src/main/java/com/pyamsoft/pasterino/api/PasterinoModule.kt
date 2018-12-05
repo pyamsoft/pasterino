@@ -19,9 +19,9 @@ package com.pyamsoft.pasterino.api
 import android.app.Application
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pasterino.model.FabScrollListenerRequestEvent
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.loader.ImageLoader
 
 interface PasterinoModule {
@@ -43,4 +43,7 @@ interface PasterinoModule {
 
   @CheckResult
   fun provideClearPreferences(): ClearPreferences
+
+  @CheckResult
+  fun provideFabScrollRequestBus(): EventBus<FabScrollListenerRequestEvent>
 }

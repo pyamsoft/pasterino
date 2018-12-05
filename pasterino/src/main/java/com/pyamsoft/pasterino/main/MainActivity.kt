@@ -18,38 +18,28 @@ package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.databinding.DataBindingUtil
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.databinding.ActivityMainBinding
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.util.toDp
 
 class MainActivity : RatingActivity() {
 
-  private lateinit var binding: ActivityMainBinding
+  internal lateinit var mainView: MainView
   internal lateinit var theming: Theming
 
   override val versionName: String = BuildConfig.VERSION_NAME
 
   override val applicationIcon: Int = R.mipmap.ic_launcher
 
-  override val currentApplicationVersion: Int = BuildConfig.VERSION_CODE
-
-  override val applicationName: String
-    get() = getString(R.string.app_name)
-
   override val rootView: View
-    get() = binding.root
+    get() = mainView.root()
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
     change("New icon style")
@@ -66,36 +56,16 @@ class MainActivity : RatingActivity() {
       setTheme(R.style.Theme_Pasterino_Light)
     }
     super.onCreate(savedInstanceState)
-    binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+    mainView.create()
 
-    setupAppBar()
+    mainView.onToolbarNavClicked { onBackPressed() }
     showMainFragment()
-  }
-
-  private fun setupAppBar() {
-    val theme: Int
-    if (theming.isDarkTheme()) {
-      theme = R.style.ThemeOverlay_AppCompat
-    } else {
-      theme = R.style.ThemeOverlay_AppCompat_Light
-    }
-
-    binding.mainToolbar.apply {
-      popupTheme = theme
-      setToolbar(this)
-      setTitle(R.string.app_name)
-      ViewCompat.setElevation(this, 4.toDp(context).toFloat())
-
-      setNavigationOnClickListener(DebouncedOnClickListener.create {
-        onBackPressed()
-      })
-    }
   }
 
   private fun showMainFragment() {
     val fragmentManager = supportFragmentManager
     if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null
-        && !AboutLibrariesFragment.isPresent(this)
+        && !AboutFragment.isPresent(this)
     ) {
       fragmentManager.beginTransaction()
           .add(R.id.main_container, MainFragment(), MainFragment.TAG)

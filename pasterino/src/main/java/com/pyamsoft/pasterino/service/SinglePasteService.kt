@@ -20,42 +20,33 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.util.fakeBind
-import com.pyamsoft.pydroid.util.fakeUnbind
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import timber.log.Timber
 
-class SinglePasteService : Service(), LifecycleOwner {
+class SinglePasteService : Service() {
 
-  private val registry = LifecycleRegistry(this)
   internal lateinit var viewModel: PasteViewModel
   internal lateinit var publisher: Publisher<ServiceEvent>
 
-  override fun getLifecycle(): Lifecycle {
-    return registry
-  }
+  private var postDisposable by singleDisposable()
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
-        .plusServiceComponent(this)
         .inject(this)
-
-    viewModel.onPostEvent { onPost() }
-
-    registry.fakeBind()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    registry.fakeUnbind()
+
+    postDisposable.tryDispose()
+
     Pasterino.getRefWatcher(this)
         .watch(this)
   }
@@ -68,13 +59,17 @@ class SinglePasteService : Service(), LifecycleOwner {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    viewModel.post()
+    postDisposable = viewModel.post(
+        onPost = {
+          publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
+          stopSelf()
+        },
+        onPostError = { error: Throwable ->
+          Timber.e(error, "onPostError failed, stop service")
+          stopSelf()
+        }
+    )
     return Service.START_NOT_STICKY
-  }
-
-  private fun onPost() {
-    publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
-    stopSelf()
   }
 
   companion object {

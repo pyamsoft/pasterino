@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.main
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pasterino.model.ConfirmEvent
@@ -26,7 +25,7 @@ import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 
 class MainModule(
-  module: PasterinoModule,
+  private val module: PasterinoModule,
   private val enforcer: Enforcer
 ) {
 
@@ -38,7 +37,13 @@ class MainModule(
   }
 
   @CheckResult
-  fun getViewModel(owner: LifecycleOwner) = MainViewModel(owner, enforcer, interactor, mainBus)
+  fun getViewModel(tag: String) = MainViewModel(
+      enforcer, interactor,
+      module.provideFabScrollRequestBus(), mainBus, tag
+  )
+
+  @CheckResult
+  fun getFragmentViewModel() = MainFragmentViewModel(module.provideFabScrollRequestBus())
 
   @CheckResult
   fun getPublisher(): Publisher<ConfirmEvent> = mainBus

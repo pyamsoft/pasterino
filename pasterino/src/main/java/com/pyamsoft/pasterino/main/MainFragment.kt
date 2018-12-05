@@ -20,26 +20,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CheckResult
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.databinding.FragmentMainBinding
 import com.pyamsoft.pasterino.service.PasteViewModel
-import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 
 class MainFragment : ToolbarFragment() {
 
-  internal lateinit var imageLoader: ImageLoader
-  private lateinit var binding: FragmentMainBinding
+  internal lateinit var mainView: MainFragmentView
   internal lateinit var pasteViewModel: PasteViewModel
+  internal lateinit var mainViewModel: MainFragmentViewModel
+
+  private var serviceStateDisposable by singleDisposable()
+  private var fabScrollRequestDisposable by singleDisposable()
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -47,43 +47,42 @@ class MainFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ): View? {
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusMainComponent(viewLifecycleOwner)
+        .plusMainFragmentComponent(viewLifecycleOwner, inflater, container)
         .inject(this)
 
-    binding = FragmentMainBinding.inflate(inflater, container, false)
+    mainView.create()
+    return mainView.root()
+  }
+
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
     displayPreferenceFragment()
 
-    pasteViewModel.onServiceStateChanged {
-      setupFAB(it)
-    }
-
-    return binding.root
-  }
-
-  private fun setupFAB(running: Boolean) {
-    binding.mainSettingsFab.setOnDebouncedClickListener {
-      if (running) {
-        ServiceInfoDialog().show(requireActivity(), "service_info")
-      } else {
-        AccessibilityRequestDialog().show(requireActivity(), "accessibility")
+    serviceStateDisposable = pasteViewModel.onServiceStateChanged { running: Boolean ->
+      mainView.setFabFromServiceState(running) {
+        if (it) {
+          ServiceInfoDialog().show(requireActivity(), "service_info")
+        } else {
+          AccessibilityRequestDialog().show(requireActivity(), "accessibility")
+        }
       }
     }
 
-    imageLoader.apply {
-      if (running) {
-        load(R.drawable.ic_help_24dp).into(binding.mainSettingsFab)
-            .bind(viewLifecycleOwner)
-      } else {
-        load(R.drawable.ic_service_start_24dp).into(binding.mainSettingsFab)
-            .bind(viewLifecycleOwner)
+
+    fabScrollRequestDisposable = mainViewModel.onFabScrollListenerCreateRequest { tag: String ->
+      mainView.createFabScrollListener { listener ->
+        mainViewModel.publishScrollListener(tag, listener)
       }
     }
   }
 
-  // Used by MainSettingsPreferenceFragment
-  @CheckResult
-  internal fun getFloatingActionButton(): FloatingActionButton {
-    return binding.mainSettingsFab
+  override fun onDestroyView() {
+    super.onDestroyView()
+    serviceStateDisposable.tryDispose()
+    fabScrollRequestDisposable.tryDispose()
   }
 
   override fun onResume() {

@@ -43,7 +43,14 @@ class Pasterino : Application(), PYDroid.Instance {
     }
 
     Theming.IS_DEFAULT_DARK_THEME = false
-    PYDroid.init(this, this, BuildConfig.DEBUG)
+    PYDroid.init(
+        this,
+        this,
+        getString(R.string.app_name),
+        "https://github.com/pyamsoft/pasterino/issues",
+        BuildConfig.VERSION_CODE,
+        BuildConfig.DEBUG
+    )
   }
 
   override fun getSystemService(name: String): Any {

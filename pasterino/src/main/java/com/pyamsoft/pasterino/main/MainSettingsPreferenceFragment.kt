@@ -29,30 +29,24 @@ import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
-import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.util.popHide
-import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.widget.HideOnScrollListener
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
 
   internal lateinit var viewModel: MainViewModel
   internal lateinit var publisher: Publisher<ServiceEvent>
-  internal lateinit var theming: Theming
+  internal lateinit var settingsView: SettingsView
 
-  private var hideOnScrollListener: HideOnScrollListener? = null
+  private var clearDisposable by singleDisposable()
+  private var scrollListenerDisposable by singleDisposable()
 
   override val rootViewContainer: Int = R.id.main_container
 
   override val preferenceXmlResId: Int = R.xml.preferences
-
-  override val applicationName: String
-    get() = getString(R.string.app_name)
-
-  override val bugreportUrl: String = "https://github.com/pyamsoft/pasterino/issues"
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -60,9 +54,10 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
     savedInstanceState: Bundle?
   ): View? {
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusMainComponent(viewLifecycleOwner)
+        .plusMainComponent(viewLifecycleOwner, preferenceScreen, TAG)
         .inject(this)
 
+    settingsView.create()
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
@@ -71,54 +66,24 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    setupExplainButton()
-    setupDarkTheme()
-    attachOnScrollListener()
-    viewModel.onClearAllEvent { onClearAll() }
+
+    settingsView.onExplainClicked { HowToDialog().show(requireActivity(), "howto") }
+
+    addScrollListener()
+    clearDisposable = viewModel.onClearAllEvent { onClearAll() }
   }
 
-  private fun setupExplainButton() {
-    val explain = findPreference(getString(R.string.explain_key))
-    explain.setOnPreferenceClickListener {
-      HowToDialog().show(requireActivity(), "howto")
-      return@setOnPreferenceClickListener true
+  private fun addScrollListener() {
+    scrollListenerDisposable = viewModel.onScrollListenerCreated {
+      settingsView.addScrollListener(listView, it)
     }
-  }
-
-  private fun setupDarkTheme() {
-    val darkTheme = findPreference(getString(R.string.dark_mode_key))
-    darkTheme.setOnPreferenceChangeListener { _, newValue ->
-      if (newValue is Boolean) {
-        theming.setDarkTheme(newValue)
-        requireActivity().recreate()
-        return@setOnPreferenceChangeListener true
-      } else {
-        return@setOnPreferenceChangeListener false
-      }
-    }
-  }
-
-  private fun attachOnScrollListener() {
-    val mainFragment = requireActivity().supportFragmentManager.findFragmentByTag(MainFragment.TAG)
-    if (mainFragment is MainFragment) {
-      val fab = mainFragment.getFloatingActionButton()
-      val listener = HideOnScrollListener.withView(fab) {
-        if (it) {
-          fab.popShow()
-        } else {
-          fab.popHide()
-        }
-      }
-
-      listView.addOnScrollListener(listener)
-      hideOnScrollListener = listener
-    }
+    viewModel.publishScrollListenerCreateRequest()
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    hideOnScrollListener?.also { listView?.removeOnScrollListener(it) }
-    hideOnScrollListener = null
+    clearDisposable.tryDispose()
+    scrollListenerDisposable.tryDispose()
   }
 
   private fun onClearAll() {
