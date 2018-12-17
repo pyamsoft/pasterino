@@ -43,7 +43,8 @@
         android:exported="true"
         android:label="@string/app_name"
         android:launchMode="singleTask"
-        android:theme="@style/Theme.Pasterino.Light.Splash">
+        android:theme="@style/Theme.Pasterino.Light.Splash"
+        android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
