@@ -28,7 +28,6 @@ import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.ui.widget.resize.FluidContentResizer
 
 class MainActivity : RatingActivity() {
 
@@ -57,7 +56,6 @@ class MainActivity : RatingActivity() {
       setTheme(R.style.Theme_Pasterino_Light)
     }
     super.onCreate(savedInstanceState)
-    FluidContentResizer.listen(this)
 
     mainView.create()
 

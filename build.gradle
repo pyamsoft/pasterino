@@ -34,10 +34,10 @@ buildscript {
 
     // AndroidX
     preference = "1.0.0"
-    annotation = "1.0.0"
+    annotation = "1.0.1"
     recyclerView = "1.0.0"
 
-    pydroid = "18.2.1-SNAPSHOT"
+    pydroid = "18.2.2-SNAPSHOT"
     leakCanary = "1.6.2"
   }
 
