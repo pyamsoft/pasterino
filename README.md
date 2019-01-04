@@ -30,7 +30,7 @@ Fear no more.
 Apache 2
 
 ```
-Copyright 2018 Peter Kenji Yamanaka
+Copyright 2019 Peter Kenji Yamanaka
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
