@@ -23,6 +23,7 @@ import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
+import androidx.annotation.CheckResult
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
@@ -63,18 +64,67 @@ class PasteService : AccessibilityService() {
     PasteServiceNotification.start(this)
   }
 
-  private fun onPasteRequested() {
-    val info = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-    if (info != null && info.isEditable) {
-      Timber.d("Perform paste on target: %s", info)
-      info.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
-      Toast.makeText(applicationContext, "Pasting text into current input.", Toast.LENGTH_SHORT)
-          .show()
-    } else {
-      Timber.e("No editable target to paste into")
-      Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
-          .show()
+  @CheckResult
+  private fun isNodeFocusedAndEditable(node: AccessibilityNodeInfo): Boolean {
+    return (node.isFocused || node.isAccessibilityFocused) && node.isEditable
+  }
+
+  @CheckResult
+  private fun findFocusedNode(node: AccessibilityNodeInfo?): AccessibilityNodeInfo? {
+    if (node == null) {
+      return null
     }
+
+    if (isNodeFocusedAndEditable(node)) {
+      return node
+    }
+
+    for (i in 0 until node.childCount) {
+      val childNode = node.getChild(i)
+      val focusedChildNode = findFocusedNode(childNode)
+      if (focusedChildNode != null) {
+        return focusedChildNode
+      }
+    }
+
+    return null
+  }
+
+  private fun onPasteRequested() {
+    var node: AccessibilityNodeInfo? = rootInActiveWindow
+    if (node != null && isNodeFocusedAndEditable(node)) {
+      Timber.d("rootInActiveWindow node is paste target")
+      pasteIntoNode(node)
+    } else {
+      node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+      if (node != null && isNodeFocusedAndEditable(node)) {
+        Timber.d("root.FOCUS_INPUT node is paste target")
+        pasteIntoNode(node)
+      } else {
+        node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+        if (node != null && isNodeFocusedAndEditable(node)) {
+          Timber.d("root.FOCUS_ACCESSIBLE node is paste target")
+          pasteIntoNode(node)
+        } else {
+          node = findFocusedNode(rootInActiveWindow)
+          if (node != null && isNodeFocusedAndEditable(node)) {
+            Timber.d("recursive result node is paste target")
+            pasteIntoNode(node)
+          } else {
+            Timber.e("No editable target to paste into")
+            Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
+                .show()
+          }
+        }
+      }
+    }
+  }
+
+  private fun pasteIntoNode(node: AccessibilityNodeInfo) {
+    Timber.d("Perform paste on target: %s", node)
+    node.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
+    Toast.makeText(applicationContext, "Pasting text into current input.", Toast.LENGTH_SHORT)
+        .show()
   }
 
   private fun onServiceFinishRequested() {
