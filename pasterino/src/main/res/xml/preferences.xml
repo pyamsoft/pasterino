@@ -28,11 +28,11 @@
         app:iconCompat="@drawable/ic_help_24dp"/>
 
     <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
-        android:defaultValue="@string/delay_time_default"
+        android:defaultValue="@string/delay_time_default_v2"
         android:dialogTitle="@string/delay_time_title"
-        android:entries="@array/delay_time_names"
-        android:entryValues="@array/delay_time_values"
-        android:key="@string/delay_time_key"
+        android:entries="@array/delay_time_names_v2"
+        android:entryValues="@array/delay_time_values_v2"
+        android:key="@string/delay_time_key_v2"
         android:summary="@string/delay_time_summary"
         android:title="@string/delay_time_title"
         app:iconCompat="@drawable/ic_timer_24dp"/>

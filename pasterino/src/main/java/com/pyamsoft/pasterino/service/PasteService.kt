@@ -106,6 +106,8 @@ class PasteService : AccessibilityService() {
           Timber.d("root.FOCUS_ACCESSIBLE node is paste target")
           pasteIntoNode(node)
         } else {
+          // TODO Add a pref which enables this slow but more accurate search
+          // fetch pref out of observable, and subscribe passing it through.
           node = findFocusedNode(rootInActiveWindow)
           if (node != null && isNodeFocusedAndEditable(node)) {
             Timber.d("recursive result node is paste target")

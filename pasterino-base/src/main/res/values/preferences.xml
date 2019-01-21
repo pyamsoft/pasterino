@@ -17,7 +17,7 @@
 
 <resources>
 
-  <string name="delay_time_default">600</string>
-  <string name="delay_time_key">delay_time</string>
+  <string name="delay_time_default_v2">1100</string>
+  <string name="delay_time_key_v2">delay_time_v2</string>
 
 </resources>

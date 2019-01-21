@@ -36,8 +36,8 @@ internal class PasterinoPreferencesImpl internal constructor(
   init {
     val appContext = context.applicationContext
     preferences = PreferenceManager.getDefaultSharedPreferences(appContext)
-    delayTime = appContext.getString(R.string.delay_time_key)
-    delayTimeDefault = appContext.getString(R.string.delay_time_default)
+    delayTime = appContext.getString(R.string.delay_time_key_v2)
+    delayTimeDefault = appContext.getString(R.string.delay_time_default_v2)
   }
 
   override val pasteDelayTime: Long

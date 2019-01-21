@@ -22,18 +22,18 @@
   <string name="explain_summary">The simple way to use Pasterino</string>
 
   <string name="delay_time_title">Paste Delay Time</string>
-  <string name="delay_time_summary">Set the amount of delay before attempting to paste text</string>
+  <string name="delay_time_summary">Longer delay times can sometimes fix not being able to paste into fields.</string>
 
-  <string-array name="delay_time_names">
-    <item name="value_small">400 ms</item>
-    <item name="value_default">600 ms</item>
-    <item name="value_large">1000 ms</item>
+  <string-array name="delay_time_names_v2">
+    <item name="value_small">700 milliseconds</item>
+    <item name="value_default">1100 milliseconds</item>
+    <item name="value_large">1500 milliseconds</item>
   </string-array>
 
-  <string-array name="delay_time_values">
-    <item name="value_small">400</item>
-    <item name="value_default">600</item>
-    <item name="value_large">1000</item>
+  <string-array name="delay_time_values_v2">
+    <item name="value_small">700</item>
+    <item name="value_default">1100</item>
+    <item name="value_large">1500</item>
   </string-array>
 
 </resources>
