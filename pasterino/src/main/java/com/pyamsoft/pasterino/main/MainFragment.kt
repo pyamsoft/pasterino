@@ -24,11 +24,14 @@ import android.view.ViewGroup
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.service.PasteViewModel
+import com.pyamsoft.pasterino.service.ServiceStateEvent.Start
+import com.pyamsoft.pasterino.service.ServiceStateEvent.Stop
+import com.pyamsoft.pasterino.service.ServiceStateWorker
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
+import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
@@ -36,10 +39,9 @@ import com.pyamsoft.pydroid.ui.util.show
 class MainFragment : ToolbarFragment() {
 
   internal lateinit var mainView: MainFragmentView
-  internal lateinit var pasteViewModel: PasteViewModel
   internal lateinit var mainViewModel: MainFragmentViewModel
+  internal lateinit var serviceStateWorker: ServiceStateWorker
 
-  private var serviceStateDisposable by singleDisposable()
   private var fabScrollRequestDisposable by singleDisposable()
 
   override fun onCreateView(
@@ -62,15 +64,13 @@ class MainFragment : ToolbarFragment() {
     super.onViewCreated(view, savedInstanceState)
     displayPreferenceFragment()
 
-    serviceStateDisposable = pasteViewModel.onServiceStateChanged { running: Boolean ->
-      mainView.setFabFromServiceState(running) {
-        if (it) {
-          ServiceInfoDialog().show(requireActivity(), "service_info")
-        } else {
-          AccessibilityRequestDialog().show(requireActivity(), "accessibility")
-        }
+    serviceStateWorker.onStateEvent {
+      return@onStateEvent when (it) {
+        Start -> setFabState(true)
+        Stop -> setFabState(false)
       }
     }
+        .destroy(viewLifecycleOwner)
 
 
     fabScrollRequestDisposable = mainViewModel.onFabScrollListenerCreateRequest { tag: String ->
@@ -80,9 +80,18 @@ class MainFragment : ToolbarFragment() {
     }
   }
 
+  private fun setFabState(running: Boolean) {
+    mainView.setFabFromServiceState(running) {
+      if (it) {
+        ServiceInfoDialog().show(requireActivity(), "service_info")
+      } else {
+        AccessibilityRequestDialog().show(requireActivity(), "accessibility")
+      }
+    }
+  }
+
   override fun onDestroyView() {
     super.onDestroyView()
-    serviceStateDisposable.tryDispose()
     fabScrollRequestDisposable.tryDispose()
   }
 

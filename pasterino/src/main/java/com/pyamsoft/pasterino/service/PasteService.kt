@@ -34,7 +34,9 @@ import timber.log.Timber
 
 class PasteService : AccessibilityService() {
 
-  internal lateinit var viewModel: PasteViewModel
+  internal lateinit var pasteWorker: PasteServiceWorker
+  internal lateinit var finishWorker: ServiceFinishWorker
+  internal lateinit var serviceStateWorker: ServiceStateWorker
 
   private var finishDisposable by singleDisposable()
   private var pasteDisposable by singleDisposable()
@@ -52,15 +54,15 @@ class PasteService : AccessibilityService() {
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    finishDisposable = viewModel.onFinishEvent { onServiceFinishRequested() }
-    pasteDisposable = viewModel.onPasteEvent { onPasteRequested() }
+    finishDisposable = finishWorker.onFinishEvent { onServiceFinishRequested() }
+    pasteDisposable = pasteWorker.onPasteEvent { onPasteRequested(it.deepSearchEnabled) }
   }
 
   override fun onServiceConnected() {
     super.onServiceConnected()
     Timber.d("onServiceConnected")
 
-    viewModel.setServiceState(true)
+    serviceStateWorker.setServiceState(true)
     PasteServiceNotification.start(this)
   }
 
@@ -90,36 +92,41 @@ class PasteService : AccessibilityService() {
     return null
   }
 
-  private fun onPasteRequested() {
+  private fun onPasteRequested(isDeepSearchEnabled: Boolean) {
     var node: AccessibilityNodeInfo? = rootInActiveWindow
+
     if (node != null && isNodeFocusedAndEditable(node)) {
       Timber.d("rootInActiveWindow node is paste target")
       pasteIntoNode(node)
-    } else {
-      node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+      return
+    }
+
+    node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+    if (node != null && isNodeFocusedAndEditable(node)) {
+      Timber.d("root.FOCUS_INPUT node is paste target")
+      pasteIntoNode(node)
+      return
+    }
+
+    node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+    if (node != null && isNodeFocusedAndEditable(node)) {
+      Timber.d("root.FOCUS_ACCESSIBLE node is paste target")
+      pasteIntoNode(node)
+      return
+    }
+
+    if (isDeepSearchEnabled) {
+      node = findFocusedNode(rootInActiveWindow)
       if (node != null && isNodeFocusedAndEditable(node)) {
-        Timber.d("root.FOCUS_INPUT node is paste target")
+        Timber.d("recursive result node is paste target")
         pasteIntoNode(node)
-      } else {
-        node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
-        if (node != null && isNodeFocusedAndEditable(node)) {
-          Timber.d("root.FOCUS_ACCESSIBLE node is paste target")
-          pasteIntoNode(node)
-        } else {
-          // TODO Add a pref which enables this slow but more accurate search
-          // fetch pref out of observable, and subscribe passing it through.
-          node = findFocusedNode(rootInActiveWindow)
-          if (node != null && isNodeFocusedAndEditable(node)) {
-            Timber.d("recursive result node is paste target")
-            pasteIntoNode(node)
-          } else {
-            Timber.e("No editable target to paste into")
-            Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
-                .show()
-          }
-        }
+        return
       }
     }
+
+    Timber.e("No editable target to paste into")
+    Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
+        .show()
   }
 
   private fun pasteIntoNode(node: AccessibilityNodeInfo) {
@@ -139,7 +146,7 @@ class PasteService : AccessibilityService() {
     Timber.d("onUnbind")
 
     PasteServiceNotification.stop(this)
-    viewModel.setServiceState(false)
+    serviceStateWorker.setServiceState(false)
     return super.onUnbind(intent)
   }
 

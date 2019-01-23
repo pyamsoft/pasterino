@@ -38,6 +38,14 @@
         app:iconCompat="@drawable/ic_timer_24dp"/>
     />
 
+    <com.pyamsoft.pydroid.ui.preference.CheckBoxPreferenceCompat
+        android:key="@string/deep_search_key_v1"
+        android:defaultValue="@string/deep_search_default_v1"
+        android:summaryOn="@string/deep_search_summary_on"
+        android:summaryOff="@string/deep_search_summary_on"
+        android:title="@string/deep_search_title"
+        app:iconCompat="@drawable/ic_help_24dp"/>
+
   </PreferenceCategory>
 
 </PreferenceScreen>

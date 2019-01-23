@@ -29,19 +29,32 @@ internal class PasterinoPreferencesImpl internal constructor(
   context: Context
 ) : PastePreferences, ClearPreferences {
 
+  private val preferences: SharedPreferences
+
   private val delayTime: String
   private val delayTimeDefault: String
-  private val preferences: SharedPreferences
+
+  private val deepSearch: String
+  private val deepSearchDefault: Boolean
 
   init {
     val appContext = context.applicationContext
     preferences = PreferenceManager.getDefaultSharedPreferences(appContext)
-    delayTime = appContext.getString(R.string.delay_time_key_v2)
-    delayTimeDefault = appContext.getString(R.string.delay_time_default_v2)
+
+    appContext.resources.also {
+      delayTime = it.getString(R.string.delay_time_key_v2)
+      delayTimeDefault = it.getString(R.string.delay_time_default_v2)
+
+      deepSearch = it.getString(R.string.deep_search_key_v1)
+      deepSearchDefault = it.getBoolean(R.bool.deep_search_default_v1)
+    }
   }
 
   override val pasteDelayTime: Long
     get() = preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
+
+  override val isDeepSearchEnabled: Boolean
+    get() = preferences.getBoolean(deepSearch, deepSearchDefault)
 
   @SuppressLint("ApplySharedPref")
   override fun clearAll() {

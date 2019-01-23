@@ -19,49 +19,24 @@ package com.pyamsoft.pasterino.service
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pasterino.model.ServiceEvent.Type.FINISH
-import com.pyamsoft.pasterino.model.ServiceEvent.Type.PASTE
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-class PasteViewModel internal constructor(
+internal class SinglePasteWorker internal constructor(
   private val enforcer: Enforcer,
   private val interactor: PasteServiceInteractor,
-  private val bus: EventBus<ServiceEvent>
-) {
+  bus: EventBus<PasteRequestEvent>
+) : Worker<PasteRequestEvent>(bus) {
 
   @CheckResult
-  fun onFinishEvent(func: (ServiceEvent.Type) -> Unit): Disposable {
-    return bus.listen()
-        .map { it.type }
-        .filter { it == FINISH }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
-  }
-
-  @CheckResult
-  fun onPasteEvent(func: (ServiceEvent.Type) -> Unit): Disposable {
-    return bus.listen()
-        .map { it.type }
-        .filter { it == PASTE }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
-  }
-
-  @CheckResult
-  fun post(
-    onPost: () -> Unit,
-    onPostError: (error: Throwable) -> Unit
-  ): Disposable {
+  fun post(onPost: () -> Unit): Disposable {
     return interactor.getPasteDelayTime()
         .observeOn(Schedulers.io())
         .flatMap {
@@ -71,24 +46,16 @@ class PasteViewModel internal constructor(
               .observeOn(Schedulers.io())
               .delay(it, MILLISECONDS)
         }
+        .flatMap {
+          enforcer.assertNotOnMainThread()
+          return@flatMap interactor.isDeepSearchEnabled()
+              .subscribeOn(Schedulers.io())
+              .observeOn(Schedulers.io())
+        }
+        .doOnSuccess { publish(PasteRequestEvent(it)) }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe({ onPost() }, {
-          Timber.e(it, "Error on post")
-          onPostError(it)
-        })
-  }
-
-  @CheckResult
-  fun onServiceStateChanged(func: (Boolean) -> Unit): Disposable {
-    return interactor.observeServiceState()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
-  }
-
-  fun setServiceState(running: Boolean) {
-    interactor.setServiceState(running)
+        .subscribe(Consumer { onPost() })
   }
 
 }

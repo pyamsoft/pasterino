@@ -17,18 +17,6 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.api.PasterinoModule
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-class PasteServiceModule(
-  pasterinoModule: PasterinoModule,
-  enforcer: Enforcer
-) {
-
-  val interactor: PasteServiceInteractor
-
-  init {
-    interactor = PasteServiceInteractorImpl(enforcer, pasterinoModule.providePreferences())
-  }
-}
+internal object ServiceFinishEvent : StateEvent

@@ -17,18 +17,23 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.api.PasterinoModule
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.arch.Worker
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
-class PasteServiceModule(
-  pasterinoModule: PasterinoModule,
-  enforcer: Enforcer
-) {
+internal class ServiceFinishWorker internal constructor(
+  bus: EventBus<ServiceFinishEvent>
+) : Worker<ServiceFinishEvent>(bus) {
 
-  val interactor: PasteServiceInteractor
-
-  init {
-    interactor = PasteServiceInteractorImpl(enforcer, pasterinoModule.providePreferences())
+  @CheckResult
+  fun onFinishEvent(func: () -> Unit): Disposable {
+    return listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { func() }
   }
+
 }

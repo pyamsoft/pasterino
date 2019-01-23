@@ -24,16 +24,13 @@ import android.os.IBinder
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.model.ServiceEvent
-import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import timber.log.Timber
 
 class SinglePasteService : Service() {
 
-  internal lateinit var viewModel: PasteViewModel
-  internal lateinit var publisher: Publisher<ServiceEvent>
+  internal lateinit var serviceWorker: SinglePasteWorker
 
   private var postDisposable by singleDisposable()
 
@@ -60,16 +57,7 @@ class SinglePasteService : Service() {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    postDisposable = viewModel.post(
-        onPost = {
-          publisher.publish(ServiceEvent(ServiceEvent.Type.PASTE))
-          stopSelf()
-        },
-        onPostError = { error: Throwable ->
-          Timber.e(error, "onPostError failed, stop service")
-          stopSelf()
-        }
-    )
+    postDisposable = serviceWorker.post { stopSelf() }
     return Service.START_NOT_STICKY
   }
 

@@ -23,4 +23,7 @@ interface PastePreferences {
 
   @get:CheckResult
   val pasteDelayTime: Long
+
+  @get:CheckResult
+  val isDeepSearchEnabled: Boolean
 }

@@ -33,9 +33,9 @@ internal class PasteServiceInteractorImpl internal constructor(
 
   private val runningStateBus = RxBus.create<Boolean>()
 
-  override fun setServiceState(changed: Boolean) {
-    running = changed
-    runningStateBus.publish(changed)
+  override fun setServiceState(start: Boolean) {
+    running = start
+    runningStateBus.publish(start)
   }
 
   override fun observeServiceState(): Observable<Boolean> {
@@ -43,9 +43,17 @@ internal class PasteServiceInteractorImpl internal constructor(
         .startWith(running)
   }
 
-  override fun getPasteDelayTime(): Single<Long> =
-    Single.fromCallable {
+  override fun getPasteDelayTime(): Single<Long> {
+    return Single.fromCallable {
       enforcer.assertNotOnMainThread()
       return@fromCallable preferences.pasteDelayTime
     }
+  }
+
+  override fun isDeepSearchEnabled(): Single<Boolean> {
+    return Single.fromCallable {
+      enforcer.assertNotOnMainThread()
+      return@fromCallable preferences.isDeepSearchEnabled
+    }
+  }
 }

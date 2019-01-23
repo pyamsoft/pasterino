@@ -24,6 +24,10 @@
   <string name="delay_time_title">Paste Delay Time</string>
   <string name="delay_time_summary">Longer delay times can sometimes fix not being able to paste into fields.</string>
 
+  <string name="deep_search_title">Enable Complete Screen Search</string>
+  <string name="deep_search_summary_on">Complete search is slower but more accurate at finding paste sections.</string>
+  <string name="deep_search_summary_off">Faster searching but may not find paste sections in all cases.</string>
+
   <string-array name="delay_time_names_v2">
     <item name="value_small">700 milliseconds</item>
     <item name="value_default">1100 milliseconds</item>
