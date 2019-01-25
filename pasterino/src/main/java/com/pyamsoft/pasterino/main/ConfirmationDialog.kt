@@ -22,7 +22,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.model.ConfirmEvent
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 

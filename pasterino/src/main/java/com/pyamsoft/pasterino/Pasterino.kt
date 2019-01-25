@@ -28,6 +28,7 @@ import com.squareup.leakcanary.RefWatcher
 class Pasterino : Application(), PYDroid.Instance {
 
   private var pyDroid: PYDroid? = null
+  private lateinit var theming: Theming
   private lateinit var component: PasterinoComponent
   private lateinit var refWatcher: RefWatcher
 
@@ -55,10 +56,10 @@ class Pasterino : Application(), PYDroid.Instance {
   }
 
   override fun getSystemService(name: String): Any {
-    if (Injector.name == name) {
-      return component
-    } else {
-      return super.getSystemService(name)
+    return when (name) {
+      Injector.name -> component
+      ThemeInjector.name -> theming
+      else -> super.getSystemService(name)
     }
   }
 
@@ -67,6 +68,8 @@ class Pasterino : Application(), PYDroid.Instance {
   override fun setPydroid(instance: PYDroid) {
     pyDroid = instance.also {
       component = PasterinoComponentImpl(this, it.modules())
+      theming = it.modules()
+          .theming()
     }
   }
 

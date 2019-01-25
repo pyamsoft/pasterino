@@ -17,10 +17,16 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.ui.app.BaseScreen
+import com.pyamsoft.pasterino.main.SettingsStateEvent.SignificantScroll
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.arch.Worker
 
-interface MainView : BaseScreen {
+internal class SettingsWorker internal constructor(
+  bus: EventBus<SettingsStateEvent>
+) : Worker<SettingsStateEvent>(bus) {
 
-  fun onToolbarNavClicked(onClick: () -> Unit)
+  fun significantScroll(visible: Boolean) {
+    publish(SignificantScroll(visible))
+  }
 
 }

@@ -26,26 +26,28 @@ import android.view.ViewGroup
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.main.SettingsViewEvent.ExplainClicked
+import com.pyamsoft.pasterino.main.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
-class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
+class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
-  internal lateinit var viewModel: MainViewModel
+  internal lateinit var settingsUiComponent: SettingsUiComponent
+  internal lateinit var settingsWorker: SettingsWorker
+  internal lateinit var clearWorker: ClearAllWorker
   internal lateinit var publisher: Publisher<ServiceEvent>
-  internal lateinit var settingsView: SettingsView
 
   private var clearDisposable by singleDisposable()
   private var scrollListenerDisposable by singleDisposable()
-
-  override val rootViewContainer: Int = R.id.main_container
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -54,12 +56,12 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .plusMainComponent(viewLifecycleOwner, preferenceScreen, TAG)
         .inject(this)
 
-    settingsView.create()
-    return super.onCreateView(inflater, container, savedInstanceState)
+    return view
   }
 
   override fun onViewCreated(
@@ -67,18 +69,24 @@ class MainSettingsPreferenceFragment : SettingsPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+    settingsUiComponent.onUiEvent()
+        .subscribe {
+          return@subscribe when (it) {
+            is ExplainClicked -> HowToDialog().show(requireActivity(), "howto")
+            is SignificantScroll -> settingsWorker.significantScroll(it.visible)
+          }
+        }
+        .destroy(viewLifecycleOwner)
 
-    settingsView.onExplainClicked { HowToDialog().show(requireActivity(), "howto") }
+    settingsUiComponent.create(savedInstanceState)
 
-    addScrollListener()
-    clearDisposable = viewModel.onClearAllEvent { onClearAll() }
+
+    clearDisposable = clearWorker.onClear { onClearAll() }
   }
 
-  private fun addScrollListener() {
-    scrollListenerDisposable = viewModel.onScrollListenerCreated {
-      settingsView.addScrollListener(listView, it)
-    }
-    viewModel.publishScrollListenerCreateRequest()
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    settingsUiComponent.saveState(outState)
   }
 
   override fun onDestroyView() {

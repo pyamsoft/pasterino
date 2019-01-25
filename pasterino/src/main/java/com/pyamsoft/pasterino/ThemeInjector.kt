@@ -20,22 +20,22 @@ package com.pyamsoft.pasterino
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.theme.Theming
 
-object Injector {
+object ThemeInjector {
 
-  const val name: String = "com.pyamsoft.pasterino.INJECTOR"
+  const val name: String = "com.pyamsoft.pasterino.THEME_INJECTOR"
 
   @SuppressLint("WrongConstant")
   @CheckResult
   @JvmStatic
-  fun <T : Any> obtain(context: Context): T {
+  fun obtain(context: Context): Theming {
     val service: Any? = context.getSystemService(name)
     if (service == null) {
-      throw IllegalStateException("No service found for: $name")
+      throw IllegalStateException("Unable to find Theming singleton")
     } else {
       @Suppress("UNCHECKED_CAST")
-      return service as T
+      return service as Theming
     }
   }
 }
-

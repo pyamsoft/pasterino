@@ -17,20 +17,10 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.preference.PreferenceScreen
-import com.pyamsoft.pasterino.service.PasteServiceModule
+import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-class MainComponentImpl(
-  private val owner: LifecycleOwner,
-  private val preferenceScreen: PreferenceScreen,
-  private val tag: String,
-  private val mainSettingsModule: MainModule,
-  private val pasteServiceModule: PasteServiceModule
-) : MainComponent {
+internal sealed class MainViewEvent : ViewEvent {
 
-  override fun inject(fragment: MainSettingsPreferenceFragment) {
-    TODO()
-  }
+  object ToolbarClicked : MainViewEvent()
 
 }

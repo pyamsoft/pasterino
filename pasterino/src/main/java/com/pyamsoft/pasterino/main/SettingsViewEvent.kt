@@ -17,16 +17,11 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.ui.app.BaseScreen
+import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-interface MainFragmentView : BaseScreen {
+sealed class SettingsViewEvent : ViewEvent {
 
-  fun setFabFromServiceState(
-    running: Boolean,
-    onClick: (running: Boolean) -> Unit
-  )
+  object ExplainClicked : SettingsViewEvent()
 
-  fun createFabScrollListener(onCreate: (listener: RecyclerView.OnScrollListener) -> Unit)
-
+  data class SignificantScroll(val visible: Boolean) : SettingsViewEvent()
 }

@@ -15,6 +15,8 @@
  *
  */
 
-package com.pyamsoft.pasterino.model
+package com.pyamsoft.pasterino.main
 
-object ConfirmEvent
+import com.pyamsoft.pydroid.ui.arch.StateEvent
+
+object ConfirmEvent : StateEvent

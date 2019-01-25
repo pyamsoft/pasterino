@@ -15,11 +15,11 @@
  *
  */
 
-package com.pyamsoft.pasterino.model
+package com.pyamsoft.pasterino.main
 
-import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-data class FabScrollListenerRequestEvent(
-  val requestTag: String,
-  val listenerResult: RecyclerView.OnScrollListener? = null
-)
+sealed class SettingsStateEvent : StateEvent {
+
+  data class SignificantScroll(val visible: Boolean) : SettingsStateEvent()
+}

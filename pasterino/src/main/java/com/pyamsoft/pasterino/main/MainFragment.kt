@@ -21,12 +21,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.service.ServiceStateEvent.Start
-import com.pyamsoft.pasterino.service.ServiceStateEvent.Stop
-import com.pyamsoft.pasterino.service.ServiceStateWorker
+import com.pyamsoft.pasterino.main.ActionViewEvent.ActionClicked
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
@@ -38,9 +37,10 @@ import com.pyamsoft.pydroid.ui.util.show
 
 class MainFragment : ToolbarFragment() {
 
-  internal lateinit var mainView: MainFragmentView
-  internal lateinit var mainViewModel: MainFragmentViewModel
-  internal lateinit var serviceStateWorker: ServiceStateWorker
+  private lateinit var layoutRoot: CoordinatorLayout
+
+  internal lateinit var frameComponent: MainFrameUiComponent
+  internal lateinit var actionComponent: MainActionUiComponent
 
   private var fabScrollRequestDisposable by singleDisposable()
 
@@ -49,12 +49,14 @@ class MainFragment : ToolbarFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    val root = inflater.inflate(R.layout.layout_coordinator, container, false)
+    layoutRoot = root.findViewById(R.id.layout_coordinator)
+
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .plusMainFragmentComponent(viewLifecycleOwner, inflater, container)
         .inject(this)
 
-    mainView.create()
-    return mainView.root()
+    return root
   }
 
   override fun onViewCreated(
@@ -64,29 +66,24 @@ class MainFragment : ToolbarFragment() {
     super.onViewCreated(view, savedInstanceState)
     displayPreferenceFragment()
 
-    serviceStateWorker.onStateEvent {
-      return@onStateEvent when (it) {
-        Start -> setFabState(true)
-        Stop -> setFabState(false)
-      }
-    }
+    frameComponent.create(savedInstanceState)
+
+    actionComponent.onUiEvent()
+        .subscribe {
+          return@subscribe when (it) {
+            is ActionClicked -> onFabClicked(it.runningService)
+          }
+        }
         .destroy(viewLifecycleOwner)
 
-
-    fabScrollRequestDisposable = mainViewModel.onFabScrollListenerCreateRequest { tag: String ->
-      mainView.createFabScrollListener { listener ->
-        mainViewModel.publishScrollListener(tag, listener)
-      }
-    }
+    actionComponent.create(savedInstanceState)
   }
 
-  private fun setFabState(running: Boolean) {
-    mainView.setFabFromServiceState(running) {
-      if (it) {
-        ServiceInfoDialog().show(requireActivity(), "service_info")
-      } else {
-        AccessibilityRequestDialog().show(requireActivity(), "accessibility")
-      }
+  private fun onFabClicked(running: Boolean) {
+    if (running) {
+      ServiceInfoDialog().show(requireActivity(), "service_info")
+    } else {
+      AccessibilityRequestDialog().show(requireActivity(), "accessibility")
     }
   }
 
@@ -107,7 +104,7 @@ class MainFragment : ToolbarFragment() {
     val fragmentManager = childFragmentManager
     if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(R.id.fragment_container, MainSettingsFragment(), MainSettingsFragment.TAG)
+          .add(frameComponent.id(), MainSettingsFragment(), MainSettingsFragment.TAG)
           .commit(viewLifecycleOwner)
     }
   }

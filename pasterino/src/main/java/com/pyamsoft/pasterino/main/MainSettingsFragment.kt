@@ -17,12 +17,12 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.ui.app.fragment.AppSettingsFragment
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
 class MainSettingsFragment : AppSettingsFragment() {
 
-  override fun provideSettingsFragment(): SettingsPreferenceFragment =
+  override fun provideSettingsFragment(): AppSettingsPreferenceFragment =
     MainSettingsPreferenceFragment()
 
   override fun provideSettingsTag(): String = MainSettingsPreferenceFragment.TAG

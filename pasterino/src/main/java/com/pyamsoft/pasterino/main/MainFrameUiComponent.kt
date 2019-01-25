@@ -17,20 +17,32 @@
 
 package com.pyamsoft.pasterino.main
 
+import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import androidx.preference.PreferenceScreen
-import com.pyamsoft.pasterino.service.PasteServiceModule
+import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import io.reactivex.Observable
 
-class MainComponentImpl(
-  private val owner: LifecycleOwner,
-  private val preferenceScreen: PreferenceScreen,
-  private val tag: String,
-  private val mainSettingsModule: MainModule,
-  private val pasteServiceModule: PasteServiceModule
-) : MainComponent {
+class MainFrameUiComponent internal constructor(
+  private val mainView: MainFrameView,
+  owner: LifecycleOwner
+) : UiComponent<EMPTY>(owner) {
 
-  override fun inject(fragment: MainSettingsPreferenceFragment) {
-    TODO()
+  override fun id(): Int {
+    return mainView.id()
+  }
+
+  override fun create(savedInstanceState: Bundle?) {
+    mainView.inflate(savedInstanceState)
+    owner.runOnDestroy { mainView.teardown() }
+  }
+
+  override fun onUiEvent(): Observable<EMPTY> {
+    return Observable.empty()
+  }
+
+  override fun saveState(outState: Bundle) {
+    mainView.saveState(outState)
   }
 
 }

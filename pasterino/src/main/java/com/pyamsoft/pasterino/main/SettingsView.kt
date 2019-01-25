@@ -17,16 +17,68 @@
 
 package com.pyamsoft.pasterino.main
 
+import android.os.Bundle
+import android.view.View
+import androidx.annotation.CheckResult
+import androidx.annotation.StringRes
+import androidx.preference.Preference
+import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.ui.app.BaseView
+import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.main.SettingsViewEvent.ExplainClicked
+import com.pyamsoft.pasterino.main.SettingsViewEvent.SignificantScroll
+import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
+import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.widget.scroll.HideOnScrollListener
 
-interface SettingsView : BaseView {
+internal class SettingsView internal constructor(
+    // TODO: Remove view req from scroll listener
+  private val view: View,
+  private val preferenceScreen: PreferenceScreen,
+  private val recyclerView: RecyclerView,
+  bus: Publisher<SettingsViewEvent>
+) : UiView<SettingsViewEvent>(bus) {
 
-  fun onExplainClicked(onClick: () -> Unit)
+  private val context = preferenceScreen.context
 
-  fun addScrollListener(
-    listView: RecyclerView,
-    listener: RecyclerView.OnScrollListener
-  )
+  private lateinit var zaptorchExplain: Preference
+
+  private var scrollListener: RecyclerView.OnScrollListener? = null
+
+  override fun id(): Int {
+    throw InvalidUiComponentIdException
+  }
+
+  override fun inflate(savedInstanceState: Bundle?) {
+    zaptorchExplain = findPreference(R.string.explain_key)
+
+    zaptorchExplain.setOnPreferenceClickListener {
+      publish(ExplainClicked)
+      return@setOnPreferenceClickListener true
+    }
+
+    val listener = HideOnScrollListener.withView(view) {
+      publish(SignificantScroll(it))
+    }
+    recyclerView.addOnScrollListener(listener)
+    scrollListener = listener
+  }
+
+  override fun saveState(outState: Bundle) {
+  }
+
+  override fun teardown() {
+    zaptorchExplain.onPreferenceClickListener = null
+
+    scrollListener?.also { recyclerView.removeOnScrollListener(it) }
+    scrollListener = null
+  }
+
+  @CheckResult
+  private fun findPreference(@StringRes id: Int): Preference {
+    return preferenceScreen.findPreference(context.getString(id))
+  }
 
 }
+

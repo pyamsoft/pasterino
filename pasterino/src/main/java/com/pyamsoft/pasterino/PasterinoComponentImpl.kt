@@ -30,7 +30,6 @@ import com.pyamsoft.pasterino.main.MainComponentImpl
 import com.pyamsoft.pasterino.main.MainFragmentComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponentImpl
 import com.pyamsoft.pasterino.main.MainModule
-import com.pyamsoft.pasterino.main.MainViewImpl
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.PasteServiceModule
 import com.pyamsoft.pasterino.service.ServiceComponent

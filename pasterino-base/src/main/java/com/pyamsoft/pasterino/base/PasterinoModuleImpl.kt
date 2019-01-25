@@ -22,7 +22,7 @@ import android.content.Context
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasterinoModule
-import com.pyamsoft.pasterino.model.FabScrollListenerRequestEvent
+import com.pyamsoft.pasterino.main.FabScrollListenerRequestEvent
 import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.RxBus
@@ -36,7 +36,7 @@ class PasterinoModuleImpl(
 
   private val imageLoader = loaderModule.provideImageLoader()
   private val preferences = PasterinoPreferencesImpl(application)
-  private val fabScrollBus = RxBus.create<FabScrollListenerRequestEvent>()
+  private val fabScrollBus = RxBus.create<com.pyamsoft.pasterino.main.FabScrollListenerRequestEvent>()
   private val pasteBus = RxBus.create<ServiceEvent>()
 
   override fun provideApplication(): Application = application
@@ -51,5 +51,5 @@ class PasterinoModuleImpl(
 
   override fun provideClearPreferences(): ClearPreferences = preferences
 
-  override fun provideFabScrollRequestBus(): EventBus<FabScrollListenerRequestEvent> = fabScrollBus
+  override fun provideFabScrollRequestBus(): EventBus<com.pyamsoft.pasterino.main.FabScrollListenerRequestEvent> = fabScrollBus
 }

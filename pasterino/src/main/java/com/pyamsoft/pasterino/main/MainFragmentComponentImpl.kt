@@ -33,12 +33,7 @@ internal class MainFragmentComponentImpl internal constructor(
 ) : MainFragmentComponent {
 
   override fun inject(fragment: MainFragment) {
-    fragment.pasteViewModel = serviceModule.getViewModel()
-    fragment.mainViewModel = mainModule.getFragmentViewModel()
-    fragment.mainView = MainFragmentViewImpl(
-        owner, inflater,
-        container, loaderModule.provideImageLoader()
-    )
+    TODO()
   }
 
 }

@@ -19,28 +19,39 @@ package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.ThemeInjector
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.commit
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 
 class MainActivity : RatingActivity() {
 
-  internal lateinit var mainView: MainView
-  internal lateinit var theming: Theming
+  internal lateinit var toolbarComponent: MainToolbarUiComponent
+  internal lateinit var frameComponent: MainFrameUiComponent
+  internal lateinit var dropshadowComponent: DropshadowUiComponent
+
+  private lateinit var layoutRoot: ConstraintLayout
 
   override val versionName: String = BuildConfig.VERSION_NAME
 
   override val applicationIcon: Int = R.mipmap.ic_launcher
 
-  override val rootView: View
-    get() = mainView.root()
+  override val snackbarRoot: View
+    get() = layoutRoot
+
+  override val fragmentContainerId: Int
+    get() = frameComponent.id()
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
     change("New icon style")
@@ -48,29 +59,65 @@ class MainActivity : RatingActivity() {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    Injector.obtain<PasterinoComponent>(applicationContext)
-        .inject(this)
-
-    if (theming.isDarkTheme()) {
+    if (ThemeInjector.obtain(applicationContext).isDarkTheme()) {
       setTheme(R.style.Theme_Pasterino_Dark)
     } else {
       setTheme(R.style.Theme_Pasterino_Light)
     }
     super.onCreate(savedInstanceState)
+    setContentView(R.layout.layout_constraint)
+    layoutRoot = findViewById(R.id.layout_constraint)
 
-    mainView.create()
+    Injector.obtain<PasterinoComponent>(applicationContext)
+        .inject(this)
 
-    mainView.onToolbarNavClicked { onBackPressed() }
+    createComponents(savedInstanceState)
+    layoutComponents(layoutRoot)
     showMainFragment()
   }
 
+  private fun createComponents(savedInstanceState: Bundle?) {
+    toolbarComponent.create(savedInstanceState)
+    frameComponent.create(savedInstanceState)
+    dropshadowComponent.create(savedInstanceState)
+  }
+
+  private fun layoutComponents(layoutRoot: ConstraintLayout) {
+    ConstraintSet().apply {
+      clone(layoutRoot)
+
+      toolbarComponent.also {
+        connect(it.id(), ConstraintSet.TOP, layoutRoot.id, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      frameComponent.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
+        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      dropshadowComponent.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      applyTo(layoutRoot)
+    }
+  }
+
   private fun showMainFragment() {
-    val fragmentManager = supportFragmentManager
-    if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null
-        && !AboutFragment.isPresent(this)
-    ) {
-      fragmentManager.beginTransaction()
-          .add(R.id.main_container, MainFragment(), MainFragment.TAG)
+    val fm = supportFragmentManager
+    if (fm.findFragmentByTag(MainFragment.TAG) == null && !AboutFragment.isPresent(this)) {
+      fm.beginTransaction()
+          .add(fragmentContainerId, MainFragment(), MainFragment.TAG)
           .commit(this)
     }
   }
