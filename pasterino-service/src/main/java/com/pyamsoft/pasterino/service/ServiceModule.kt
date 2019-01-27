@@ -17,11 +17,18 @@
 
 package com.pyamsoft.pasterino.service
 
-import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pasterino.api.PasteServiceInteractor
+import com.pyamsoft.pasterino.api.PasterinoModule
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-class ServiceComponentImpl(
-  private val owner: LifecycleOwner,
-  private val pasteServiceModule: PasteServiceModule
-) : ServiceComponent {
+class ServiceModule(
+  pasterinoModule: PasterinoModule,
+  enforcer: Enforcer
+) {
 
+  val interactor: PasteServiceInteractor
+
+  init {
+    interactor = PasteServiceInteractorImpl(enforcer, pasterinoModule.providePreferences())
+  }
 }

@@ -15,14 +15,20 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pydroid.ui.arch.StateEvent
+import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
-internal sealed class ServiceStateEvent : StateEvent {
+class MainSettingsFragment : AppSettingsFragment() {
 
-  object Start : ServiceStateEvent()
+  override fun provideSettingsFragment(): AppSettingsPreferenceFragment =
+    MainSettingsPreferenceFragment()
 
-  object Stop : ServiceStateEvent()
+  override fun provideSettingsTag(): String =
+    MainSettingsPreferenceFragment.TAG
 
+  companion object {
+    const val TAG = "MainSettingsFragment"
+  }
 }

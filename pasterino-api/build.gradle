@@ -55,5 +55,5 @@ dependencies {
   // PYDroid
   api "com.pyamsoft.pydroid:loader:$pydroid"
 
-  api project(":pasterino-model")
+  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

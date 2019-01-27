@@ -18,34 +18,36 @@
 package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainViewEvent.ToolbarClicked
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.util.toDp
 
 internal class MainToolbarView internal constructor(
-  private val parent: ViewGroup,
   private val activity: ActivityBase,
-  bus: Publisher<MainViewEvent>
-) : UiView<MainViewEvent>(bus) {
+  parent: ViewGroup,
+  bus: EventBus<MainViewEvent>
+) : BaseUiView<MainViewEvent>(parent, bus) {
 
-  private lateinit var toolbar: Toolbar
+  private val toolbar by lazyView<Toolbar>(R.id.toolbar)
+
+  override val layout: Int = R.layout.toolbar
 
   override fun id(): Int {
     return toolbar.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.toolbar) {
-      toolbar = findViewById(R.id.toolbar)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     setupToolbar()
   }
 
@@ -60,9 +62,6 @@ internal class MainToolbarView internal constructor(
       })
     }
 
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   override fun teardown() {

@@ -15,57 +15,40 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
 import android.os.Bundle
-import android.view.View
-import androidx.annotation.CheckResult
-import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.main.SettingsViewEvent.ExplainClicked
-import com.pyamsoft.pasterino.main.SettingsViewEvent.SignificantScroll
-import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pasterino.settings.SettingsViewEvent.ExplainClicked
+import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.widget.scroll.HideOnScrollListener
 
 internal class SettingsView internal constructor(
-    // TODO: Remove view req from scroll listener
-  private val view: View,
-  private val preferenceScreen: PreferenceScreen,
   private val recyclerView: RecyclerView,
-  bus: Publisher<SettingsViewEvent>
-) : UiView<SettingsViewEvent>(bus) {
+  parent: PreferenceScreen,
+  bus: EventBus<SettingsViewEvent>
+) : PrefUiView<SettingsViewEvent>(parent, bus) {
 
-  private val context = preferenceScreen.context
-
-  private lateinit var zaptorchExplain: Preference
+  private val zaptorchExplain by lazyPref<Preference>(R.string.explain_key)
 
   private var scrollListener: RecyclerView.OnScrollListener? = null
 
-  override fun id(): Int {
-    throw InvalidUiComponentIdException
-  }
-
   override fun inflate(savedInstanceState: Bundle?) {
-    zaptorchExplain = findPreference(R.string.explain_key)
-
     zaptorchExplain.setOnPreferenceClickListener {
       publish(ExplainClicked)
       return@setOnPreferenceClickListener true
     }
 
-    val listener = HideOnScrollListener.withView(view) {
+    val listener = HideOnScrollListener.create(true) {
       publish(SignificantScroll(it))
     }
     recyclerView.addOnScrollListener(listener)
     scrollListener = listener
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   override fun teardown() {
@@ -73,11 +56,6 @@ internal class SettingsView internal constructor(
 
     scrollListener?.also { recyclerView.removeOnScrollListener(it) }
     scrollListener = null
-  }
-
-  @CheckResult
-  private fun findPreference(@StringRes id: Int): Preference {
-    return preferenceScreen.findPreference(context.getString(id))
   }
 
 }

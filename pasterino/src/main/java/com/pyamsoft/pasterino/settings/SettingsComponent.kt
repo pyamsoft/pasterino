@@ -15,18 +15,12 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pasterino.main.SettingsStateEvent.SignificantScroll
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.arch.Worker
+import com.pyamsoft.pasterino.settings.MainSettingsPreferenceFragment
 
-internal class SettingsWorker internal constructor(
-  bus: EventBus<SettingsStateEvent>
-) : Worker<SettingsStateEvent>(bus) {
+interface SettingsComponent {
 
-  fun significantScroll(visible: Boolean) {
-    publish(SignificantScroll(visible))
-  }
+  fun inject(fragment: MainSettingsPreferenceFragment)
 
 }

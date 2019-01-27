@@ -18,23 +18,34 @@
 package com.pyamsoft.pasterino
 
 import android.app.Application
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
-import com.pyamsoft.pasterino.main.ConfirmationDialog
-import com.pyamsoft.pasterino.main.MainActivity
+import com.pyamsoft.pasterino.main.ActionViewEvent
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainComponentImpl
 import com.pyamsoft.pasterino.main.MainFragmentComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponentImpl
 import com.pyamsoft.pasterino.main.MainModule
+import com.pyamsoft.pasterino.main.MainViewEvent
+import com.pyamsoft.pasterino.service.PasteRequestEvent
 import com.pyamsoft.pasterino.service.PasteService
-import com.pyamsoft.pasterino.service.PasteServiceModule
-import com.pyamsoft.pasterino.service.ServiceComponent
-import com.pyamsoft.pasterino.service.ServiceComponentImpl
+import com.pyamsoft.pasterino.service.PasteServiceWorker
+import com.pyamsoft.pasterino.service.ServiceFinishEvent
+import com.pyamsoft.pasterino.service.ServiceFinishWorker
+import com.pyamsoft.pasterino.service.ServiceModule
+import com.pyamsoft.pasterino.service.ServiceStateWorker
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.service.SinglePasteWorker
+import com.pyamsoft.pasterino.settings.ClearAllWorker
+import com.pyamsoft.pasterino.settings.ConfirmationDialog
+import com.pyamsoft.pasterino.settings.SettingsComponent
+import com.pyamsoft.pasterino.settings.SettingsComponentImpl
+import com.pyamsoft.pasterino.settings.SettingsStateEvent
+import com.pyamsoft.pasterino.settings.SettingsViewEvent
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.ModuleProvider
 
 internal class PasterinoComponentImpl internal constructor(
@@ -42,48 +53,60 @@ internal class PasterinoComponentImpl internal constructor(
   moduleProvider: ModuleProvider
 ) : PasterinoComponent {
 
-  private val theming = moduleProvider.theming()
+  private val enforcer = moduleProvider.enforcer()
   private val loaderModule = moduleProvider.loaderModule()
-  private val pasterinoModule = PasterinoModuleImpl(application, loaderModule)
-  private val mainSettingsModule = MainModule(pasterinoModule, moduleProvider.enforcer())
-  private val pasteServiceModule = PasteServiceModule(pasterinoModule, moduleProvider.enforcer())
+  private val mainModule: MainModule
+  private val serviceModule: ServiceModule
 
-  override fun inject(activity: MainActivity) {
-    activity.theming = theming
-    activity.mainView = MainViewImpl(activity)
+  private val actionViewBus = RxBus.create<ActionViewEvent>()
+
+  private val settingsStateBus = RxBus.create<SettingsStateEvent>()
+  private val settingsViewBus = RxBus.create<SettingsViewEvent>()
+
+  private val serviceFinishBus = RxBus.create<ServiceFinishEvent>()
+
+  private val mainViewBus = RxBus.create<MainViewEvent>()
+
+  private val pasteRequestBus = RxBus.create<PasteRequestEvent>()
+
+  init {
+    val pasterinoModule = PasterinoModuleImpl(application, loaderModule)
+    mainModule = MainModule(pasterinoModule, moduleProvider.enforcer())
+    serviceModule = ServiceModule(pasterinoModule, moduleProvider.enforcer())
   }
 
   override fun inject(dialog: ConfirmationDialog) {
-    dialog.publisher = mainSettingsModule.getPublisher()
+    dialog.worker = ClearAllWorker(mainModule.interactor, settingsStateBus)
   }
 
   override fun inject(service: PasteService) {
-    service.viewModel = pasteServiceModule.getViewModel()
+    service.finishWorker = ServiceFinishWorker(serviceFinishBus)
+    service.pasteWorker = PasteServiceWorker(pasteRequestBus)
+    service.serviceStateWorker = ServiceStateWorker(serviceModule.interactor)
   }
 
   override fun inject(service: SinglePasteService) {
-    service.viewModel = pasteServiceModule.getViewModel()
-    service.publisher = pasteServiceModule.getPublisher()
+    service.serviceWorker = SinglePasteWorker(enforcer, serviceModule.interactor, pasteRequestBus)
   }
 
   override fun plusMainComponent(
+    parent: ViewGroup,
+    owner: LifecycleOwner
+  ): MainComponent = MainComponentImpl(parent, owner, mainViewBus)
+
+  override fun plusSettingsComponent(
     owner: LifecycleOwner,
-    preferenceScreen: PreferenceScreen,
-    tag: String
-  ): MainComponent = MainComponentImpl(
-      owner, preferenceScreen, tag,
-      mainSettingsModule, pasteServiceModule
+    recyclerView: RecyclerView,
+    preferenceScreen: PreferenceScreen
+  ): SettingsComponent = SettingsComponentImpl(
+      preferenceScreen, recyclerView, owner, mainModule,
+      settingsViewBus, settingsStateBus, serviceFinishBus
   )
 
   override fun plusMainFragmentComponent(
-    owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?
+    parent: ViewGroup,
+    owner: LifecycleOwner
   ): MainFragmentComponent = MainFragmentComponentImpl(
-      owner, inflater, container,
-      loaderModule, pasteServiceModule, mainSettingsModule
+      parent, owner, loaderModule, serviceModule, actionViewBus, settingsStateBus
   )
-
-  override fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent =
-    ServiceComponentImpl(owner, pasteServiceModule)
 }

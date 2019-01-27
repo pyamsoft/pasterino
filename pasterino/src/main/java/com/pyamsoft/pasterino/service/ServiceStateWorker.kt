@@ -19,8 +19,6 @@ package com.pyamsoft.pasterino.service
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.service.ServiceStateEvent.Start
-import com.pyamsoft.pasterino.service.ServiceStateEvent.Stop
 import com.pyamsoft.pydroid.ui.arch.StateEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.StateEvent.EmptyBus
 import com.pyamsoft.pydroid.ui.arch.Worker
@@ -33,9 +31,8 @@ internal class ServiceStateWorker internal constructor(
 ) : Worker<EMPTY>(EmptyBus) {
 
   @CheckResult
-  fun onStateEvent(func: (event: ServiceStateEvent) -> Unit): Disposable {
+  fun onStateEvent(func: (started: Boolean) -> Unit): Disposable {
     return interactor.observeServiceState()
-        .map { if (it) Start else Stop }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(func)

@@ -21,17 +21,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.ThemeInjector
+import com.pyamsoft.pasterino.main.MainViewEvent.ToolbarClicked
 import com.pyamsoft.pydroid.ui.about.AboutFragment
+import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
-import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.theme.ThemeInjector
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 
@@ -69,6 +69,7 @@ class MainActivity : RatingActivity() {
     layoutRoot = findViewById(R.id.layout_constraint)
 
     Injector.obtain<PasterinoComponent>(applicationContext)
+        .plusMainComponent(layoutRoot, this)
         .inject(this)
 
     createComponents(savedInstanceState)
@@ -77,6 +78,13 @@ class MainActivity : RatingActivity() {
   }
 
   private fun createComponents(savedInstanceState: Bundle?) {
+    toolbarComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        ToolbarClicked -> onBackPressed()
+      }
+    }
+        .destroy(this)
+
     toolbarComponent.create(savedInstanceState)
     frameComponent.create(savedInstanceState)
     dropshadowComponent.create(savedInstanceState)

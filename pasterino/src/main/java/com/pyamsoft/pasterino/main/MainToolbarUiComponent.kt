@@ -17,37 +17,23 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.arch.UiComponent
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
+import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 internal class MainToolbarUiComponent internal constructor(
-  private val toolbarView: MainToolbarView,
-  private val uiBus: Listener<MainViewEvent>,
+  view: MainToolbarView,
   owner: LifecycleOwner
-) : UiComponent<MainViewEvent>(owner) {
+) : BaseUiComponent<MainViewEvent, MainToolbarView>(view, owner) {
 
-  override fun id(): Int {
-    return toolbarView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    toolbarView.inflate(savedInstanceState)
-    owner.runOnDestroy { toolbarView.teardown() }
-  }
-
-  override fun onUiEvent(): Observable<MainViewEvent> {
-    return uiBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-  }
-
-  override fun saveState(outState: Bundle) {
-    toolbarView.saveState(outState)
+  override fun onUiEvent(): ObservableTransformer<in MainViewEvent, out MainViewEvent>? {
+    return ObservableTransformer {
+      return@ObservableTransformer it
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+    }
   }
 
 }

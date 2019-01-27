@@ -17,34 +17,23 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
 internal class MainFrameView internal constructor(
-  private val parent: ViewGroup
-) : UiView<EMPTY>(EmptyPublisher) {
+  parent: ViewGroup
+) : BaseUiView<EMPTY>(parent, EmptyBus) {
 
-  private lateinit var frameLayout: FrameLayout
+  private val frameLayout by lazyView<FrameLayout>(R.id.layout_frame)
+
+  override val layout: Int = R.layout.layout_frame
 
   override fun id(): Int {
     return frameLayout.id
-  }
-
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.layout_frame) {
-      frameLayout = findViewById(R.id.layout_frame)
-    }
-  }
-
-  override fun saveState(outState: Bundle) {
-  }
-
-  override fun teardown() {
   }
 
 }

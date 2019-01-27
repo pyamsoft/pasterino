@@ -17,35 +17,18 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.api.PasterinoModule
-import com.pyamsoft.pasterino.main.ConfirmEvent
-import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 
 class MainModule(
-  private val module: PasterinoModule,
-  private val enforcer: Enforcer
+  module: PasterinoModule,
+  enforcer: Enforcer
 ) {
 
-  private val interactor: MainInteractor
-  private val mainBus = RxBus.create<com.pyamsoft.pasterino.main.ConfirmEvent>()
+  val interactor: MainInteractor
 
   init {
     interactor = MainInteractorImpl(module.provideClearPreferences(), enforcer)
   }
-
-  @CheckResult
-  fun getViewModel(tag: String) = com.pyamsoft.pasterino.main.MainViewModel(
-      enforcer, interactor,
-      module.provideFabScrollRequestBus(), mainBus, tag
-  )
-
-  @CheckResult
-  fun getFragmentViewModel() = MainFragmentViewModel(module.provideFabScrollRequestBus())
-
-  @CheckResult
-  fun getPublisher(): Publisher<com.pyamsoft.pasterino.main.ConfirmEvent> = mainBus
 }

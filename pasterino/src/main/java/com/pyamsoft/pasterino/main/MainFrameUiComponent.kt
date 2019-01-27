@@ -17,32 +17,11 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import io.reactivex.Observable
 
-class MainFrameUiComponent internal constructor(
-  private val mainView: MainFrameView,
+internal class MainFrameUiComponent internal constructor(
+  view: MainFrameView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner) {
-
-  override fun id(): Int {
-    return mainView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    mainView.inflate(savedInstanceState)
-    owner.runOnDestroy { mainView.teardown() }
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
-  }
-
-  override fun saveState(outState: Bundle) {
-    mainView.saveState(outState)
-  }
-
-}
+) : BaseUiComponent<EMPTY, MainFrameView>(view, owner)

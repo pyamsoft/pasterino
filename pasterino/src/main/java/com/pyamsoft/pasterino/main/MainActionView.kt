@@ -17,39 +17,31 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.ActionViewEvent.ActionClicked
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class MainActionView internal constructor(
-  private val parent: ViewGroup,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
-  publisher: Publisher<ActionViewEvent>
-) : UiView<ActionViewEvent>(publisher) {
+  parent: ViewGroup,
+  bus: EventBus<ActionViewEvent>
+) : BaseUiView<ActionViewEvent>(parent, bus) {
 
-  private lateinit var actionButton: FloatingActionButton
+  private val actionButton by lazyView<FloatingActionButton>(R.id.main_settings_fab)
+
+  override val layout: Int = R.layout.floating_action_button
 
   override fun id(): Int {
     return actionButton.id
-  }
-
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.floating_action_button) {
-      actionButton = findViewById(R.id.main_settings_fab)
-    }
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   override fun teardown() {

@@ -19,39 +19,26 @@ package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.main.SettingsStateEvent.SignificantScroll
-import com.pyamsoft.pasterino.service.ServiceStateEvent.Start
-import com.pyamsoft.pasterino.service.ServiceStateEvent.Stop
 import com.pyamsoft.pasterino.service.ServiceStateWorker
+import com.pyamsoft.pasterino.settings.SettingsStateEvent
+import com.pyamsoft.pasterino.settings.SettingsStateEvent.ClearAllEvent
+import com.pyamsoft.pasterino.settings.SettingsStateEvent.SignificantScroll
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
-class MainActionUiComponent internal constructor(
-  private val actionView: MainActionView,
-  private val uiBus: Listener<ActionViewEvent>,
+internal class MainActionUiComponent internal constructor(
   private val controllerBus: Listener<SettingsStateEvent>,
   private val worker: ServiceStateWorker,
+  view: MainActionView,
   owner: LifecycleOwner
-) : UiComponent<ActionViewEvent>(owner) {
+) : BaseUiComponent<ActionViewEvent, MainActionView>(view, owner) {
 
-  override fun id(): Int {
-    return actionView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    actionView.inflate(savedInstanceState)
-    owner.run { actionView.teardown() }
-
-    worker.onStateEvent {
-      return@onStateEvent when (it) {
-        Start -> actionView.setFabFromServiceState(true)
-        Stop -> actionView.setFabFromServiceState(false)
-      }
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    worker.onStateEvent { view.setFabFromServiceState(it) }
         .destroy(owner)
 
     controllerBus.listen()
@@ -59,20 +46,11 @@ class MainActionUiComponent internal constructor(
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe {
           return@subscribe when (it) {
-            is SignificantScroll -> actionView.toggleVisibility(it.visible)
+            is SignificantScroll -> view.toggleVisibility(it.visible)
+            is ClearAllEvent -> Timber.d("Ignoring event: $it")
           }
         }
         .destroy(owner)
-  }
-
-  override fun onUiEvent(): Observable<ActionViewEvent> {
-    return uiBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-  }
-
-  override fun saveState(outState: Bundle) {
-    actionView.saveState(outState)
   }
 
 }

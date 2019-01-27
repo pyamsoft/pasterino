@@ -15,29 +15,27 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.settings
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.arch.Worker
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
+import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-internal class ServiceFinishWorker internal constructor(
-  bus: EventBus<ServiceFinishEvent>
-) : Worker<ServiceFinishEvent>(bus) {
+internal class SettingsUiComponent internal constructor(
+  view: SettingsView,
+  owner: LifecycleOwner
+) : BaseUiComponent<SettingsViewEvent, SettingsView>(view, owner) {
 
-  @CheckResult
-  fun onFinishEvent(func: () -> Unit): Disposable {
-    return listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { func() }
-  }
-
-  fun finish() {
-    publish(ServiceFinishEvent)
+  override fun onUiEvent(): ObservableTransformer<in SettingsViewEvent, out SettingsViewEvent>? {
+    return ObservableTransformer {
+      return@ObservableTransformer it
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+    }
   }
 
 }
+
+

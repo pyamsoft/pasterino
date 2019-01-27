@@ -15,22 +15,13 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
-import android.app.Dialog
-import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-class HowToDialog : ToolbarDialog() {
+sealed class SettingsStateEvent : StateEvent {
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireActivity())
-        .setMessage(
-            "When you want to paste into a text input field, simply click the notification and wait a little."
-        )
-        .setTitle("How to Use")
-        .setNeutralButton("Got It") { _, _ -> dismiss() }
-        .create()
-  }
+  object ClearAllEvent : SettingsStateEvent()
+
+  data class SignificantScroll(val visible: Boolean) : SettingsStateEvent()
 }

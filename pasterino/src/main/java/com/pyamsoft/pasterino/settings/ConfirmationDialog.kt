@@ -15,27 +15,23 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 
 class ConfirmationDialog : ToolbarDialog() {
 
-  internal lateinit var publisher: Publisher<ConfirmEvent>
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .inject(this)
-  }
+  internal lateinit var worker: ClearAllWorker
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
+        .inject(this)
+
     return AlertDialog.Builder(requireActivity())
         .setMessage(
             """
@@ -43,7 +39,7 @@ class ConfirmationDialog : ToolbarDialog() {
         |You will have to manually restart the Accessibility Service component of Pasterino""".trimMargin()
         )
         .setPositiveButton("Yes") { _, _ ->
-          publisher.publish(ConfirmEvent)
+          worker.clearAll()
           dismiss()
         }
         .setNegativeButton("No") { _, _ -> dismiss() }

@@ -15,10 +15,11 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.MainInteractor
+import com.pyamsoft.pasterino.settings.SettingsStateEvent.ClearAllEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,12 +28,13 @@ import io.reactivex.schedulers.Schedulers
 
 class ClearAllWorker internal constructor(
   private val interactor: MainInteractor,
-  bus: EventBus<ConfirmEvent>
-) : Worker<ConfirmEvent>(bus) {
+  bus: EventBus<SettingsStateEvent>
+) : Worker<SettingsStateEvent>(bus) {
 
   @CheckResult
   fun onClear(func: () -> Unit): Disposable {
     return listen()
+        .ofType(ClearAllEvent::class.java)
         .observeOn(Schedulers.io())
         .flatMapSingle {
           return@flatMapSingle interactor.clearAll()
@@ -42,6 +44,10 @@ class ClearAllWorker internal constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { func() }
+  }
+
+  fun clearAll() {
+    publish(ClearAllEvent)
   }
 }
 

@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
 import android.app.ActivityManager
 import android.content.Context
@@ -26,12 +26,11 @@ import android.view.ViewGroup
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.main.SettingsViewEvent.ExplainClicked
-import com.pyamsoft.pasterino.main.SettingsViewEvent.SignificantScroll
-import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pasterino.service.PasteServiceNotification
+import com.pyamsoft.pasterino.service.ServiceFinishWorker
 import com.pyamsoft.pasterino.service.SinglePasteService
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pasterino.settings.SettingsViewEvent.ExplainClicked
+import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.arch.destroy
@@ -43,8 +42,8 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
   internal lateinit var settingsUiComponent: SettingsUiComponent
   internal lateinit var settingsWorker: SettingsWorker
+  internal lateinit var serviceFinishWorker: ServiceFinishWorker
   internal lateinit var clearWorker: ClearAllWorker
-  internal lateinit var publisher: Publisher<ServiceEvent>
 
   private var clearDisposable by singleDisposable()
   private var scrollListenerDisposable by singleDisposable()
@@ -56,9 +55,10 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val view = super.onCreateView(inflater, container, savedInstanceState)
+    val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
+
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusMainComponent(viewLifecycleOwner, preferenceScreen, TAG)
+        .plusSettingsComponent(viewLifecycleOwner, listView, preferenceScreen)
         .inject(this)
 
     return view
@@ -69,13 +69,12 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    settingsUiComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is ExplainClicked -> HowToDialog().show(requireActivity(), "howto")
-            is SignificantScroll -> settingsWorker.significantScroll(it.visible)
-          }
-        }
+    settingsUiComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        is ExplainClicked -> HowToDialog().show(requireActivity(), "howto")
+        is SignificantScroll -> settingsWorker.significantScroll(it.visible)
+      }
+    }
         .destroy(viewLifecycleOwner)
 
     settingsUiComponent.create(savedInstanceState)
@@ -100,7 +99,7 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
       PasteServiceNotification.stop(it)
       SinglePasteService.stop(it)
       try {
-        publisher.publish(ServiceEvent(ServiceEvent.Type.FINISH))
+        serviceFinishWorker.finish()
       } catch (e: NullPointerException) {
         Timber.e(e, "Expected exception when Service is NULL")
       }
@@ -112,7 +111,8 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
   }
 
   override fun onClearAllClicked() {
-    ConfirmationDialog().show(requireActivity(), "confirm")
+    ConfirmationDialog()
+        .show(requireActivity(), "confirm")
   }
 
   companion object {

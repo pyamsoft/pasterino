@@ -15,13 +15,18 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
+import com.pyamsoft.pasterino.settings.SettingsStateEvent.SignificantScroll
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.arch.Worker
 
-sealed class SettingsViewEvent : ViewEvent {
+internal class SettingsWorker internal constructor(
+  bus: EventBus<SettingsStateEvent>
+) : Worker<SettingsStateEvent>(bus) {
 
-  object ExplainClicked : SettingsViewEvent()
+  fun significantScroll(visible: Boolean) {
+    publish(SignificantScroll(visible))
+  }
 
-  data class SignificantScroll(val visible: Boolean) : SettingsViewEvent()
 }

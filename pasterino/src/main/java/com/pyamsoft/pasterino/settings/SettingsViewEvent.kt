@@ -15,20 +15,13 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.api.PasterinoModule
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-class PasteServiceModule(
-  pasterinoModule: PasterinoModule,
-  enforcer: Enforcer
-) {
+sealed class SettingsViewEvent : ViewEvent {
 
-  val interactor: PasteServiceInteractor
+  object ExplainClicked : SettingsViewEvent()
 
-  init {
-    interactor = PasteServiceInteractorImpl(enforcer, pasterinoModule.providePreferences())
-  }
+  data class SignificantScroll(val visible: Boolean) : SettingsViewEvent()
 }

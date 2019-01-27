@@ -17,23 +17,32 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.service.PasteServiceModule
+import com.pyamsoft.pasterino.service.ServiceModule
+import com.pyamsoft.pasterino.service.ServiceStateWorker
+import com.pyamsoft.pasterino.settings.SettingsStateEvent
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.LoaderModule
 
 internal class MainFragmentComponentImpl internal constructor(
+  private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val inflater: LayoutInflater,
-  private val container: ViewGroup?,
   private val loaderModule: LoaderModule,
-  private val serviceModule: PasteServiceModule,
-  private val mainModule: MainModule
+  private val serviceModule: ServiceModule,
+  private val actionViewBus: EventBus<ActionViewEvent>,
+  private val settingsStateBus: EventBus<SettingsStateEvent>
 ) : MainFragmentComponent {
 
   override fun inject(fragment: MainFragment) {
-    TODO()
+    val actionView = MainActionView(loaderModule.provideImageLoader(), owner, parent, actionViewBus)
+    val frame = MainFrameView(parent)
+    val serviceStateWorker = ServiceStateWorker(serviceModule.interactor)
+
+    fragment.frameComponent = MainFrameUiComponent(frame, owner)
+    fragment.actionComponent = MainActionUiComponent(
+        settingsStateBus, serviceStateWorker, actionView, owner
+    )
   }
 
 }

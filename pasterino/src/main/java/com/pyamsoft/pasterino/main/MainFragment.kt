@@ -26,6 +26,7 @@ import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.ActionViewEvent.ActionClicked
+import com.pyamsoft.pasterino.settings.MainSettingsFragment
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
@@ -53,7 +54,7 @@ class MainFragment : ToolbarFragment() {
     layoutRoot = root.findViewById(R.id.layout_coordinator)
 
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusMainFragmentComponent(viewLifecycleOwner, inflater, container)
+        .plusMainFragmentComponent(layoutRoot, viewLifecycleOwner)
         .inject(this)
 
     return root
@@ -64,24 +65,24 @@ class MainFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    displayPreferenceFragment()
-
     frameComponent.create(savedInstanceState)
 
-    actionComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is ActionClicked -> onFabClicked(it.runningService)
-          }
-        }
+    actionComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        is ActionClicked -> onFabClicked(it.runningService)
+      }
+    }
         .destroy(viewLifecycleOwner)
 
     actionComponent.create(savedInstanceState)
+
+    displayPreferenceFragment()
   }
 
   private fun onFabClicked(running: Boolean) {
     if (running) {
-      ServiceInfoDialog().show(requireActivity(), "service_info")
+      ServiceInfoDialog()
+          .show(requireActivity(), "service_info")
     } else {
       AccessibilityRequestDialog().show(requireActivity(), "accessibility")
     }
@@ -104,7 +105,10 @@ class MainFragment : ToolbarFragment() {
     val fragmentManager = childFragmentManager
     if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(frameComponent.id(), MainSettingsFragment(), MainSettingsFragment.TAG)
+          .add(
+              frameComponent.id(),
+              MainSettingsFragment(), MainSettingsFragment.TAG
+          )
           .commit(viewLifecycleOwner)
     }
   }

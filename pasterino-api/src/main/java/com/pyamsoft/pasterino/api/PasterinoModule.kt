@@ -20,8 +20,6 @@ package com.pyamsoft.pasterino.api
 import android.app.Application
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pasterino.main.FabScrollListenerRequestEvent
-import com.pyamsoft.pasterino.model.ServiceEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 
@@ -37,14 +35,8 @@ interface PasterinoModule {
   fun provideImageLoader(): ImageLoader
 
   @CheckResult
-  fun providePasteBus(): EventBus<ServiceEvent>
-
-  @CheckResult
   fun providePreferences(): PastePreferences
 
   @CheckResult
   fun provideClearPreferences(): ClearPreferences
-
-  @CheckResult
-  fun provideFabScrollRequestBus(): EventBus<com.pyamsoft.pasterino.main.FabScrollListenerRequestEvent>
 }

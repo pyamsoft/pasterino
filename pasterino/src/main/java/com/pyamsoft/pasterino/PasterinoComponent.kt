@@ -17,22 +17,20 @@
 
 package com.pyamsoft.pasterino
 
-import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pasterino.main.ConfirmationDialog
-import com.pyamsoft.pasterino.main.MainActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponent
 import com.pyamsoft.pasterino.service.PasteService
-import com.pyamsoft.pasterino.service.ServiceComponent
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.settings.ConfirmationDialog
+import com.pyamsoft.pasterino.settings.SettingsComponent
 
 interface PasterinoComponent {
-
-  fun inject(activity: MainActivity)
 
   fun inject(dialog: ConfirmationDialog)
 
@@ -42,18 +40,20 @@ interface PasterinoComponent {
 
   @CheckResult
   fun plusMainComponent(
-    owner: LifecycleOwner,
-    preferenceScreen: PreferenceScreen,
-    tag: String
+    parent: ViewGroup,
+    owner: LifecycleOwner
   ): MainComponent
 
   @CheckResult
   fun plusMainFragmentComponent(
-    owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?
+    parent: ViewGroup,
+    owner: LifecycleOwner
   ): MainFragmentComponent
 
   @CheckResult
-  fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent
+  fun plusSettingsComponent(
+    owner: LifecycleOwner,
+    recyclerView: RecyclerView,
+    preferenceScreen: PreferenceScreen
+  ): SettingsComponent
 }

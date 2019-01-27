@@ -17,20 +17,23 @@
 
 package com.pyamsoft.pasterino.main
 
+import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import androidx.preference.PreferenceScreen
-import com.pyamsoft.pasterino.service.PasteServiceModule
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent.Companion
 
-class MainComponentImpl(
+internal class MainComponentImpl internal constructor(
+  private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val preferenceScreen: PreferenceScreen,
-  private val tag: String,
-  private val mainSettingsModule: MainModule,
-  private val pasteServiceModule: PasteServiceModule
+  private val mainViewBus: EventBus<MainViewEvent>
 ) : MainComponent {
 
-  override fun inject(fragment: MainSettingsPreferenceFragment) {
-    TODO()
+  override fun inject(activity: MainActivity) {
+    val frame = MainFrameView(parent)
+    val toolbar = MainToolbarView(activity, parent, mainViewBus)
+    activity.frameComponent = MainFrameUiComponent(frame, owner)
+    activity.dropshadowComponent = Companion.create(parent, owner)
+    activity.toolbarComponent = MainToolbarUiComponent(toolbar, owner)
   }
 
 }
