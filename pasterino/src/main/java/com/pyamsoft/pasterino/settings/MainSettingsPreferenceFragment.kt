@@ -33,8 +33,10 @@ import com.pyamsoft.pasterino.settings.SettingsViewEvent.ExplainClicked
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
@@ -113,6 +115,14 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
   override fun onClearAllClicked() {
     ConfirmationDialog()
         .show(requireActivity(), "confirm")
+  }
+
+  override fun onResume() {
+    super.onResume()
+    requireToolbarActivity().withToolbar {
+      it.setTitle(R.string.app_name)
+      it.setUpEnabled(false)
+    }
   }
 
   companion object {

@@ -34,12 +34,12 @@ internal class SettingsView internal constructor(
   bus: EventBus<SettingsViewEvent>
 ) : PrefUiView<SettingsViewEvent>(parent, bus) {
 
-  private val zaptorchExplain by lazyPref<Preference>(R.string.explain_key)
+  private val explain by lazyPref<Preference>(R.string.explain_key)
 
   private var scrollListener: RecyclerView.OnScrollListener? = null
 
   override fun inflate(savedInstanceState: Bundle?) {
-    zaptorchExplain.setOnPreferenceClickListener {
+    explain.setOnPreferenceClickListener {
       publish(ExplainClicked)
       return@setOnPreferenceClickListener true
     }
@@ -52,7 +52,7 @@ internal class SettingsView internal constructor(
   }
 
   override fun teardown() {
-    zaptorchExplain.onPreferenceClickListener = null
+    explain.onPreferenceClickListener = null
 
     scrollListener?.also { recyclerView.removeOnScrollListener(it) }
     scrollListener = null
