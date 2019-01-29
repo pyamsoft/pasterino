@@ -105,10 +105,7 @@ class MainFragment : ToolbarFragment() {
     val fragmentManager = childFragmentManager
     if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(
-              frameComponent.id(),
-              MainSettingsFragment(), MainSettingsFragment.TAG
-          )
+          .add(frameComponent.id(), MainSettingsFragment(), MainSettingsFragment.TAG)
           .commit(viewLifecycleOwner)
     }
   }

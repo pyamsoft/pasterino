@@ -20,7 +20,7 @@ package com.pyamsoft.pasterino.main
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent.Companion
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 
 internal class MainComponentImpl internal constructor(
   private val parent: ViewGroup,
@@ -32,7 +32,7 @@ internal class MainComponentImpl internal constructor(
     val frame = MainFrameView(parent)
     val toolbar = MainToolbarView(activity, parent, mainViewBus)
     activity.frameComponent = MainFrameUiComponent(frame, owner)
-    activity.dropshadowComponent = Companion.create(parent, owner)
+    activity.dropshadowComponent = DropshadowUiComponent.create(parent, owner)
     activity.toolbarComponent = MainToolbarUiComponent(toolbar, owner)
   }
 

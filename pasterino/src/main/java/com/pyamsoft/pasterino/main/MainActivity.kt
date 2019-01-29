@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.ThemeInjector
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
+import kotlin.LazyThreadSafetyMode.NONE
 
 class MainActivity : RatingActivity() {
 
@@ -41,7 +42,9 @@ class MainActivity : RatingActivity() {
   internal lateinit var frameComponent: MainFrameUiComponent
   internal lateinit var dropshadowComponent: DropshadowUiComponent
 
-  private lateinit var layoutRoot: ConstraintLayout
+  private val layoutRoot by lazy(NONE) {
+    findViewById<ConstraintLayout>(R.id.layout_constraint)
+  }
 
   override val versionName: String = BuildConfig.VERSION_NAME
 
@@ -66,7 +69,6 @@ class MainActivity : RatingActivity() {
     }
     super.onCreate(savedInstanceState)
     setContentView(R.layout.layout_constraint)
-    layoutRoot = findViewById(R.id.layout_constraint)
 
     Injector.obtain<PasterinoComponent>(applicationContext)
         .plusMainComponent(layoutRoot, this)
@@ -80,7 +82,7 @@ class MainActivity : RatingActivity() {
   private fun createComponents(savedInstanceState: Bundle?) {
     toolbarComponent.onUiEvent {
       return@onUiEvent when (it) {
-        ToolbarClicked -> onBackPressed()
+        is ToolbarClicked -> onBackPressed()
       }
     }
         .destroy(this)
