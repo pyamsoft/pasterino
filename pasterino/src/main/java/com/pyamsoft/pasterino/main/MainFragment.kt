@@ -81,8 +81,7 @@ class MainFragment : ToolbarFragment() {
 
   private fun onFabClicked(running: Boolean) {
     if (running) {
-      ServiceInfoDialog()
-          .show(requireActivity(), "service_info")
+      ServiceInfoDialog().show(requireActivity(), "service_info")
     } else {
       AccessibilityRequestDialog().show(requireActivity(), "accessibility")
     }
