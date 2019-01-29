@@ -43,8 +43,6 @@ class MainFragment : ToolbarFragment() {
   internal lateinit var frameComponent: MainFrameUiComponent
   internal lateinit var actionComponent: MainActionUiComponent
 
-  private var fabScrollRequestDisposable by singleDisposable()
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -85,11 +83,6 @@ class MainFragment : ToolbarFragment() {
     } else {
       AccessibilityRequestDialog().show(requireActivity(), "accessibility")
     }
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    fabScrollRequestDisposable.tryDispose()
   }
 
   override fun onResume() {
