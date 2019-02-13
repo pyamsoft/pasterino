@@ -17,23 +17,19 @@
 
 package com.pyamsoft.pasterino.service
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.arch.Worker
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-internal class PasteServiceWorker internal constructor(
-  bus: EventBus<PasteRequestEvent>
-) : Worker<PasteRequestEvent>(bus) {
+internal interface ServiceStatePresenter : Presenter<ServiceStatePresenter.Callback> {
 
-  @CheckResult
-  fun onPasteEvent(func: (event: PasteRequestEvent) -> Unit): Disposable {
-    return listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
+  fun start()
+
+  fun stop()
+
+  interface Callback {
+
+    fun onServiceStarted()
+
+    fun onServiceStopped()
   }
-}
 
+}

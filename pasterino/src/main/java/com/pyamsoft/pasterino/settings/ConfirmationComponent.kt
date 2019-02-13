@@ -15,19 +15,10 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
-import android.app.Dialog
-import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+interface ConfirmationComponent {
 
-class ServiceInfoDialog : DialogFragment() {
+  fun inject(dialog: ConfirmationDialog)
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireActivity())
-        .setMessage("Pasterino service is On")
-        .setPositiveButton("Okay") { _, _ -> dismiss() }
-        .create()
-  }
 }

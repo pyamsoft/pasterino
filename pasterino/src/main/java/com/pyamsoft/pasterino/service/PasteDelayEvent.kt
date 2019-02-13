@@ -17,6 +17,4 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.ui.arch.StateEvent
-
-internal data class PasteDelayEvent(val time: Long) : StateEvent
+internal data class PasteDelayEvent(val time: Long)

@@ -25,22 +25,24 @@ import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.main.MainViewEvent.ToolbarClicked
 import com.pyamsoft.pydroid.ui.about.AboutFragment
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.ThemeInjector
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MainActivity : RatingActivity() {
+class MainActivity : RatingActivity(), MainPresenter.Callback {
 
-  internal lateinit var toolbarComponent: MainToolbarUiComponent
-  internal lateinit var frameComponent: MainFrameUiComponent
-  internal lateinit var dropshadowComponent: DropshadowUiComponent
+  internal lateinit var toolbar: MainToolbarView
+  internal lateinit var frameView: MainFrameView
+  internal lateinit var dropshadow: DropshadowView
+
+  internal lateinit var presenter: MainPresenter
+  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
 
   private val layoutRoot by lazy(NONE) {
     findViewById<ConstraintLayout>(R.id.layout_constraint)
@@ -54,7 +56,7 @@ class MainActivity : RatingActivity() {
     get() = layoutRoot
 
   override val fragmentContainerId: Int
-    get() = frameComponent.id()
+    get() = frameView.id()
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
     change("New icon style")
@@ -77,34 +79,47 @@ class MainActivity : RatingActivity() {
     createComponents(savedInstanceState)
     layoutComponents(layoutRoot)
     showMainFragment()
+
+    presenter.bind(this)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    toolbar.teardown()
+    frameView.teardown()
+    dropshadow.teardown()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    toolbar.saveState(outState)
+    frameView.saveState(outState)
+    dropshadow.saveState(outState)
   }
 
   private fun createComponents(savedInstanceState: Bundle?) {
-    toolbarComponent.onUiEvent {
-      return@onUiEvent when (it) {
-        is ToolbarClicked -> onBackPressed()
-      }
-    }
-        .destroy(this)
+    toolbar.inflate(savedInstanceState)
+    frameView.inflate(savedInstanceState)
+    dropshadow.inflate(savedInstanceState)
+  }
 
-    toolbarComponent.create(savedInstanceState)
-    frameComponent.create(savedInstanceState)
-    dropshadowComponent.create(savedInstanceState)
+  override fun onToolbarNavEvent() {
+    onBackPressed()
   }
 
   private fun layoutComponents(layoutRoot: ConstraintLayout) {
     ConstraintSet().apply {
       clone(layoutRoot)
 
-      toolbarComponent.also {
+      toolbar.also {
         connect(it.id(), ConstraintSet.TOP, layoutRoot.id, ConstraintSet.TOP)
         connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
-      frameComponent.also {
-        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+      frameView.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
@@ -112,8 +127,8 @@ class MainActivity : RatingActivity() {
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
-      dropshadowComponent.also {
-        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+      dropshadow.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
@@ -132,3 +147,4 @@ class MainActivity : RatingActivity() {
     }
   }
 }
+

@@ -17,11 +17,14 @@
 
 package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pydroid.ui.arch.StateEvent
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-sealed class SettingsStateEvent : StateEvent {
+interface ClearAllPresenter : Presenter<ClearAllPresenter.Callback> {
 
-  object ClearAllEvent : SettingsStateEvent()
+  fun clearAll()
 
-  data class SignificantScroll(val visible: Boolean) : SettingsStateEvent()
+  interface Callback {
+
+    fun onClearAll()
+  }
 }

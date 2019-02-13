@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.ui.arch.StateEvent
-
-internal data class PasteRequestEvent(val deepSearchEnabled: Boolean) : StateEvent
+internal data class PasteRequestEvent(val deepSearchEnabled: Boolean)
 
 

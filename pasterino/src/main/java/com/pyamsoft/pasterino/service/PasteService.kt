@@ -25,21 +25,30 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.annotation.CheckResult
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.util.fakeBind
+import com.pyamsoft.pydroid.util.fakeUnbind
 import timber.log.Timber
 
-class PasteService : AccessibilityService() {
+class PasteService : AccessibilityService(),
+    LifecycleOwner,
+    ServiceFinishPresenter.Callback,
+    PastePresenter.Callback {
 
-  internal lateinit var pasteWorker: PasteServiceWorker
-  internal lateinit var finishWorker: ServiceFinishWorker
-  internal lateinit var serviceStateWorker: ServiceStateWorker
+  internal lateinit var presenter: PastePresenter
+  internal lateinit var finishPresenter: ServiceFinishPresenter
+  internal lateinit var statePresenter: ServiceStatePresenter
 
-  private var finishDisposable by singleDisposable()
-  private var pasteDisposable by singleDisposable()
+  private val registry = LifecycleRegistry(this)
+
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -52,17 +61,61 @@ class PasteService : AccessibilityService() {
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
+        .plusServiceComponent(this)
         .inject(this)
 
-    finishDisposable = finishWorker.onFinishEvent { onServiceFinishRequested() }
-    pasteDisposable = pasteWorker.onPasteEvent { onPasteRequested(it.deepSearchEnabled) }
+    finishPresenter.bind(this)
+    presenter.bind(this)
+
+    registry.fakeBind()
+  }
+
+  override fun onServiceFinished() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      disableSelf()
+    }
+  }
+
+  override fun onPaste(deepSearchEnabled: Boolean) {
+    var node: AccessibilityNodeInfo? = rootInActiveWindow
+
+    if (node != null && isNodeFocusedAndEditable(node)) {
+      Timber.d("rootInActiveWindow node is paste target")
+      pasteIntoNode(node)
+      return
+    }
+
+    node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+    if (node != null && isNodeFocusedAndEditable(node)) {
+      Timber.d("root.FOCUS_INPUT node is paste target")
+      pasteIntoNode(node)
+      return
+    }
+
+    node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+    if (node != null && isNodeFocusedAndEditable(node)) {
+      Timber.d("root.FOCUS_ACCESSIBLE node is paste target")
+      pasteIntoNode(node)
+      return
+    }
+
+    if (deepSearchEnabled) {
+      node = findFocusedNode(rootInActiveWindow)
+      if (node != null && isNodeFocusedAndEditable(node)) {
+        Timber.d("recursive result node is paste target")
+        pasteIntoNode(node)
+        return
+      }
+    }
+
+    Timber.e("No editable target to paste into")
+    Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
+        .show()
   }
 
   override fun onServiceConnected() {
     super.onServiceConnected()
-    Timber.d("onServiceConnected")
-
-    serviceStateWorker.setServiceState(true)
+    statePresenter.start()
     PasteServiceNotification.start(this)
   }
 
@@ -92,43 +145,6 @@ class PasteService : AccessibilityService() {
     return null
   }
 
-  private fun onPasteRequested(isDeepSearchEnabled: Boolean) {
-    var node: AccessibilityNodeInfo? = rootInActiveWindow
-
-    if (node != null && isNodeFocusedAndEditable(node)) {
-      Timber.d("rootInActiveWindow node is paste target")
-      pasteIntoNode(node)
-      return
-    }
-
-    node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
-    if (node != null && isNodeFocusedAndEditable(node)) {
-      Timber.d("root.FOCUS_INPUT node is paste target")
-      pasteIntoNode(node)
-      return
-    }
-
-    node = rootInActiveWindow.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
-    if (node != null && isNodeFocusedAndEditable(node)) {
-      Timber.d("root.FOCUS_ACCESSIBLE node is paste target")
-      pasteIntoNode(node)
-      return
-    }
-
-    if (isDeepSearchEnabled) {
-      node = findFocusedNode(rootInActiveWindow)
-      if (node != null && isNodeFocusedAndEditable(node)) {
-        Timber.d("recursive result node is paste target")
-        pasteIntoNode(node)
-        return
-      }
-    }
-
-    Timber.e("No editable target to paste into")
-    Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
-        .show()
-  }
-
   private fun pasteIntoNode(node: AccessibilityNodeInfo) {
     Timber.d("Perform paste on target: %s", node)
     node.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
@@ -136,27 +152,18 @@ class PasteService : AccessibilityService() {
         .show()
   }
 
-  private fun onServiceFinishRequested() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      disableSelf()
-    }
-  }
-
   override fun onUnbind(intent: Intent): Boolean {
-    Timber.d("onUnbind")
-
     PasteServiceNotification.stop(this)
-    serviceStateWorker.setServiceState(false)
+    statePresenter.stop()
     return super.onUnbind(intent)
   }
 
   override fun onDestroy() {
     super.onDestroy()
 
-    finishDisposable.tryDispose()
-    pasteDisposable.tryDispose()
-
     Pasterino.getRefWatcher(this)
         .watch(this)
+
+    registry.fakeUnbind()
   }
 }

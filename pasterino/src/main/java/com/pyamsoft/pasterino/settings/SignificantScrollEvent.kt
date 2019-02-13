@@ -15,19 +15,6 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
-import android.app.Dialog
-import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
-
-class ServiceInfoDialog : DialogFragment() {
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireActivity())
-        .setMessage("Pasterino service is On")
-        .setPositiveButton("Okay") { _, _ -> dismiss() }
-        .create()
-  }
-}
+data class SignificantScrollEvent(val visible: Boolean)

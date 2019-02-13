@@ -17,27 +17,44 @@
 
 package com.pyamsoft.pasterino.service
 
-import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.ui.arch.Worker
+import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.ui.arch.destroy
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-internal class SinglePasteWorker internal constructor(
+internal class PastePresenterImpl internal constructor(
   private val enforcer: Enforcer,
   private val interactor: PasteServiceInteractor,
+  owner: LifecycleOwner,
   bus: EventBus<PasteRequestEvent>
-) : Worker<PasteRequestEvent>(bus) {
+) : BasePresenter<PasteRequestEvent, PastePresenter.Callback>(owner, bus),
+    PastePresenter {
 
-  @CheckResult
-  fun post(onPost: () -> Unit): Disposable {
-    return interactor.getPasteDelayTime()
+  private var pasteDisposable by singleDisposable()
+
+  override fun onBind() {
+    listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { callback.onPaste(it.deepSearchEnabled) }
+        .destroy(owner)
+  }
+
+  override fun onUnbind() {
+    pasteDisposable.tryDispose()
+  }
+
+  override fun paste() {
+    pasteDisposable = interactor.getPasteDelayTime()
         .observeOn(Schedulers.io())
         .flatMap {
           enforcer.assertNotOnMainThread()
@@ -52,10 +69,9 @@ internal class SinglePasteWorker internal constructor(
               .subscribeOn(Schedulers.io())
               .observeOn(Schedulers.io())
         }
-        .doOnSuccess { publish(PasteRequestEvent(it)) }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(Consumer { onPost() })
+        .subscribe(Consumer { publish(PasteRequestEvent(it)) })
   }
 
 }

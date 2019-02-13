@@ -21,8 +21,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.main.ActionViewEvent.ActionClicked
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.popHide
@@ -33,8 +31,8 @@ internal class MainActionView internal constructor(
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
   parent: ViewGroup,
-  bus: EventBus<ActionViewEvent>
-) : BaseUiView<ActionViewEvent>(parent, bus) {
+  callback: MainActionView.Callback
+) : BaseUiView<MainActionView.Callback>(parent, callback) {
 
   private val actionButton by lazyView<FloatingActionButton>(R.id.main_settings_fab)
 
@@ -50,7 +48,7 @@ internal class MainActionView internal constructor(
 
   fun setFabFromServiceState(running: Boolean) {
     actionButton.setOnDebouncedClickListener {
-      publish(ActionClicked(running))
+      callback.onActionButtonClicked(running)
     }
 
     val icon: Int
@@ -72,4 +70,11 @@ internal class MainActionView internal constructor(
     }
   }
 
+  interface Callback {
+
+    fun onActionButtonClicked(running: Boolean)
+
+  }
+
 }
+

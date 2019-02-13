@@ -17,6 +17,4 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.ui.arch.StateEvent
-
-internal object ServiceFinishEvent : StateEvent
+internal object ServiceFinishEvent

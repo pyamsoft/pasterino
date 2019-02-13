@@ -20,28 +20,32 @@ package com.pyamsoft.pasterino.settings
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pasterino.main.MainModule
+import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
-import com.pyamsoft.pasterino.service.ServiceFinishWorker
+import com.pyamsoft.pasterino.service.ServiceFinishPresenterImpl
 import com.pyamsoft.pydroid.core.bus.EventBus
 
 internal class SettingsComponentImpl internal constructor(
-  private val preferenceScreen: PreferenceScreen,
-  private val recyclerView: RecyclerView,
   private val owner: LifecycleOwner,
-  private val mainModule: MainModule,
-  private val settingsViewBus: EventBus<SettingsViewEvent>,
-  private val settingsStateBus: EventBus<SettingsStateEvent>,
+  private val recyclerView: RecyclerView,
+  private val preferenceScreen: PreferenceScreen,
+  private val interactor: MainInteractor,
+  private val clearAllBus: EventBus<ClearAllEvent>,
+  private val significantScrollBus: EventBus<SignificantScrollEvent>,
   private val serviceFinishBus: EventBus<ServiceFinishEvent>
 ) : SettingsComponent {
 
   override fun inject(fragment: MainSettingsPreferenceFragment) {
-    fragment.clearWorker = ClearAllWorker(mainModule.interactor, settingsStateBus)
-    fragment.serviceFinishWorker = ServiceFinishWorker(serviceFinishBus)
-    fragment.settingsWorker = SettingsWorker(settingsStateBus)
+    val settingsPresenter = SettingsPresenterImpl(owner, significantScrollBus)
+    val view = SettingsView(recyclerView, preferenceScreen, settingsPresenter)
 
-    val view = SettingsView(recyclerView, preferenceScreen, settingsViewBus)
-    fragment.settingsUiComponent = SettingsUiComponent(view, owner)
+    fragment.apply {
+      this.clearPresenter = ClearAllPresenterImpl(interactor, owner, clearAllBus)
+      this.serviceFinishPresenter = ServiceFinishPresenterImpl(owner, serviceFinishBus)
+      this.presenter = settingsPresenter
+      this.settingsView = view
+    }
   }
 
 }
+

@@ -22,10 +22,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 
-class AccessibilityRequestDialog : ToolbarDialog() {
+class AccessibilityRequestDialog : DialogFragment() {
 
   private val accessibilityServiceIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
 

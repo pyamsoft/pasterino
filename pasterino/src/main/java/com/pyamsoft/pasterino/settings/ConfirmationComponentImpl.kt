@@ -18,24 +18,19 @@
 package com.pyamsoft.pasterino.settings
 
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
-import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.pyamsoft.pasterino.api.MainInteractor
+import com.pyamsoft.pydroid.core.bus.EventBus
 
-internal class SettingsUiComponent internal constructor(
-  view: SettingsView,
-  owner: LifecycleOwner
-) : BaseUiComponent<SettingsViewEvent, SettingsView>(view, owner) {
+internal class ConfirmationComponentImpl internal constructor(
+  private val interactor: MainInteractor,
+  private val owner: LifecycleOwner,
+  private val bus: EventBus<ClearAllEvent>
+) : ConfirmationComponent {
 
-  override fun onUiEvent(): ObservableTransformer<in SettingsViewEvent, out SettingsViewEvent>? {
-    return ObservableTransformer {
-      return@ObservableTransformer it
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
+  override fun inject(dialog: ConfirmationDialog) {
+    dialog.apply {
+      this.presenter = ClearAllPresenterImpl(interactor, owner, bus)
     }
   }
 
 }
-
-

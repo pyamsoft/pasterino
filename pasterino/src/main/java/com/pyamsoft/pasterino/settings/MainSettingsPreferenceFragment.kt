@@ -27,28 +27,22 @@ import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.service.PasteServiceNotification
-import com.pyamsoft.pasterino.service.ServiceFinishWorker
+import com.pyamsoft.pasterino.service.ServiceFinishPresenter
 import com.pyamsoft.pasterino.service.SinglePasteService
-import com.pyamsoft.pasterino.settings.SettingsViewEvent.ExplainClicked
-import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
-class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
+class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
+    SettingsPresenter.Callback,
+    ClearAllPresenter.Callback {
 
-  internal lateinit var settingsUiComponent: SettingsUiComponent
-  internal lateinit var settingsWorker: SettingsWorker
-  internal lateinit var serviceFinishWorker: ServiceFinishWorker
-  internal lateinit var clearWorker: ClearAllWorker
-
-  private var clearDisposable by singleDisposable()
-  private var scrollListenerDisposable by singleDisposable()
+  internal lateinit var settingsView: SettingsView
+  internal lateinit var presenter: SettingsPresenter
+  internal lateinit var serviceFinishPresenter: ServiceFinishPresenter
+  internal lateinit var clearPresenter: ClearAllPresenter
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -71,37 +65,30 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    settingsUiComponent.onUiEvent {
-      return@onUiEvent when (it) {
-        is ExplainClicked -> HowToDialog().show(requireActivity(), "howto")
-        is SignificantScroll -> settingsWorker.significantScroll(it.visible)
-      }
-    }
-        .destroy(viewLifecycleOwner)
-
-    settingsUiComponent.create(savedInstanceState)
-
-
-    clearDisposable = clearWorker.onClear { onClearAll() }
+    presenter.bind(this)
+    clearPresenter.bind(this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    settingsUiComponent.saveState(outState)
+    settingsView.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    clearDisposable.tryDispose()
-    scrollListenerDisposable.tryDispose()
+    settingsView.teardown()
   }
 
-  private fun onClearAll() {
+  override fun onShowExplanation() {
+    HowToDialog().show(requireActivity(), "howto")
+  }
+
+  override fun onClearAll() {
     requireContext().also {
       PasteServiceNotification.stop(it)
       SinglePasteService.stop(it)
       try {
-        serviceFinishWorker.finish()
+        serviceFinishPresenter.finish()
       } catch (e: NullPointerException) {
         Timber.e(e, "Expected exception when Service is NULL")
       }
@@ -113,6 +100,7 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment() {
   }
 
   override fun onClearAllClicked() {
+    super.onClearAllClicked()
     ConfirmationDialog()
         .show(requireActivity(), "confirm")
   }

@@ -15,29 +15,31 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.settings
 
-import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.arch.Worker
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import com.pyamsoft.pydroid.ui.arch.BasePresenter
 
-internal class ServiceFinishWorker internal constructor(
-  bus: EventBus<ServiceFinishEvent>
-) : Worker<ServiceFinishEvent>(bus) {
+internal class SettingsPresenterImpl internal constructor(
+  owner: LifecycleOwner,
+  bus: EventBus<SignificantScrollEvent>
+) : BasePresenter<SignificantScrollEvent, SettingsPresenter.Callback>(owner, bus),
+    SettingsView.Callback,
+    SettingsPresenter {
 
-  @CheckResult
-  fun onFinishEvent(func: () -> Unit): Disposable {
-    return listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { func() }
+  override fun onExplainClicked() {
+    callback.onShowExplanation()
   }
 
-  fun finish() {
-    publish(ServiceFinishEvent)
+  override fun onSignificantScrollEvent(visible: Boolean) {
+    publish(SignificantScrollEvent(visible))
+  }
+
+  override fun onBind() {
+  }
+
+  override fun onUnbind() {
   }
 
 }

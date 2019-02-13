@@ -15,19 +15,12 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.service
 
-import android.app.Dialog
-import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+interface ServiceComponent {
 
-class ServiceInfoDialog : DialogFragment() {
+  fun inject(service: SinglePasteService)
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireActivity())
-        .setMessage("Pasterino service is On")
-        .setPositiveButton("Okay") { _, _ -> dismiss() }
-        .create()
-  }
+  fun inject(service: PasteService)
+
 }

@@ -15,12 +15,16 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-internal sealed class MainViewEvent : ViewEvent {
+interface ServiceFinishPresenter : Presenter<ServiceFinishPresenter.Callback> {
 
-  object ToolbarClicked : MainViewEvent()
+  fun finish()
 
+  interface Callback {
+
+    fun onServiceFinished()
+  }
 }

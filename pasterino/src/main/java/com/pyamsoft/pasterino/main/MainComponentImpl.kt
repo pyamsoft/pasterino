@@ -20,20 +20,29 @@ package com.pyamsoft.pasterino.main
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 
 internal class MainComponentImpl internal constructor(
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val mainViewBus: EventBus<MainViewEvent>
+  private val failedBus: EventBus<FailedNavigationEvent>
 ) : MainComponent {
 
   override fun inject(activity: MainActivity) {
-    val frame = MainFrameView(parent)
-    val toolbar = MainToolbarView(activity, parent, mainViewBus)
-    activity.frameComponent = MainFrameUiComponent(frame, owner)
-    activity.dropshadowComponent = DropshadowUiComponent.create(parent, owner)
-    activity.toolbarComponent = MainToolbarUiComponent(toolbar, owner)
-  }
+    val dropshadowView = DropshadowView(parent)
+    val mainFrame = MainFrameView(parent)
+    val mainPresenter = MainPresenterImpl(owner)
+    val toolbarView = MainToolbarView(activity, parent, mainPresenter)
 
+    activity.apply {
+      this.dropshadow = dropshadowView
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(owner, failedBus)
+      this.frameView = mainFrame
+      this.presenter = mainPresenter
+      this.toolbar = toolbarView
+    }
+  }
 }
+

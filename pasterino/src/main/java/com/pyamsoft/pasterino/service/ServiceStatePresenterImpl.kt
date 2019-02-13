@@ -17,29 +17,43 @@
 
 package com.pyamsoft.pasterino.service
 
-import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pydroid.ui.arch.StateEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.StateEvent.EmptyBus
-import com.pyamsoft.pydroid.ui.arch.Worker
+import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.ui.arch.destroy
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-internal class ServiceStateWorker internal constructor(
-  private val interactor: PasteServiceInteractor
-) : Worker<EMPTY>(EmptyBus) {
+internal class ServiceStatePresenterImpl internal constructor(
+  private val interactor: PasteServiceInteractor,
+  owner: LifecycleOwner
+) : BasePresenter<Unit, ServiceStatePresenter.Callback>(owner, RxBus.empty()),
+    ServiceStatePresenter {
 
-  @CheckResult
-  fun onStateEvent(func: (started: Boolean) -> Unit): Disposable {
-    return interactor.observeServiceState()
+  override fun onBind() {
+    interactor.observeServiceState()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
+        .subscribe {
+          if (it) {
+            callback.onServiceStarted()
+          } else {
+            callback.onServiceStopped()
+          }
+        }
+        .destroy(owner)
   }
 
-  fun setServiceState(start: Boolean) {
-    interactor.setServiceState(start)
+  override fun onUnbind() {
+  }
+
+  override fun start() {
+    interactor.setServiceState(true)
+  }
+
+  override fun stop() {
+    interactor.setServiceState(false)
   }
 
 }

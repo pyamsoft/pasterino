@@ -17,17 +17,13 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.app.Dialog
-import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-class ServiceInfoDialog : DialogFragment() {
+internal interface MainPresenter : Presenter<MainPresenter.Callback> {
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireActivity())
-        .setMessage("Pasterino service is On")
-        .setPositiveButton("Okay") { _, _ -> dismiss() }
-        .create()
+  interface Callback {
+
+    fun onToolbarNavEvent()
   }
+
 }

@@ -21,32 +21,43 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.util.fakeBind
+import com.pyamsoft.pydroid.util.fakeUnbind
 import timber.log.Timber
 
-class SinglePasteService : Service() {
+class SinglePasteService : Service(), LifecycleOwner, PastePresenter.Callback {
 
-  internal lateinit var serviceWorker: SinglePasteWorker
+  internal lateinit var presenter: PastePresenter
 
-  private var postDisposable by singleDisposable()
+  private val registry = LifecycleRegistry(this)
+
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
+        .plusServiceComponent(this)
         .inject(this)
+
+    presenter.bind(this)
+
+    registry.fakeBind()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-
-    postDisposable.tryDispose()
-
     Pasterino.getRefWatcher(this)
         .watch(this)
+
+    registry.fakeUnbind()
   }
 
   override fun onBind(intent: Intent): IBinder? = null
@@ -57,8 +68,12 @@ class SinglePasteService : Service() {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    postDisposable = serviceWorker.post { stopSelf() }
+    presenter.paste()
     return Service.START_NOT_STICKY
+  }
+
+  override fun onPaste(deepSearchEnabled: Boolean) {
+    stopSelf()
   }
 
   companion object {

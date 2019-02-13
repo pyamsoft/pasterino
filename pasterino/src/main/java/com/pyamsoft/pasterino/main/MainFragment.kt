@@ -22,26 +22,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.main.ActionViewEvent.ActionClicked
+import com.pyamsoft.pasterino.service.ServiceStatePresenter
 import com.pyamsoft.pasterino.settings.MainSettingsFragment
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
-import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 
-class MainFragment : ToolbarFragment() {
+class MainFragment : Fragment(), ServiceStatePresenter.Callback, MainFragmentPresenter.Callback {
 
   private lateinit var layoutRoot: CoordinatorLayout
 
-  internal lateinit var frameComponent: MainFrameUiComponent
-  internal lateinit var actionComponent: MainActionUiComponent
+  internal lateinit var presenter: MainFragmentPresenter
+  internal lateinit var serviceStatePresenter: ServiceStatePresenter
+  internal lateinit var frameView: MainFrameView
+  internal lateinit var actionView: MainActionView
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -63,26 +62,41 @@ class MainFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    frameComponent.create(savedInstanceState)
-
-    actionComponent.onUiEvent {
-      return@onUiEvent when (it) {
-        is ActionClicked -> onFabClicked(it.runningService)
-      }
-    }
-        .destroy(viewLifecycleOwner)
-
-    actionComponent.create(savedInstanceState)
+    frameView.inflate(savedInstanceState)
+    actionView.inflate(savedInstanceState)
 
     displayPreferenceFragment()
+
+    presenter.bind(this)
+    serviceStatePresenter.bind(this)
   }
 
-  private fun onFabClicked(running: Boolean) {
-    if (running) {
-      ServiceInfoDialog().show(requireActivity(), "service_info")
-    } else {
-      AccessibilityRequestDialog().show(requireActivity(), "accessibility")
-    }
+  override fun onDestroyView() {
+    super.onDestroyView()
+    frameView.teardown()
+    actionView.teardown()
+  }
+
+  override fun onServiceStarted() {
+    actionView.setFabFromServiceState(true)
+  }
+
+  override fun onServiceStopped() {
+    actionView.setFabFromServiceState(false)
+  }
+
+  override fun onServiceRunningAction() {
+    ServiceInfoDialog()
+        .show(requireActivity(), "service_info")
+  }
+
+  override fun onServiceStoppedAction() {
+    AccessibilityRequestDialog()
+        .show(requireActivity(), "accessibility")
+  }
+
+  override fun onSignificantScrollEvent(visible: Boolean) {
+    actionView.toggleVisibility(visible)
   }
 
   override fun onResume() {
@@ -97,7 +111,7 @@ class MainFragment : ToolbarFragment() {
     val fragmentManager = childFragmentManager
     if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(frameComponent.id(), MainSettingsFragment(), MainSettingsFragment.TAG)
+          .add(frameView.id(), MainSettingsFragment(), MainSettingsFragment.TAG)
           .commit(viewLifecycleOwner)
     }
   }
@@ -107,3 +121,4 @@ class MainFragment : ToolbarFragment() {
     const val TAG = "MainFragment"
   }
 }
+

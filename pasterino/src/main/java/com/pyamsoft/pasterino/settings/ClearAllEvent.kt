@@ -15,11 +15,6 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
-
-sealed class ActionViewEvent : ViewEvent {
-
-  data class ActionClicked(val runningService: Boolean) : ActionViewEvent()
-}
+object ClearAllEvent

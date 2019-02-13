@@ -15,18 +15,18 @@
  *
  */
 
-package com.pyamsoft.pasterino.settings
+package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pasterino.settings.SettingsStateEvent.SignificantScroll
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.arch.Worker
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-internal class SettingsWorker internal constructor(
-  bus: EventBus<SettingsStateEvent>
-) : Worker<SettingsStateEvent>(bus) {
+internal interface PastePresenter : Presenter<PastePresenter.Callback> {
 
-  fun significantScroll(visible: Boolean) {
-    publish(SignificantScroll(visible))
+  fun paste()
+
+  interface Callback {
+
+    fun onPaste(deepSearchEnabled: Boolean)
+
   }
 
 }

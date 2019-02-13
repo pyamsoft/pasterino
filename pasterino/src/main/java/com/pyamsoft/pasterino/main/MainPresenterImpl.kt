@@ -18,10 +18,24 @@
 package com.pyamsoft.pasterino.main
 
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pasterino.api.MainInteractor
+import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.ui.arch.BasePresenter
 
-internal class MainFrameUiComponent internal constructor(
-  view: MainFrameView,
+internal class MainPresenterImpl internal constructor(
   owner: LifecycleOwner
-) : BaseUiComponent<EMPTY, MainFrameView>(view, owner)
+) : BasePresenter<Unit, MainPresenter.Callback>(owner, RxBus.empty()),
+    MainPresenter,
+    MainToolbarView.Callback {
+
+  override fun onToolbarNavClicked() {
+    callback.onToolbarNavEvent()
+  }
+
+  override fun onBind() {
+  }
+
+  override fun onUnbind() {
+  }
+
+}

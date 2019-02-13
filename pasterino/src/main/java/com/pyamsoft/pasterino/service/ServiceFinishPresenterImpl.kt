@@ -15,25 +15,34 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.service
 
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
-import io.reactivex.ObservableTransformer
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.ui.arch.destroy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-internal class MainToolbarUiComponent internal constructor(
-  view: MainToolbarView,
-  owner: LifecycleOwner
-) : BaseUiComponent<MainViewEvent, MainToolbarView>(view, owner) {
+internal class ServiceFinishPresenterImpl internal constructor(
+  owner: LifecycleOwner,
+  bus: EventBus<ServiceFinishEvent>
+) : BasePresenter<ServiceFinishEvent, ServiceFinishPresenter.Callback>(owner, bus),
+    ServiceFinishPresenter {
 
-  override fun onUiEvent(): ObservableTransformer<in MainViewEvent, out MainViewEvent>? {
-    return ObservableTransformer {
-      return@ObservableTransformer it
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-    }
+  override fun onBind() {
+    listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { callback.onServiceFinished() }
+        .destroy(owner)
+  }
+
+  override fun onUnbind() {
+  }
+
+  override fun finish() {
+    publish(ServiceFinishEvent)
   }
 
 }

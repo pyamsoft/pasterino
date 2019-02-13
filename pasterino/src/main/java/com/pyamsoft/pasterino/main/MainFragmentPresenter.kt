@@ -15,13 +15,19 @@
  *
  */
 
-package com.pyamsoft.pasterino.settings
+package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-sealed class SettingsViewEvent : ViewEvent {
+internal interface MainFragmentPresenter : Presenter<MainFragmentPresenter.Callback> {
 
-  object ExplainClicked : SettingsViewEvent()
+  interface Callback {
 
-  data class SignificantScroll(val visible: Boolean) : SettingsViewEvent()
+    fun onServiceRunningAction()
+
+    fun onServiceStoppedAction()
+
+    fun onSignificantScrollEvent(visible: Boolean)
+  }
+
 }

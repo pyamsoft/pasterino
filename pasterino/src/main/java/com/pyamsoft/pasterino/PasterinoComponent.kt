@@ -26,17 +26,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponent
 import com.pyamsoft.pasterino.service.PasteService
+import com.pyamsoft.pasterino.service.ServiceComponent
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.settings.ConfirmationComponent
 import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent
 
 interface PasterinoComponent {
-
-  fun inject(dialog: ConfirmationDialog)
-
-  fun inject(service: PasteService)
-
-  fun inject(service: SinglePasteService)
 
   @CheckResult
   fun plusMainComponent(
@@ -56,4 +52,11 @@ interface PasterinoComponent {
     recyclerView: RecyclerView,
     preferenceScreen: PreferenceScreen
   ): SettingsComponent
+
+
+  @CheckResult
+  fun plusConfirmComponent(owner: LifecycleOwner): ConfirmationComponent
+
+  @CheckResult
+  fun plusServiceComponent(owner: LifecycleOwner): ServiceComponent
 }

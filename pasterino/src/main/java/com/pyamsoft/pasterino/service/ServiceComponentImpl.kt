@@ -15,35 +15,33 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.service
 
-import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.service.ServiceStatePresenterImpl
-import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-internal class MainFragmentComponentImpl internal constructor(
-  private val parent: ViewGroup,
+internal class ServiceComponentImpl internal constructor(
   private val owner: LifecycleOwner,
-  private val imageLoader: ImageLoader,
+  private val enforcer: Enforcer,
   private val interactor: PasteServiceInteractor,
-  private val scrollBus: EventBus<SignificantScrollEvent>
-) : MainFragmentComponent {
+  private val pasteBus: EventBus<PasteRequestEvent>,
+  private val finishBus: EventBus<ServiceFinishEvent>
+) : ServiceComponent {
 
-  override fun inject(fragment: MainFragment) {
-    val mainPresenter = MainFragmentPresenterImpl(owner, scrollBus)
+  override fun inject(service: PasteService) {
+    service.apply {
+      this.presenter = PastePresenterImpl(enforcer, interactor, owner, pasteBus)
+      this.finishPresenter = ServiceFinishPresenterImpl(owner, finishBus)
+      this.statePresenter = ServiceStatePresenterImpl(interactor, owner)
+    }
+  }
 
-    fragment.apply {
-      this.actionView = MainActionView(imageLoader, owner, parent, mainPresenter)
-      this.frameView = MainFrameView(parent)
-      this.presenter = mainPresenter
-      this.serviceStatePresenter = ServiceStatePresenterImpl(interactor, owner)
+  override fun inject(service: SinglePasteService) {
+    service.apply {
+      this.presenter = PastePresenterImpl(enforcer, interactor, owner, pasteBus)
     }
   }
 
 }
-
-
