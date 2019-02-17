@@ -51,7 +51,7 @@ class MainFragment : Fragment(), ServiceStatePresenter.Callback, MainFragmentPre
     layoutRoot = root.findViewById(R.id.layout_coordinator)
 
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusMainFragmentComponent(layoutRoot, viewLifecycleOwner)
+        .plusMainFragmentComponent(layoutRoot)
         .inject(this)
 
     return root
@@ -67,8 +67,8 @@ class MainFragment : Fragment(), ServiceStatePresenter.Callback, MainFragmentPre
 
     displayPreferenceFragment()
 
-    presenter.bind(this)
-    serviceStatePresenter.bind(this)
+    presenter.bind(viewLifecycleOwner, this)
+    serviceStatePresenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onDestroyView() {

@@ -54,7 +54,7 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
     val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
 
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusSettingsComponent(viewLifecycleOwner, listView, preferenceScreen)
+        .plusSettingsComponent(listView, preferenceScreen)
         .inject(this)
 
     return view
@@ -65,8 +65,8 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    presenter.bind(this)
-    clearPresenter.bind(this)
+    presenter.bind(viewLifecycleOwner, this)
+    clearPresenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

@@ -61,11 +61,10 @@ class PasteService : AccessibilityService(),
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
-        .plusServiceComponent(this)
         .inject(this)
 
-    finishPresenter.bind(this)
-    presenter.bind(this)
+    finishPresenter.bind(this, this)
+    presenter.bind(this, this)
 
     registry.fakeBind()
   }

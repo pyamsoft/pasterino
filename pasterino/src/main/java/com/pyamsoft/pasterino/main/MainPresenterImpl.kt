@@ -17,14 +17,11 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.arch.BasePresenter
 
 internal class MainPresenterImpl internal constructor(
-  owner: LifecycleOwner
-) : BasePresenter<Unit, MainPresenter.Callback>(owner, RxBus.empty()),
+) : BasePresenter<Unit, MainPresenter.Callback>(RxBus.empty()),
     MainPresenter,
     MainToolbarView.Callback {
 

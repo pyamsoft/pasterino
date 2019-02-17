@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pasterino.service
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
@@ -34,9 +33,8 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 internal class PastePresenterImpl internal constructor(
   private val enforcer: Enforcer,
   private val interactor: PasteServiceInteractor,
-  owner: LifecycleOwner,
   bus: EventBus<PasteRequestEvent>
-) : BasePresenter<PasteRequestEvent, PastePresenter.Callback>(owner, bus),
+) : BasePresenter<PasteRequestEvent, PastePresenter.Callback>(bus),
     PastePresenter {
 
   private var pasteDisposable by singleDisposable()

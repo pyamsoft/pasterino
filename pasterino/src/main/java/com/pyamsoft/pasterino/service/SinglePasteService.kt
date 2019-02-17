@@ -44,10 +44,9 @@ class SinglePasteService : Service(), LifecycleOwner, PastePresenter.Callback {
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
-        .plusServiceComponent(this)
         .inject(this)
 
-    presenter.bind(this)
+    presenter.bind(this, this)
 
     registry.fakeBind()
   }

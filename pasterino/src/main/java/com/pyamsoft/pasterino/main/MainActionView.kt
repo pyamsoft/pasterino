@@ -18,10 +18,10 @@
 package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
@@ -29,12 +29,13 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class MainActionView internal constructor(
   private val imageLoader: ImageLoader,
-  private val owner: LifecycleOwner,
   parent: ViewGroup,
   callback: MainActionView.Callback
 ) : BaseUiView<MainActionView.Callback>(parent, callback) {
 
   private val actionButton by lazyView<FloatingActionButton>(R.id.main_settings_fab)
+
+  private var actionIconLoaded: Loaded? = null
 
   override val layout: Int = R.layout.floating_action_button
 
@@ -44,6 +45,7 @@ internal class MainActionView internal constructor(
 
   override fun teardown() {
     actionButton.setOnDebouncedClickListener(null)
+    actionIconLoaded?.dispose()
   }
 
   fun setFabFromServiceState(running: Boolean) {
@@ -57,9 +59,9 @@ internal class MainActionView internal constructor(
     } else {
       icon = R.drawable.ic_service_start_24dp
     }
-    imageLoader.load(icon)
+    actionIconLoaded?.dispose()
+    actionIconLoaded = imageLoader.load(icon)
         .into(actionButton)
-        .bind(owner)
   }
 
   fun toggleVisibility(visible: Boolean) {

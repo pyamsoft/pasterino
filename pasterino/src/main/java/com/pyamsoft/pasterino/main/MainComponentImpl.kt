@@ -26,19 +26,18 @@ import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 
 internal class MainComponentImpl internal constructor(
   private val parent: ViewGroup,
-  private val owner: LifecycleOwner,
   private val failedBus: EventBus<FailedNavigationEvent>
 ) : MainComponent {
 
   override fun inject(activity: MainActivity) {
     val dropshadowView = DropshadowView(parent)
     val mainFrame = MainFrameView(parent)
-    val mainPresenter = MainPresenterImpl(owner)
+    val mainPresenter = MainPresenterImpl()
     val toolbarView = MainToolbarView(activity, parent, mainPresenter)
 
     activity.apply {
       this.dropshadow = dropshadowView
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(owner, failedBus)
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(failedBus)
       this.frameView = mainFrame
       this.presenter = mainPresenter
       this.toolbar = toolbarView

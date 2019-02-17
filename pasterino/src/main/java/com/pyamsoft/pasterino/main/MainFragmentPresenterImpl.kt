@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pasterino.main
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.arch.BasePresenter
@@ -26,9 +25,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 internal class MainFragmentPresenterImpl internal constructor(
-  owner: LifecycleOwner,
   bus: EventBus<SignificantScrollEvent>
-) : BasePresenter<SignificantScrollEvent, MainFragmentPresenter.Callback>(owner, bus),
+) : BasePresenter<SignificantScrollEvent, MainFragmentPresenter.Callback>(bus),
     MainFragmentPresenter,
     MainActionView.Callback {
 

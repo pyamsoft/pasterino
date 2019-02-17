@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pasterino.settings
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.api.MainInteractor
@@ -26,7 +25,6 @@ import com.pyamsoft.pasterino.service.ServiceFinishPresenterImpl
 import com.pyamsoft.pydroid.core.bus.EventBus
 
 internal class SettingsComponentImpl internal constructor(
-  private val owner: LifecycleOwner,
   private val recyclerView: RecyclerView,
   private val preferenceScreen: PreferenceScreen,
   private val interactor: MainInteractor,
@@ -36,12 +34,12 @@ internal class SettingsComponentImpl internal constructor(
 ) : SettingsComponent {
 
   override fun inject(fragment: MainSettingsPreferenceFragment) {
-    val settingsPresenter = SettingsPresenterImpl(owner, significantScrollBus)
+    val settingsPresenter = SettingsPresenterImpl(significantScrollBus)
     val view = SettingsView(recyclerView, preferenceScreen, settingsPresenter)
 
     fragment.apply {
-      this.clearPresenter = ClearAllPresenterImpl(interactor, owner, clearAllBus)
-      this.serviceFinishPresenter = ServiceFinishPresenterImpl(owner, serviceFinishBus)
+      this.clearPresenter = ClearAllPresenterImpl(interactor, clearAllBus)
+      this.serviceFinishPresenter = ServiceFinishPresenterImpl(serviceFinishBus)
       this.presenter = settingsPresenter
       this.settingsView = view
     }

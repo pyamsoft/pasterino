@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pasterino.service
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.arch.BasePresenter
@@ -26,9 +25,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 internal class ServiceStatePresenterImpl internal constructor(
-  private val interactor: PasteServiceInteractor,
-  owner: LifecycleOwner
-) : BasePresenter<Unit, ServiceStatePresenter.Callback>(owner, RxBus.empty()),
+  private val interactor: PasteServiceInteractor
+) : BasePresenter<Unit, ServiceStatePresenter.Callback>(RxBus.empty()),
     ServiceStatePresenter {
 
   override fun onBind() {
