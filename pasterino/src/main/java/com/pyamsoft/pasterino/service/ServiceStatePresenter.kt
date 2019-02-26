@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
 
 internal interface ServiceStatePresenter : Presenter<ServiceStatePresenter.Callback> {
 

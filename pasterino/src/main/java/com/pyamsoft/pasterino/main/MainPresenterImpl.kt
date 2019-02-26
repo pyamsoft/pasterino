@@ -18,7 +18,7 @@
 package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.BasePresenter
 
 internal class MainPresenterImpl internal constructor(
 ) : BasePresenter<Unit, MainPresenter.Callback>(RxBus.empty()),
