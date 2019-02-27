@@ -18,11 +18,9 @@
 package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.arch.BasePresenter
 import com.pyamsoft.pydroid.arch.destroy
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.pyamsoft.pydroid.core.bus.EventBus
 
 internal class MainFragmentPresenterImpl internal constructor(
   bus: EventBus<SignificantScrollEvent>
@@ -39,9 +37,7 @@ internal class MainFragmentPresenterImpl internal constructor(
   }
 
   override fun onBind() {
-    listen().subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { callback.onSignificantScrollEvent(it.visible) }
+    listen().subscribe { callback.onSignificantScrollEvent(it.visible) }
         .destroy(owner)
   }
 

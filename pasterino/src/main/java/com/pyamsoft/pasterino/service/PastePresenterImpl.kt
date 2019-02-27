@@ -18,12 +18,12 @@
 package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
@@ -40,10 +40,7 @@ internal class PastePresenterImpl internal constructor(
   private var pasteDisposable by singleDisposable()
 
   override fun onBind() {
-    listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { callback.onPaste(it.deepSearchEnabled) }
+    listen().subscribe { callback.onPaste(it.deepSearchEnabled) }
         .destroy(owner)
   }
 
