@@ -38,7 +38,7 @@ buildscript {
     annotation = "1.0.1"
     recyclerView = "1.0.0"
 
-    pydroid = "19.0.2"
+    pydroid = "19.0.3-SNAPSHOT"
     leakCanary = "1.6.3"
   }
 
