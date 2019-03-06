@@ -100,6 +100,10 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
         .show(requireActivity(), "confirm")
   }
 
+  override fun onClearAllError(throwable: Throwable) {
+    settingsView.showErrorMessage("Error resetting settings, please try again later")
+  }
+
   companion object {
 
     const val TAG = "MainSettingsPreferenceFragment"

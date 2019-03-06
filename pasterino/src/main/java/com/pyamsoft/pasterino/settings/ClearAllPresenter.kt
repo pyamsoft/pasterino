@@ -26,5 +26,7 @@ interface ClearAllPresenter : Presenter<ClearAllPresenter.Callback> {
   interface Callback {
 
     fun onClearAll()
+
+    fun onClearAllError(throwable: Throwable)
   }
 }

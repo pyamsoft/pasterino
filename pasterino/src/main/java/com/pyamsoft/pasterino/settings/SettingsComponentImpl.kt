@@ -37,7 +37,9 @@ internal class SettingsComponentImpl internal constructor(
 
   override fun inject(fragment: MainSettingsPreferenceFragment) {
     val settingsPresenter = SettingsPresenterImpl(significantScrollBus)
-    val view = SettingsView(recyclerView, preferenceScreen, settingsPresenter)
+    val view = SettingsView(
+        fragment.viewLifecycleOwner, recyclerView, preferenceScreen, settingsPresenter
+    )
 
     fragment.apply {
       this.clearPresenter = ClearAllPresenterImpl(interactor, clearAllBus)

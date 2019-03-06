@@ -17,41 +17,43 @@
 
 package com.pyamsoft.pasterino.settings
 
-import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pydroid.arch.BasePresenter
 import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.core.bus.EventBus
-import io.reactivex.Single
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class ClearAllPresenterImpl internal constructor(
   private val interactor: MainInteractor,
   bus: EventBus<ClearAllEvent>
 ) : BasePresenter<ClearAllEvent, ClearAllPresenter.Callback>(bus), ClearAllPresenter {
 
-  @CheckResult
-  private fun clear(): Single<Unit> {
-    return interactor.clearAll()
-        .subscribeOn(Schedulers.io())
-        .observeOn(Schedulers.io())
-  }
+  private var clearDisposable by singleDisposable()
 
   override fun onBind() {
     listen()
-        .ofType(ClearAllEvent::class.java)
-        .flatMapSingle { clear() }
-        .subscribeOn(Schedulers.trampoline())
-        .observeOn(Schedulers.trampoline())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe { callback.onClearAll() }
         .destroy(owner)
   }
 
   override fun onUnbind() {
+    clearDisposable.tryDispose()
   }
 
   override fun clearAll() {
-    publish(ClearAllEvent)
+    clearDisposable = interactor.clearAll()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({ publish(ClearAllEvent) }, {
+          Timber.e(it, "Error clearing all settings")
+          callback.onClearAllError(it)
+        })
   }
 }
 

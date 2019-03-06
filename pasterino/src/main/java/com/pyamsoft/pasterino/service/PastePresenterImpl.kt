@@ -40,7 +40,10 @@ internal class PastePresenterImpl internal constructor(
   private var pasteDisposable by singleDisposable()
 
   override fun onBind() {
-    listen().subscribe { callback.onPaste(it.deepSearchEnabled) }
+    listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { callback.onPaste(it.deepSearchEnabled) }
         .destroy(owner)
   }
 
