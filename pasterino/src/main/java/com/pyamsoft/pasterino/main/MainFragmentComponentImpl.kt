@@ -21,8 +21,10 @@ import android.view.ViewGroup
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.ServiceStatePresenterImpl
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
+import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 
 internal class MainFragmentComponentImpl internal constructor(
   private val parent: ViewGroup,
@@ -37,6 +39,7 @@ internal class MainFragmentComponentImpl internal constructor(
     fragment.apply {
       this.actionView = MainActionView(imageLoader, parent, mainPresenter)
       this.frameView = MainFrameView(parent)
+      this.toolbarView = ToolbarView(requireToolbarActivity())
       this.presenter = mainPresenter
       this.serviceStatePresenter = ServiceStatePresenterImpl(interactor)
     }

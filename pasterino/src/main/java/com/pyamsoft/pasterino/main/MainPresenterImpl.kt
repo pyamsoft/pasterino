@@ -17,17 +17,12 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.core.bus.RxBus
 
 internal class MainPresenterImpl internal constructor(
 ) : BasePresenter<Unit, MainPresenter.Callback>(RxBus.empty()),
-    MainPresenter,
-    MainToolbarView.Callback {
-
-  override fun onToolbarNavClicked() {
-    callback.onToolbarNavEvent()
-  }
+    MainPresenter {
 
   override fun onBind() {
   }

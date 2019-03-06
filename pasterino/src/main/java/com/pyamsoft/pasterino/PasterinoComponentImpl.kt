@@ -55,6 +55,7 @@ internal class PasterinoComponentImpl internal constructor(
   private val pasteRequestBus = RxBus.create<PasteRequestEvent>()
   private val serviceFinishBus = RxBus.create<ServiceFinishEvent>()
 
+  private val schedulerProvider = moduleProvider.schedulerProvider()
   private val navModule = moduleProvider.failedNavigationModule()
   private val enforcer = moduleProvider.enforcer()
   private val loaderModule = moduleProvider.loaderModule()
@@ -88,7 +89,7 @@ internal class PasterinoComponentImpl internal constructor(
   }
 
   override fun plusMainComponent(parent: ViewGroup): MainComponent =
-    MainComponentImpl(parent, navModule.bus)
+    MainComponentImpl(schedulerProvider, parent, navModule.bus)
 
   override fun plusSettingsComponent(
     recyclerView: RecyclerView,

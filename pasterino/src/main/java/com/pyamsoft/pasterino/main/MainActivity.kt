@@ -103,10 +103,6 @@ class MainActivity : RatingActivity(), MainPresenter.Callback {
     dropshadow.inflate(savedInstanceState)
   }
 
-  override fun onToolbarNavEvent() {
-    onBackPressed()
-  }
-
   private fun layoutComponents(layoutRoot: ConstraintLayout) {
     ConstraintSet().apply {
       clone(layoutRoot)

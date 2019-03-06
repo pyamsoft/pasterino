@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
 import com.pyamsoft.pasterino.service.ServiceFinishPresenterImpl
+import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 
 internal class SettingsComponentImpl internal constructor(
   private val recyclerView: RecyclerView,
@@ -40,6 +42,7 @@ internal class SettingsComponentImpl internal constructor(
     fragment.apply {
       this.clearPresenter = ClearAllPresenterImpl(interactor, clearAllBus)
       this.serviceFinishPresenter = ServiceFinishPresenterImpl(serviceFinishBus)
+      this.toolbarView = ToolbarView(requireToolbarActivity())
       this.presenter = settingsPresenter
       this.settingsView = view
     }

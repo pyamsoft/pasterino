@@ -18,13 +18,14 @@
 package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 
 internal class MainComponentImpl internal constructor(
+  private val schedulerProvider: SchedulerProvider,
   private val parent: ViewGroup,
   private val failedBus: EventBus<FailedNavigationEvent>
 ) : MainComponent {
@@ -33,11 +34,11 @@ internal class MainComponentImpl internal constructor(
     val dropshadowView = DropshadowView(parent)
     val mainFrame = MainFrameView(parent)
     val mainPresenter = MainPresenterImpl()
-    val toolbarView = MainToolbarView(activity, parent, mainPresenter)
+    val toolbarView = MainToolbarView(activity, parent)
 
     activity.apply {
       this.dropshadow = dropshadowView
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(failedBus)
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(schedulerProvider, failedBus)
       this.frameView = mainFrame
       this.presenter = mainPresenter
       this.toolbar = toolbarView

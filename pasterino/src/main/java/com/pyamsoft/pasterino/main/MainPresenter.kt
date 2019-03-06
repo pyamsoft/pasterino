@@ -21,9 +21,6 @@ import com.pyamsoft.pydroid.arch.Presenter
 
 internal interface MainPresenter : Presenter<MainPresenter.Callback> {
 
-  interface Callback {
-
-    fun onToolbarNavEvent()
-  }
+  interface Callback
 
 }
