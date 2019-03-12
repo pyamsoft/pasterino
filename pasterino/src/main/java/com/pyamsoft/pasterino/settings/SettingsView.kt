@@ -59,8 +59,6 @@ internal class SettingsView internal constructor(
 
     scrollListener?.also { recyclerView.removeOnScrollListener(it) }
     scrollListener = null
-
-    removePreference(explain)
   }
 
   fun showErrorMessage(message: String) {
