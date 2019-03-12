@@ -17,23 +17,19 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.view.ViewGroup
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
+import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.pyamsoft.pydroid.arch.UiComponent
 
-internal class MainComponentImpl internal constructor(
-  private val parent: ViewGroup
-) : MainComponent {
+internal interface MainToolbarUiComponent : UiComponent<MainToolbarUiComponent.Callback> {
 
-  override fun inject(activity: MainActivity) {
-    val dropshadowView = DropshadowView(parent)
-    val mainFrame = MainFrameView(parent)
-    val mainPresenter = MainPresenterImpl()
-    val toolbarView = MainToolbarView(activity, parent)
+  @IdRes
+  @CheckResult
+  fun id(): Int
 
-    activity.apply {
-      this.component = MainUiComponentImpl(mainFrame, mainPresenter)
-      this.toolbarComponent = MainToolbarUiComponentImpl(toolbarView, dropshadowView)
-    }
-  }
+  fun layout(constraintLayout: ConstraintLayout)
+
+  interface Callback
+
 }
-

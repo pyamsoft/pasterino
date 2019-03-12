@@ -41,8 +41,9 @@ internal class MainFragmentComponentImpl internal constructor(
     val serviceStatePresenter = ServiceStatePresenterImpl(interactor)
 
     fragment.apply {
+      this.toolbar = toolbarView
       this.component = MainFragmentUiComponentImpl(
-          mainPresenter, serviceStatePresenter, toolbarView, frameView, actionView
+          mainPresenter, serviceStatePresenter, frameView, actionView
       )
     }
   }

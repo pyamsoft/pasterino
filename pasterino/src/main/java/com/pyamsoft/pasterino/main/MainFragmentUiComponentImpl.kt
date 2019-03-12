@@ -20,14 +20,12 @@ package com.pyamsoft.pasterino.main
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.service.ServiceStatePresenter
-import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 
 internal class MainFragmentUiComponentImpl internal constructor(
   private val presenter: MainFragmentPresenter,
   private val serviceStatePresenter: ServiceStatePresenter,
-  private val toolbarView: ToolbarView,
   private val frameView: MainFrameView,
   private val actionView: MainActionView
 ) : BaseUiComponent<MainFragmentUiComponent.Callback>(),
@@ -41,14 +39,12 @@ internal class MainFragmentUiComponentImpl internal constructor(
     callback: MainFragmentUiComponent.Callback
   ) {
     owner.doOnDestroy {
-      toolbarView.teardown()
       frameView.teardown()
       actionView.teardown()
       presenter.unbind()
       serviceStatePresenter.unbind()
     }
 
-    toolbarView.inflate(savedInstanceState)
     frameView.inflate(savedInstanceState)
     actionView.inflate(savedInstanceState)
     presenter.bind(this)
@@ -56,7 +52,6 @@ internal class MainFragmentUiComponentImpl internal constructor(
   }
 
   override fun saveState(outState: Bundle) {
-    toolbarView.saveState(outState)
     frameView.saveState(outState)
     actionView.saveState(outState)
   }

@@ -20,23 +20,21 @@ package com.pyamsoft.pasterino.main
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.ThemeInjector
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MainActivity : RatingActivity(), MainUiComponent.Callback {
+class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiComponent.Callback {
 
+  internal lateinit var toolbarComponent: MainToolbarUiComponent
   internal lateinit var component: MainUiComponent
 
   private val layoutRoot by lazy(NONE) {
@@ -51,7 +49,7 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback {
     get() = layoutRoot
 
   override val fragmentContainerId: Int
-    get() = layoutRoot.id
+    get() = component.id()
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
     change("New icon style")
@@ -71,7 +69,11 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback {
         .plusMainComponent(layoutRoot)
         .inject(this)
 
+    toolbarComponent.bind(this, savedInstanceState, this)
     component.bind(this, savedInstanceState, this)
+
+    toolbarComponent.layout(layoutRoot)
+    component.layout(layoutRoot, toolbarComponent.id())
 
     showMainFragment()
   }

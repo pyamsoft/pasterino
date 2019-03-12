@@ -38,7 +38,7 @@ interface PasterinoComponent {
   fun inject(service: SinglePasteService)
 
   @CheckResult
-  fun plusMainComponent(parent: ConstraintLayout): MainComponent
+  fun plusMainComponent(parent: ViewGroup): MainComponent
 
   @CheckResult
   fun plusMainFragmentComponent(parent: ViewGroup): MainFragmentComponent

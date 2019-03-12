@@ -45,8 +45,9 @@ internal class SettingsComponentImpl internal constructor(
     val toolbar = ToolbarView(fragment.requireToolbarActivity())
 
     fragment.apply {
+      this.toolbarView = toolbar
       this.component = MainSettingsUiComponentImpl(
-          view, toolbar, settingsPresenter, serviceFinishPresenter, clearPresenter
+          view, settingsPresenter, serviceFinishPresenter, clearPresenter
       )
     }
   }

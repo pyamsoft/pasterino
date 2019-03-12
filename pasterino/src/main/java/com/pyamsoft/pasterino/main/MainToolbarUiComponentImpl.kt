@@ -21,19 +21,19 @@ import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.main.MainUiComponent.Callback
+import com.pyamsoft.pasterino.main.MainToolbarUiComponent.Callback
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 
-internal class MainUiComponentImpl internal constructor(
-  private val frameView: MainFrameView,
-  private val presenter: MainPresenter
-) : BaseUiComponent<MainUiComponent.Callback>(),
-    MainUiComponent,
-    MainPresenter.Callback {
+internal class MainToolbarUiComponentImpl internal constructor(
+  private val toolbarView: MainToolbarView,
+  private val dropshadowView: DropshadowView
+) : BaseUiComponent<MainToolbarUiComponent.Callback>(),
+    MainToolbarUiComponent {
 
   override fun id(): Int {
-    return frameView.id()
+    return toolbarView.id()
   }
 
   override fun onBind(
@@ -42,31 +42,34 @@ internal class MainUiComponentImpl internal constructor(
     callback: Callback
   ) {
     owner.doOnDestroy {
-      frameView.teardown()
-      presenter.unbind()
+      toolbarView.teardown()
+      dropshadowView.teardown()
     }
 
-    frameView.inflate(savedInstanceState)
-    presenter.bind(this)
+    toolbarView.inflate(savedInstanceState)
+    dropshadowView.inflate(savedInstanceState)
   }
 
   override fun saveState(outState: Bundle) {
-    frameView.saveState(outState)
+    toolbarView.saveState(outState)
+    dropshadowView.saveState(outState)
   }
 
-  override fun layout(
-    constraintLayout: ConstraintLayout,
-    aboveId: Int
-  ) {
+  override fun layout(constraintLayout: ConstraintLayout) {
     ConstraintSet().apply {
       clone(constraintLayout)
 
-      frameView.also {
-        connect(it.id(), ConstraintSet.TOP, aboveId, ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.BOTTOM, constraintLayout.id, ConstraintSet.BOTTOM)
+      toolbarView.also {
+        connect(it.id(), ConstraintSet.TOP, constraintLayout.id, ConstraintSet.TOP)
         connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      dropshadowView.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarView.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 

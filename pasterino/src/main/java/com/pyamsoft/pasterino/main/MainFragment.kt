@@ -27,6 +27,7 @@ import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.MainSettingsFragment
+import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.ui.app.requireView
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
@@ -34,7 +35,9 @@ import kotlin.LazyThreadSafetyMode.NONE
 
 class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
 
+  internal lateinit var toolbar: ToolbarView
   internal lateinit var component: MainFragmentUiComponent
+
   private val layoutRoot by lazy(NONE) {
     requireView().findViewById<CoordinatorLayout>(
         R.id.layout_coordinator
@@ -59,13 +62,21 @@ class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
         .plusMainFragmentComponent(layoutRoot)
         .inject(this)
 
+    toolbar.inflate(savedInstanceState)
     component.bind(viewLifecycleOwner, savedInstanceState, this)
+
     displayPreferenceFragment()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
+    toolbar.saveState(outState)
     component.saveState(outState)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    toolbar.teardown()
   }
 
   override fun onShowServiceInfo() {

@@ -21,14 +21,12 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.service.ServiceFinishPresenter
 import com.pyamsoft.pasterino.settings.MainSettingsUiComponent.Callback
-import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import timber.log.Timber
 
 internal class MainSettingsUiComponentImpl internal constructor(
   private val settingsView: SettingsView,
-  private val toolbarView: ToolbarView,
   private val presenter: SettingsPresenter,
   private val serviceFinishPresenter: ServiceFinishPresenter,
   private val clearPresenter: ClearAllPresenter
@@ -44,19 +42,16 @@ internal class MainSettingsUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       settingsView.teardown()
-      toolbarView.teardown()
       presenter.unbind()
       clearPresenter.unbind()
     }
 
     settingsView.inflate(savedInstanceState)
-    toolbarView.inflate(savedInstanceState)
     presenter.bind(this)
     clearPresenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {
-    toolbarView.saveState(outState)
     settingsView.saveState(outState)
   }
 

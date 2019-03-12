@@ -38,7 +38,10 @@ internal class SettingsView internal constructor(
 
   private var scrollListener: RecyclerView.OnScrollListener? = null
 
-  override fun inflate(savedInstanceState: Bundle?) {
+  override fun onInflated(
+    preferenceScreen: PreferenceScreen,
+    savedInstanceState: Bundle?
+  ) {
     explain.setOnPreferenceClickListener {
       callback.onExplainClicked()
       return@setOnPreferenceClickListener true
@@ -51,11 +54,13 @@ internal class SettingsView internal constructor(
     scrollListener = listener
   }
 
-  override fun teardown() {
+  override fun onTeardown() {
     explain.onPreferenceClickListener = null
 
     scrollListener?.also { recyclerView.removeOnScrollListener(it) }
     scrollListener = null
+
+    removePreference(explain)
   }
 
   fun showErrorMessage(message: String) {

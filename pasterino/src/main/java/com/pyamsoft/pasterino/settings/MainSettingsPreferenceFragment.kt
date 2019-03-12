@@ -26,6 +26,7 @@ import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
@@ -33,6 +34,7 @@ import timber.log.Timber
 class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
     MainSettingsUiComponent.Callback {
 
+  internal lateinit var toolbarView: ToolbarView
   internal lateinit var component: MainSettingsUiComponent
 
   override val preferenceXmlResId: Int = R.xml.preferences
@@ -47,12 +49,19 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
         .plusSettingsComponent(listView, preferenceScreen)
         .inject(this)
 
+    toolbarView.inflate(savedInstanceState)
     component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
+    toolbarView.saveState(outState)
     component.saveState(outState)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    toolbarView.teardown()
   }
 
   override fun showHowTo() {
