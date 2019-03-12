@@ -40,13 +40,14 @@ internal class SettingsComponentImpl internal constructor(
     val view = SettingsView(
         fragment.viewLifecycleOwner, recyclerView, preferenceScreen, settingsPresenter
     )
+    val clearPresenter = ClearAllPresenterImpl(interactor, clearAllBus)
+    val serviceFinishPresenter = ServiceFinishPresenterImpl(serviceFinishBus)
+    val toolbar = ToolbarView(fragment.requireToolbarActivity())
 
     fragment.apply {
-      this.clearPresenter = ClearAllPresenterImpl(interactor, clearAllBus)
-      this.serviceFinishPresenter = ServiceFinishPresenterImpl(serviceFinishBus)
-      this.toolbarView = ToolbarView(requireToolbarActivity())
-      this.presenter = settingsPresenter
-      this.settingsView = view
+      this.component = MainSettingsUiComponentImpl(
+          view, toolbar, settingsPresenter, serviceFinishPresenter, clearPresenter
+      )
     }
   }
 

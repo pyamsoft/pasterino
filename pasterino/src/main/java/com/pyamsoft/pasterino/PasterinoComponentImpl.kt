@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino
 
 import android.app.Application
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.base.PasterinoModuleImpl
@@ -88,8 +89,8 @@ internal class PasterinoComponentImpl internal constructor(
     }
   }
 
-  override fun plusMainComponent(parent: ViewGroup): MainComponent =
-    MainComponentImpl(schedulerProvider, parent, navModule.bus)
+  override fun plusMainComponent(parent: ConstraintLayout): MainComponent =
+    MainComponentImpl(parent)
 
   override fun plusSettingsComponent(
     recyclerView: RecyclerView,

@@ -26,20 +26,20 @@ import androidx.fragment.app.Fragment
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.service.ServiceStatePresenter
 import com.pyamsoft.pasterino.settings.MainSettingsFragment
-import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.ui.app.requireView
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
+import kotlin.LazyThreadSafetyMode.NONE
 
-class MainFragment : Fragment(), ServiceStatePresenter.Callback, MainFragmentPresenter.Callback {
+class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
 
-  internal lateinit var presenter: MainFragmentPresenter
-  internal lateinit var serviceStatePresenter: ServiceStatePresenter
-
-  internal lateinit var toolbarView: ToolbarView
-  internal lateinit var frameView: MainFrameView
-  internal lateinit var actionView: MainActionView
+  internal lateinit var component: MainFragmentUiComponent
+  private val layoutRoot by lazy(NONE) {
+    requireView().findViewById<CoordinatorLayout>(
+        R.id.layout_coordinator
+    )
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -55,62 +55,34 @@ class MainFragment : Fragment(), ServiceStatePresenter.Callback, MainFragmentPre
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    val layoutRoot = view.findViewById<CoordinatorLayout>(R.id.layout_coordinator)
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .plusMainFragmentComponent(layoutRoot)
         .inject(this)
 
-    toolbarView.inflate(savedInstanceState)
-    frameView.inflate(savedInstanceState)
-    actionView.inflate(savedInstanceState)
-
+    component.bind(viewLifecycleOwner, savedInstanceState, this)
     displayPreferenceFragment()
-
-    presenter.bind(viewLifecycleOwner, this)
-    serviceStatePresenter.bind(viewLifecycleOwner, this)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    toolbarView.teardown()
-    frameView.teardown()
-    actionView.teardown()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbarView.saveState(outState)
-    frameView.saveState(outState)
-    actionView.saveState(outState)
+    component.saveState(outState)
   }
 
-  override fun onServiceStarted() {
-    actionView.setFabFromServiceState(true)
-  }
-
-  override fun onServiceStopped() {
-    actionView.setFabFromServiceState(false)
-  }
-
-  override fun onServiceRunningAction() {
+  override fun onShowServiceInfo() {
     ServiceInfoDialog()
         .show(requireActivity(), "service_info")
   }
 
-  override fun onServiceStoppedAction() {
+  override fun onShowPermissionDialog() {
     AccessibilityRequestDialog()
         .show(requireActivity(), "accessibility")
-  }
-
-  override fun onSignificantScrollEvent(visible: Boolean) {
-    actionView.toggleVisibility(visible)
   }
 
   private fun displayPreferenceFragment() {
     val fragmentManager = childFragmentManager
     if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(frameView.id(), MainSettingsFragment(), MainSettingsFragment.TAG)
+          .add(layoutRoot.id, MainSettingsFragment(), MainSettingsFragment.TAG)
           .commit(viewLifecycleOwner)
     }
   }

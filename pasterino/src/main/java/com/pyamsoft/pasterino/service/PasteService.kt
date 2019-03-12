@@ -25,30 +25,18 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.annotation.CheckResult
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pydroid.util.fakeBind
-import com.pyamsoft.pydroid.util.fakeUnbind
 import timber.log.Timber
 
 class PasteService : AccessibilityService(),
-    LifecycleOwner,
     ServiceFinishPresenter.Callback,
     PastePresenter.Callback {
 
   internal lateinit var presenter: PastePresenter
   internal lateinit var finishPresenter: ServiceFinishPresenter
   internal lateinit var statePresenter: ServiceStatePresenter
-
-  private val registry = LifecycleRegistry(this)
-
-  override fun getLifecycle(): Lifecycle {
-    return registry
-  }
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -63,10 +51,8 @@ class PasteService : AccessibilityService(),
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    finishPresenter.bind(this, this)
-    presenter.bind(this, this)
-
-    registry.fakeBind()
+    finishPresenter.bind(this)
+    presenter.bind(this)
   }
 
   override fun onServiceFinished() {
@@ -159,10 +145,10 @@ class PasteService : AccessibilityService(),
 
   override fun onDestroy() {
     super.onDestroy()
+    presenter.unbind()
+    finishPresenter.unbind()
 
     Pasterino.getRefWatcher(this)
         .watch(this)
-
-    registry.fakeUnbind()
   }
 }

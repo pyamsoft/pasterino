@@ -18,7 +18,6 @@
 package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -33,7 +32,7 @@ internal class ServiceFinishPresenterImpl internal constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { callback.onServiceFinished() }
-        .destroy(owner)
+        .destroy()
   }
 
   override fun onUnbind() {

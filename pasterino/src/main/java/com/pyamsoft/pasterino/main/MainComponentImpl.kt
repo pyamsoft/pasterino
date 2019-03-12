@@ -17,17 +17,11 @@
 
 package com.pyamsoft.pasterino.main
 
-import android.view.ViewGroup
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 
 internal class MainComponentImpl internal constructor(
-  private val schedulerProvider: SchedulerProvider,
-  private val parent: ViewGroup,
-  private val failedBus: EventBus<FailedNavigationEvent>
+  private val parent: ConstraintLayout
 ) : MainComponent {
 
   override fun inject(activity: MainActivity) {
@@ -36,12 +30,11 @@ internal class MainComponentImpl internal constructor(
     val mainPresenter = MainPresenterImpl()
     val toolbarView = MainToolbarView(activity, parent)
 
+    val component = MainUiComponentImpl(
+        parent, toolbarView, mainFrame, dropshadowView, mainPresenter
+    )
     activity.apply {
-      this.dropshadow = dropshadowView
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(schedulerProvider, failedBus)
-      this.frameView = mainFrame
-      this.presenter = mainPresenter
-      this.toolbar = toolbarView
+      this.component = component
     }
   }
 }

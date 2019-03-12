@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.main.MainComponent
@@ -37,7 +38,7 @@ interface PasterinoComponent {
   fun inject(service: SinglePasteService)
 
   @CheckResult
-  fun plusMainComponent(parent: ViewGroup): MainComponent
+  fun plusMainComponent(parent: ConstraintLayout): MainComponent
 
   @CheckResult
   fun plusMainFragmentComponent(parent: ViewGroup): MainFragmentComponent

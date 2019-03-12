@@ -20,7 +20,6 @@ package com.pyamsoft.pasterino.service
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -40,7 +39,7 @@ internal class ServiceStatePresenterImpl internal constructor(
             callback.onServiceStopped()
           }
         }
-        .destroy(owner)
+        .destroy()
   }
 
   override fun onUnbind() {

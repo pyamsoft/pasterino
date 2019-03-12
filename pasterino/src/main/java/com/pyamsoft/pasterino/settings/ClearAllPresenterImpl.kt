@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino.settings
 
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
@@ -39,7 +38,7 @@ class ClearAllPresenterImpl internal constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { callback.onClearAll() }
-        .destroy(owner)
+        .destroy()
   }
 
   override fun onUnbind() {

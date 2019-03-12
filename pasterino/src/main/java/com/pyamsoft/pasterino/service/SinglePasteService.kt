@@ -21,42 +21,29 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pydroid.util.fakeBind
-import com.pyamsoft.pydroid.util.fakeUnbind
 import timber.log.Timber
 
-class SinglePasteService : Service(), LifecycleOwner, PastePresenter.Callback {
+class SinglePasteService : Service(), PastePresenter.Callback {
 
   internal lateinit var presenter: PastePresenter
-
-  private val registry = LifecycleRegistry(this)
-
-  override fun getLifecycle(): Lifecycle {
-    return registry
-  }
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    presenter.bind(this, this)
-
-    registry.fakeBind()
+    presenter.bind(this)
   }
 
   override fun onDestroy() {
     super.onDestroy()
+    presenter.unbind()
+
     Pasterino.getRefWatcher(this)
         .watch(this)
-
-    registry.fakeUnbind()
   }
 
   override fun onBind(intent: Intent): IBinder? = null

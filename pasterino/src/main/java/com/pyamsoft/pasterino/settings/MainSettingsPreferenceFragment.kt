@@ -25,23 +25,15 @@ import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.service.PasteServiceNotification
-import com.pyamsoft.pasterino.service.ServiceFinishPresenter
 import com.pyamsoft.pasterino.service.SinglePasteService
-import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
 class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
-    SettingsPresenter.Callback,
-    ClearAllPresenter.Callback {
+    MainSettingsUiComponent.Callback {
 
-  internal lateinit var settingsView: SettingsView
-  internal lateinit var toolbarView: ToolbarView
-
-  internal lateinit var presenter: SettingsPresenter
-  internal lateinit var serviceFinishPresenter: ServiceFinishPresenter
-  internal lateinit var clearPresenter: ClearAllPresenter
+  internal lateinit var component: MainSettingsUiComponent
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -55,38 +47,22 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
         .plusSettingsComponent(listView, preferenceScreen)
         .inject(this)
 
-    settingsView.inflate(savedInstanceState)
-    toolbarView.inflate(savedInstanceState)
-
-    presenter.bind(viewLifecycleOwner, this)
-    clearPresenter.bind(viewLifecycleOwner, this)
+    component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbarView.saveState(outState)
-    settingsView.saveState(outState)
+    component.saveState(outState)
   }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    toolbarView.teardown()
-    settingsView.teardown()
-  }
-
-  override fun onShowExplanation() {
+  override fun showHowTo() {
     HowToDialog().show(requireActivity(), "howto")
   }
 
-  override fun onClearAll() {
+  override fun onKillApplication() {
     requireContext().also {
       PasteServiceNotification.stop(it)
       SinglePasteService.stop(it)
-      try {
-        serviceFinishPresenter.finish()
-      } catch (e: NullPointerException) {
-        Timber.e(e, "Expected exception when Service is NULL")
-      }
 
       Timber.d("Clear application data")
       val activityManager = it.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -98,10 +74,6 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
     super.onClearAllClicked()
     ConfirmationDialog()
         .show(requireActivity(), "confirm")
-  }
-
-  override fun onClearAllError(throwable: Throwable) {
-    settingsView.showErrorMessage("Error resetting settings, please try again later")
   }
 
   companion object {

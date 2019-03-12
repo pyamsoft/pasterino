@@ -35,14 +35,9 @@ import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MainActivity : RatingActivity(), MainPresenter.Callback {
+class MainActivity : RatingActivity(), MainUiComponent.Callback {
 
-  internal lateinit var toolbar: MainToolbarView
-  internal lateinit var frameView: MainFrameView
-  internal lateinit var dropshadow: DropshadowView
-
-  internal lateinit var presenter: MainPresenter
-  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
+  internal lateinit var component: MainUiComponent
 
   private val layoutRoot by lazy(NONE) {
     findViewById<ConstraintLayout>(R.id.layout_constraint)
@@ -56,7 +51,7 @@ class MainActivity : RatingActivity(), MainPresenter.Callback {
     get() = layoutRoot
 
   override val fragmentContainerId: Int
-    get() = frameView.id()
+    get() = layoutRoot.id
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
     change("New icon style")
@@ -76,62 +71,14 @@ class MainActivity : RatingActivity(), MainPresenter.Callback {
         .plusMainComponent(layoutRoot)
         .inject(this)
 
-    createComponents(savedInstanceState)
-    layoutComponents(layoutRoot)
+    component.bind(this, savedInstanceState, this)
+
     showMainFragment()
-
-    presenter.bind(this, this)
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    toolbar.teardown()
-    frameView.teardown()
-    dropshadow.teardown()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbar.saveState(outState)
-    frameView.saveState(outState)
-    dropshadow.saveState(outState)
-  }
-
-  private fun createComponents(savedInstanceState: Bundle?) {
-    toolbar.inflate(savedInstanceState)
-    frameView.inflate(savedInstanceState)
-    dropshadow.inflate(savedInstanceState)
-  }
-
-  private fun layoutComponents(layoutRoot: ConstraintLayout) {
-    ConstraintSet().apply {
-      clone(layoutRoot)
-
-      toolbar.also {
-        connect(it.id(), ConstraintSet.TOP, layoutRoot.id, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      frameView.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      dropshadow.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      applyTo(layoutRoot)
-    }
+    component.saveState(outState)
   }
 
   private fun showMainFragment() {
