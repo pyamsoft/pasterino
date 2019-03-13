@@ -69,8 +69,8 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
         .plusMainComponent(layoutRoot)
         .inject(this)
 
-    toolbarComponent.bind(this, savedInstanceState, this)
     component.bind(this, savedInstanceState, this)
+    toolbarComponent.bind(this, savedInstanceState, this)
 
     toolbarComponent.layout(layoutRoot)
     component.layout(layoutRoot, toolbarComponent.id())
