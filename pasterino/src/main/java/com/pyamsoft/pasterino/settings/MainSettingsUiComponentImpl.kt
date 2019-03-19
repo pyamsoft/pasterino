@@ -23,6 +23,7 @@ import com.pyamsoft.pasterino.service.ServiceFinishPresenter
 import com.pyamsoft.pasterino.settings.MainSettingsUiComponent.Callback
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import timber.log.Timber
 
 internal class MainSettingsUiComponentImpl internal constructor(
@@ -34,6 +35,10 @@ internal class MainSettingsUiComponentImpl internal constructor(
     MainSettingsUiComponent,
     SettingsPresenter.Callback,
     ClearAllPresenter.Callback {
+
+  override fun id(): Int {
+    throw InvalidIdException
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -51,7 +56,7 @@ internal class MainSettingsUiComponentImpl internal constructor(
     clearPresenter.bind(this)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     settingsView.saveState(outState)
   }
 

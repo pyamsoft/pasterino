@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.service.ServiceStatePresenter
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 
 internal class MainFragmentUiComponentImpl internal constructor(
   private val presenter: MainFragmentPresenter,
@@ -32,6 +33,10 @@ internal class MainFragmentUiComponentImpl internal constructor(
     MainFragmentUiComponent,
     MainFragmentPresenter.Callback,
     ServiceStatePresenter.Callback {
+
+  override fun id(): Int {
+    throw InvalidIdException
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -51,7 +56,7 @@ internal class MainFragmentUiComponentImpl internal constructor(
     serviceStatePresenter.bind(this)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     frameView.saveState(outState)
     actionView.saveState(outState)
   }

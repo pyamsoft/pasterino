@@ -18,7 +18,6 @@
 package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.main.MainToolbarUiComponent.Callback
@@ -50,30 +49,17 @@ internal class MainToolbarUiComponentImpl internal constructor(
     dropshadowView.inflate(savedInstanceState)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     toolbarView.saveState(outState)
     dropshadowView.saveState(outState)
   }
 
-  override fun layout(constraintLayout: ConstraintLayout) {
-    ConstraintSet().apply {
-      clone(constraintLayout)
-
-      toolbarView.also {
-        connect(it.id(), ConstraintSet.TOP, constraintLayout.id, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      dropshadowView.also {
-        connect(it.id(), ConstraintSet.TOP, toolbarView.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      applyTo(constraintLayout)
+  override fun onLayout(set: ConstraintSet) {
+    dropshadowView.also {
+      set.connect(it.id(), ConstraintSet.TOP, toolbarView.id(), ConstraintSet.BOTTOM)
+      set.connect(it.id(), ConstraintSet.START, toolbarView.id(), ConstraintSet.START)
+      set.connect(it.id(), ConstraintSet.END, toolbarView.id(), ConstraintSet.END)
+      set.constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
     }
   }
 
