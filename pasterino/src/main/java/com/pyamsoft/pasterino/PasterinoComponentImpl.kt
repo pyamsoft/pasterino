@@ -27,16 +27,16 @@ import com.pyamsoft.pasterino.main.MainComponentImpl
 import com.pyamsoft.pasterino.main.MainFragmentComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponentImpl
 import com.pyamsoft.pasterino.main.MainModule
-import com.pyamsoft.pasterino.service.PastePresenterImpl
+import com.pyamsoft.pasterino.service.PasteBinder
 import com.pyamsoft.pasterino.service.PasteRequestEvent
 import com.pyamsoft.pasterino.service.PasteService
+import com.pyamsoft.pasterino.service.ServiceFinishBinder
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
-import com.pyamsoft.pasterino.service.ServiceFinishPresenterImpl
 import com.pyamsoft.pasterino.service.ServiceModule
-import com.pyamsoft.pasterino.service.ServiceStatePresenterImpl
+import com.pyamsoft.pasterino.service.ServiceStateBinder
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pasterino.settings.ClearAllEvent
-import com.pyamsoft.pasterino.settings.ClearAllPresenterImpl
+import com.pyamsoft.pasterino.settings.ClearAllPresenter
 import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent
 import com.pyamsoft.pasterino.settings.SettingsComponentImpl
@@ -55,8 +55,6 @@ internal class PasterinoComponentImpl internal constructor(
   private val pasteRequestBus = RxBus.create<PasteRequestEvent>()
   private val serviceFinishBus = RxBus.create<ServiceFinishEvent>()
 
-  private val schedulerProvider = moduleProvider.schedulerProvider()
-  private val navModule = moduleProvider.failedNavigationModule()
   private val enforcer = moduleProvider.enforcer()
   private val loaderModule = moduleProvider.loaderModule()
   private val mainModule: MainModule
@@ -70,21 +68,21 @@ internal class PasterinoComponentImpl internal constructor(
 
   override fun inject(dialog: ConfirmationDialog) {
     dialog.apply {
-      this.presenter = ClearAllPresenterImpl(mainModule.interactor, clearAllBus)
+      this.presenter = ClearAllPresenter(mainModule.interactor, clearAllBus)
     }
   }
 
   override fun inject(service: PasteService) {
     service.apply {
-      this.presenter = PastePresenterImpl(enforcer, serviceModule.interactor, pasteRequestBus)
-      this.finishPresenter = ServiceFinishPresenterImpl(serviceFinishBus)
-      this.statePresenter = ServiceStatePresenterImpl(serviceModule.interactor)
+      this.pasteBinder = PasteBinder(enforcer, serviceModule.interactor, pasteRequestBus)
+      this.finishBinder = ServiceFinishBinder(serviceFinishBus)
+      this.stateBinder = ServiceStateBinder(serviceModule.interactor)
     }
   }
 
   override fun inject(service: SinglePasteService) {
     service.apply {
-      this.presenter = PastePresenterImpl(enforcer, serviceModule.interactor, pasteRequestBus)
+      this.pasteBinder = PasteBinder(enforcer, serviceModule.interactor, pasteRequestBus)
     }
   }
 

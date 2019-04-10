@@ -17,14 +17,33 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.arch.UiBinder
+import com.pyamsoft.pydroid.core.bus.EventBus
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-interface ServiceFinishPresenter : Presenter<ServiceFinishPresenter.Callback> {
+internal class ServiceFinishBinder internal constructor(
+  private val bus: EventBus<ServiceFinishEvent>
+) : UiBinder<ServiceFinishBinder.Callback>() {
 
-  fun finish()
+  override fun onBind() {
+    bus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { callback.onServiceFinished() }
+        .destroy()
+  }
 
-  interface Callback {
+  override fun onUnbind() {
+  }
+
+  fun finish() {
+    bus.publish(ServiceFinishEvent)
+  }
+
+  interface Callback : UiBinder.Callback {
 
     fun onServiceFinished()
   }
+
 }

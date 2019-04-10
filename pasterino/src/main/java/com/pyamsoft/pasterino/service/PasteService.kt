@@ -31,12 +31,12 @@ import com.pyamsoft.pasterino.PasterinoComponent
 import timber.log.Timber
 
 class PasteService : AccessibilityService(),
-    ServiceFinishPresenter.Callback,
-    PastePresenter.Callback {
+    ServiceFinishBinder.Callback,
+    PasteBinder.Callback {
 
-  internal lateinit var presenter: PastePresenter
-  internal lateinit var finishPresenter: ServiceFinishPresenter
-  internal lateinit var statePresenter: ServiceStatePresenter
+  internal lateinit var pasteBinder: PasteBinder
+  internal lateinit var finishBinder: ServiceFinishBinder
+  internal lateinit var stateBinder: ServiceStateBinder
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -51,8 +51,8 @@ class PasteService : AccessibilityService(),
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    finishPresenter.bind(this)
-    presenter.bind(this)
+    finishBinder.bind(this)
+    pasteBinder.bind(this)
   }
 
   override fun onServiceFinished() {
@@ -100,7 +100,7 @@ class PasteService : AccessibilityService(),
 
   override fun onServiceConnected() {
     super.onServiceConnected()
-    statePresenter.start()
+    stateBinder.start()
     PasteServiceNotification.start(this)
   }
 
@@ -139,14 +139,14 @@ class PasteService : AccessibilityService(),
 
   override fun onUnbind(intent: Intent): Boolean {
     PasteServiceNotification.stop(this)
-    statePresenter.stop()
+    stateBinder.stop()
     return super.onUnbind(intent)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    presenter.unbind()
-    finishPresenter.unbind()
+    pasteBinder.unbind()
+    finishBinder.unbind()
 
     Pasterino.getRefWatcher(this)
         .watch(this)

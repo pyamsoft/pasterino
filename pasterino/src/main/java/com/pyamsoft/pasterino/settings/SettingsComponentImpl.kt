@@ -21,7 +21,7 @@ import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
-import com.pyamsoft.pasterino.service.ServiceFinishPresenterImpl
+import com.pyamsoft.pasterino.service.ServiceFinishBinder
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
@@ -36,18 +36,18 @@ internal class SettingsComponentImpl internal constructor(
 ) : SettingsComponent {
 
   override fun inject(fragment: MainSettingsPreferenceFragment) {
-    val settingsPresenter = SettingsPresenterImpl(significantScrollBus)
+    val settingsBinder = SettingsBinder(significantScrollBus)
     val view = SettingsView(
-        fragment.viewLifecycleOwner, recyclerView, preferenceScreen, settingsPresenter
+        fragment.viewLifecycleOwner, recyclerView, preferenceScreen, settingsBinder
     )
-    val clearPresenter = ClearAllPresenterImpl(interactor, clearAllBus)
-    val serviceFinishPresenter = ServiceFinishPresenterImpl(serviceFinishBus)
+    val clearPresenter = ClearAllPresenter(interactor, clearAllBus)
+    val serviceFinishBinder = ServiceFinishBinder(serviceFinishBus)
     val toolbar = ToolbarView(fragment.requireToolbarActivity())
 
     fragment.apply {
       this.toolbarView = toolbar
       this.component = MainSettingsUiComponentImpl(
-          view, settingsPresenter, serviceFinishPresenter, clearPresenter
+          view, settingsBinder, serviceFinishBinder, clearPresenter
       )
     }
   }

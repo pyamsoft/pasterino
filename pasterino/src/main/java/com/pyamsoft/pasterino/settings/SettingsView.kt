@@ -61,10 +61,15 @@ internal class SettingsView internal constructor(
     scrollListener = null
   }
 
-  fun showErrorMessage(message: String) {
+  fun showError(message: String) {
     Snackbreak.bindTo(owner)
         .short(recyclerView, message)
         .show()
+  }
+
+  fun clearError() {
+    Snackbreak.bindTo(owner)
+        .dismiss()
   }
 
   interface Callback {

@@ -19,20 +19,21 @@ package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.service.ServiceStatePresenter
+import com.pyamsoft.pasterino.main.MainFragmentPresenter.FragmentState
+import com.pyamsoft.pasterino.service.ServiceStateBinder
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 
 internal class MainFragmentUiComponentImpl internal constructor(
   private val presenter: MainFragmentPresenter,
-  private val serviceStatePresenter: ServiceStatePresenter,
+  private val serviceStateBinder: ServiceStateBinder,
   private val frameView: MainFrameView,
   private val actionView: MainActionView
 ) : BaseUiComponent<MainFragmentUiComponent.Callback>(),
     MainFragmentUiComponent,
     MainFragmentPresenter.Callback,
-    ServiceStatePresenter.Callback {
+    ServiceStateBinder.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -47,13 +48,13 @@ internal class MainFragmentUiComponentImpl internal constructor(
       frameView.teardown()
       actionView.teardown()
       presenter.unbind()
-      serviceStatePresenter.unbind()
+      serviceStateBinder.unbind()
     }
 
     frameView.inflate(savedInstanceState)
     actionView.inflate(savedInstanceState)
     presenter.bind(this)
-    serviceStatePresenter.bind(this)
+    serviceStateBinder.bind(this)
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -69,16 +70,30 @@ internal class MainFragmentUiComponentImpl internal constructor(
     actionView.setFabFromServiceState(false)
   }
 
-  override fun onSignificantScrollEvent(visible: Boolean) {
-    actionView.toggleVisibility(visible)
-  }
-
-  override fun onServiceRunningAction() {
+  override fun handleServiceStarted() {
     callback.onShowServiceInfo()
   }
 
-  override fun onServiceStoppedAction() {
+  override fun handleServiceStopped() {
     callback.onShowPermissionDialog()
+  }
+
+  override fun onRender(
+    state: FragmentState,
+    oldState: FragmentState?
+  ) {
+    renderVisible(state, oldState)
+  }
+
+  private fun renderVisible(
+    state: FragmentState,
+    oldState: FragmentState?
+  ) {
+    state.isVisible.let { visible ->
+      if (oldState == null || oldState.isVisible != visible) {
+        actionView.toggleVisibility(visible)
+      }
+    }
   }
 
 }

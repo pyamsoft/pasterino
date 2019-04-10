@@ -19,7 +19,8 @@ package com.pyamsoft.pasterino.settings
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.service.ServiceFinishPresenter
+import com.pyamsoft.pasterino.service.ServiceFinishBinder
+import com.pyamsoft.pasterino.settings.ClearAllPresenter.ClearState
 import com.pyamsoft.pasterino.settings.MainSettingsUiComponent.Callback
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
@@ -28,12 +29,12 @@ import timber.log.Timber
 
 internal class MainSettingsUiComponentImpl internal constructor(
   private val settingsView: SettingsView,
-  private val presenter: SettingsPresenter,
-  private val serviceFinishPresenter: ServiceFinishPresenter,
+  private val binder: SettingsBinder,
+  private val serviceFinishBinder: ServiceFinishBinder,
   private val clearPresenter: ClearAllPresenter
 ) : BaseUiComponent<MainSettingsUiComponent.Callback>(),
     MainSettingsUiComponent,
-    SettingsPresenter.Callback,
+    SettingsBinder.Callback,
     ClearAllPresenter.Callback {
 
   override fun id(): Int {
@@ -47,12 +48,12 @@ internal class MainSettingsUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       settingsView.teardown()
-      presenter.unbind()
+      binder.unbind()
       clearPresenter.unbind()
     }
 
     settingsView.inflate(savedInstanceState)
-    presenter.bind(this)
+    binder.bind(this)
     clearPresenter.bind(this)
   }
 
@@ -64,9 +65,9 @@ internal class MainSettingsUiComponentImpl internal constructor(
     callback.showHowTo()
   }
 
-  override fun onClearAll() {
+  override fun handleClearAll() {
     try {
-      serviceFinishPresenter.finish()
+      serviceFinishBinder.finish()
     } catch (e: NullPointerException) {
       Timber.e(e, "Expected exception when Service is NULL")
     }
@@ -74,8 +75,26 @@ internal class MainSettingsUiComponentImpl internal constructor(
     callback.onKillApplication()
   }
 
-  override fun onClearAllError(throwable: Throwable) {
-    settingsView.showErrorMessage("Error resetting settings, please try again later")
+  override fun onRender(
+    state: ClearState,
+    oldState: ClearState?
+  ) {
+    renderError(state, oldState)
+  }
+
+  private fun renderError(
+    state: ClearState,
+    oldState: ClearState?
+  ) {
+    state.throwable.let { throwable ->
+      if (oldState == null || oldState.throwable != throwable) {
+        if (throwable == null) {
+          settingsView.clearError()
+        } else {
+          settingsView.showError("Error resetting settings, please try again later")
+        }
+      }
+    }
   }
 
 }

@@ -24,11 +24,9 @@ import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 
 internal class MainUiComponentImpl internal constructor(
-  private val frameView: MainFrameView,
-  private val presenter: MainPresenter
+  private val frameView: MainFrameView
 ) : BaseUiComponent<MainUiComponent.Callback>(),
-    MainUiComponent,
-    MainPresenter.Callback {
+    MainUiComponent {
 
   override fun id(): Int {
     return frameView.id()
@@ -41,11 +39,9 @@ internal class MainUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       frameView.teardown()
-      presenter.unbind()
     }
 
     frameView.inflate(savedInstanceState)
-    presenter.bind(this)
   }
 
   override fun onSaveState(outState: Bundle) {

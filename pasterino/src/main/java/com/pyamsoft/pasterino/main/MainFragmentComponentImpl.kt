@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.service.ServiceStatePresenterImpl
+import com.pyamsoft.pasterino.service.ServiceStateBinder
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -34,11 +34,11 @@ internal class MainFragmentComponentImpl internal constructor(
 ) : MainFragmentComponent {
 
   override fun inject(fragment: MainFragment) {
-    val mainPresenter = MainFragmentPresenterImpl(scrollBus)
+    val mainPresenter = MainFragmentPresenter(scrollBus)
     val actionView = MainActionView(imageLoader, parent, mainPresenter)
     val frameView = MainFrameView(parent)
     val toolbarView = ToolbarView(fragment.requireToolbarActivity())
-    val serviceStatePresenter = ServiceStatePresenterImpl(interactor)
+    val serviceStatePresenter = ServiceStateBinder(interactor)
 
     fragment.apply {
       this.toolbar = toolbarView

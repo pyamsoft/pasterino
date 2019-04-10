@@ -17,29 +17,46 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pasterino.api.PasteServiceInteractor
+import com.pyamsoft.pydroid.arch.UiBinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-internal class ServiceFinishPresenterImpl internal constructor(
-  bus: EventBus<ServiceFinishEvent>
-) : BasePresenter<ServiceFinishEvent, ServiceFinishPresenter.Callback>(bus),
-    ServiceFinishPresenter {
+internal class ServiceStateBinder internal constructor(
+  private val interactor: PasteServiceInteractor
+) : UiBinder<ServiceStateBinder.Callback>() {
 
   override fun onBind() {
-    listen()
+    interactor.observeServiceState()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { callback.onServiceFinished() }
+        .subscribe {
+          if (it) {
+            callback.onServiceStarted()
+          } else {
+            callback.onServiceStopped()
+          }
+        }
         .destroy()
   }
 
   override fun onUnbind() {
   }
 
-  override fun finish() {
-    publish(ServiceFinishEvent)
+  fun start() {
+    interactor.setServiceState(true)
+  }
+
+  fun stop() {
+    interactor.setServiceState(false)
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun onServiceStarted()
+
+    fun onServiceStopped()
+
   }
 
 }

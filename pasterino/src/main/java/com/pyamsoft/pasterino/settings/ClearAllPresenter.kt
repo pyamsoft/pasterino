@@ -17,16 +17,67 @@
 
 package com.pyamsoft.pasterino.settings
 
+import com.pyamsoft.pasterino.api.MainInteractor
+import com.pyamsoft.pasterino.settings.ClearAllPresenter.ClearState
 import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
-interface ClearAllPresenter : Presenter<ClearAllPresenter.Callback> {
+class ClearAllPresenter internal constructor(
+  private val interactor: MainInteractor,
+  private val bus: EventBus<ClearAllEvent>
+) : Presenter<ClearState, ClearAllPresenter.Callback>() {
 
-  fun clearAll()
+  private var clearDisposable by singleDisposable()
 
-  interface Callback {
+  override fun initialState(): ClearState {
+    return ClearState(throwable = null)
+  }
 
-    fun onClearAll()
+  override fun onBind() {
+    bus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { handleClearAll() }
+        .destroy()
+  }
 
-    fun onClearAllError(throwable: Throwable)
+  override fun onUnbind() {
+    clearDisposable.tryDispose()
+  }
+
+  fun clearAll() {
+    clearDisposable = interactor.clearAll()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({ bus.publish(ClearAllEvent) }, {
+          Timber.e(it, "Error clearing all settings")
+          handleClearAllError(it)
+        })
+  }
+
+  private fun handleClearAll() {
+    setState {
+      copy(throwable = null)
+    }
+    callback.handleClearAll()
+  }
+
+  private fun handleClearAllError(throwable: Throwable) {
+    setState {
+      copy(throwable = throwable)
+    }
+  }
+
+  data class ClearState(val throwable: Throwable?)
+
+  interface Callback : Presenter.Callback<ClearState> {
+
+    fun handleClearAll()
   }
 }
+

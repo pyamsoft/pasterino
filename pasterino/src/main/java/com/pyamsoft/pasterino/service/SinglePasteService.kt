@@ -26,21 +26,20 @@ import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import timber.log.Timber
 
-class SinglePasteService : Service(), PastePresenter.Callback {
+class SinglePasteService : Service(), PasteBinder.Callback {
 
-  internal lateinit var presenter: PastePresenter
+  internal lateinit var pasteBinder: PasteBinder
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-
-    presenter.bind(this)
+    pasteBinder.bind(this)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    presenter.unbind()
+    pasteBinder.unbind()
 
     Pasterino.getRefWatcher(this)
         .watch(this)
@@ -54,7 +53,7 @@ class SinglePasteService : Service(), PastePresenter.Callback {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    presenter.paste()
+    pasteBinder.paste()
     return Service.START_NOT_STICKY
   }
 

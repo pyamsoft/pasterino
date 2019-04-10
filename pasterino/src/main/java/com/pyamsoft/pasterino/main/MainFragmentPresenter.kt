@@ -17,17 +17,54 @@
 
 package com.pyamsoft.pasterino.main
 
+import com.pyamsoft.pasterino.main.MainFragmentPresenter.FragmentState
+import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.core.bus.EventBus
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-internal interface MainFragmentPresenter : Presenter<MainFragmentPresenter.Callback> {
+internal class MainFragmentPresenter internal constructor(
+  private val bus: EventBus<SignificantScrollEvent>
+) : Presenter<FragmentState, MainFragmentPresenter.Callback>(),
+    MainActionView.Callback {
 
-  interface Callback {
+  override fun initialState(): FragmentState {
+    return FragmentState(isVisible = false)
+  }
 
-    fun onServiceRunningAction()
+  override fun onBind() {
+    bus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { handleSignificantScrollEvent(it.visible) }
+        .destroy()
+  }
 
-    fun onServiceStoppedAction()
+  override fun onUnbind() {
+  }
 
-    fun onSignificantScrollEvent(visible: Boolean)
+  override fun onActionButtonClicked(running: Boolean) {
+    if (running) {
+      callback.handleServiceStarted()
+    } else {
+      callback.handleServiceStopped()
+    }
+  }
+
+  private fun handleSignificantScrollEvent(visible: Boolean) {
+    setState {
+      copy(isVisible = visible)
+    }
+  }
+
+  data class FragmentState(val isVisible: Boolean)
+
+  interface Callback : Presenter.Callback<FragmentState> {
+
+    fun handleServiceStarted()
+
+    fun handleServiceStopped()
   }
 
 }

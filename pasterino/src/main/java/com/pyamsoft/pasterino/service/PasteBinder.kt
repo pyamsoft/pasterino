@@ -18,7 +18,7 @@
 package com.pyamsoft.pasterino.service
 
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.UiBinder
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.threads.Enforcer
@@ -29,17 +29,16 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-internal class PastePresenterImpl internal constructor(
+internal class PasteBinder internal constructor(
   private val enforcer: Enforcer,
   private val interactor: PasteServiceInteractor,
-  bus: EventBus<PasteRequestEvent>
-) : BasePresenter<PasteRequestEvent, PastePresenter.Callback>(bus),
-    PastePresenter {
+  private val bus: EventBus<PasteRequestEvent>
+) : UiBinder<PasteBinder.Callback>() {
 
   private var pasteDisposable by singleDisposable()
 
   override fun onBind() {
-    listen()
+    bus.listen()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { callback.onPaste(it.deepSearchEnabled) }
@@ -50,7 +49,7 @@ internal class PastePresenterImpl internal constructor(
     pasteDisposable.tryDispose()
   }
 
-  override fun paste() {
+  fun paste() {
     pasteDisposable = interactor.getPasteDelayTime()
         .observeOn(Schedulers.io())
         .flatMap {
@@ -68,7 +67,13 @@ internal class PastePresenterImpl internal constructor(
         }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(Consumer { publish(PasteRequestEvent(it)) })
+        .subscribe(Consumer { bus.publish(PasteRequestEvent(it)) })
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun onPaste(deepSearchEnabled: Boolean)
+
   }
 
 }

@@ -27,11 +27,10 @@ internal class MainComponentImpl internal constructor(
   override fun inject(activity: MainActivity) {
     val dropshadowView = DropshadowView(parent)
     val mainFrame = MainFrameView(parent)
-    val mainPresenter = MainPresenterImpl()
     val toolbarView = MainToolbarView(activity, parent)
 
     activity.apply {
-      this.component = MainUiComponentImpl(mainFrame, mainPresenter)
+      this.component = MainUiComponentImpl(mainFrame)
       this.toolbarComponent = MainToolbarUiComponentImpl(toolbarView, dropshadowView)
     }
   }
