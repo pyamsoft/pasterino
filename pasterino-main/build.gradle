@@ -57,5 +57,8 @@ kapt {
 }
 
 dependencies {
+  implementation "com.google.dagger:dagger:$dagger"
+  kapt "com.google.dagger:dagger-compiler:$dagger"
+
   api project(":pasterino-api")
 }

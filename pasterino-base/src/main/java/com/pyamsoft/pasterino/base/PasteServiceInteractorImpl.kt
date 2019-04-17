@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.base
 
 import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
@@ -23,8 +23,11 @@ import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Observable
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class PasteServiceInteractorImpl internal constructor(
+@Singleton
+internal class PasteServiceInteractorImpl @Inject internal constructor(
   private val enforcer: Enforcer,
   private val preferences: PastePreferences
 ) : PasteServiceInteractor {

@@ -59,6 +59,9 @@ kapt {
 dependencies {
   api "androidx.preference:preference:$preference"
 
+  implementation "com.google.dagger:dagger:$dagger"
+  kapt "com.google.dagger:dagger-compiler:$dagger"
+
   // PYDroid
   api project(":pasterino-api")
 }

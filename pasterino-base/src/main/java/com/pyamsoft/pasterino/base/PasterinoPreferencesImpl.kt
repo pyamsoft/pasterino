@@ -23,8 +23,11 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
+import javax.inject.Inject
+import javax.inject.Singleton
 
-internal class PasterinoPreferencesImpl internal constructor(
+@Singleton
+internal class PasterinoPreferencesImpl @Inject internal constructor(
   context: Context
 ) : PastePreferences, ClearPreferences {
 

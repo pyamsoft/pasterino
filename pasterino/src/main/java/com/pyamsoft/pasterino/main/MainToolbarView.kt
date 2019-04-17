@@ -26,8 +26,9 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.util.toDp
+import javax.inject.Inject
 
-internal class MainToolbarView internal constructor(
+internal class MainToolbarView @Inject internal constructor(
   private val toolbarActivityProvider: ToolbarActivityProvider,
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {

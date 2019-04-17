@@ -59,7 +59,7 @@ object PasteServiceNotification {
       synchronized(this) {
         if (notificationManager == null) {
           notificationManager =
-              requireNotNull(context.applicationContext.getSystemService<NotificationManager>())
+            requireNotNull(context.applicationContext.getSystemService<NotificationManager>())
         }
       }
     }
@@ -73,7 +73,7 @@ object PasteServiceNotification {
     val appContext = context.applicationContext
     val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
     val notificationChannelId = "pasterino_foreground"
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
       setupNotificationChannel(appContext, notificationChannelId)
     }
     return NotificationCompat.Builder(appContext, notificationChannelId)

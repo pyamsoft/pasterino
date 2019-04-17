@@ -20,18 +20,20 @@ package com.pyamsoft.pasterino.main
 import android.view.ViewGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.main.MainActionView.Callback
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import javax.inject.Inject
 
-internal class MainActionView internal constructor(
+internal class MainActionView @Inject internal constructor(
   private val imageLoader: ImageLoader,
   parent: ViewGroup,
-  callback: MainActionView.Callback
-) : BaseUiView<MainActionView.Callback>(parent, callback) {
+  callback: Callback
+) : BaseUiView<Callback>(parent, callback) {
 
   private var actionIconLoaded: Loaded? = null
 

@@ -23,16 +23,18 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.settings.SettingsView.Callback
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.widget.scroll.HideOnScrollListener
+import javax.inject.Inject
 
-internal class SettingsView internal constructor(
+internal class SettingsView @Inject internal constructor(
   private val owner: LifecycleOwner,
   private val recyclerView: RecyclerView,
   parent: PreferenceScreen,
-  callback: SettingsView.Callback
-) : PrefUiView<SettingsView.Callback>(parent, callback) {
+  callback: Callback
+) : PrefUiView<Callback>(parent, callback) {
 
   private val explain by lazyPref<Preference>(R.string.explain_key)
 

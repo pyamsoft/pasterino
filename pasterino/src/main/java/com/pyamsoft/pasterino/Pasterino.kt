@@ -21,15 +21,12 @@ import android.app.Application
 import android.app.Service
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.theme.ThemeInjector
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 
-class Pasterino : Application(), PYDroid.Instance {
+class Pasterino : Application() {
 
-  private var pyDroid: PYDroid? = null
-  private lateinit var theming: Theming
   private lateinit var component: PasterinoComponent
   private lateinit var refWatcher: RefWatcher
 
@@ -48,30 +45,27 @@ class Pasterino : Application(), PYDroid.Instance {
     Theming.IS_DEFAULT_DARK_THEME = false
     PYDroid.init(
         this,
-        this,
         getString(R.string.app_name),
         "https://github.com/pyamsoft/pasterino/issues",
         BuildConfig.VERSION_CODE,
         BuildConfig.DEBUG
-    )
+    ) { provider ->
+      component = DaggerPasterinoComponent.factory()
+          .create(this, provider.enforcer(), provider.imageLoader())
+    }
   }
 
   override fun getSystemService(name: String): Any {
-    return when (name) {
-      Injector.name -> component
-      ThemeInjector.name -> theming
-      else -> super.getSystemService(name)
+    val service = PYDroid.getSystemService(name)
+    if (service != null) {
+      return service
     }
-  }
 
-  override fun getPydroid(): PYDroid? = pyDroid
-
-  override fun setPydroid(instance: PYDroid) {
-    pyDroid = instance.also {
-      component = PasterinoComponentImpl(this, it.modules())
-      theming = it.modules()
-          .theming()
+    if (PasterinoComponent::class.java.name == name) {
+      return component
     }
+
+    return super.getSystemService(name)
   }
 
   companion object {

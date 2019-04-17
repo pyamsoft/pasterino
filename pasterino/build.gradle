@@ -86,8 +86,13 @@ dependencies {
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
   releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
   testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+
   // PYDroid
   implementation "com.pyamsoft.pydroid:ui:$pydroid"
+
+  implementation "com.google.dagger:dagger:$dagger"
+  kapt "com.google.dagger:dagger-compiler:$dagger"
+
   implementation project(':pasterino-base')
   implementation project(':pasterino-main')
   implementation project(':pasterino-service')

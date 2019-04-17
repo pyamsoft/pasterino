@@ -19,7 +19,7 @@ package com.pyamsoft.pasterino.settings
 
 import com.pyamsoft.pydroid.arch.UiComponent
 
-internal interface MainSettingsUiComponent : UiComponent<MainSettingsUiComponent.Callback> {
+internal interface SettingsUiComponent : UiComponent<SettingsUiComponent.Callback> {
 
   interface Callback {
 

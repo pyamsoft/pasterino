@@ -18,25 +18,25 @@
 package com.pyamsoft.pasterino.settings
 
 import com.pyamsoft.pasterino.api.MainInteractor
-import com.pyamsoft.pasterino.settings.ClearAllPresenter.ClearState
-import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pasterino.settings.ClearAllViewModel.ClearState
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
-class ClearAllPresenter internal constructor(
+class ClearAllViewModel @Inject internal constructor(
   private val interactor: MainInteractor,
   private val bus: EventBus<ClearAllEvent>
-) : Presenter<ClearState, ClearAllPresenter.Callback>() {
+) : UiViewModel<ClearState>(
+    initialState = ClearState(isClearing = false, throwable = null)
+) {
 
   private var clearDisposable by singleDisposable()
-
-  override fun initialState(): ClearState {
-    return ClearState(throwable = null)
-  }
 
   override fun onBind() {
     bus.listen()
@@ -62,22 +62,23 @@ class ClearAllPresenter internal constructor(
 
   private fun handleClearAll() {
     setState {
-      copy(throwable = null)
+      copy(throwable = null).also {
+        setUniqueState(true, old = { it.isClearing }) { state, value ->
+          state.copy(isClearing = value)
+        }
+      }
     }
-    callback.handleClearAll()
   }
 
   private fun handleClearAllError(throwable: Throwable) {
     setState {
-      copy(throwable = throwable)
+      copy(isClearing = false, throwable = throwable)
     }
   }
 
-  data class ClearState(val throwable: Throwable?)
-
-  interface Callback : Presenter.Callback<ClearState> {
-
-    fun handleClearAll()
-  }
+  data class ClearState(
+    val isClearing: Boolean,
+    val throwable: Throwable?
+  ) : UiState
 }
 

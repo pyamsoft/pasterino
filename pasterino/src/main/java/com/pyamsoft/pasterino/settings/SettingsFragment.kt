@@ -17,32 +17,18 @@
 
 package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pydroid.arch.UiBinder
-import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
-internal class SettingsBinder internal constructor(
-  private val bus: EventBus<SignificantScrollEvent>
-) : UiBinder<SettingsBinder.Callback>(),
-    SettingsView.Callback {
+class SettingsFragment : AppSettingsFragment() {
 
-  override fun onExplainClicked() {
-    callback.onShowExplanation()
+  override fun provideSettingsFragment(): AppSettingsPreferenceFragment =
+    SettingsPreferenceFragment()
+
+  override fun provideSettingsTag(): String =
+    SettingsPreferenceFragment.TAG
+
+  companion object {
+    const val TAG = "SettingsFragment"
   }
-
-  override fun onSignificantScrollEvent(visible: Boolean) {
-    bus.publish(SignificantScrollEvent(visible))
-  }
-
-  override fun onBind() {
-  }
-
-  override fun onUnbind() {
-  }
-
-  interface Callback : UiBinder.Callback {
-
-    fun onShowExplanation()
-
-  }
-
 }

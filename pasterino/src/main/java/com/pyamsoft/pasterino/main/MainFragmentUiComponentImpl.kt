@@ -19,21 +19,22 @@ package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pasterino.main.MainFragmentPresenter.FragmentState
-import com.pyamsoft.pasterino.service.ServiceStateBinder
+import com.pyamsoft.pasterino.main.MainFragmentViewModel.FragmentState
+import com.pyamsoft.pasterino.service.ServiceStateViewModel
+import com.pyamsoft.pasterino.service.ServiceStateViewModel.ServiceState
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.arch.renderOnChange
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
+import javax.inject.Inject
 
-internal class MainFragmentUiComponentImpl internal constructor(
-  private val presenter: MainFragmentPresenter,
-  private val serviceStateBinder: ServiceStateBinder,
+internal class MainFragmentUiComponentImpl @Inject internal constructor(
+  private val viewModel: MainFragmentViewModel,
+  private val serviceStateViewModel: ServiceStateViewModel,
   private val frameView: MainFrameView,
   private val actionView: MainActionView
 ) : BaseUiComponent<MainFragmentUiComponent.Callback>(),
-    MainFragmentUiComponent,
-    MainFragmentPresenter.Callback,
-    ServiceStateBinder.Callback {
+    MainFragmentUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -47,53 +48,61 @@ internal class MainFragmentUiComponentImpl internal constructor(
     owner.doOnDestroy {
       frameView.teardown()
       actionView.teardown()
-      presenter.unbind()
-      serviceStateBinder.unbind()
+      viewModel.unbind()
+      serviceStateViewModel.unbind()
     }
 
     frameView.inflate(savedInstanceState)
     actionView.inflate(savedInstanceState)
-    presenter.bind(this)
-    serviceStateBinder.bind(this)
+    serviceStateViewModel.bind { state, oldState ->
+      renderServiceState(state, oldState)
+    }
+    viewModel.bind { state, oldState ->
+      renderStarted(state, oldState)
+      renderVisible(state, oldState)
+    }
   }
 
-  override fun onSaveState(outState: Bundle) {
-    frameView.saveState(outState)
-    actionView.saveState(outState)
-  }
-
-  override fun onServiceStarted() {
-    actionView.setFabFromServiceState(true)
-  }
-
-  override fun onServiceStopped() {
-    actionView.setFabFromServiceState(false)
-  }
-
-  override fun handleServiceStarted() {
-    callback.onShowServiceInfo()
-  }
-
-  override fun handleServiceStopped() {
-    callback.onShowPermissionDialog()
-  }
-
-  override fun onRender(
+  private fun renderStarted(
     state: FragmentState,
     oldState: FragmentState?
   ) {
-    renderVisible(state, oldState)
+    state.renderOnChange(oldState, value = { it.isStarted }) { isStarted ->
+      if (isStarted != null) {
+        if (isStarted.isStarted) {
+          callback.onShowServiceInfo()
+        } else {
+          callback.onShowPermissionDialog()
+        }
+      }
+    }
   }
 
   private fun renderVisible(
     state: FragmentState,
     oldState: FragmentState?
   ) {
-    state.isVisible.let { visible ->
-      if (oldState == null || oldState.isVisible != visible) {
-        actionView.toggleVisibility(visible)
+    state.renderOnChange(oldState, value = { it.isVisible }) { visible ->
+      if (visible != null) {
+        actionView.toggleVisibility(visible.isVisible)
       }
     }
+  }
+
+  private fun renderServiceState(
+    state: ServiceState,
+    oldState: ServiceState?
+  ) {
+    state.renderOnChange(oldState, value = { it.isStarted }) { isStarted ->
+      if (isStarted != null) {
+        actionView.setFabFromServiceState(isStarted.isStarted)
+      }
+    }
+  }
+
+  override fun onSaveState(outState: Bundle) {
+    frameView.saveState(outState)
+    actionView.saveState(outState)
   }
 
 }

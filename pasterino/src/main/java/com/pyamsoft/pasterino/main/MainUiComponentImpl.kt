@@ -22,10 +22,11 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pasterino.main.MainUiComponent.Callback
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import javax.inject.Inject
 
-internal class MainUiComponentImpl internal constructor(
+internal class MainUiComponentImpl @Inject internal constructor(
   private val frameView: MainFrameView
-) : BaseUiComponent<MainUiComponent.Callback>(),
+) : BaseUiComponent<Callback>(),
     MainUiComponent {
 
   override fun id(): Int {

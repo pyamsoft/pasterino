@@ -15,20 +15,22 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.base
 
+import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.MainInteractor
-import com.pyamsoft.pasterino.api.PasterinoModule
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import io.reactivex.Single
+import javax.inject.Inject
 
-class MainModule(
-  module: PasterinoModule,
-  enforcer: Enforcer
-) {
+internal class MainInteractorImpl @Inject internal constructor(
+  private val preferences: ClearPreferences,
+  private val enforcer: Enforcer
+) : MainInteractor {
 
-  val interactor: MainInteractor
-
-  init {
-    interactor = MainInteractorImpl(module.provideClearPreferences(), enforcer)
+  // This must be a Single or the stream will not continue
+  override fun clearAll(): Single<Unit> = Single.fromCallable {
+    enforcer.assertNotOnMainThread()
+    return@fromCallable preferences.clearAll()
   }
 }

@@ -23,22 +23,23 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pasterino.BuildConfig
-import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.layout
+import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
-import com.pyamsoft.pydroid.ui.theme.ThemeInjector
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.commit
+import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
 
 class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiComponent.Callback {
 
-  internal lateinit var toolbarComponent: MainToolbarUiComponent
-  internal lateinit var component: MainUiComponent
+  @field:Inject internal lateinit var toolbarComponent: MainToolbarUiComponent
+  @field:Inject internal lateinit var component: MainUiComponent
 
   override val versionName: String = BuildConfig.VERSION_NAME
 
@@ -57,7 +58,7 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    if (ThemeInjector.obtain(applicationContext).isDarkTheme()) {
+    if (Injector.obtain<Theming>(applicationContext).isDarkTheme()) {
       setTheme(R.style.Theme_Pasterino_Dark)
     } else {
       setTheme(R.style.Theme_Pasterino_Light)
@@ -67,7 +68,8 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
 
     val layoutRoot = findViewById<ConstraintLayout>(R.id.content_root)
     Injector.obtain<PasterinoComponent>(applicationContext)
-        .plusMainComponent(layoutRoot)
+        .plusMainComponent()
+        .create(layoutRoot, this)
         .inject(this)
 
     component.bind(layoutRoot, this, savedInstanceState, this)

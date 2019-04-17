@@ -21,12 +21,13 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
+import com.pyamsoft.pydroid.ui.Injector
+import javax.inject.Inject
 
 class ConfirmationDialog : DialogFragment() {
 
-  internal lateinit var presenter: ClearAllPresenter
+  @field:Inject internal lateinit var viewModel: ClearAllViewModel
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
@@ -39,7 +40,7 @@ class ConfirmationDialog : DialogFragment() {
         |You will have to manually restart the Accessibility Service component of Pasterino""".trimMargin()
         )
         .setPositiveButton("Yes") { _, _ ->
-          presenter.clearAll()
+          viewModel.clearAll()
           dismiss()
         }
         .setNegativeButton("No") { _, _ -> dismiss() }

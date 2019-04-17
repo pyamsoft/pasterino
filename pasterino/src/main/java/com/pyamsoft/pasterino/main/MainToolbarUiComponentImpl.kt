@@ -24,11 +24,12 @@ import com.pyamsoft.pasterino.main.MainToolbarUiComponent.Callback
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
+import javax.inject.Inject
 
-internal class MainToolbarUiComponentImpl internal constructor(
+internal class MainToolbarUiComponentImpl @Inject internal constructor(
   private val toolbarView: MainToolbarView,
   private val dropshadowView: DropshadowView
-) : BaseUiComponent<MainToolbarUiComponent.Callback>(),
+) : BaseUiComponent<Callback>(),
     MainToolbarUiComponent {
 
   override fun id(): Int {

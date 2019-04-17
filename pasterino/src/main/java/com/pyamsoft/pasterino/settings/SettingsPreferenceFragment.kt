@@ -21,21 +21,23 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.service.PasteServiceNotification
 import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
-    MainSettingsUiComponent.Callback {
+class SettingsPreferenceFragment : AppSettingsPreferenceFragment(),
+    SettingsUiComponent.Callback {
 
-  internal lateinit var toolbarView: ToolbarView
-  internal lateinit var component: MainSettingsUiComponent
+  @field:Inject internal lateinit var toolbar: ToolbarView
+  @field:Inject internal lateinit var component: SettingsUiComponent
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -46,22 +48,23 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
     super.onViewCreated(view, savedInstanceState)
 
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusSettingsComponent(listView, preferenceScreen)
+        .plusSettingsComponent()
+        .create(viewLifecycleOwner, requireToolbarActivity(), listView, preferenceScreen)
         .inject(this)
 
-    toolbarView.inflate(savedInstanceState)
+    toolbar.inflate(savedInstanceState)
     component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbarView.saveState(outState)
+    toolbar.saveState(outState)
     component.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    toolbarView.teardown()
+    toolbar.teardown()
   }
 
   override fun showHowTo() {
@@ -87,6 +90,6 @@ class MainSettingsPreferenceFragment : AppSettingsPreferenceFragment(),
 
   companion object {
 
-    const val TAG = "MainSettingsPreferenceFragment"
+    const val TAG = "SettingsPreferenceFragment"
   }
 }

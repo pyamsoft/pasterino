@@ -17,18 +17,34 @@
 
 package com.pyamsoft.pasterino
 
-import android.view.ViewGroup
+import android.content.Context
 import androidx.annotation.CheckResult
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.preference.PreferenceScreen
-import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pasterino.PasterinoComponent.PasterinoModule
+import com.pyamsoft.pasterino.base.BaseModule
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponent
+import com.pyamsoft.pasterino.main.MainHandler.MainEvent
+import com.pyamsoft.pasterino.service.PasteRequestEvent
 import com.pyamsoft.pasterino.service.PasteService
+import com.pyamsoft.pasterino.service.ServiceFinishEvent
 import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.settings.ClearAllEvent
 import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent
+import com.pyamsoft.pasterino.settings.SettingsHandler.SettingsEvent
+import com.pyamsoft.pasterino.settings.SignificantScrollEvent
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.loader.ImageLoader
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
+@Singleton
+@Component(modules = [PasterinoModule::class, BaseModule::class])
 interface PasterinoComponent {
 
   fun inject(dialog: ConfirmationDialog)
@@ -38,14 +54,79 @@ interface PasterinoComponent {
   fun inject(service: SinglePasteService)
 
   @CheckResult
-  fun plusMainComponent(parent: ViewGroup): MainComponent
+  fun plusMainComponent(): MainComponent.Factory
 
   @CheckResult
-  fun plusMainFragmentComponent(parent: ViewGroup): MainFragmentComponent
+  fun plusMainFragmentComponent(): MainFragmentComponent.Factory
 
   @CheckResult
-  fun plusSettingsComponent(
-    recyclerView: RecyclerView,
-    preferenceScreen: PreferenceScreen
-  ): SettingsComponent
+  fun plusSettingsComponent(): SettingsComponent.Factory
+
+  @Component.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance context: Context,
+      @BindsInstance enforcer: Enforcer,
+      @BindsInstance imageLoader: ImageLoader
+    ): PasterinoComponent
+  }
+
+  @Module
+  abstract class PasterinoModule {
+
+    @Module
+    companion object {
+
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun provideClearBus(): EventBus<ClearAllEvent> {
+        return RxBus.create()
+      }
+
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun providePasteBus(): EventBus<PasteRequestEvent> {
+        return RxBus.create()
+      }
+
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun provideServiceBus(): EventBus<ServiceFinishEvent> {
+        return RxBus.create()
+      }
+
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun provideSettingsEventBus(): EventBus<SettingsEvent> {
+        return RxBus.create()
+      }
+
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun provideMainEventBus(): EventBus<MainEvent> {
+        return RxBus.create()
+      }
+
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun provideScrollBus(): EventBus<SignificantScrollEvent> {
+        return RxBus.create()
+      }
+
+    }
+  }
 }

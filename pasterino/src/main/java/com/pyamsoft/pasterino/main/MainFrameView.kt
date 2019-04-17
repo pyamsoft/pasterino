@@ -21,8 +21,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.BaseUiView
+import javax.inject.Inject
 
-internal class MainFrameView internal constructor(
+internal class MainFrameView @Inject internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 

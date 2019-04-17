@@ -17,46 +17,39 @@
 
 package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pydroid.arch.UiBinder
+import com.pyamsoft.pasterino.service.ServiceFinishViewModel.FinishState
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-internal class ServiceStateBinder internal constructor(
-  private val interactor: PasteServiceInteractor
-) : UiBinder<ServiceStateBinder.Callback>() {
+internal class ServiceFinishViewModel @Inject internal constructor(
+  private val bus: EventBus<ServiceFinishEvent>
+) : UiViewModel<FinishState>(
+    initialState = FinishState(isFinished = false)
+) {
 
   override fun onBind() {
-    interactor.observeServiceState()
+    bus.listen()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
-          if (it) {
-            callback.onServiceStarted()
-          } else {
-            callback.onServiceStopped()
-          }
-        }
+        .subscribe { handleServiceFinished() }
         .destroy()
+  }
+
+  private fun handleServiceFinished() {
+    setState { copy(isFinished = true) }
   }
 
   override fun onUnbind() {
   }
 
-  fun start() {
-    interactor.setServiceState(true)
+  fun finish() {
+    bus.publish(ServiceFinishEvent)
   }
 
-  fun stop() {
-    interactor.setServiceState(false)
-  }
-
-  interface Callback : UiBinder.Callback {
-
-    fun onServiceStarted()
-
-    fun onServiceStopped()
-
-  }
+  data class FinishState(val isFinished: Boolean) : UiState
 
 }

@@ -21,25 +21,41 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
+import com.pyamsoft.pasterino.service.PasteViewModel.PasteState
+import com.pyamsoft.pydroid.arch.renderOnChange
+import com.pyamsoft.pydroid.ui.Injector
 import timber.log.Timber
+import javax.inject.Inject
 
-class SinglePasteService : Service(), PasteBinder.Callback {
+class SinglePasteService : Service() {
 
-  internal lateinit var pasteBinder: PasteBinder
+  @field:Inject internal lateinit var viewModel: PasteViewModel
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-    pasteBinder.bind(this)
+    viewModel.bind { state, oldState ->
+      renderPaste(state, oldState)
+    }
+  }
+
+  private fun renderPaste(
+    state: PasteState,
+    oldState: PasteState?
+  ) {
+    state.renderOnChange(oldState, value = { it.isDeepSearchEnabled }) { deepSearch ->
+      if (deepSearch != null) {
+        stopSelf()
+      }
+    }
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    pasteBinder.unbind()
+    viewModel.unbind()
 
     Pasterino.getRefWatcher(this)
         .watch(this)
@@ -53,12 +69,8 @@ class SinglePasteService : Service(), PasteBinder.Callback {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    pasteBinder.paste()
-    return Service.START_NOT_STICKY
-  }
-
-  override fun onPaste(deepSearchEnabled: Boolean) {
-    stopSelf()
+    viewModel.paste()
+    return START_NOT_STICKY
   }
 
   companion object {

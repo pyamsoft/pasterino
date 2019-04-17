@@ -23,18 +23,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
-import com.pyamsoft.pasterino.Injector
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.settings.MainSettingsFragment
+import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
+import javax.inject.Inject
 
 class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
 
-  internal lateinit var toolbar: ToolbarView
-  internal lateinit var component: MainFragmentUiComponent
+  @field:Inject internal lateinit var toolbar: ToolbarView
+  @field:Inject internal lateinit var component: MainFragmentUiComponent
 
   private var layoutRoot: CoordinatorLayout? = null
 
@@ -54,7 +56,8 @@ class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
 
     layoutRoot = view.findViewById(R.id.layout_coordinator)
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
-        .plusMainFragmentComponent(requireNotNull(layoutRoot))
+        .plusMainFragmentComponent()
+        .create(requireToolbarActivity(), requireNotNull(layoutRoot))
         .inject(this)
 
     toolbar.inflate(savedInstanceState)
@@ -87,9 +90,9 @@ class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
 
   private fun displayPreferenceFragment() {
     val fragmentManager = childFragmentManager
-    if (fragmentManager.findFragmentByTag(MainSettingsFragment.TAG) == null) {
+    if (fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(requireNotNull(layoutRoot).id, MainSettingsFragment(), MainSettingsFragment.TAG)
+          .add(requireNotNull(layoutRoot).id, SettingsFragment(), SettingsFragment.TAG)
           .commit(viewLifecycleOwner)
     }
   }
