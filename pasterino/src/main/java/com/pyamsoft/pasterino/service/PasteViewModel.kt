@@ -70,7 +70,7 @@ internal class PasteViewModel @Inject internal constructor(
           return@flatMap Single.just(0)
               .subscribeOn(Schedulers.io())
               .observeOn(Schedulers.io())
-              .delay(it * 2, MILLISECONDS)
+              .delay(it, MILLISECONDS)
         }
         .flatMap {
           enforcer.assertNotOnMainThread()
