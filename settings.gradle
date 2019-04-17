@@ -15,5 +15,5 @@
  *
  */
 
-include ':pasterino', ':pasterino-base', ':pasterino-main', ':pasterino-api',
-    ':pasterino-service'
+include ':pasterino', ':pasterino-base', ':pasterino-api'
+
