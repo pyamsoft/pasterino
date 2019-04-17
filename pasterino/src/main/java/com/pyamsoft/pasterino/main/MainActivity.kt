@@ -53,7 +53,8 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
     get() = component.id()
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
-    change("New icon style")
+    bugfix("Fix crash on paste in some situations")
+    bugfix("Fix inability to paste on some Samsung devices")
     change("Better open source license viewing experience")
   }
 
