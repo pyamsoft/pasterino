@@ -31,13 +31,14 @@ import javax.inject.Inject
 
 class SinglePasteService : Service() {
 
-  @field:Inject internal lateinit var viewModel: PasteViewModel
+  @JvmField @Inject internal var viewModel: PasteViewModel? = null
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-    viewModel.bind { state, oldState ->
+
+    requireNotNull(viewModel).bind { state, oldState ->
       renderPaste(state, oldState)
     }
   }
@@ -55,7 +56,9 @@ class SinglePasteService : Service() {
 
   override fun onDestroy() {
     super.onDestroy()
-    viewModel.unbind()
+    viewModel?.unbind()
+
+    viewModel = null
 
     Pasterino.getRefWatcher(this)
         .watch(this)
@@ -69,7 +72,7 @@ class SinglePasteService : Service() {
     startId: Int
   ): Int {
     Timber.d("Attempt single paste")
-    viewModel.paste()
+    requireNotNull(viewModel).paste()
     return START_NOT_STICKY
   }
 

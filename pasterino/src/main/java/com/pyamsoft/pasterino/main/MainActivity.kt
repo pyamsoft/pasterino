@@ -38,8 +38,8 @@ import kotlin.LazyThreadSafetyMode.NONE
 
 class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiComponent.Callback {
 
-  @field:Inject internal lateinit var toolbarComponent: MainToolbarUiComponent
-  @field:Inject internal lateinit var component: MainUiComponent
+  @JvmField @Inject internal var toolbarComponent: MainToolbarUiComponent? = null
+  @JvmField @Inject internal var component: MainUiComponent? = null
 
   override val versionName: String = BuildConfig.VERSION_NAME
 
@@ -50,7 +50,7 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
   }
 
   override val fragmentContainerId: Int
-    get() = component.id()
+    get() = requireNotNull(component).id()
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
     bugfix("Fix crash on paste in some situations")
@@ -73,6 +73,8 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
         .create(layoutRoot, this)
         .inject(this)
 
+    val component = requireNotNull(component)
+    val toolbarComponent = requireNotNull(toolbarComponent)
     component.bind(layoutRoot, this, savedInstanceState, this)
     toolbarComponent.bind(layoutRoot, this, savedInstanceState, this)
     layoutRoot.layout {
@@ -99,7 +101,13 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    component?.saveState(outState)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    component = null
+    toolbarComponent = null
   }
 
   private fun showMainFragment() {

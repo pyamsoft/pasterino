@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class ConfirmationDialog : DialogFragment() {
 
-  @field:Inject internal lateinit var viewModel: ClearAllViewModel
+  @JvmField @Inject internal var viewModel: ClearAllViewModel? = null
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
@@ -40,10 +40,15 @@ class ConfirmationDialog : DialogFragment() {
         |You will have to manually restart the Accessibility Service component of Pasterino""".trimMargin()
         )
         .setPositiveButton("Yes") { _, _ ->
-          viewModel.clearAll()
+          requireNotNull(viewModel).clearAll()
           dismiss()
         }
         .setNegativeButton("No") { _, _ -> dismiss() }
         .create()
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    viewModel = null
   }
 }

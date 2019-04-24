@@ -36,9 +36,9 @@ import javax.inject.Inject
 
 class PasteService : AccessibilityService() {
 
-  @field:Inject internal lateinit var pasteViewModel: PasteViewModel
-  @field:Inject internal lateinit var finishViewModel: ServiceFinishViewModel
-  @field:Inject internal lateinit var stateViewModel: ServiceStateViewModel
+  @JvmField @Inject internal var pasteViewModel: PasteViewModel? = null
+  @JvmField @Inject internal var finishViewModel: ServiceFinishViewModel? = null
+  @JvmField @Inject internal var stateViewModel: ServiceStateViewModel? = null
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -53,10 +53,10 @@ class PasteService : AccessibilityService() {
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    pasteViewModel.bind { state, oldState ->
+    requireNotNull(pasteViewModel).bind { state, oldState ->
       renderPaste(state, oldState)
     }
-    finishViewModel.bind { state, oldState ->
+    requireNotNull(finishViewModel).bind { state, oldState ->
       renderFinish(state, oldState)
     }
   }
@@ -129,7 +129,7 @@ class PasteService : AccessibilityService() {
 
   override fun onServiceConnected() {
     super.onServiceConnected()
-    stateViewModel.start()
+    requireNotNull(stateViewModel).start()
     PasteServiceNotification.start(this)
   }
 
@@ -168,14 +168,17 @@ class PasteService : AccessibilityService() {
 
   override fun onUnbind(intent: Intent): Boolean {
     PasteServiceNotification.stop(this)
-    stateViewModel.stop()
+    requireNotNull(stateViewModel).stop()
     return super.onUnbind(intent)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    pasteViewModel.unbind()
-    finishViewModel.unbind()
+    pasteViewModel?.unbind()
+    finishViewModel?.unbind()
+
+    pasteViewModel = null
+    finishViewModel = null
 
     Pasterino.getRefWatcher(this)
         .watch(this)

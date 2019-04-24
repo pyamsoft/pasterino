@@ -27,8 +27,8 @@ import com.squareup.leakcanary.RefWatcher
 
 class Pasterino : Application() {
 
-  private lateinit var component: PasterinoComponent
-  private lateinit var refWatcher: RefWatcher
+  private var component: PasterinoComponent? = null
+  private var refWatcher: RefWatcher? = null
 
   override fun onCreate() {
     super.onCreate()
@@ -62,7 +62,7 @@ class Pasterino : Application() {
     }
 
     if (PasterinoComponent::class.java.name == name) {
-      return component
+      return requireNotNull(component)
     }
 
     return super.getSystemService(name)
@@ -78,7 +78,7 @@ class Pasterino : Application() {
     @CheckResult
     private fun getRefWatcherInternal(application: Application): RefWatcher {
       if (application is Pasterino) {
-        return application.refWatcher
+        return requireNotNull(application.refWatcher)
       } else {
         throw IllegalStateException("Application is not Pasterino")
       }

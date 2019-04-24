@@ -35,8 +35,8 @@ import javax.inject.Inject
 
 class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
 
-  @field:Inject internal lateinit var toolbar: ToolbarView
-  @field:Inject internal lateinit var component: MainFragmentUiComponent
+  @JvmField @Inject internal var toolbar: ToolbarView? = null
+  @JvmField @Inject internal var component: MainFragmentUiComponent? = null
 
   private var layoutRoot: CoordinatorLayout? = null
 
@@ -60,22 +60,25 @@ class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
         .create(requireToolbarActivity(), requireNotNull(layoutRoot))
         .inject(this)
 
-    toolbar.inflate(savedInstanceState)
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(toolbar).inflate(savedInstanceState)
+    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
 
     displayPreferenceFragment()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbar.saveState(outState)
-    component.saveState(outState)
+    toolbar?.saveState(outState)
+    component?.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    toolbar.teardown()
+    toolbar?.teardown()
+
     layoutRoot = null
+    toolbar = null
+    component = null
   }
 
   override fun onShowServiceInfo() {

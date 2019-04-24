@@ -36,8 +36,8 @@ import javax.inject.Inject
 class SettingsPreferenceFragment : AppSettingsPreferenceFragment(),
     SettingsUiComponent.Callback {
 
-  @field:Inject internal lateinit var toolbar: ToolbarView
-  @field:Inject internal lateinit var component: SettingsUiComponent
+  @JvmField @Inject internal var toolbar: ToolbarView? = null
+  @JvmField @Inject internal var component: SettingsUiComponent? = null
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -52,19 +52,21 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment(),
         .create(viewLifecycleOwner, requireToolbarActivity(), listView, preferenceScreen)
         .inject(this)
 
-    toolbar.inflate(savedInstanceState)
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(toolbar).inflate(savedInstanceState)
+    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbar.saveState(outState)
-    component.saveState(outState)
+    toolbar?.saveState(outState)
+    component?.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    toolbar.teardown()
+    toolbar?.teardown()
+    toolbar = null
+    component = null
   }
 
   override fun showHowTo() {
