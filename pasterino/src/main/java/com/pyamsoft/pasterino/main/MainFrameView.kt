@@ -29,7 +29,7 @@ internal class MainFrameView @Inject internal constructor(
 
   override val layout: Int = R.layout.layout_frame
 
-  override val layoutRoot by lazyView<FrameLayout>(R.id.layout_frame)
+  override val layoutRoot by boundView<FrameLayout>(R.id.layout_frame)
 
 }
 

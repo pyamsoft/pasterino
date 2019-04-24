@@ -28,8 +28,8 @@ android {
     applicationId "com.pyamsoft.pasterino"
     minSdkVersion rootProject.ext.minSdk
     targetSdkVersion rootProject.ext.maxSdk
-    versionCode 82
-    versionName "1.7.8"
+    versionCode 83
+    versionName "1.7.9-SNAPSHOT"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true

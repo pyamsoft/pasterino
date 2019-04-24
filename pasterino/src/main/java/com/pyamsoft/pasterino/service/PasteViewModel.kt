@@ -48,7 +48,7 @@ internal class PasteViewModel @Inject internal constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { handlePaste(it.deepSearchEnabled) }
-        .destroy()
+        .disposeOnDestroy()
   }
 
   private fun handlePaste(deepSearchEnabled: Boolean) {

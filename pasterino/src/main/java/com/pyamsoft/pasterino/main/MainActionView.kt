@@ -39,7 +39,7 @@ internal class MainActionView @Inject internal constructor(
 
   override val layout: Int = R.layout.floating_action_button
 
-  override val layoutRoot by lazyView<FloatingActionButton>(R.id.main_settings_fab)
+  override val layoutRoot by boundView<FloatingActionButton>(R.id.main_settings_fab)
 
   override fun onTeardown() {
     layoutRoot.setOnDebouncedClickListener(null)
