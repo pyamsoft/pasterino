@@ -78,7 +78,6 @@ object PasteServiceNotification {
     }
     return NotificationCompat.Builder(appContext, notificationChannelId)
         .apply {
-          setContentTitle(appContext.getString(R.string.app_name))
           setSmallIcon(R.drawable.ic_paste_notification)
           setContentText("Pasterino Plzarino")
           setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
