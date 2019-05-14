@@ -23,9 +23,11 @@ import android.os.Bundle
 import android.view.View
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.service.PasteServiceNotification
-import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
+import com.pyamsoft.pasterino.settings.SettingsControllerEvent.Explain
 import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.arch.impl.createComponent
+import com.pyamsoft.pydroid.arch.impl.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
@@ -33,11 +35,11 @@ import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 import javax.inject.Inject
 
-class SettingsPreferenceFragment : AppSettingsPreferenceFragment(),
-    SettingsUiComponent.Callback {
+class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
-  @JvmField @Inject internal var toolbar: ToolbarView? = null
-  @JvmField @Inject internal var component: SettingsUiComponent? = null
+  @JvmField @Inject internal var viewModel: SettingsViewModel? = null
+  @JvmField @Inject internal var settingsView: SettingsView? = null
+  @JvmField @Inject internal var toolbarView: ToolbarView? = null
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -52,36 +54,46 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment(),
         .create(viewLifecycleOwner, requireToolbarActivity(), listView, preferenceScreen)
         .inject(this)
 
-    requireNotNull(toolbar).inflate(savedInstanceState)
-    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(toolbarView).inflate(savedInstanceState)
+    viewLifecycleOwner.doOnDestroy {
+      toolbarView?.teardown()
+    }
+
+    createComponent(
+        savedInstanceState, viewLifecycleOwner,
+        requireNotNull(viewModel),
+        requireNotNull(settingsView)
+    ) {
+      return@createComponent when (it) {
+        is Explain -> showHowTo()
+        is ClearAll -> killApplication()
+      }
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbar?.saveState(outState)
-    component?.saveState(outState)
+    toolbarView?.saveState(outState)
+    settingsView?.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    toolbar?.teardown()
-    toolbar = null
-    component = null
+    viewModel = null
+    settingsView = null
+    toolbarView = null
   }
 
-  override fun showHowTo() {
-    HowToDialog().show(requireActivity(), "howto")
-  }
-
-  override fun onKillApplication() {
+  private fun killApplication() {
     requireContext().also {
-      PasteServiceNotification.stop(it)
-      SinglePasteService.stop(it)
-
       Timber.d("Clear application data")
       val activityManager = it.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
       activityManager.clearApplicationUserData()
     }
+  }
+
+  private fun showHowTo() {
+    HowToDialog().show(requireActivity(), "howto")
   }
 
   override fun onClearAllClicked() {
@@ -95,3 +107,4 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment(),
     const val TAG = "SettingsPreferenceFragment"
   }
 }
+

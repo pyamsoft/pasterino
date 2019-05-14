@@ -25,20 +25,22 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.arch.impl.createComponent
+import com.pyamsoft.pydroid.arch.impl.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
 import javax.inject.Inject
 
-class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
+class MainFragment : Fragment() {
 
-  @JvmField @Inject internal var toolbar: ToolbarView? = null
-  @JvmField @Inject internal var component: MainFragmentUiComponent? = null
-
-  private var layoutRoot: CoordinatorLayout? = null
+  @JvmField @Inject internal var actionView: MainActionView? = null
+  @JvmField @Inject internal var toolbarView: ToolbarView? = null
+  @JvmField @Inject internal var viewModel: MainViewModel? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -54,48 +56,62 @@ class MainFragment : Fragment(), MainFragmentUiComponent.Callback {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    layoutRoot = view.findViewById(R.id.layout_coordinator)
+    val layoutRoot = view.findViewById<CoordinatorLayout>(R.id.layout_coordinator)
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .plusMainFragmentComponent()
-        .create(requireToolbarActivity(), requireNotNull(layoutRoot))
+        .create(requireToolbarActivity(), layoutRoot)
         .inject(this)
 
-    requireNotNull(toolbar).inflate(savedInstanceState)
-    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(toolbarView).inflate(savedInstanceState)
+    viewLifecycleOwner.doOnDestroy { toolbarView?.teardown() }
+
+    createComponent(
+        savedInstanceState, viewLifecycleOwner,
+        requireNotNull(viewModel),
+        requireNotNull(actionView)
+    ) {
+      return@createComponent when (it) {
+        is ServiceAction -> {
+          if (it.isServiceRunning) {
+            showInfoDialog()
+          } else {
+            showUsageAccessRequestDialog()
+          }
+        }
+      }
+    }
 
     displayPreferenceFragment()
   }
 
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    toolbar?.saveState(outState)
-    component?.saveState(outState)
-  }
-
   override fun onDestroyView() {
     super.onDestroyView()
-    toolbar?.teardown()
-
-    layoutRoot = null
-    toolbar = null
-    component = null
+    viewModel = null
+    actionView = null
+    toolbarView = null
   }
 
-  override fun onShowServiceInfo() {
-    ServiceInfoDialog()
-        .show(requireActivity(), "service_info")
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    toolbarView?.saveState(outState)
+    actionView?.saveState(outState)
   }
 
-  override fun onShowPermissionDialog() {
+  private fun showUsageAccessRequestDialog() {
     AccessibilityRequestDialog()
         .show(requireActivity(), "accessibility")
+  }
+
+  private fun showInfoDialog() {
+    ServiceInfoDialog()
+        .show(requireActivity(), "service_info")
   }
 
   private fun displayPreferenceFragment() {
     val fragmentManager = childFragmentManager
     if (fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .add(requireNotNull(layoutRoot).id, SettingsFragment(), SettingsFragment.TAG)
+          .add(requireNotNull(actionView).id(), SettingsFragment(), SettingsFragment.TAG)
           .commit(viewLifecycleOwner)
     }
   }

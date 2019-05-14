@@ -27,18 +27,18 @@ import androidx.annotation.CheckResult
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.service.PasteViewModel.PasteState
-import com.pyamsoft.pasterino.service.ServiceFinishViewModel.FinishState
-import com.pyamsoft.pydroid.arch.renderOnChange
+import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
+import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.Injector
 import timber.log.Timber
 import javax.inject.Inject
 
 class PasteService : AccessibilityService() {
 
-  @JvmField @Inject internal var pasteViewModel: PasteViewModel? = null
-  @JvmField @Inject internal var finishViewModel: ServiceFinishViewModel? = null
-  @JvmField @Inject internal var stateViewModel: ServiceStateViewModel? = null
+  @JvmField @Inject internal var viewModel: PasteViewModel? = null
+  private var disposable by singleDisposable()
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -53,35 +53,17 @@ class PasteService : AccessibilityService() {
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    requireNotNull(pasteViewModel).bind { state, oldState ->
-      renderPaste(state, oldState)
-    }
-    requireNotNull(finishViewModel).bind { state, oldState ->
-      renderFinish(state, oldState)
-    }
-  }
-
-  private fun renderFinish(
-    state: FinishState,
-    oldState: FinishState?
-  ) {
-    state.renderOnChange(oldState, value = { it.isFinished }) { finished ->
-      if (finished) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-          disableSelf()
-        }
+    disposable = requireNotNull(viewModel).render {
+      return@render when (it) {
+        is PasteEvent -> performPaste(it.isDeepSearchEnabled)
+        is Finish -> finish()
       }
     }
   }
 
-  private fun renderPaste(
-    state: PasteState,
-    oldState: PasteState?
-  ) {
-    state.renderOnChange(oldState, value = { it.isDeepSearchEnabled }) { deepSearch ->
-      if (deepSearch != null) {
-        performPaste(deepSearch.isEnabled)
-      }
+  private fun finish() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      disableSelf()
     }
   }
 
@@ -129,7 +111,7 @@ class PasteService : AccessibilityService() {
 
   override fun onServiceConnected() {
     super.onServiceConnected()
-    requireNotNull(stateViewModel).start()
+    requireNotNull(viewModel).start()
     PasteServiceNotification.start(this)
   }
 
@@ -168,17 +150,15 @@ class PasteService : AccessibilityService() {
 
   override fun onUnbind(intent: Intent): Boolean {
     PasteServiceNotification.stop(this)
-    requireNotNull(stateViewModel).stop()
+    viewModel?.start()
     return super.onUnbind(intent)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    pasteViewModel?.unbind()
-    finishViewModel?.unbind()
 
-    pasteViewModel = null
-    finishViewModel = null
+    disposable.tryDispose()
+    viewModel = null
 
     Pasterino.getRefWatcher(this)
         .watch(this)

@@ -17,71 +17,39 @@
 
 package com.pyamsoft.pasterino.service
 
-import android.app.Service
-import android.content.Context
+import android.app.IntentService
 import android.content.Intent
-import android.os.IBinder
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.service.PasteViewModel.PasteState
-import com.pyamsoft.pydroid.arch.renderOnChange
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.Injector
 import timber.log.Timber
 import javax.inject.Inject
 
-class SinglePasteService : Service() {
+class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
 
-  @JvmField @Inject internal var viewModel: PasteViewModel? = null
+  @JvmField @Inject internal var bus: EventBus<PasteRequestEvent>? = null
 
   override fun onCreate() {
     super.onCreate()
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
-
-    requireNotNull(viewModel).bind { state, oldState ->
-      renderPaste(state, oldState)
-    }
-  }
-
-  private fun renderPaste(
-    state: PasteState,
-    oldState: PasteState?
-  ) {
-    state.renderOnChange(oldState, value = { it.isDeepSearchEnabled }) { deepSearch ->
-      if (deepSearch != null) {
-        stopSelf()
-      }
-    }
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    viewModel?.unbind()
 
-    viewModel = null
+    bus = null
 
     Pasterino.getRefWatcher(this)
         .watch(this)
   }
 
-  override fun onBind(intent: Intent): IBinder? = null
-
-  override fun onStartCommand(
-    intent: Intent?,
-    flags: Int,
-    startId: Int
-  ): Int {
-    Timber.d("Attempt single paste")
-    requireNotNull(viewModel).paste()
-    return START_NOT_STICKY
-  }
-
-  companion object {
-
-    @JvmStatic
-    fun stop(context: Context) {
-      val service = Intent(context.applicationContext, SinglePasteService::class.java)
-      context.applicationContext.stopService(service)
+  override fun onHandleIntent(intent: Intent?) {
+    try {
+      requireNotNull(bus).publish(PasteRequestEvent)
+    } catch (e: IllegalStateException) {
+      Timber.e(e, "Error pasting")
     }
   }
 }

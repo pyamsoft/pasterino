@@ -17,6 +17,6 @@
 
 package com.pyamsoft.pasterino.service
 
-internal data class PasteRequestEvent(val deepSearchEnabled: Boolean)
+object PasteRequestEvent
 
 

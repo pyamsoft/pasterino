@@ -51,7 +51,7 @@ class Pasterino : Application() {
         BuildConfig.DEBUG
     ) { provider ->
       component = DaggerPasterinoComponent.factory()
-          .create(this, provider.enforcer(), provider.imageLoader())
+          .create(this, provider.theming(), provider.enforcer(), provider.imageLoader())
     }
   }
 

@@ -17,15 +17,23 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 
-internal interface MainFragmentUiComponent : UiComponent<MainFragmentUiComponent.Callback> {
+data class MainViewState(
+  val isVisible: Boolean,
+  val isServiceRunning: Boolean
+) : UiViewState
 
-  interface Callback {
+sealed class MainViewEvent : UiViewEvent {
 
-    fun onShowServiceInfo()
+  data class ActionClick(val isServiceRunning: Boolean) : MainViewEvent()
 
-    fun onShowPermissionDialog()
-  }
+}
+
+sealed class MainControllerEvent : UiControllerEvent {
+
+  data class ServiceAction(val isServiceRunning: Boolean) : MainControllerEvent()
 
 }

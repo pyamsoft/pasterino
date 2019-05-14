@@ -15,12 +15,27 @@
  *
  */
 
-package com.pyamsoft.pasterino.main
+package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 
-internal interface MainUiComponent : UiComponent<MainUiComponent.Callback> {
+data class SettingsViewState(val throwable: Throwable?) : UiViewState
 
-  interface Callback
+sealed class SettingsViewEvent : UiViewEvent {
+
+  object ShowExplanation : SettingsViewEvent()
+
+  data class SignificantScroll(val visible: Boolean) : SettingsViewEvent()
 
 }
+
+sealed class SettingsControllerEvent : UiControllerEvent {
+
+  object Explain : SettingsControllerEvent()
+
+  object ClearAll : SettingsControllerEvent()
+
+}
+

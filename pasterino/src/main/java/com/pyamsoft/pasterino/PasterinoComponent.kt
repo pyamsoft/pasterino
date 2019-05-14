@@ -23,7 +23,6 @@ import com.pyamsoft.pasterino.PasterinoComponent.PasterinoModule
 import com.pyamsoft.pasterino.base.BaseModule
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponent
-import com.pyamsoft.pasterino.main.MainHandler.MainEvent
 import com.pyamsoft.pasterino.service.PasteRequestEvent
 import com.pyamsoft.pasterino.service.PasteService
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
@@ -31,12 +30,12 @@ import com.pyamsoft.pasterino.service.SinglePasteService
 import com.pyamsoft.pasterino.settings.ClearAllEvent
 import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent
-import com.pyamsoft.pasterino.settings.SettingsHandler.SettingsEvent
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.theme.Theming
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -68,6 +67,7 @@ interface PasterinoComponent {
     @CheckResult
     fun create(
       @BindsInstance context: Context,
+      @BindsInstance theming: Theming,
       @BindsInstance enforcer: Enforcer,
       @BindsInstance imageLoader: ImageLoader
     ): PasterinoComponent
@@ -100,22 +100,6 @@ interface PasterinoComponent {
       @JvmStatic
       @CheckResult
       internal fun provideServiceBus(): EventBus<ServiceFinishEvent> {
-        return RxBus.create()
-      }
-
-      @Provides
-      @Singleton
-      @JvmStatic
-      @CheckResult
-      internal fun provideSettingsEventBus(): EventBus<SettingsEvent> {
-        return RxBus.create()
-      }
-
-      @Provides
-      @Singleton
-      @JvmStatic
-      @CheckResult
-      internal fun provideMainEventBus(): EventBus<MainEvent> {
         return RxBus.create()
       }
 

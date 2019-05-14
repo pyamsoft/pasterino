@@ -15,18 +15,15 @@
  *
  */
 
-package com.pyamsoft.pasterino.settings
+package com.pyamsoft.pasterino.service
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
 
-internal interface SettingsUiComponent : UiComponent<SettingsUiComponent.Callback> {
+sealed class ServiceControllerEvent : UiControllerEvent {
 
-  interface Callback {
+  data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceControllerEvent()
 
-    fun onKillApplication()
-
-    fun showHowTo()
-
-  }
+  object Finish : ServiceControllerEvent()
 
 }
+

@@ -23,19 +23,23 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
+import com.pyamsoft.pydroid.arch.impl.UnitViewState
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.toDp
 import javax.inject.Inject
 
 internal class MainToolbarView @Inject internal constructor(
   private val toolbarActivityProvider: ToolbarActivityProvider,
+  private val theming: Theming,
   parent: ViewGroup
-) : BaseUiView<Unit>(parent, Unit) {
-
-  override val layout: Int = R.layout.toolbar
+) : BaseUiView<UnitViewState, UnitViewEvent>(parent) {
 
   override val layoutRoot by boundView<Toolbar>(R.id.toolbar)
+
+  override val layout: Int = R.layout.toolbar
 
   override fun onInflated(
     view: View,
@@ -45,11 +49,25 @@ internal class MainToolbarView @Inject internal constructor(
   }
 
   private fun setupToolbar() {
+    val theme: Int
+    if (theming.isDarkTheme()) {
+      theme = R.style.ThemeOverlay_AppCompat
+    } else {
+      theme = R.style.ThemeOverlay_AppCompat_Light
+    }
+
     layoutRoot.apply {
+      popupTheme = theme
       toolbarActivityProvider.setToolbar(this)
       setTitle(R.string.app_name)
       ViewCompat.setElevation(this, 4F.toDp(context).toFloat())
     }
+  }
+
+  override fun onRender(
+    state: UnitViewState,
+    oldState: UnitViewState?
+  ) {
   }
 
   override fun onTeardown() {

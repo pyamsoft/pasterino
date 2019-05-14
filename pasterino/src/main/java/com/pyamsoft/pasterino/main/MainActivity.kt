@@ -18,14 +18,14 @@
 package com.pyamsoft.pasterino.main
 
 import android.os.Bundle
-import android.view.View
+import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pydroid.arch.layout
+import com.pyamsoft.pydroid.arch.impl.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
@@ -33,24 +33,27 @@ import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.commit
+import com.pyamsoft.pydroid.ui.util.layout
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiComponent.Callback {
+class MainActivity : RatingActivity() {
 
-  @JvmField @Inject internal var toolbarComponent: MainToolbarUiComponent? = null
-  @JvmField @Inject internal var component: MainUiComponent? = null
+  @JvmField @Inject internal var toolbar: MainToolbarView? = null
+  @JvmField @Inject internal var mainView: MainFrameView? = null
+  @JvmField @Inject internal var dropshadowView: DropshadowView? = null
 
   override val versionName: String = BuildConfig.VERSION_NAME
 
   override val applicationIcon: Int = R.mipmap.ic_launcher
 
-  override val snackbarRoot: View by lazy(NONE) {
+  override val snackbarRoot: ViewGroup by lazy(NONE) {
     findViewById<CoordinatorLayout>(R.id.snackbar_root)
   }
 
   override val fragmentContainerId: Int
-    get() = requireNotNull(component).id()
+    get() = requireNotNull(mainView).id()
 
   override val changeLogLines: ChangeLogBuilder = buildChangeLog {
     bugfix("Fix crash on paste in some situations")
@@ -73,14 +76,29 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
         .create(layoutRoot, this)
         .inject(this)
 
-    val component = requireNotNull(component)
-    val toolbarComponent = requireNotNull(toolbarComponent)
-    component.bind(layoutRoot, this, savedInstanceState, this)
-    toolbarComponent.bind(layoutRoot, this, savedInstanceState, this)
-    layoutRoot.layout {
+    val component = requireNotNull(mainView)
+    val toolbarComponent = requireNotNull(toolbar)
+    val dropshadow = requireNotNull(dropshadowView)
 
+    component.inflate(savedInstanceState)
+    toolbarComponent.inflate(savedInstanceState)
+    dropshadow.inflate(savedInstanceState)
+    this.doOnDestroy {
+      component.teardown()
+      toolbarComponent.teardown()
+      dropshadow.teardown()
+    }
+
+    layoutRoot.layout {
       toolbarComponent.also {
         connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      dropshadow.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
@@ -94,6 +112,7 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
+
     }
 
     showMainFragment()
@@ -101,13 +120,17 @@ class MainActivity : RatingActivity(), MainUiComponent.Callback, MainToolbarUiCo
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component?.saveState(outState)
+    mainView?.saveState(outState)
+    dropshadowView?.saveState(outState)
+    toolbar?.saveState(outState)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    component = null
-    toolbarComponent = null
+
+    mainView = null
+    dropshadowView = null
+    toolbar = null
   }
 
   private fun showMainFragment() {
