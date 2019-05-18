@@ -17,18 +17,17 @@
 
 package com.pyamsoft.pasterino.service
 
+import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
-import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
-import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
-import com.pyamsoft.pydroid.arch.impl.UnitViewState
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.core.tryDispose
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -39,35 +38,39 @@ internal class PasteViewModel @Inject internal constructor(
   private val pasteRequestBus: EventBus<PasteRequestEvent>,
   private val interactor: PasteServiceInteractor,
   private val enforcer: Enforcer
-) : BaseUiViewModel<UnitViewState, UnitViewEvent, ServiceControllerEvent>(
-    initialState = UnitViewState
 ) {
 
   private var pasteDisposable by singleDisposable()
   private var pasteRequestDisposable by singleDisposable()
   private var finishDisposable by singleDisposable()
 
-  override fun onBind() {
+  @CheckResult
+  fun bind(onEvent: (event: ServiceControllerEvent) -> Unit): Disposable {
     finishDisposable = finishBus.listen()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { publish(Finish) }
+        .subscribe { onEvent(Finish) }
 
     pasteRequestDisposable = pasteRequestBus.listen()
         .subscribeOn(Schedulers.computation())
         .observeOn(Schedulers.computation())
-        .subscribe { paste() }
+        .subscribe { paste(onEvent) }
+
+    return object : Disposable {
+
+      override fun isDisposed(): Boolean {
+        return finishDisposable.isDisposed && pasteRequestDisposable.isDisposed
+      }
+
+      override fun dispose() {
+        pasteRequestDisposable.tryDispose()
+        finishDisposable.tryDispose()
+      }
+
+    }
   }
 
-  override fun handleViewEvent(event: UnitViewEvent) {
-  }
-
-  override fun onUnbind() {
-    pasteRequestDisposable.tryDispose()
-    finishDisposable.tryDispose()
-  }
-
-  private fun paste() {
+  private inline fun paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) {
     pasteDisposable = interactor.getPasteDelayTime()
         .flatMap {
           enforcer.assertNotOnMainThread()
@@ -81,7 +84,7 @@ internal class PasteViewModel @Inject internal constructor(
         .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
         .doAfterTerminate { pasteDisposable.tryDispose() }
-        .subscribe(Consumer { publish(PasteEvent(it)) })
+        .subscribe(Consumer { onEvent(PasteEvent(it)) })
   }
 
   fun start() {

@@ -21,7 +21,7 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
-import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
@@ -32,17 +32,14 @@ import javax.inject.Inject
 internal class MainViewModel @Inject internal constructor(
   private val serviceInteractor: PasteServiceInteractor,
   private val visibilityBus: EventBus<SignificantScrollEvent>
-) : BaseUiViewModel<MainViewState, MainViewEvent, MainControllerEvent>(
-    initialState = MainViewState(
-        isVisible = true,
-        isServiceRunning = false
-    )
+) : UiViewModel<MainViewState, MainViewEvent, MainControllerEvent>(
+    initialState = MainViewState(isVisible = true, isServiceRunning = false)
 ) {
 
   private var serviceDisposable by singleDisposable()
   private var visibilityDisposable by singleDisposable()
 
-  override fun onBind() {
+  fun beginWatchingService() {
     serviceDisposable = serviceInteractor.observeServiceState()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -60,8 +57,9 @@ internal class MainViewModel @Inject internal constructor(
     }
   }
 
-  override fun onUnbind() {
+  override fun onCleared() {
     serviceDisposable.tryDispose()
+    visibilityDisposable.tryDispose()
   }
 
 }

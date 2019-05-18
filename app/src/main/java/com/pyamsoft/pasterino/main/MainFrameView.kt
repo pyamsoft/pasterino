@@ -20,9 +20,9 @@ package com.pyamsoft.pasterino.main
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
-import com.pyamsoft.pydroid.arch.impl.UnitViewState
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
 import javax.inject.Inject
 
 internal class MainFrameView @Inject internal constructor(

@@ -25,7 +25,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pydroid.arch.impl.doOnDestroy
+import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder

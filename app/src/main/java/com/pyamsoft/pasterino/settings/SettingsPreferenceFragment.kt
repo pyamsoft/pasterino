@@ -26,8 +26,8 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.Explain
 import com.pyamsoft.pasterino.widget.ToolbarView
-import com.pyamsoft.pydroid.arch.impl.createComponent
-import com.pyamsoft.pydroid.arch.impl.doOnDestroy
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
@@ -69,6 +69,8 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
         is ClearAll -> killApplication()
       }
     }
+
+    requireNotNull(viewModel).beginWatchingForApplicationClear()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

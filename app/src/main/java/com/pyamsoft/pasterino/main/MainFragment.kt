@@ -28,8 +28,8 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
-import com.pyamsoft.pydroid.arch.impl.createComponent
-import com.pyamsoft.pydroid.arch.impl.doOnDestroy
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
@@ -81,6 +81,7 @@ class MainFragment : Fragment() {
       }
     }
 
+    requireNotNull(viewModel).beginWatchingService()
     displayPreferenceFragment()
   }
 

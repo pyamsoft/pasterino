@@ -53,8 +53,8 @@ class PasteService : AccessibilityService() {
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    disposable = requireNotNull(viewModel).render {
-      return@render when (it) {
+    disposable = requireNotNull(viewModel).bind {
+      return@bind when (it) {
         is PasteEvent -> performPaste(it.isDeepSearchEnabled)
         is Finish -> finish()
       }
@@ -150,7 +150,7 @@ class PasteService : AccessibilityService() {
 
   override fun onUnbind(intent: Intent): Boolean {
     PasteServiceNotification.stop(this)
-    viewModel?.start()
+    viewModel?.stop()
     return super.onUnbind(intent)
   }
 
