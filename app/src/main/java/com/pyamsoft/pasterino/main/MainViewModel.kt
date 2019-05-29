@@ -30,8 +30,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 internal class MainViewModel @Inject internal constructor(
-  private val serviceInteractor: PasteServiceInteractor,
-  private val visibilityBus: EventBus<SignificantScrollEvent>
+  serviceInteractor: PasteServiceInteractor,
+  visibilityBus: EventBus<SignificantScrollEvent>
 ) : UiViewModel<MainViewState, MainViewEvent, MainControllerEvent>(
     initialState = MainViewState(isVisible = true, isServiceRunning = false)
 ) {
@@ -39,7 +39,7 @@ internal class MainViewModel @Inject internal constructor(
   private var serviceDisposable by singleDisposable()
   private var visibilityDisposable by singleDisposable()
 
-  fun beginWatchingService() {
+  init {
     serviceDisposable = serviceInteractor.observeServiceState()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

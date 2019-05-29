@@ -21,6 +21,8 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
@@ -37,9 +39,10 @@ import javax.inject.Inject
 
 class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
-  @JvmField @Inject internal var viewModel: SettingsViewModel? = null
+  @JvmField @Inject internal var factory: ViewModelProvider.Factory? = null
   @JvmField @Inject internal var settingsView: SettingsView? = null
   @JvmField @Inject internal var toolbarView: ToolbarView? = null
+  private var viewModel: SettingsViewModel? = null
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -59,6 +62,11 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
       toolbarView?.teardown()
     }
 
+    ViewModelProviders.of(this, factory)
+        .let { factory ->
+          viewModel = factory.get(SettingsViewModel::class.java)
+        }
+
     createComponent(
         savedInstanceState, viewLifecycleOwner,
         requireNotNull(viewModel),
@@ -69,8 +77,6 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
         is ClearAll -> killApplication()
       }
     }
-
-    requireNotNull(viewModel).beginWatchingForApplicationClear()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -84,6 +90,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
     viewModel = null
     settingsView = null
     toolbarView = null
+    factory = null
   }
 
   private fun killApplication() {

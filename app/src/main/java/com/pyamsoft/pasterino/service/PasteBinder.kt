@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
-internal class PasteViewModel @Inject internal constructor(
+internal class PasteBinder @Inject internal constructor(
   private val finishBus: EventBus<ServiceFinishEvent>,
   private val pasteRequestBus: EventBus<PasteRequestEvent>,
   private val interactor: PasteServiceInteractor,

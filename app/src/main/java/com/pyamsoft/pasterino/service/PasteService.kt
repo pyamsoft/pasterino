@@ -37,7 +37,7 @@ import javax.inject.Inject
 
 class PasteService : AccessibilityService() {
 
-  @JvmField @Inject internal var viewModel: PasteViewModel? = null
+  @JvmField @Inject internal var binder: PasteBinder? = null
   private var disposable by singleDisposable()
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
@@ -53,7 +53,7 @@ class PasteService : AccessibilityService() {
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    disposable = requireNotNull(viewModel).bind {
+    disposable = requireNotNull(binder).bind {
       return@bind when (it) {
         is PasteEvent -> performPaste(it.isDeepSearchEnabled)
         is Finish -> finish()
@@ -111,7 +111,7 @@ class PasteService : AccessibilityService() {
 
   override fun onServiceConnected() {
     super.onServiceConnected()
-    requireNotNull(viewModel).start()
+    requireNotNull(binder).start()
     PasteServiceNotification.start(this)
   }
 
@@ -150,7 +150,7 @@ class PasteService : AccessibilityService() {
 
   override fun onUnbind(intent: Intent): Boolean {
     PasteServiceNotification.stop(this)
-    viewModel?.stop()
+    binder?.stop()
     return super.onUnbind(intent)
   }
 
@@ -158,7 +158,7 @@ class PasteService : AccessibilityService() {
     super.onDestroy()
 
     disposable.tryDispose()
-    viewModel = null
+    binder = null
 
     Pasterino.getRefWatcher(this)
         .watch(this)

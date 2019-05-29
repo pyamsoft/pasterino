@@ -23,6 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
@@ -38,9 +40,10 @@ import javax.inject.Inject
 
 class MainFragment : Fragment() {
 
+  @JvmField @Inject internal var factory: ViewModelProvider.Factory? = null
   @JvmField @Inject internal var actionView: MainActionView? = null
   @JvmField @Inject internal var toolbarView: ToolbarView? = null
-  @JvmField @Inject internal var viewModel: MainViewModel? = null
+  private var viewModel: MainViewModel? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -65,6 +68,10 @@ class MainFragment : Fragment() {
     requireNotNull(toolbarView).inflate(savedInstanceState)
     viewLifecycleOwner.doOnDestroy { toolbarView?.teardown() }
 
+    ViewModelProviders.of(this, factory).let { factory ->
+      viewModel = factory.get(MainViewModel::class.java)
+    }
+
     createComponent(
         savedInstanceState, viewLifecycleOwner,
         requireNotNull(viewModel),
@@ -81,7 +88,6 @@ class MainFragment : Fragment() {
       }
     }
 
-    requireNotNull(viewModel).beginWatchingService()
     displayPreferenceFragment()
   }
 
@@ -90,6 +96,7 @@ class MainFragment : Fragment() {
     viewModel = null
     actionView = null
     toolbarView = null
+    factory = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
