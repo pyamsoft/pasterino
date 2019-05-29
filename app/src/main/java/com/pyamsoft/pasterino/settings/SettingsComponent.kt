@@ -19,13 +19,21 @@ package com.pyamsoft.pasterino.settings
 
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pasterino.PasterinoViewModelFactory
+import com.pyamsoft.pasterino.ViewModelKey
+import com.pyamsoft.pasterino.settings.SettingsComponent.ViewModelModule
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
+import dagger.Binds
 import dagger.BindsInstance
+import dagger.Module
 import dagger.Subcomponent
+import dagger.multibindings.IntoMap
 
-@Subcomponent
+@Subcomponent(modules = [ViewModelModule::class])
 interface SettingsComponent {
 
   fun inject(fragment: SettingsPreferenceFragment)
@@ -41,6 +49,18 @@ interface SettingsComponent {
       @BindsInstance preferenceScreen: PreferenceScreen
     ): SettingsComponent
 
+  }
+
+  @Module
+  abstract class ViewModelModule {
+
+    @Binds
+    internal abstract fun bindViewModelFactory(factory: PasterinoViewModelFactory): ViewModelProvider.Factory
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    internal abstract fun settingsViewModel(viewModel: SettingsViewModel): UiViewModel<*, *, *>
   }
 
 }

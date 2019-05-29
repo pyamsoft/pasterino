@@ -43,7 +43,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [PasterinoModule::class, BaseModule::class, ViewModelModule::class])
+@Component(modules = [PasterinoModule::class, BaseModule::class])
 interface PasterinoComponent {
 
   fun inject(dialog: ConfirmationDialog)

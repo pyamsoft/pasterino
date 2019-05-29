@@ -17,21 +17,13 @@
 
 package com.pyamsoft.pasterino
 
-import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pasterino.main.MainViewModel
-import com.pyamsoft.pasterino.settings.SettingsViewModel
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
-import dagger.Binds
 import dagger.MapKey
-import dagger.Module
-import dagger.multibindings.IntoMap
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 
-@Singleton
 internal class PasterinoViewModelFactory @Inject internal constructor(
   private val viewModels: MutableMap<Class<out UiViewModel<*, *, *>>, Provider<UiViewModel<*, *, *>>>
 ) : UiViewModelFactory() {
@@ -50,21 +42,5 @@ internal class PasterinoViewModelFactory @Inject internal constructor(
 )
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
-private annotation class ViewModelKey(val value: KClass<out UiViewModel<*, *, *>>)
+internal annotation class ViewModelKey(val value: KClass<out UiViewModel<*, *, *>>)
 
-@Module
-abstract class ViewModelModule {
-
-  @Binds
-  internal abstract fun bindViewModelFactory(factory: PasterinoViewModelFactory): ViewModelProvider.Factory
-
-  @Binds
-  @IntoMap
-  @ViewModelKey(MainViewModel::class)
-  internal abstract fun mainViewModel(viewModel: MainViewModel): UiViewModel<*, *, *>
-
-  @Binds
-  @IntoMap
-  @ViewModelKey(SettingsViewModel::class)
-  internal abstract fun settingsViewModel(viewModel: SettingsViewModel): UiViewModel<*, *, *>
-}
