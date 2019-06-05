@@ -19,15 +19,11 @@ package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pasterino.main.MainComponent.MainModule
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import dagger.BindsInstance
-import dagger.Module
-import dagger.Provides
 import dagger.Subcomponent
 
-@Subcomponent(modules = [MainModule::class])
+@Subcomponent
 interface MainComponent {
 
   fun inject(activity: MainActivity)
@@ -41,21 +37,6 @@ interface MainComponent {
       @BindsInstance toolbarActivityProvider: ToolbarActivityProvider
     ): MainComponent
 
-  }
-
-  @Module
-  abstract class MainModule {
-
-    @Module
-    companion object {
-
-      @Provides
-      @JvmStatic
-      @CheckResult
-      fun provideDropshadow(parent: ViewGroup): DropshadowView {
-        return DropshadowView(parent)
-      }
-    }
   }
 
 }

@@ -42,7 +42,6 @@ class MainActivity : RatingActivity() {
 
   @JvmField @Inject internal var toolbar: MainToolbarView? = null
   @JvmField @Inject internal var mainView: MainFrameView? = null
-  @JvmField @Inject internal var dropshadowView: DropshadowView? = null
 
   override val versionName: String = BuildConfig.VERSION_NAME
 
@@ -78,7 +77,7 @@ class MainActivity : RatingActivity() {
 
     val component = requireNotNull(mainView)
     val toolbarComponent = requireNotNull(toolbar)
-    val dropshadow = requireNotNull(dropshadowView)
+    val dropshadow = DropshadowView.create(layoutRoot)
 
     component.inflate(savedInstanceState)
     toolbarComponent.inflate(savedInstanceState)
@@ -121,7 +120,6 @@ class MainActivity : RatingActivity() {
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     mainView?.saveState(outState)
-    dropshadowView?.saveState(outState)
     toolbar?.saveState(outState)
   }
 
@@ -129,7 +127,6 @@ class MainActivity : RatingActivity() {
     super.onDestroy()
 
     mainView = null
-    dropshadowView = null
     toolbar = null
   }
 
