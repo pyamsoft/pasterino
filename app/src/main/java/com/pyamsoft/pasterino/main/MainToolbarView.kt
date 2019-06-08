@@ -28,13 +28,11 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
-import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.toDp
 import javax.inject.Inject
 
 internal class MainToolbarView @Inject internal constructor(
   private val toolbarActivityProvider: ToolbarActivityProvider,
-  private val theming: Theming,
   parent: ViewGroup
 ) : BaseUiView<UnitViewState, UnitViewEvent>(parent) {
 
@@ -50,15 +48,7 @@ internal class MainToolbarView @Inject internal constructor(
   }
 
   private fun setupToolbar() {
-    val theme: Int
-    if (theming.isDarkTheme()) {
-      theme = R.style.ThemeOverlay_AppCompat
-    } else {
-      theme = R.style.ThemeOverlay_AppCompat_Light
-    }
-
     layoutRoot.apply {
-      popupTheme = theme
       toolbarActivityProvider.setToolbar(this)
       setTitle(R.string.app_name)
       ViewCompat.setElevation(this, 4F.toDp(context).toFloat())

@@ -61,11 +61,7 @@ class MainActivity : RatingActivity() {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    if (Injector.obtain<Theming>(applicationContext).isDarkTheme()) {
-      setTheme(R.style.Theme_Pasterino_Dark)
-    } else {
-      setTheme(R.style.Theme_Pasterino_Light)
-    }
+    setTheme(R.style.Theme_Pasterino)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.snackbar_screen)
 

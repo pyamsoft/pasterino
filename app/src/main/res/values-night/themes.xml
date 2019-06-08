@@ -17,14 +17,14 @@
 
 <resources>
 
-  <style name="Base.Theme.Pasterino.Dark" parent="@style/Theme.MaterialComponents.NoActionBar">
+  <style name="Base.Theme.Pasterino" parent="@style/Theme.MaterialComponents.NoActionBar">
     <item name="colorPrimary">@color/green500</item>
     <item name="colorPrimaryDark">@color/green700</item>
     <item name="colorAccent">@color/redA400</item>
   </style>
 
   <!-- Normal App Theme -->
-  <style name="Theme.Pasterino.Dark" parent="@style/Base.Theme.Pasterino.Dark">
+  <style name="Theme.Pasterino" parent="@style/Base.Theme.Pasterino">
     <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
   </style>
 

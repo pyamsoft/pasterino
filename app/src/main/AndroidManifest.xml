@@ -29,7 +29,7 @@
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:roundIcon="@mipmap/ic_launcher"
-      android:theme="@style/Theme.Pasterino.Light"
+      android:theme="@style/Theme.Pasterino"
       tools:ignore="GoogleAppIndexingWarning">
 
     <!-- Support super wide screen -->
@@ -44,7 +44,7 @@
         android:exported="true"
         android:label="@string/app_name"
         android:launchMode="singleTask"
-        android:theme="@style/Theme.Pasterino.Light.Splash"
+        android:theme="@style/Theme.Pasterino.Splash"
         android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
