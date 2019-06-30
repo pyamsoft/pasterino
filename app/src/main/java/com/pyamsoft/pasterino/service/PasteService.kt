@@ -29,8 +29,6 @@ import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.Injector
 import timber.log.Timber
 import javax.inject.Inject
@@ -38,7 +36,6 @@ import javax.inject.Inject
 class PasteService : AccessibilityService() {
 
   @JvmField @Inject internal var binder: PasteBinder? = null
-  private var disposable by singleDisposable()
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -53,7 +50,7 @@ class PasteService : AccessibilityService() {
     Injector.obtain<PasterinoComponent>(applicationContext)
         .inject(this)
 
-    disposable = requireNotNull(binder).bind {
+    requireNotNull(binder).bind {
       return@bind when (it) {
         is PasteEvent -> performPaste(it.isDeepSearchEnabled)
         is Finish -> finish()
@@ -157,7 +154,7 @@ class PasteService : AccessibilityService() {
   override fun onDestroy() {
     super.onDestroy()
 
-    disposable.tryDispose()
+    binder?.unbind()
     binder = null
 
     Pasterino.getRefWatcher(this)

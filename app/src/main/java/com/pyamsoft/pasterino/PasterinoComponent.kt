@@ -31,9 +31,8 @@ import com.pyamsoft.pasterino.settings.ClearAllEvent
 import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import dagger.BindsInstance
@@ -84,7 +83,7 @@ interface PasterinoComponent {
       @JvmStatic
       @CheckResult
       internal fun provideClearBus(): EventBus<ClearAllEvent> {
-        return RxBus.create()
+        return EventBus.create()
       }
 
       @Provides
@@ -92,7 +91,7 @@ interface PasterinoComponent {
       @JvmStatic
       @CheckResult
       internal fun providePasteBus(): EventBus<PasteRequestEvent> {
-        return RxBus.create()
+        return EventBus.create()
       }
 
       @Provides
@@ -100,7 +99,7 @@ interface PasterinoComponent {
       @JvmStatic
       @CheckResult
       internal fun provideServiceBus(): EventBus<ServiceFinishEvent> {
-        return RxBus.create()
+        return EventBus.create()
       }
 
       @Provides
@@ -108,7 +107,7 @@ interface PasterinoComponent {
       @JvmStatic
       @CheckResult
       internal fun provideScrollBus(): EventBus<SignificantScrollEvent> {
-        return RxBus.create()
+        return EventBus.create()
       }
 
     }

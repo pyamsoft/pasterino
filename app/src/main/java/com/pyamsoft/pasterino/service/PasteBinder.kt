@@ -17,20 +17,16 @@
 
 package com.pyamsoft.pasterino.service
 
-import androidx.annotation.CheckResult
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.tryDispose
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit.MILLISECONDS
+import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
@@ -38,54 +34,31 @@ internal class PasteBinder @Inject internal constructor(
   private val pasteRequestBus: EventBus<PasteRequestEvent>,
   private val interactor: PasteServiceInteractor,
   private val enforcer: Enforcer
-) {
+) : Binder<ServiceControllerEvent>() {
 
-  private var pasteDisposable by singleDisposable()
-  private var pasteRequestDisposable by singleDisposable()
-  private var finishDisposable by singleDisposable()
+  override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
+    binderScope.listenFinish(onEvent)
+    binderScope.listenPaste(onEvent)
+  }
 
-  @CheckResult
-  fun bind(onEvent: (event: ServiceControllerEvent) -> Unit): Disposable {
-    finishDisposable = finishBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { onEvent(Finish) }
-
-    pasteRequestDisposable = pasteRequestBus.listen()
-        .subscribeOn(Schedulers.computation())
-        .observeOn(Schedulers.computation())
-        .subscribe { paste(onEvent) }
-
-    return object : Disposable {
-
-      override fun isDisposed(): Boolean {
-        return finishDisposable.isDisposed && pasteRequestDisposable.isDisposed
-      }
-
-      override fun dispose() {
-        pasteRequestDisposable.tryDispose()
-        finishDisposable.tryDispose()
-      }
-
+  private inline fun CoroutineScope.listenFinish(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
+    launch(context = Dispatchers.Default) {
+      finishBus.onEvent { withContext(context = Dispatchers.Main) { onEvent(Finish) } }
     }
-  }
 
-  private inline fun paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) {
-    pasteDisposable = interactor.getPasteDelayTime()
-        .flatMap {
-          enforcer.assertNotOnMainThread()
-          return@flatMap Single.just(Unit)
-              .delay(it, MILLISECONDS)
-        }
-        .flatMap {
-          enforcer.assertNotOnMainThread()
-          return@flatMap interactor.isDeepSearchEnabled()
-        }
-        .subscribeOn(Schedulers.computation())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doAfterTerminate { pasteDisposable.tryDispose() }
-        .subscribe(Consumer { onEvent(PasteEvent(it)) })
-  }
+  private inline fun CoroutineScope.listenPaste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
+    launch(context = Dispatchers.Default) {
+      pasteRequestBus.onEvent { paste(onEvent) }
+    }
+
+  private inline fun CoroutineScope.paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
+    launch(context = Dispatchers.Default) {
+      enforcer.assertNotOnMainThread()
+      val delayTime = interactor.getPasteDelayTime()
+      delay(delayTime)
+      val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
+      withContext(context = Dispatchers.Main) { onEvent(PasteEvent(isDeepSearchEnabled)) }
+    }
 
   fun start() {
     interactor.setServiceState(true)

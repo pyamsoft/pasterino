@@ -19,8 +19,7 @@ package com.pyamsoft.pasterino.base
 
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.MainInteractor
-import com.pyamsoft.pydroid.core.threads.Enforcer
-import io.reactivex.Single
+import com.pyamsoft.pydroid.core.Enforcer
 import javax.inject.Inject
 
 internal class MainInteractorImpl @Inject internal constructor(
@@ -28,9 +27,8 @@ internal class MainInteractorImpl @Inject internal constructor(
   private val enforcer: Enforcer
 ) : MainInteractor {
 
-  // This must be a Single or the stream will not continue
-  override fun clearAll(): Single<Unit> = Single.fromCallable {
+  override suspend fun clearAll() {
     enforcer.assertNotOnMainThread()
-    return@fromCallable preferences.clearAll()
+    preferences.clearAll()
   }
 }

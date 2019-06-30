@@ -31,7 +31,6 @@ import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
@@ -42,7 +41,7 @@ class MainFragment : Fragment() {
 
   @JvmField @Inject internal var factory: ViewModelProvider.Factory? = null
   @JvmField @Inject internal var actionView: MainActionView? = null
-  @JvmField @Inject internal var toolbarView: ToolbarView? = null
+  @JvmField @Inject internal var toolbarView: ToolbarView<MainViewState, MainViewEvent>? = null
   private var viewModel: MainViewModel? = null
 
   override fun onCreateView(
@@ -65,9 +64,6 @@ class MainFragment : Fragment() {
         .create(requireToolbarActivity(), layoutRoot)
         .inject(this)
 
-    requireNotNull(toolbarView).inflate(savedInstanceState)
-    viewLifecycleOwner.doOnDestroy { toolbarView?.teardown() }
-
     ViewModelProviders.of(this, factory)
         .let { factory ->
           viewModel = factory.get(MainViewModel::class.java)
@@ -76,7 +72,8 @@ class MainFragment : Fragment() {
     createComponent(
         savedInstanceState, viewLifecycleOwner,
         requireNotNull(viewModel),
-        requireNotNull(actionView)
+        requireNotNull(actionView),
+        requireNotNull(toolbarView)
     ) {
       return@createComponent when (it) {
         is ServiceAction -> {

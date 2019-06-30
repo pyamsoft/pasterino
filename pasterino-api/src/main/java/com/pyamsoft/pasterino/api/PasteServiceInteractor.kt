@@ -18,20 +18,18 @@
 package com.pyamsoft.pasterino.api
 
 import androidx.annotation.CheckResult
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.pyamsoft.pydroid.arch.EventConsumer
 
 interface PasteServiceInteractor {
 
   @CheckResult
-  fun isDeepSearchEnabled(): Single<Boolean>
+  suspend fun isDeepSearchEnabled(): Boolean
 
   @CheckResult
-  fun getPasteDelayTime(): Single<Long>
+  suspend fun getPasteDelayTime(): Long
 
   @CheckResult
-  fun observeServiceState(): Observable<Boolean>
+  fun observeServiceState(): EventConsumer<Boolean>
 
   fun setServiceState(start: Boolean)
 }

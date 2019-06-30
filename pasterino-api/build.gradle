@@ -58,10 +58,9 @@ kapt {
 
 dependencies {
   // PYDroid
+  api "com.pyamsoft.pydroid:arch:$pydroid"
   api "com.pyamsoft.pydroid:loader:$pydroid"
 
   implementation "com.google.dagger:dagger:$dagger"
   kapt "com.google.dagger:dagger-compiler:$dagger"
-
-  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

@@ -17,11 +17,7 @@
 
 package com.pyamsoft.pasterino.api
 
-import androidx.annotation.CheckResult
-import io.reactivex.Single
-
 interface MainInteractor {
 
-  @CheckResult
-  fun clearAll(): Single<Unit>
+  suspend fun clearAll()
 }

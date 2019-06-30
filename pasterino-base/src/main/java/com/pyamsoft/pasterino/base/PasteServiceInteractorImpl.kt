@@ -19,10 +19,9 @@ package com.pyamsoft.pasterino.base
 
 import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.core.threads.Enforcer
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.arch.EventConsumer
+import com.pyamsoft.pydroid.core.Enforcer
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,29 +33,30 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
 
   private var running = false
 
-  private val runningStateBus = RxBus.create<Boolean>()
+  private val runningStateBus = EventBus.create<Boolean>()
 
   override fun setServiceState(start: Boolean) {
     running = start
     runningStateBus.publish(start)
   }
 
-  override fun observeServiceState(): Observable<Boolean> {
-    return runningStateBus.listen()
-        .startWith(running)
-  }
+  override fun observeServiceState(): EventConsumer<Boolean> {
+    return object : EventConsumer<Boolean> {
+      override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
+        emitter(running)
+        runningStateBus.onEvent { emitter(it) }
+      }
 
-  override fun getPasteDelayTime(): Single<Long> {
-    return Single.fromCallable {
-      enforcer.assertNotOnMainThread()
-      return@fromCallable preferences.pasteDelayTime
     }
   }
 
-  override fun isDeepSearchEnabled(): Single<Boolean> {
-    return Single.fromCallable {
-      enforcer.assertNotOnMainThread()
-      return@fromCallable preferences.isDeepSearchEnabled
-    }
+  override suspend fun getPasteDelayTime(): Long {
+    enforcer.assertNotOnMainThread()
+    return preferences.pasteDelayTime
+  }
+
+  override suspend fun isDeepSearchEnabled(): Boolean {
+    enforcer.assertNotOnMainThread()
+    return preferences.isDeepSearchEnabled
   }
 }
