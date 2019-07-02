@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pasterino.service
 
+import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
@@ -36,6 +37,14 @@ internal class PasteBinder @Inject internal constructor(
   private val enforcer: Enforcer
 ) : Binder<ServiceControllerEvent>() {
 
+  private val pasteRunner = highlander<Unit, (event: ServiceControllerEvent) -> Unit> { onEvent ->
+    enforcer.assertNotOnMainThread()
+    val delayTime = interactor.getPasteDelayTime()
+    delay(delayTime)
+    val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
+    withContext(context = Dispatchers.Main) { onEvent(PasteEvent(isDeepSearchEnabled)) }
+  }
+
   override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
     binderScope.listenFinish(onEvent)
     binderScope.listenPaste(onEvent)
@@ -52,13 +61,7 @@ internal class PasteBinder @Inject internal constructor(
     }
 
   private inline fun CoroutineScope.paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-    launch(context = Dispatchers.Default) {
-      enforcer.assertNotOnMainThread()
-      val delayTime = interactor.getPasteDelayTime()
-      delay(delayTime)
-      val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
-      withContext(context = Dispatchers.Main) { onEvent(PasteEvent(isDeepSearchEnabled)) }
-    }
+    launch(context = Dispatchers.Default) { pasteRunner.call { onEvent(it) } }
 
   fun start() {
     interactor.setServiceState(true)
