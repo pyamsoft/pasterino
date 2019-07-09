@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
@@ -33,6 +32,7 @@ import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
+import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class MainFragment : Fragment() {
   @JvmField @Inject internal var factory: ViewModelProvider.Factory? = null
   @JvmField @Inject internal var actionView: MainActionView? = null
   @JvmField @Inject internal var toolbarView: ToolbarView<MainViewState, MainViewEvent>? = null
-  private var viewModel: MainViewModel? = null
+  private val viewModel by factory<MainViewModel> { factory }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -64,14 +64,9 @@ class MainFragment : Fragment() {
         .create(requireToolbarActivity(), layoutRoot)
         .inject(this)
 
-    ViewModelProviders.of(this, factory)
-        .let { factory ->
-          viewModel = factory.get(MainViewModel::class.java)
-        }
-
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(viewModel),
+        viewModel,
         requireNotNull(actionView),
         requireNotNull(toolbarView)
     ) {
@@ -91,7 +86,6 @@ class MainFragment : Fragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    viewModel = null
     actionView = null
     toolbarView = null
     factory = null

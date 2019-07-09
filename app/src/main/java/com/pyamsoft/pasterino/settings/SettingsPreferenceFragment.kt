@@ -22,7 +22,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
@@ -31,6 +30,7 @@ import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
+import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
@@ -42,7 +42,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
   @JvmField @Inject internal var settingsView: SettingsView? = null
   @JvmField @Inject internal var toolbarView: ToolbarView<SettingsViewState, SettingsViewEvent>? =
     null
-  private var viewModel: SettingsViewModel? = null
+  private val viewModel by factory<SettingsViewModel> { factory }
 
   override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -57,14 +57,9 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
         .create(viewLifecycleOwner, requireToolbarActivity(), listView, preferenceScreen)
         .inject(this)
 
-    ViewModelProviders.of(this, factory)
-        .let { factory ->
-          viewModel = factory.get(SettingsViewModel::class.java)
-        }
-
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(viewModel),
+        viewModel,
         requireNotNull(settingsView),
         requireNotNull(toolbarView)
     ) {
@@ -83,7 +78,6 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    viewModel = null
     settingsView = null
     toolbarView = null
     factory = null
