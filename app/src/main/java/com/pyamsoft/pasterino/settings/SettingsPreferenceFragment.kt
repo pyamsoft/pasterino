@@ -27,6 +27,7 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.Explain
 import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
@@ -40,8 +41,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
   @JvmField @Inject internal var factory: ViewModelProvider.Factory? = null
   @JvmField @Inject internal var settingsView: SettingsView? = null
-  @JvmField @Inject internal var toolbarView: ToolbarView<SettingsViewState, SettingsViewEvent>? =
-    null
+  @JvmField @Inject internal var toolbarView: ToolbarView<UnitViewState, SettingsViewEvent>? = null
   private val viewModel by factory<SettingsViewModel> { factory }
 
   override val preferenceXmlResId: Int = R.xml.preferences
@@ -54,7 +54,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
     Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
         .plusSettingsComponent()
-        .create(viewLifecycleOwner, requireToolbarActivity(), listView, preferenceScreen)
+        .create(requireToolbarActivity(), listView, preferenceScreen)
         .inject(this)
 
     createComponent(

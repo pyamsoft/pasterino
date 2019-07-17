@@ -18,7 +18,6 @@
 package com.pyamsoft.pasterino.settings
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +42,6 @@ interface SettingsComponent {
 
     @CheckResult
     fun create(
-      @BindsInstance owner: LifecycleOwner,
       @BindsInstance toolbarActivity: ToolbarActivity,
       @BindsInstance listView: RecyclerView,
       @BindsInstance preferenceScreen: PreferenceScreen

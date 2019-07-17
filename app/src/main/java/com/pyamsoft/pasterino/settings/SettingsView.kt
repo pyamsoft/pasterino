@@ -18,7 +18,6 @@
 package com.pyamsoft.pasterino.settings
 
 import android.os.Bundle
-import androidx.lifecycle.LifecycleOwner
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
@@ -26,16 +25,15 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.ShowExplanation
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.widget.scroll.HideOnScrollListener
 import javax.inject.Inject
 
 internal class SettingsView @Inject internal constructor(
-  private val owner: LifecycleOwner,
   private val recyclerView: RecyclerView,
   parent: PreferenceScreen
-) : PrefUiView<SettingsViewState, SettingsViewEvent>(parent) {
+) : PrefUiView<UnitViewState, SettingsViewEvent>(parent) {
 
   private val explain by boundPref<Preference>(R.string.explain_key)
 
@@ -58,16 +56,9 @@ internal class SettingsView @Inject internal constructor(
   }
 
   override fun onRender(
-    state: SettingsViewState,
+    state: UnitViewState,
     savedState: UiSavedState
   ) {
-    state.throwable.let { throwable ->
-      if (throwable == null) {
-        clearError()
-      } else {
-        showError(throwable.message ?: "An unknown error occurred")
-      }
-    }
   }
 
   override fun onTeardown() {
@@ -75,16 +66,6 @@ internal class SettingsView @Inject internal constructor(
 
     scrollListener?.also { recyclerView.removeOnScrollListener(it) }
     scrollListener = null
-  }
-
-  private fun showError(message: String) {
-    Snackbreak.bindTo(owner)
-        .short(recyclerView, message)
-  }
-
-  private fun clearError() {
-    Snackbreak.bindTo(owner)
-        .dismiss()
   }
 }
 

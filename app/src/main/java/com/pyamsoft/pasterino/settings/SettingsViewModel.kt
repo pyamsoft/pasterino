@@ -25,6 +25,7 @@ import com.pyamsoft.pasterino.settings.SettingsViewEvent.ShowExplanation
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitViewState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,8 +35,8 @@ internal class SettingsViewModel @Inject internal constructor(
   private val scrollBus: EventBus<SignificantScrollEvent>,
   private val serviceFinishBus: EventBus<ServiceFinishEvent>,
   private val clearBus: EventBus<ClearAllEvent>
-) : UiViewModel<SettingsViewState, SettingsViewEvent, SettingsControllerEvent>(
-    initialState = SettingsViewState(throwable = null)
+) : UiViewModel<UnitViewState, SettingsViewEvent, SettingsControllerEvent>(
+    initialState = UnitViewState
 ) {
 
   override fun onInit() {
