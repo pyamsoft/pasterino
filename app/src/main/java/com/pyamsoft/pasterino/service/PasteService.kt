@@ -22,20 +22,30 @@ import android.content.Intent
 import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Toast
 import androidx.annotation.CheckResult
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.ui.util.Toaster
+import com.pyamsoft.pydroid.util.fakeBind
+import com.pyamsoft.pydroid.util.fakeUnbind
 import timber.log.Timber
 import javax.inject.Inject
 
-class PasteService : AccessibilityService() {
+class PasteService : AccessibilityService(), LifecycleOwner {
 
   @JvmField @Inject internal var binder: PasteBinder? = null
+  private val registry = LifecycleRegistry(this)
+
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
 
   override fun onAccessibilityEvent(event: AccessibilityEvent) {
     Timber.d("onAccessibilityEvent")
@@ -56,6 +66,8 @@ class PasteService : AccessibilityService() {
         is Finish -> finish()
       }
     }
+
+    registry.fakeBind()
   }
 
   private fun finish() {
@@ -102,7 +114,8 @@ class PasteService : AccessibilityService() {
     }
 
     Timber.e("No editable target to paste into")
-    Toast.makeText(applicationContext, "Nothing to paste into.", Toast.LENGTH_SHORT)
+    Toaster.bindTo(this)
+        .short(applicationContext, "Nothing to paste into.")
         .show()
   }
 
@@ -141,7 +154,8 @@ class PasteService : AccessibilityService() {
   private fun pasteIntoNode(node: AccessibilityNodeInfo) {
     Timber.d("Perform paste on target: %s", node)
     node.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
-    Toast.makeText(applicationContext, "Pasting text into current input.", Toast.LENGTH_SHORT)
+    Toaster.bindTo(this)
+        .short(applicationContext, "Pasting text into current input.")
         .show()
   }
 
@@ -156,6 +170,8 @@ class PasteService : AccessibilityService() {
 
     binder?.unbind()
     binder = null
+
+    registry.fakeUnbind()
 
     Pasterino.getRefWatcher(this)
         .watch(this)
