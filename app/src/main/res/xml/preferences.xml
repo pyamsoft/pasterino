@@ -21,12 +21,6 @@
 
   <PreferenceCategory android:title="Service Settings">
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/explain_key"
-        android:summary="@string/explain_summary"
-        android:title="@string/explain_title"
-        app:iconCompat="@drawable/ic_help_24dp"/>
-
     <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
         android:defaultValue="@string/delay_time_default_v2"
         android:dialogTitle="@string/delay_time_title"
@@ -39,10 +33,10 @@
     />
 
     <com.pyamsoft.pydroid.ui.preference.CheckBoxPreferenceCompat
-        android:key="@string/deep_search_key_v1"
         android:defaultValue="@bool/deep_search_default_v1"
-        android:summaryOn="@string/deep_search_summary_on"
+        android:key="@string/deep_search_key_v1"
         android:summaryOff="@string/deep_search_summary_off"
+        android:summaryOn="@string/deep_search_summary_on"
         android:title="@string/deep_search_title"
         app:iconCompat="@drawable/ic_help_24dp"/>
 

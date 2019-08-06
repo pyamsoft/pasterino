@@ -22,12 +22,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
-class ServiceInfoDialog : DialogFragment() {
+class HowToDialog : DialogFragment() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(requireActivity())
-        .setMessage("Pasterino service is On")
-        .setPositiveButton("Okay") { _, _ -> dismiss() }
+        .setMessage(
+            "When you want to paste into a text input field, simply click the notification and wait a little."
+        )
+        .setTitle("How to Use")
+        .setNeutralButton("Got It") { _, _ -> dismiss() }
         .create()
   }
 }

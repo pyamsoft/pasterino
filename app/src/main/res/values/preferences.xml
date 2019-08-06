@@ -17,10 +17,6 @@
 
 <resources>
 
-  <string name="explain_key">explain</string>
-  <string name="explain_title">How to Use</string>
-  <string name="explain_summary">The simple way to use Pasterino</string>
-
   <string name="delay_time_title">Paste Delay Time</string>
   <string name="delay_time_summary">Longer delay times can sometimes fix not being able to paste into fields.</string>
 

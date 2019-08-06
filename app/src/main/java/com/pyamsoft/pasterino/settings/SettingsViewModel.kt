@@ -20,8 +20,6 @@ package com.pyamsoft.pasterino.settings
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
-import com.pyamsoft.pasterino.settings.SettingsControllerEvent.Explain
-import com.pyamsoft.pasterino.settings.SettingsViewEvent.ShowExplanation
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
@@ -48,7 +46,6 @@ internal class SettingsViewModel @Inject internal constructor(
   override fun handleViewEvent(event: SettingsViewEvent) {
     return when (event) {
       is SignificantScroll -> scrollBus.publish(SignificantScrollEvent(event.visible))
-      is ShowExplanation -> publish(Explain)
     }
   }
 

@@ -25,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
-import com.pyamsoft.pasterino.settings.SettingsControllerEvent.Explain
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.createComponent
@@ -64,7 +63,6 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
         requireNotNull(toolbarView)
     ) {
       return@createComponent when (it) {
-        is Explain -> showHowTo()
         is ClearAll -> killApplication()
       }
     }
@@ -89,10 +87,6 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
       val activityManager = it.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
       activityManager.clearApplicationUserData()
     }
-  }
-
-  private fun showHowTo() {
-    HowToDialog().show(requireActivity(), "howto")
   }
 
   override fun onClearAllClicked() {
