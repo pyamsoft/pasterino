@@ -15,11 +15,11 @@
   ~
   -->
 
-<PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <PreferenceCategory android:title="Service Settings">
+  <androidx.preference.PreferenceCategory android:title="Service Settings">
 
     <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
         android:defaultValue="@string/delay_time_default_v2"
@@ -40,6 +40,6 @@
         android:title="@string/deep_search_title"
         app:iconCompat="@drawable/ic_help_24dp"/>
 
-  </PreferenceCategory>
+  </androidx.preference.PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>
