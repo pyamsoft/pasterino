@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pasterino.main
 
+import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
@@ -33,6 +34,7 @@ interface MainComponent {
 
     @CheckResult
     fun create(
+      @BindsInstance activity: Activity,
       @BindsInstance parent: ViewGroup,
       @BindsInstance toolbarActivityProvider: ToolbarActivityProvider
     ): MainComponent

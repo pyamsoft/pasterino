@@ -46,6 +46,8 @@ class Pasterino : Application() {
         getString(R.string.app_name),
         "https://github.com/pyamsoft/pasterino",
         "https://github.com/pyamsoft/pasterino/issues",
+        PRIVACY_POLICY_URL,
+        TERMS_CONDITIONS_URL,
         BuildConfig.VERSION_CODE,
         BuildConfig.DEBUG
     ) { provider ->
@@ -68,6 +70,10 @@ class Pasterino : Application() {
   }
 
   companion object {
+
+    const val PRIVACY_POLICY_URL = "https://pyamsoft.blogspot.com/p/pasterino-privacy-policy.html"
+    const val TERMS_CONDITIONS_URL =
+      "https://pyamsoft.blogspot.com/p/pasterino-terms-and-conditions.html"
 
     @JvmStatic
     @CheckResult

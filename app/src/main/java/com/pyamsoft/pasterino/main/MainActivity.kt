@@ -68,7 +68,7 @@ class MainActivity : RatingActivity() {
     val layoutRoot = findViewById<ConstraintLayout>(R.id.content_root)
     Injector.obtain<PasterinoComponent>(applicationContext)
         .plusMainComponent()
-        .create(layoutRoot, this)
+        .create(this, layoutRoot, this)
         .inject(this)
 
     val component = requireNotNull(mainView)
