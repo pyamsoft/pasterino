@@ -45,71 +45,70 @@ import javax.inject.Singleton
 @Component(modules = [PasterinoModule::class, BaseModule::class])
 interface PasterinoComponent {
 
-  fun inject(dialog: ConfirmationDialog)
+    fun inject(dialog: ConfirmationDialog)
 
-  fun inject(service: PasteService)
+    fun inject(service: PasteService)
 
-  fun inject(service: SinglePasteService)
-
-  @CheckResult
-  fun plusMainComponent(): MainComponent.Factory
-
-  @CheckResult
-  fun plusMainFragmentComponent(): MainFragmentComponent.Factory
-
-  @CheckResult
-  fun plusSettingsComponent(): SettingsComponent.Factory
-
-  @Component.Factory
-  interface Factory {
+    fun inject(service: SinglePasteService)
 
     @CheckResult
-    fun create(
-      @BindsInstance context: Context,
-      @BindsInstance theming: Theming,
-      @BindsInstance enforcer: Enforcer,
-      @BindsInstance imageLoader: ImageLoader
-    ): PasterinoComponent
-  }
+    fun plusMainComponent(): MainComponent.Factory
 
-  @Module
-  abstract class PasterinoModule {
+    @CheckResult
+    fun plusMainFragmentComponent(): MainFragmentComponent.Factory
+
+    @CheckResult
+    fun plusSettingsComponent(): SettingsComponent.Factory
+
+    @Component.Factory
+    interface Factory {
+
+        @CheckResult
+        fun create(
+            @BindsInstance context: Context,
+            @BindsInstance theming: Theming,
+            @BindsInstance enforcer: Enforcer,
+            @BindsInstance imageLoader: ImageLoader
+        ): PasterinoComponent
+    }
 
     @Module
-    companion object {
+    abstract class PasterinoModule {
 
-      @Provides
-      @Singleton
-      @JvmStatic
-      @CheckResult
-      internal fun provideClearBus(): EventBus<ClearAllEvent> {
-        return EventBus.create()
-      }
+        @Module
+        companion object {
 
-      @Provides
-      @Singleton
-      @JvmStatic
-      @CheckResult
-      internal fun providePasteBus(): EventBus<PasteRequestEvent> {
-        return EventBus.create()
-      }
+            @Provides
+            @Singleton
+            @JvmStatic
+            @CheckResult
+            internal fun provideClearBus(): EventBus<ClearAllEvent> {
+                return EventBus.create()
+            }
 
-      @Provides
-      @Singleton
-      @JvmStatic
-      @CheckResult
-      internal fun provideServiceBus(): EventBus<ServiceFinishEvent> {
-        return EventBus.create()
-      }
+            @Provides
+            @Singleton
+            @JvmStatic
+            @CheckResult
+            internal fun providePasteBus(): EventBus<PasteRequestEvent> {
+                return EventBus.create()
+            }
 
-      @Provides
-      @Singleton
-      @JvmStatic
-      @CheckResult
-      internal fun provideScrollBus(): EventBus<SignificantScrollEvent> {
-        return EventBus.create()
-      }
+            @Provides
+            @Singleton
+            @JvmStatic
+            @CheckResult
+            internal fun provideServiceBus(): EventBus<ServiceFinishEvent> {
+                return EventBus.create()
+            }
 
+            @Provides
+            @Singleton
+            @JvmStatic
+            @CheckResult
+            internal fun provideScrollBus(): EventBus<SignificantScrollEvent> {
+                return EventBus.create()
+            }
+        }
     }
-  }
 }

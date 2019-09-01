@@ -31,44 +31,43 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
-  private val finishBus: EventBus<ServiceFinishEvent>,
-  private val pasteRequestBus: EventBus<PasteRequestEvent>,
-  private val interactor: PasteServiceInteractor,
-  private val enforcer: Enforcer
+    private val finishBus: EventBus<ServiceFinishEvent>,
+    private val pasteRequestBus: EventBus<PasteRequestEvent>,
+    private val interactor: PasteServiceInteractor,
+    private val enforcer: Enforcer
 ) : Binder<ServiceControllerEvent>() {
 
-  private val pasteRunner = highlander<Unit, (event: ServiceControllerEvent) -> Unit> { onEvent ->
-    enforcer.assertNotOnMainThread()
-    val delayTime = interactor.getPasteDelayTime()
-    delay(delayTime)
-    val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
-    withContext(context = Dispatchers.Main) { onEvent(PasteEvent(isDeepSearchEnabled)) }
-  }
-
-  override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
-    binderScope.listenFinish(onEvent)
-    binderScope.listenPaste(onEvent)
-  }
-
-  private inline fun CoroutineScope.listenFinish(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-    launch(context = Dispatchers.Default) {
-      finishBus.onEvent { withContext(context = Dispatchers.Main) { onEvent(Finish) } }
+    private val pasteRunner = highlander<Unit, (event: ServiceControllerEvent) -> Unit> { onEvent ->
+        enforcer.assertNotOnMainThread()
+        val delayTime = interactor.getPasteDelayTime()
+        delay(delayTime)
+        val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
+        withContext(context = Dispatchers.Main) { onEvent(PasteEvent(isDeepSearchEnabled)) }
     }
 
-  private inline fun CoroutineScope.listenPaste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-    launch(context = Dispatchers.Default) {
-      pasteRequestBus.onEvent { paste(onEvent) }
+    override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
+        binderScope.listenFinish(onEvent)
+        binderScope.listenPaste(onEvent)
     }
 
-  private inline fun CoroutineScope.paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-    launch(context = Dispatchers.Default) { pasteRunner.call { onEvent(it) } }
+    private inline fun CoroutineScope.listenFinish(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
+        launch(context = Dispatchers.Default) {
+            finishBus.onEvent { withContext(context = Dispatchers.Main) { onEvent(Finish) } }
+        }
 
-  fun start() {
-    interactor.setServiceState(true)
-  }
+    private inline fun CoroutineScope.listenPaste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
+        launch(context = Dispatchers.Default) {
+            pasteRequestBus.onEvent { paste(onEvent) }
+        }
 
-  fun stop() {
-    interactor.setServiceState(false)
-  }
+    private inline fun CoroutineScope.paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
+        launch(context = Dispatchers.Default) { pasteRunner.call { onEvent(it) } }
 
+    fun start() {
+        interactor.setServiceState(true)
+    }
+
+    fun stop() {
+        interactor.setServiceState(false)
+    }
 }

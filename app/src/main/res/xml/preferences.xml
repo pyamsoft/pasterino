@@ -15,31 +15,30 @@
   ~
   -->
 
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <androidx.preference.PreferenceCategory android:title="Service Settings">
+    <androidx.preference.PreferenceCategory android:title="Service Settings">
 
-    <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
-        android:defaultValue="@string/delay_time_default_v2"
-        android:dialogTitle="@string/delay_time_title"
-        android:entries="@array/delay_time_names_v2"
-        android:entryValues="@array/delay_time_values_v2"
-        android:key="@string/delay_time_key_v2"
-        android:summary="@string/delay_time_summary"
-        android:title="@string/delay_time_title"
-        app:iconCompat="@drawable/ic_timer_24dp"/>
-    />
+        <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
+            android:defaultValue="@string/delay_time_default_v2"
+            android:dialogTitle="@string/delay_time_title"
+            android:entries="@array/delay_time_names_v2"
+            android:entryValues="@array/delay_time_values_v2"
+            android:key="@string/delay_time_key_v2"
+            android:summary="@string/delay_time_summary"
+            android:title="@string/delay_time_title"
+            app:iconCompat="@drawable/ic_timer_24dp" />
+        />
 
-    <com.pyamsoft.pydroid.ui.preference.CheckBoxPreferenceCompat
-        android:defaultValue="@bool/deep_search_default_v1"
-        android:key="@string/deep_search_key_v1"
-        android:summaryOff="@string/deep_search_summary_off"
-        android:summaryOn="@string/deep_search_summary_on"
-        android:title="@string/deep_search_title"
-        app:iconCompat="@drawable/ic_help_24dp"/>
+        <com.pyamsoft.pydroid.ui.preference.CheckBoxPreferenceCompat
+            android:defaultValue="@bool/deep_search_default_v1"
+            android:key="@string/deep_search_key_v1"
+            android:summaryOff="@string/deep_search_summary_off"
+            android:summaryOn="@string/deep_search_summary_on"
+            android:title="@string/deep_search_title"
+            app:iconCompat="@drawable/ic_help_24dp" />
 
-  </androidx.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

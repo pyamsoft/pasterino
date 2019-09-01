@@ -24,13 +24,13 @@ import androidx.fragment.app.DialogFragment
 
 class HowToDialog : DialogFragment() {
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireActivity())
-        .setMessage(
-            "When you want to paste into a text input field, simply click the notification and wait a little."
-        )
-        .setTitle("How to Use")
-        .setNeutralButton("Got It") { _, _ -> dismiss() }
-        .create()
-  }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return AlertDialog.Builder(requireActivity())
+            .setMessage(
+                "When you want to paste into a text input field, simply click the notification and wait a little."
+            )
+            .setTitle("How to Use")
+            .setNeutralButton("Got It") { _, _ -> dismiss() }
+            .create()
+    }
 }

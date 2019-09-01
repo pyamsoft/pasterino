@@ -28,28 +28,30 @@ import javax.inject.Inject
 
 class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
 
-  @JvmField @Inject internal var bus: EventBus<PasteRequestEvent>? = null
+    @JvmField
+    @Inject
+    internal var bus: EventBus<PasteRequestEvent>? = null
 
-  override fun onCreate() {
-    super.onCreate()
-    Injector.obtain<PasterinoComponent>(applicationContext)
-        .inject(this)
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-
-    bus = null
-
-    Pasterino.getRefWatcher(this)
-        .watch(this)
-  }
-
-  override fun onHandleIntent(intent: Intent?) {
-    try {
-      requireNotNull(bus).publish(PasteRequestEvent)
-    } catch (e: IllegalStateException) {
-      Timber.e(e, "Error pasting")
+    override fun onCreate() {
+        super.onCreate()
+        Injector.obtain<PasterinoComponent>(applicationContext)
+            .inject(this)
     }
-  }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        bus = null
+
+        Pasterino.getRefWatcher(this)
+            .watch(this)
+    }
+
+    override fun onHandleIntent(intent: Intent?) {
+        try {
+            requireNotNull(bus).publish(PasteRequestEvent)
+        } catch (e: IllegalStateException) {
+            Timber.e(e, "Error pasting")
+        }
+    }
 }

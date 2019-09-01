@@ -15,4 +15,4 @@
   ~
   -->
 
-<manifest package="com.pyamsoft.pasterino.base"/>
+<manifest package="com.pyamsoft.pasterino.base" />

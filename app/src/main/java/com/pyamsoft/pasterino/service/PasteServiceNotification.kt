@@ -35,80 +35,81 @@ import timber.log.Timber
 
 object PasteServiceNotification {
 
-  private const val ID = 1005
-  private const val RC = 1005
+    private const val ID = 1005
+    private const val RC = 1005
 
-  @Volatile private var notificationManager: NotificationManager? = null
+    @Volatile
+    private var notificationManager: NotificationManager? = null
 
-  @JvmStatic
-  internal fun start(context: Context) {
-    Timber.d("Start notification %d", ID)
-    getNotificationManager(context).notify(ID, createNotification(context))
-  }
+    @JvmStatic
+    internal fun start(context: Context) {
+        Timber.d("Start notification %d", ID)
+        getNotificationManager(context).notify(ID, createNotification(context))
+    }
 
-  @JvmStatic
-  internal fun stop(context: Context) {
-    Timber.d("Stop notification %d", ID)
-    getNotificationManager(context).cancel(ID)
-  }
+    @JvmStatic
+    internal fun stop(context: Context) {
+        Timber.d("Stop notification %d", ID)
+        getNotificationManager(context).cancel(ID)
+    }
 
-  @JvmStatic
-  @CheckResult
-  private fun getNotificationManager(context: Context): NotificationManager {
-    if (notificationManager == null) {
-      synchronized(this) {
+    @JvmStatic
+    @CheckResult
+    private fun getNotificationManager(context: Context): NotificationManager {
         if (notificationManager == null) {
-          notificationManager =
-            requireNotNull(context.applicationContext.getSystemService<NotificationManager>())
+            synchronized(this) {
+                if (notificationManager == null) {
+                    notificationManager =
+                        requireNotNull(context.applicationContext.getSystemService<NotificationManager>())
+                }
+            }
         }
-      }
+
+        return requireNotNull(notificationManager)
     }
 
-    return requireNotNull(notificationManager)
-  }
-
-  @JvmStatic
-  @CheckResult
-  private fun createNotification(context: Context): Notification {
-    val appContext = context.applicationContext
-    val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
-    val notificationChannelId = "pasterino_foreground"
-    if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
-      setupNotificationChannel(appContext, notificationChannelId)
-    }
-    return NotificationCompat.Builder(appContext, notificationChannelId)
-        .apply {
-          setSmallIcon(R.drawable.ic_paste_notification)
-          setContentText("Pasterino Plzarino")
-          setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
-          setWhen(0)
-          setOngoing(true)
-          setAutoCancel(false)
-          setNumber(0)
-          priority = NotificationCompat.PRIORITY_MIN
-          color = ContextCompat.getColor(appContext, R.color.green500)
+    @JvmStatic
+    @CheckResult
+    private fun createNotification(context: Context): Notification {
+        val appContext = context.applicationContext
+        val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
+        val notificationChannelId = "pasterino_foreground"
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
+            setupNotificationChannel(appContext, notificationChannelId)
         }
-        .build()
-  }
-
-  @JvmStatic
-  @RequiresApi(VERSION_CODES.O)
-  private fun setupNotificationChannel(
-    context: Context,
-    notificationChannelId: String
-  ) {
-    val name = "Paste Service"
-    val desc = "Notification related to the Pasterino service"
-    val importance = NotificationManager.IMPORTANCE_MIN
-    val notificationChannel = NotificationChannel(notificationChannelId, name, importance).apply {
-      lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-      description = desc
-      enableLights(false)
-      enableVibration(false)
-      setSound(null, null)
+        return NotificationCompat.Builder(appContext, notificationChannelId)
+            .apply {
+                setSmallIcon(R.drawable.ic_paste_notification)
+                setContentText("Pasterino Plzarino")
+                setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
+                setWhen(0)
+                setOngoing(true)
+                setAutoCancel(false)
+                setNumber(0)
+                priority = NotificationCompat.PRIORITY_MIN
+                color = ContextCompat.getColor(appContext, R.color.green500)
+            }
+            .build()
     }
 
-    Timber.d("Create notification channel with id: %s", notificationChannelId)
-    getNotificationManager(context).createNotificationChannel(notificationChannel)
-  }
+    @JvmStatic
+    @RequiresApi(VERSION_CODES.O)
+    private fun setupNotificationChannel(
+        context: Context,
+        notificationChannelId: String
+    ) {
+        val name = "Paste Service"
+        val desc = "Notification related to the Pasterino service"
+        val importance = NotificationManager.IMPORTANCE_MIN
+        val notificationChannel = NotificationChannel(notificationChannelId, name, importance).apply {
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            description = desc
+            enableLights(false)
+            enableVibration(false)
+            setSound(null, null)
+        }
+
+        Timber.d("Create notification channel with id: %s", notificationChannelId)
+        getNotificationManager(context).createNotificationChannel(notificationChannel)
+    }
 }

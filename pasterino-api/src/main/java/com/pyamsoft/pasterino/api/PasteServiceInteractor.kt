@@ -22,14 +22,14 @@ import com.pyamsoft.pydroid.arch.EventConsumer
 
 interface PasteServiceInteractor {
 
-  @CheckResult
-  suspend fun isDeepSearchEnabled(): Boolean
+    @CheckResult
+    suspend fun isDeepSearchEnabled(): Boolean
 
-  @CheckResult
-  suspend fun getPasteDelayTime(): Long
+    @CheckResult
+    suspend fun getPasteDelayTime(): Long
 
-  @CheckResult
-  fun observeServiceState(): EventConsumer<Boolean>
+    @CheckResult
+    fun observeServiceState(): EventConsumer<Boolean>
 
-  fun setServiceState(start: Boolean)
+    fun setServiceState(start: Boolean)
 }

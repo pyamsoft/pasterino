@@ -19,5 +19,5 @@ package com.pyamsoft.pasterino.api
 
 interface ClearPreferences {
 
-  fun clearAll()
+    fun clearAll()
 }

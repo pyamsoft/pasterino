@@ -22,76 +22,76 @@ apply plugin: "com.getkeepsafe.dexcount"
 
 //noinspection GroovyMissingReturnStatement
 android {
-  compileSdkVersion rootProject.ext.maxSdk
+    compileSdkVersion rootProject.ext.maxSdk
 
-  defaultConfig {
-    applicationId "com.pyamsoft.pasterino"
-    minSdkVersion rootProject.ext.minSdk
-    targetSdkVersion rootProject.ext.maxSdk
-    versionCode 83
-    versionName "1.7.9-SNAPSHOT"
+    defaultConfig {
+        applicationId "com.pyamsoft.pasterino"
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.maxSdk
+        versionCode 83
+        versionName "1.7.9-SNAPSHOT"
 
-    // For vector drawables
-    vectorDrawables.useSupportLibrary = true
+        // For vector drawables
+        vectorDrawables.useSupportLibrary = true
 
-    resConfigs "en"
-  }
-
-  signingConfigs {
-    release {
-      storeFile new File(RELEASE_STORE_FILE)
-      keyAlias RELEASE_KEY_ALIAS
-      keyPassword RELEASE_KEY_PASSWD
-      storePassword RELEASE_STORE_PASSWD
-    }
-  }
-
-  buildTypes {
-    release {
-      signingConfig signingConfigs.release
-      minifyEnabled true
-      shrinkResources true
-      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
-          "proguard-rules.pro"
+        resConfigs "en"
     }
 
-    debug {
-      applicationIdSuffix ".dev"
-      versionNameSuffix "-dev"
+    signingConfigs {
+        release {
+            storeFile new File(RELEASE_STORE_FILE)
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWD
+            storePassword RELEASE_STORE_PASSWD
+        }
     }
-  }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+        }
+
+        debug {
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 // Kapt flags
 kapt {
-  correctErrorTypes = true
-  useBuildCache = true
-  mapDiagnosticLocations = true
+    correctErrorTypes = true
+    useBuildCache = true
+    mapDiagnosticLocations = true
 
-  javacOptions {
-    option("-Xlint:unchecked")
-    option("-Xlint:deprecation")
-    option("-Xmaxerrs", 10000)
-  }
+    javacOptions {
+        option("-Xlint:unchecked")
+        option("-Xlint:deprecation")
+        option("-Xmaxerrs", 10000)
+    }
 }
 
 dependencies {
-  // Leak Canary
-  debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanary"
-  debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
-  releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
-  testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+    // Leak Canary
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanary"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
-  // PYDroid
-  implementation "com.pyamsoft.pydroid:ui:$pydroid"
+    // PYDroid
+    implementation "com.pyamsoft.pydroid:ui:$pydroid"
 
-  implementation "com.google.dagger:dagger:$dagger"
-  kapt "com.google.dagger:dagger-compiler:$dagger"
+    implementation "com.google.dagger:dagger:$dagger"
+    kapt "com.google.dagger:dagger-compiler:$dagger"
 
-  implementation project(':pasterino-base')
+    implementation project(':pasterino-base')
 }

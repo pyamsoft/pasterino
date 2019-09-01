@@ -18,5 +18,3 @@
 package com.pyamsoft.pasterino.service
 
 object PasteRequestEvent
-
-

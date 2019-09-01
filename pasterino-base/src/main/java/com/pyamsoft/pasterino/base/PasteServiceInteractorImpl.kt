@@ -27,36 +27,35 @@ import javax.inject.Singleton
 
 @Singleton
 internal class PasteServiceInteractorImpl @Inject internal constructor(
-  private val enforcer: Enforcer,
-  private val preferences: PastePreferences
+    private val enforcer: Enforcer,
+    private val preferences: PastePreferences
 ) : PasteServiceInteractor {
 
-  private var running = false
+    private var running = false
 
-  private val runningStateBus = EventBus.create<Boolean>()
+    private val runningStateBus = EventBus.create<Boolean>()
 
-  override fun setServiceState(start: Boolean) {
-    running = start
-    runningStateBus.publish(start)
-  }
-
-  override fun observeServiceState(): EventConsumer<Boolean> {
-    return object : EventConsumer<Boolean> {
-      override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
-        emitter(running)
-        runningStateBus.onEvent { emitter(it) }
-      }
-
+    override fun setServiceState(start: Boolean) {
+        running = start
+        runningStateBus.publish(start)
     }
-  }
 
-  override suspend fun getPasteDelayTime(): Long {
-    enforcer.assertNotOnMainThread()
-    return preferences.pasteDelayTime
-  }
+    override fun observeServiceState(): EventConsumer<Boolean> {
+        return object : EventConsumer<Boolean> {
+            override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
+                emitter(running)
+                runningStateBus.onEvent { emitter(it) }
+            }
+        }
+    }
 
-  override suspend fun isDeepSearchEnabled(): Boolean {
-    enforcer.assertNotOnMainThread()
-    return preferences.isDeepSearchEnabled
-  }
+    override suspend fun getPasteDelayTime(): Long {
+        enforcer.assertNotOnMainThread()
+        return preferences.pasteDelayTime
+    }
+
+    override suspend fun isDeepSearchEnabled(): Boolean {
+        enforcer.assertNotOnMainThread()
+        return preferences.isDeepSearchEnabled
+    }
 }

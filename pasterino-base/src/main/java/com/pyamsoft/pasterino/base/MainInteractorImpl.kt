@@ -23,12 +23,12 @@ import com.pyamsoft.pydroid.core.Enforcer
 import javax.inject.Inject
 
 internal class MainInteractorImpl @Inject internal constructor(
-  private val preferences: ClearPreferences,
-  private val enforcer: Enforcer
+    private val preferences: ClearPreferences,
+    private val enforcer: Enforcer
 ) : MainInteractor {
 
-  override suspend fun clearAll() {
-    enforcer.assertNotOnMainThread()
-    preferences.clearAll()
-  }
+    override suspend fun clearAll() {
+        enforcer.assertNotOnMainThread()
+        preferences.clearAll()
+    }
 }

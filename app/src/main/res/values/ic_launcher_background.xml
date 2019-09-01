@@ -16,5 +16,5 @@
   -->
 
 <resources>
-  <color name="ic_launcher_background">@color/green500</color>
+    <color name="ic_launcher_background">@color/green500</color>
 </resources>

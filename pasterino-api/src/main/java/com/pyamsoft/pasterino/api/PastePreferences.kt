@@ -21,9 +21,9 @@ import androidx.annotation.CheckResult
 
 interface PastePreferences {
 
-  @get:CheckResult
-  val pasteDelayTime: Long
+    @get:CheckResult
+    val pasteDelayTime: Long
 
-  @get:CheckResult
-  val isDeepSearchEnabled: Boolean
+    @get:CheckResult
+    val isDeepSearchEnabled: Boolean
 }
