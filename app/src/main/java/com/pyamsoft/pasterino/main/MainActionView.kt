@@ -36,16 +36,19 @@ internal class MainActionView @Inject internal constructor(
     parent: ViewGroup
 ) : BaseUiView<MainViewState, MainViewEvent>(parent) {
 
-    override val layoutRoot by boundView<FrameLayout>(R.id.fab_container)
     private val fab by boundView<FloatingActionButton>(R.id.fab)
 
     private var actionIconLoaded: Loaded? = null
 
     override val layout: Int = R.layout.floating_action_button
 
-    override fun onTeardown() {
-        fab.setOnDebouncedClickListener(null)
-        actionIconLoaded?.dispose()
+    override val layoutRoot by boundView<FrameLayout>(R.id.fab_container)
+
+    init {
+        doOnTeardown {
+            fab.setOnDebouncedClickListener(null)
+            actionIconLoaded?.dispose()
+        }
     }
 
     override fun onRender(
@@ -61,11 +64,10 @@ internal class MainActionView @Inject internal constructor(
             publish(ActionClick(running))
         }
 
-        val icon: Int
-        if (running) {
-            icon = R.drawable.ic_help_24dp
+        val icon = if (running) {
+            R.drawable.ic_help_24dp
         } else {
-            icon = R.drawable.ic_service_start_24dp
+            R.drawable.ic_service_start_24dp
         }
 
         actionIconLoaded?.dispose()

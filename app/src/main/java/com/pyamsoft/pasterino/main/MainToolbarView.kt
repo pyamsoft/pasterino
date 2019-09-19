@@ -18,8 +18,6 @@
 package com.pyamsoft.pasterino.main
 
 import android.app.Activity
-import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -38,30 +36,35 @@ import javax.inject.Inject
 
 internal class MainToolbarView @Inject internal constructor(
     activity: Activity,
-    private val theming: Theming,
-    private val toolbarActivityProvider: ToolbarActivityProvider,
+    theming: Theming,
+    toolbarActivityProvider: ToolbarActivityProvider,
     parent: ViewGroup
 ) : BaseUiView<UnitViewState, UnitViewEvent>(parent) {
-
-    private var activity: Activity? = activity
 
     override val layoutRoot by boundView<Toolbar>(R.id.toolbar)
 
     override val layout: Int = R.layout.toolbar
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        setupToolbar()
+    init {
+        doOnInflate {
+            setupToolbar(toolbarActivityProvider, theming, activity)
+        }
+
+        doOnTeardown {
+            toolbarActivityProvider.setToolbar(null)
+            layoutRoot.removePrivacy()
+        }
     }
 
-    private fun setupToolbar() {
-        val theme: Int
-        if (theming.isDarkTheme(requireNotNull(activity))) {
-            theme = R.style.ThemeOverlay_MaterialComponents
+    private fun setupToolbar(
+        toolbarActivityProvider: ToolbarActivityProvider,
+        theming: Theming,
+        activity: Activity
+    ) {
+        val theme = if (theming.isDarkTheme(activity)) {
+            R.style.ThemeOverlay_MaterialComponents
         } else {
-            theme = R.style.ThemeOverlay_MaterialComponents_Light
+            R.style.ThemeOverlay_MaterialComponents_Light
         }
 
         layoutRoot.apply {
@@ -77,11 +80,5 @@ internal class MainToolbarView @Inject internal constructor(
         state: UnitViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        toolbarActivityProvider.setToolbar(null)
-        layoutRoot.removePrivacy()
-        activity = null
     }
 }

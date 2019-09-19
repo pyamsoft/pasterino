@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pasterino.settings
 
-import android.os.Bundle
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
@@ -28,31 +27,30 @@ import com.pyamsoft.pydroid.ui.widget.scroll.HideOnScrollListener
 import javax.inject.Inject
 
 internal class SettingsView @Inject internal constructor(
-    private val recyclerView: RecyclerView,
+    recyclerView: RecyclerView,
     parent: PreferenceScreen
 ) : PrefUiView<UnitViewState, SettingsViewEvent>(parent) {
 
     private var scrollListener: RecyclerView.OnScrollListener? = null
 
-    override fun onInflated(
-        preferenceScreen: PreferenceScreen,
-        savedInstanceState: Bundle?
-    ) {
-        val listener = HideOnScrollListener.create(true) {
-            publish(SignificantScroll(it))
+    init {
+        doOnInflate {
+            val listener = HideOnScrollListener.create(true) {
+                publish(SignificantScroll(it))
+            }
+            recyclerView.addOnScrollListener(listener)
+            scrollListener = listener
         }
-        recyclerView.addOnScrollListener(listener)
-        scrollListener = listener
+
+        doOnTeardown {
+            scrollListener?.also { recyclerView.removeOnScrollListener(it) }
+            scrollListener = null
+        }
     }
 
     override fun onRender(
         state: UnitViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        scrollListener?.also { recyclerView.removeOnScrollListener(it) }
-        scrollListener = null
     }
 }

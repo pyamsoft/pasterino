@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pasterino.widget
 
-import android.os.Bundle
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
@@ -29,18 +28,20 @@ import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import javax.inject.Inject
 
 internal class ToolbarView<S : UiViewState, E : UiViewEvent> @Inject internal constructor(
-    private val toolbarActivity: ToolbarActivity
+    toolbarActivity: ToolbarActivity
 ) : UiView<S, E>() {
+
+    init {
+        doOnInflate {
+            toolbarActivity.withToolbar { toolbar ->
+                toolbar.setTitle(R.string.app_name)
+                toolbar.setUpEnabled(false)
+            }
+        }
+    }
 
     override fun id(): Int {
         throw InvalidIdException
-    }
-
-    override fun doInflate(savedInstanceState: Bundle?) {
-        toolbarActivity.withToolbar { toolbar ->
-            toolbar.setTitle(R.string.app_name)
-            toolbar.setUpEnabled(false)
-        }
     }
 
     override fun render(
