@@ -35,6 +35,7 @@ import timber.log.Timber
 
 object PasteServiceNotification {
 
+    private const val CHANNEL_ID = "pasterino_foreground"
     private const val ID = 1005
     private const val RC = 1005
 
@@ -60,7 +61,7 @@ object PasteServiceNotification {
             synchronized(this) {
                 if (notificationManager == null) {
                     notificationManager =
-                        requireNotNull(context.applicationContext.getSystemService<NotificationManager>())
+                        requireNotNull(context.applicationContext.getSystemService())
                 }
             }
         }
@@ -73,11 +74,10 @@ object PasteServiceNotification {
     private fun createNotification(context: Context): Notification {
         val appContext = context.applicationContext
         val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
-        val notificationChannelId = "pasterino_foreground"
         if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
-            setupNotificationChannel(appContext, notificationChannelId)
+            setupNotificationChannel(appContext)
         }
-        return NotificationCompat.Builder(appContext, notificationChannelId)
+        return NotificationCompat.Builder(appContext, CHANNEL_ID)
             .apply {
                 setSmallIcon(R.drawable.ic_paste_notification)
                 setContentText("Pasterino Plzarino")
@@ -95,13 +95,12 @@ object PasteServiceNotification {
     @JvmStatic
     @RequiresApi(VERSION_CODES.O)
     private fun setupNotificationChannel(
-        context: Context,
-        notificationChannelId: String
+        context: Context
     ) {
         val name = "Paste Service"
         val desc = "Notification related to the Pasterino service"
         val importance = NotificationManager.IMPORTANCE_MIN
-        val notificationChannel = NotificationChannel(notificationChannelId, name, importance).apply {
+        val notificationChannel = NotificationChannel(CHANNEL_ID, name, importance).apply {
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             description = desc
             enableLights(false)
@@ -109,7 +108,7 @@ object PasteServiceNotification {
             setSound(null, null)
         }
 
-        Timber.d("Create notification channel with id: %s", notificationChannelId)
+        Timber.d("Create notification channel with id: %s", CHANNEL_ID)
         getNotificationManager(context).createNotificationChannel(notificationChannel)
     }
 }
