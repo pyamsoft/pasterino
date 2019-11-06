@@ -59,9 +59,9 @@ class MainActivity : RatingActivity() {
         get() = requireNotNull(mainView).id()
 
     override val changeLogLines: ChangeLogBuilder = buildChangeLog {
-        bugfix("Fix crash on paste in some situations")
-        bugfix("Fix inability to paste on some Samsung devices")
-        change("Better open source license viewing experience")
+        change("Lower memory consumption and faster operation")
+        bugfix("Fixed a memory leak in the license viewing experience")
+        feature("Added links to Terms of Service and Privacy Policy")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
