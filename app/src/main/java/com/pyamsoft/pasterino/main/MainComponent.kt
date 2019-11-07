@@ -20,6 +20,7 @@ package com.pyamsoft.pasterino.main
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
+import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -34,7 +35,8 @@ interface MainComponent {
         @CheckResult
         fun create(
             @BindsInstance parent: ViewGroup,
-            @BindsInstance toolbarActivityProvider: ToolbarActivityProvider
+            @BindsInstance toolbarActivityProvider: ToolbarActivityProvider,
+            @BindsInstance themeProvider: ThemeProvider
         ): MainComponent
     }
 }

@@ -41,7 +41,7 @@ buildscript {
         preference = "1.1.0"
 
 
-        pydroid = "20.6.4"
+        pydroid = "20.6.6"
         leakCanary = "1.6.3"
         dagger = "2.25.2"
     }
