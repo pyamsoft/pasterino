@@ -19,7 +19,6 @@ package com.pyamsoft.pasterino.service
 
 import android.app.IntentService
 import android.content.Intent
-import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.ui.Injector
@@ -42,9 +41,6 @@ class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
         super.onDestroy()
 
         bus = null
-
-        Pasterino.getRefWatcher(this)
-            .watch(this)
     }
 
     override fun onHandleIntent(intent: Intent?) {

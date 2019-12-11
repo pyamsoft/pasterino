@@ -18,28 +18,14 @@
 package com.pyamsoft.pasterino
 
 import android.app.Application
-import android.app.Service
-import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.squareup.leakcanary.LeakCanary
-import com.squareup.leakcanary.RefWatcher
 
 class Pasterino : Application() {
 
     private var component: PasterinoComponent? = null
-    private var refWatcher: RefWatcher? = null
 
     override fun onCreate() {
         super.onCreate()
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-
-        refWatcher = if (BuildConfig.DEBUG) {
-            LeakCanary.install(this)
-        } else {
-            RefWatcher.DISABLED
-        }
 
         PYDroid.init(
             this,
@@ -71,22 +57,9 @@ class Pasterino : Application() {
 
     companion object {
 
-        const val PRIVACY_POLICY_URL = "https://pyamsoft.blogspot.com/p/pasterino-privacy-policy.html"
+        const val PRIVACY_POLICY_URL =
+            "https://pyamsoft.blogspot.com/p/pasterino-privacy-policy.html"
         const val TERMS_CONDITIONS_URL =
             "https://pyamsoft.blogspot.com/p/pasterino-terms-and-conditions.html"
-
-        @JvmStatic
-        @CheckResult
-        fun getRefWatcher(service: Service): RefWatcher = getRefWatcherInternal(service.application)
-
-        @JvmStatic
-        @CheckResult
-        private fun getRefWatcherInternal(application: Application): RefWatcher {
-            if (application is Pasterino) {
-                return requireNotNull(application.refWatcher)
-            } else {
-                throw IllegalStateException("Application is not Pasterino")
-            }
-        }
     }
 }

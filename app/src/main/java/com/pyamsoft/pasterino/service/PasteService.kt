@@ -27,7 +27,6 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
@@ -174,8 +173,5 @@ class PasteService : AccessibilityService(), LifecycleOwner {
         binder = null
 
         registry.fakeUnbind()
-
-        Pasterino.getRefWatcher(this)
-            .watch(this)
     }
 }
