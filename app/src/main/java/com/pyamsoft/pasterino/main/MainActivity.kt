@@ -22,13 +22,15 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pydroid.arch.UnitViewModel
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.about.AboutFragment
+import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.buildChangeLog
@@ -44,15 +46,22 @@ class MainActivity : RatingActivity() {
 
     @JvmField
     @Inject
-    internal var toolbar: MainToolbarView? = null
+    internal var toolbar: ActivityToolbarView? = null
 
     @JvmField
     @Inject
-    internal var mainView: MainFrameView? = null
+    internal var activityView: ActivityFrameView? = null
 
     @JvmField
     @Inject
     internal var theming: Theming? = null
+
+    @JvmField
+    @Inject
+    internal var factory: ViewModelProvider.Factory? = null
+    private val viewModel by factory<ActivityViewModel> { factory }
+
+    private var stateSaver: StateSaver? = null
 
     override val versionName: String = BuildConfig.VERSION_NAME
 
@@ -63,7 +72,7 @@ class MainActivity : RatingActivity() {
     }
 
     override val fragmentContainerId: Int
-        get() = requireNotNull(mainView).id()
+        get() = requireNotNull(activityView).id()
 
     override val changeLogLines: ChangeLogBuilder = buildChangeLog {
         change("Lower memory consumption and faster operation")
@@ -90,19 +99,21 @@ class MainActivity : RatingActivity() {
             )
             .inject(this)
 
-        val component = requireNotNull(mainView)
-        val toolbarComponent = requireNotNull(toolbar)
-        val dropshadow = DropshadowView.create(layoutRoot)
+        val activityView = requireNotNull(activityView)
+        val toolbar = requireNotNull(toolbar)
+        val dropshadow =
+            DropshadowView.createTyped<ActivityViewState, ActivityViewEvent>(layoutRoot)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, this,
-            UnitViewModel.create(),
-            component,
-            toolbarComponent, dropshadow
+            viewModel,
+            activityView,
+            toolbar,
+            dropshadow
         ) {}
 
         layoutRoot.layout {
-            toolbarComponent.also {
+            toolbar.also {
                 connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
                 connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
                 connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
@@ -110,14 +121,14 @@ class MainActivity : RatingActivity() {
             }
 
             dropshadow.also {
-                connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+                connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
                 connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
                 connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
                 constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
             }
 
-            component.also {
-                connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+            activityView.also {
+                connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
                 connect(
                     it.id(),
                     ConstraintSet.BOTTOM,
@@ -136,15 +147,17 @@ class MainActivity : RatingActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mainView?.saveState(outState)
-        toolbar?.saveState(outState)
+        stateSaver?.saveState(outState)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        mainView = null
+        stateSaver = null
+        factory = null
+        activityView = null
         toolbar = null
+        theming = null
     }
 
     private fun showMainFragment() {

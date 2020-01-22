@@ -26,6 +26,7 @@ import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
 import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
@@ -41,13 +42,17 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
     @JvmField
     @Inject
     internal var factory: ViewModelProvider.Factory? = null
+
     @JvmField
     @Inject
     internal var settingsView: SettingsView? = null
+
     @JvmField
     @Inject
     internal var toolbarView: ToolbarView<UnitViewState, SettingsViewEvent>? = null
     private val viewModel by factory<SettingsViewModel> { factory }
+
+    private var stateSaver: StateSaver? = null
 
     override val preferenceXmlResId: Int = R.xml.preferences
 
@@ -62,7 +67,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
             .create(requireToolbarActivity(), listView, preferenceScreen)
             .inject(this)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             viewModel,
             requireNotNull(settingsView),
@@ -76,8 +81,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        toolbarView?.saveState(outState)
-        settingsView?.saveState(outState)
+        stateSaver?.saveState(outState)
     }
 
     override fun onDestroyView() {
@@ -85,6 +89,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
         settingsView = null
         toolbarView = null
         factory = null
+        stateSaver = null
     }
 
     private fun killApplication() {

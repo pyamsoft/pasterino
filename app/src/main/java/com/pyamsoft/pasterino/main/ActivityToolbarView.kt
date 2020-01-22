@@ -23,9 +23,6 @@ import androidx.core.view.ViewCompat
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
-import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.privacy.addPrivacy
 import com.pyamsoft.pydroid.ui.privacy.removePrivacy
@@ -33,11 +30,11 @@ import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.util.toDp
 import javax.inject.Inject
 
-internal class MainToolbarView @Inject internal constructor(
+internal class ActivityToolbarView @Inject internal constructor(
     theming: ThemeProvider,
     toolbarActivityProvider: ToolbarActivityProvider,
     parent: ViewGroup
-) : BaseUiView<UnitViewState, UnitViewEvent>(parent) {
+) : BaseUiView<ActivityViewState, ActivityViewEvent>(parent) {
 
     override val layoutRoot by boundView<Toolbar>(R.id.toolbar)
 
@@ -73,9 +70,6 @@ internal class MainToolbarView @Inject internal constructor(
         }
     }
 
-    override fun onRender(
-        state: UnitViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: ActivityViewState) {
     }
 }

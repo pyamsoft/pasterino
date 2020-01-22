@@ -29,6 +29,7 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
@@ -50,6 +51,8 @@ class MainFragment : Fragment() {
     internal var toolbarView: ToolbarView<MainViewState, MainViewEvent>? = null
     private val viewModel by factory<MainViewModel> { factory }
 
+    private var stateSaver: StateSaver? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -70,8 +73,9 @@ class MainFragment : Fragment() {
             .create(requireToolbarActivity(), layoutRoot)
             .inject(this)
 
-        createComponent(
-            savedInstanceState, viewLifecycleOwner,
+        stateSaver = createComponent(
+            savedInstanceState,
+            viewLifecycleOwner,
             viewModel,
             requireNotNull(actionView),
             requireNotNull(toolbarView)
@@ -92,6 +96,7 @@ class MainFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        stateSaver = null
         actionView = null
         toolbarView = null
         factory = null
@@ -99,8 +104,7 @@ class MainFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        toolbarView?.saveState(outState)
-        actionView?.saveState(outState)
+        stateSaver?.saveState(outState)
     }
 
     private fun showUsageAccessRequestDialog() {

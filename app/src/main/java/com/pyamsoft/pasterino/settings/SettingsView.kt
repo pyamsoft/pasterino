@@ -20,7 +20,6 @@ package com.pyamsoft.pasterino.settings
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.widget.scroll.HideOnScrollListener
@@ -48,9 +47,6 @@ internal class SettingsView @Inject internal constructor(
         }
     }
 
-    override fun onRender(
-        state: UnitViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: UnitViewState) {
     }
 }

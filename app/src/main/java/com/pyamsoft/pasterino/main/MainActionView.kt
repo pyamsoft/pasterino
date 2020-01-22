@@ -19,11 +19,11 @@ package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.ViewPropertyAnimatorCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.util.popHide
@@ -44,17 +44,25 @@ internal class MainActionView @Inject internal constructor(
 
     override val layoutRoot by boundView<FrameLayout>(R.id.fab_container)
 
+    private var animator: ViewPropertyAnimatorCompat? = null
+
     init {
         doOnTeardown {
             fab.setOnDebouncedClickListener(null)
             actionIconLoaded?.dispose()
         }
+
+        doOnTeardown {
+            cancelAnimator()
+        }
     }
 
-    override fun onRender(
-        state: MainViewState,
-        savedState: UiSavedState
-    ) {
+    private fun cancelAnimator() {
+        animator?.cancel()
+        animator = null
+    }
+
+    override fun onRender(state: MainViewState) {
         toggleVisibility(state.isVisible)
         setFabState(state.isServiceRunning)
     }
@@ -76,10 +84,10 @@ internal class MainActionView @Inject internal constructor(
     }
 
     private fun toggleVisibility(visible: Boolean) {
-        if (visible) {
-            fab.popShow()
-        } else {
-            fab.popHide()
+        if (animator == null) {
+            val a = if (visible) fab.popShow() else fab.popHide()
+            a.withEndAction { cancelAnimator() }
+            animator = a
         }
     }
 }
