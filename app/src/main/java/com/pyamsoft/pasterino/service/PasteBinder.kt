@@ -23,12 +23,12 @@ import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.core.Enforcer
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
     private val finishBus: EventBus<ServiceFinishEvent>,

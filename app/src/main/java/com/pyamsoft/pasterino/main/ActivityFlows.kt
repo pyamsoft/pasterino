@@ -23,4 +23,3 @@ import com.pyamsoft.pydroid.arch.UiViewState
 object ActivityViewState : UiViewState
 
 object ActivityViewEvent : UiViewEvent
-

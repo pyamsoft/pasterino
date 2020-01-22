@@ -24,9 +24,9 @@ import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 internal class MainViewModel @Inject internal constructor(
     interactor: PasteServiceInteractor,

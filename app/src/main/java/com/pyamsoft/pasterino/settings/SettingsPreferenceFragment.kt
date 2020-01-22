@@ -34,8 +34,8 @@ import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.show
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 

@@ -21,8 +21,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import javax.inject.Inject
 
-internal class ActivityViewModel @Inject internal constructor(
-) : UiViewModel<ActivityViewState, ActivityViewEvent, UnitControllerEvent>(
+internal class ActivityViewModel @Inject internal constructor() : UiViewModel<ActivityViewState, ActivityViewEvent, UnitControllerEvent>(
     initialState = ActivityViewState
 ) {
 

@@ -22,8 +22,8 @@ import android.content.Intent
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.ui.Injector
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
 

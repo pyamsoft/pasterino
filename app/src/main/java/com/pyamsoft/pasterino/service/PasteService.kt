@@ -34,8 +34,8 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
 import com.pyamsoft.pydroid.util.fakeBind
 import com.pyamsoft.pydroid.util.fakeUnbind
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class PasteService : AccessibilityService(), LifecycleOwner {
 

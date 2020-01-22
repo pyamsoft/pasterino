@@ -24,10 +24,10 @@ import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewState
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 internal class SettingsViewModel @Inject internal constructor(
     private val scrollBus: EventBus<SignificantScrollEvent>,
