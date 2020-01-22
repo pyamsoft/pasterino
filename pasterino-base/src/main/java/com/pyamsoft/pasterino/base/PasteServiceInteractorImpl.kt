@@ -51,11 +51,11 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
 
     override suspend fun getPasteDelayTime(): Long {
         enforcer.assertNotOnMainThread()
-        return preferences.pasteDelayTime
+        return preferences.getPasteDelayTime()
     }
 
     override suspend fun isDeepSearchEnabled(): Boolean {
         enforcer.assertNotOnMainThread()
-        return preferences.isDeepSearchEnabled
+        return preferences.isDeepSearchEnabled()
     }
 }

@@ -19,19 +19,18 @@ package com.pyamsoft.pasterino.base
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.PastePreferences
+import com.pyamsoft.pydroid.core.Enforcer
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class PasterinoPreferencesImpl @Inject internal constructor(
+    private val enforcer: Enforcer,
     context: Context
 ) : PastePreferences, ClearPreferences {
-
-    private val preferences: SharedPreferences
 
     private val delayTime: String
     private val delayTimeDefault: String
@@ -39,27 +38,35 @@ internal class PasterinoPreferencesImpl @Inject internal constructor(
     private val deepSearch: String
     private val deepSearchDefault: Boolean
 
+    private val preferences by lazy {
+        enforcer.assertNotOnMainThread()
+        PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    }
+
     init {
-        val appContext = context.applicationContext
-        preferences = PreferenceManager.getDefaultSharedPreferences(appContext)
+        context.applicationContext.resources.apply {
+            delayTime = getString(R.string.delay_time_key_v2)
+            delayTimeDefault = getString(R.string.delay_time_default_v2)
 
-        appContext.resources.also {
-            delayTime = it.getString(R.string.delay_time_key_v2)
-            delayTimeDefault = it.getString(R.string.delay_time_default_v2)
-
-            deepSearch = it.getString(R.string.deep_search_key_v1)
-            deepSearchDefault = it.getBoolean(R.bool.deep_search_default_v1)
+            deepSearch = getString(R.string.deep_search_key_v1)
+            deepSearchDefault = getBoolean(R.bool.deep_search_default_v1)
         }
     }
 
-    override val pasteDelayTime: Long
-        get() = preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
+    override suspend fun getPasteDelayTime(): Long {
+        enforcer.assertNotOnMainThread()
+        return preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
+    }
 
-    override val isDeepSearchEnabled: Boolean
-        get() = preferences.getBoolean(deepSearch, deepSearchDefault)
+    override suspend fun isDeepSearchEnabled(): Boolean {
+        enforcer.assertNotOnMainThread()
+        return preferences.getBoolean(deepSearch, deepSearchDefault)
+    }
 
     @SuppressLint("ApplySharedPref")
-    override fun clearAll() {
+    override suspend fun clearAll() {
+        enforcer.assertNotOnMainThread()
+
         // Make sure we commit so that they are cleared
         preferences.edit()
             .clear()
