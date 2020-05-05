@@ -29,7 +29,7 @@ interface PasteServiceInteractor {
     suspend fun getPasteDelayTime(): Long
 
     @CheckResult
-    fun observeServiceState(): EventConsumer<Boolean>
+    suspend fun observeServiceState(): EventConsumer<Boolean>
 
     fun setServiceState(start: Boolean)
 }

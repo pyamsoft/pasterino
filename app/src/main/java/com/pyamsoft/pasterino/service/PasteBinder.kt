@@ -22,29 +22,24 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pydroid.arch.EventBus
-import com.pyamsoft.pydroid.core.Enforcer
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
     private val finishBus: EventBus<ServiceFinishEvent>,
     private val pasteRequestBus: EventBus<PasteRequestEvent>,
-    private val interactor: PasteServiceInteractor,
-    private val enforcer: Enforcer
+    private val interactor: PasteServiceInteractor
 ) : Binder<ServiceControllerEvent>() {
 
     private val pasteRunner = highlander<Unit, (event: ServiceControllerEvent) -> Unit> { onEvent ->
-        return@highlander withContext(context = Dispatchers.Default) {
-            enforcer.assertNotOnMainThread()
-            val delayTime = interactor.getPasteDelayTime()
-            delay(delayTime)
-            val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
-            onEvent(PasteEvent(isDeepSearchEnabled))
-        }
+        val delayTime = interactor.getPasteDelayTime()
+        delay(delayTime)
+        val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
+        onEvent(PasteEvent(isDeepSearchEnabled))
     }
 
     override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {

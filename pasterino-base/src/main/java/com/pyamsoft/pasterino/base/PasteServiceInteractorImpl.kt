@@ -22,6 +22,8 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.EventConsumer
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -42,30 +44,33 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
         runningStateBus.publish(start)
     }
 
-    override fun observeServiceState(): EventConsumer<Boolean> {
-        return object : EventConsumer<Boolean> {
+    override suspend fun observeServiceState(): EventConsumer<Boolean> =
+        withContext(context = Dispatchers.Default) {
+            enforcer.assertNotOnMainThread()
+            return@withContext object : EventConsumer<Boolean> {
 
-            override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
-                return onEvent(EmptyCoroutineContext, emitter)
-            }
+                override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
+                    return onEvent(EmptyCoroutineContext, emitter)
+                }
 
-            override suspend fun onEvent(
-                context: CoroutineContext,
-                emitter: suspend (event: Boolean) -> Unit
-            ) {
-                emitter(running)
-                runningStateBus.onEvent(context = context) { emitter(it) }
+                override suspend fun onEvent(
+                    context: CoroutineContext,
+                    emitter: suspend (event: Boolean) -> Unit
+                ) {
+                    emitter(running)
+                    runningStateBus.onEvent(context = context) { emitter(it) }
+                }
             }
         }
+
+    override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
+        enforcer.assertNotOnMainThread()
+        return@withContext preferences.getPasteDelayTime()
     }
 
-    override suspend fun getPasteDelayTime(): Long {
-        enforcer.assertNotOnMainThread()
-        return preferences.getPasteDelayTime()
-    }
-
-    override suspend fun isDeepSearchEnabled(): Boolean {
-        enforcer.assertNotOnMainThread()
-        return preferences.isDeepSearchEnabled()
-    }
+    override suspend fun isDeepSearchEnabled(): Boolean =
+        withContext(context = Dispatchers.Default) {
+            enforcer.assertNotOnMainThread()
+            return@withContext preferences.isDeepSearchEnabled()
+        }
 }
