@@ -29,7 +29,6 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
-import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
@@ -162,7 +161,7 @@ class MainActivity : RatingActivity() {
 
     private fun showMainFragment() {
         val fm = supportFragmentManager
-        if (fm.findFragmentByTag(MainFragment.TAG) == null && !AboutFragment.isPresent(this)) {
+        if (fm.findFragmentByTag(MainFragment.TAG) == null) {
             fm.commit(this) {
                 add(fragmentContainerId, MainFragment(), MainFragment.TAG)
             }

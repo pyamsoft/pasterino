@@ -39,6 +39,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -65,6 +66,7 @@ interface PasterinoComponent {
 
         @CheckResult
         fun create(
+            @Named("debug") @BindsInstance debug: Boolean,
             @BindsInstance context: Context,
             @BindsInstance theming: Theming,
             @BindsInstance enforcer: Enforcer,

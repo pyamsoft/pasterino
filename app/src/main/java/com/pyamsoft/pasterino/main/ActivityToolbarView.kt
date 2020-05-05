@@ -18,10 +18,10 @@
 package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.databinding.ToolbarBinding
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.privacy.addPrivacy
@@ -34,11 +34,11 @@ internal class ActivityToolbarView @Inject internal constructor(
     theming: ThemeProvider,
     toolbarActivityProvider: ToolbarActivityProvider,
     parent: ViewGroup
-) : BaseUiView<ActivityViewState, ActivityViewEvent>(parent) {
+) : BaseUiView<ActivityViewState, ActivityViewEvent, ToolbarBinding>(parent) {
 
-    override val layoutRoot by boundView<Toolbar>(R.id.toolbar)
+    override val viewBinding = ToolbarBinding::inflate
 
-    override val layout: Int = R.layout.toolbar
+    override val layoutRoot by boundView { toolbar }
 
     init {
         doOnInflate {

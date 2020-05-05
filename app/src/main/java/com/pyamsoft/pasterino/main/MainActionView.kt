@@ -18,10 +18,9 @@
 package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.core.view.ViewPropertyAnimatorCompat
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.databinding.FloatingActionButtonBinding
 import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
@@ -34,21 +33,19 @@ import javax.inject.Inject
 internal class MainActionView @Inject internal constructor(
     private val imageLoader: ImageLoader,
     parent: ViewGroup
-) : BaseUiView<MainViewState, MainViewEvent>(parent) {
+) : BaseUiView<MainViewState, MainViewEvent, FloatingActionButtonBinding>(parent) {
 
-    private val fab by boundView<FloatingActionButton>(R.id.fab)
+    override val viewBinding = FloatingActionButtonBinding::inflate
+
+    override val layoutRoot by boundView { fabContainer }
 
     private var actionIconLoaded: Loaded? = null
-
-    override val layout: Int = R.layout.floating_action_button
-
-    override val layoutRoot by boundView<FrameLayout>(R.id.fab_container)
 
     private var animator: ViewPropertyAnimatorCompat? = null
 
     init {
         doOnTeardown {
-            fab.setOnDebouncedClickListener(null)
+            binding.fab.setOnDebouncedClickListener(null)
             actionIconLoaded?.dispose()
         }
 
@@ -68,7 +65,7 @@ internal class MainActionView @Inject internal constructor(
     }
 
     private fun setFabState(running: Boolean) {
-        fab.setOnDebouncedClickListener {
+        binding.fab.setOnDebouncedClickListener {
             publish(ActionClick(running))
         }
 
@@ -80,12 +77,12 @@ internal class MainActionView @Inject internal constructor(
 
         actionIconLoaded?.dispose()
         actionIconLoaded = imageLoader.load(icon)
-            .into(fab)
+            .into(binding.fab)
     }
 
     private fun toggleVisibility(visible: Boolean) {
         if (animator == null) {
-            val a = if (visible) fab.popShow() else fab.popHide()
+            val a = if (visible) binding.fab.popShow() else binding.fab.popHide()
             a.withEndAction { cancelAnimator() }
             animator = a
         }

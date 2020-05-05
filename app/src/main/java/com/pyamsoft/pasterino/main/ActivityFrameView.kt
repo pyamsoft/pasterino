@@ -18,18 +18,17 @@
 package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.databinding.MainContainerBinding
 import com.pyamsoft.pydroid.arch.BaseUiView
 import javax.inject.Inject
 
 internal class ActivityFrameView @Inject internal constructor(
     parent: ViewGroup
-) : BaseUiView<ActivityViewState, ActivityViewEvent>(parent) {
+) : BaseUiView<ActivityViewState, ActivityViewEvent, MainContainerBinding>(parent) {
 
-    override val layoutRoot by boundView<FrameLayout>(R.id.layout_frame)
+    override val viewBinding = MainContainerBinding::inflate
 
-    override val layout: Int = R.layout.layout_frame
+    override val layoutRoot by boundView { mainContainer }
 
     override fun onRender(state: ActivityViewState) {
     }

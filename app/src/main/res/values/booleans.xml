@@ -16,12 +16,5 @@
   -->
 
 <resources>
-
-    <style name="Theme.Pasterino" parent="@style/Base.Theme.Pasterino" />
-
-    <style name="Theme.Pasterino.Dialog" parent="@style/Base.Theme.Pasterino.Dialog" />
-
-    <style name="Theme.Pasterino.Dialog.Alert" parent="@style/Base.Theme.Pasterino.Dialog.Alert" />
-
-    <style name="Theme.Pasterino.Splash" parent="@style/Base.Theme.Pasterino.Splash" />
+    <bool name="light_bars">true</bool>
 </resources>

@@ -38,11 +38,13 @@ internal class PasteBinder @Inject internal constructor(
 ) : Binder<ServiceControllerEvent>() {
 
     private val pasteRunner = highlander<Unit, (event: ServiceControllerEvent) -> Unit> { onEvent ->
-        enforcer.assertNotOnMainThread()
-        val delayTime = interactor.getPasteDelayTime()
-        delay(delayTime)
-        val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
-        withContext(context = Dispatchers.Main) { onEvent(PasteEvent(isDeepSearchEnabled)) }
+        return@highlander withContext(context = Dispatchers.Default) {
+            enforcer.assertNotOnMainThread()
+            val delayTime = interactor.getPasteDelayTime()
+            delay(delayTime)
+            val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
+            onEvent(PasteEvent(isDeepSearchEnabled))
+        }
     }
 
     override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
@@ -61,7 +63,11 @@ internal class PasteBinder @Inject internal constructor(
         }
 
     private inline fun CoroutineScope.paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-        launch(context = Dispatchers.Default) { pasteRunner.call { onEvent(it) } }
+        launch {
+            pasteRunner.call { event ->
+                launch(context = Dispatchers.Main) { onEvent(event) }
+            }
+        }
 
     fun start() {
         interactor.setServiceState(true)

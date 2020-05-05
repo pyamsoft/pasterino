@@ -20,9 +20,12 @@ package com.pyamsoft.pasterino.main
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import javax.inject.Inject
+import javax.inject.Named
 
-internal class ActivityViewModel @Inject internal constructor() : UiViewModel<ActivityViewState, ActivityViewEvent, UnitControllerEvent>(
-    initialState = ActivityViewState
+internal class ActivityViewModel @Inject internal constructor(
+    @Named("debug") debug: Boolean
+) : UiViewModel<ActivityViewState, ActivityViewEvent, UnitControllerEvent>(
+    initialState = ActivityViewState, debug = debug
 ) {
 
     override fun handleViewEvent(event: ActivityViewEvent) {

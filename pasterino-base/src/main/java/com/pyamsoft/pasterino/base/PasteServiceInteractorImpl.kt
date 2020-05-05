@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.arch.EventConsumer
 import com.pyamsoft.pydroid.core.Enforcer
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 @Singleton
 internal class PasteServiceInteractorImpl @Inject internal constructor(
@@ -42,9 +44,17 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
 
     override fun observeServiceState(): EventConsumer<Boolean> {
         return object : EventConsumer<Boolean> {
+
             override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
+                return onEvent(EmptyCoroutineContext, emitter)
+            }
+
+            override suspend fun onEvent(
+                context: CoroutineContext,
+                emitter: suspend (event: Boolean) -> Unit
+            ) {
                 emitter(running)
-                runningStateBus.onEvent { emitter(it) }
+                runningStateBus.onEvent(context = context) { emitter(it) }
             }
         }
     }

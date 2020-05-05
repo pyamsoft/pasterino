@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino
 
 import android.app.Application
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.util.isDebugMode
 
 class Pasterino : Application() {
 
@@ -29,16 +30,22 @@ class Pasterino : Application() {
 
         PYDroid.init(
             this,
-            getString(R.string.app_name),
-            "https://github.com/pyamsoft/pasterino",
-            "https://github.com/pyamsoft/pasterino/issues",
-            PRIVACY_POLICY_URL,
-            TERMS_CONDITIONS_URL,
-            BuildConfig.VERSION_CODE,
-            BuildConfig.DEBUG
+            PYDroid.Parameters(
+                viewSourceUrl = "https://github.com/pyamsoft/pasterino",
+                bugReportUrl = "https://github.com/pyamsoft/pasterino/issues",
+                version = BuildConfig.VERSION_CODE,
+                termsConditionsUrl = TERMS_CONDITIONS_URL,
+                privacyPolicyUrl = PRIVACY_POLICY_URL
+            )
         ) { provider ->
             component = DaggerPasterinoComponent.factory()
-                .create(this, provider.theming(), provider.enforcer(), provider.imageLoader())
+                .create(
+                    isDebugMode(),
+                    this,
+                    provider.theming(),
+                    provider.enforcer(),
+                    provider.imageLoader()
+                )
         }
     }
 

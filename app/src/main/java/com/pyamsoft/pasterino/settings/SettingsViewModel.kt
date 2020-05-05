@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pasterino.settings
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
@@ -25,23 +24,21 @@ import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewState
 import javax.inject.Inject
+import javax.inject.Named
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal class SettingsViewModel @Inject internal constructor(
+    @Named("debug") debug: Boolean,
     private val scrollBus: EventBus<SignificantScrollEvent>,
     private val serviceFinishBus: EventBus<ServiceFinishEvent>,
     clearBus: EventBus<ClearAllEvent>
 ) : UiViewModel<UnitViewState, SettingsViewEvent, SettingsControllerEvent>(
-    initialState = UnitViewState
+    initialState = UnitViewState, debug = debug
 ) {
 
     init {
         doOnInit {
-            viewModelScope.launch(context = Dispatchers.Default) {
-                clearBus.onEvent { withContext(context = Dispatchers.Main) { killApplication() } }
-            }
+            clearBus.scopedEvent(context = Dispatchers.Default) { killApplication() }
         }
     }
 
