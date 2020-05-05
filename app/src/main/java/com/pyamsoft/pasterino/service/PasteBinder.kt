@@ -43,8 +43,10 @@ internal class PasteBinder @Inject internal constructor(
     }
 
     override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
-        binderScope.listenFinish(onEvent)
-        binderScope.listenPaste(onEvent)
+        binderScope.launch {
+            listenFinish(onEvent)
+            listenPaste(onEvent)
+        }
     }
 
     private inline fun CoroutineScope.listenFinish(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
