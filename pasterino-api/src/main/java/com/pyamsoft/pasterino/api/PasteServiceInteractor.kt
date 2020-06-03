@@ -31,5 +31,5 @@ interface PasteServiceInteractor {
     @CheckResult
     suspend fun observeServiceState(): EventConsumer<Boolean>
 
-    fun setServiceState(start: Boolean)
+    suspend fun setServiceState(start: Boolean)
 }

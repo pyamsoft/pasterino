@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pasterino.settings
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pasterino.service.ServiceFinishEvent
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
@@ -26,6 +27,7 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 internal class SettingsViewModel @Inject internal constructor(
     @Named("debug") debug: Boolean,
@@ -38,13 +40,21 @@ internal class SettingsViewModel @Inject internal constructor(
 
     init {
         doOnInit {
-            clearBus.scopedEvent(context = Dispatchers.Default) { killApplication() }
+            viewModelScope.launch(context = Dispatchers.Default) {
+                clearBus.onEvent { killApplication() }
+            }
         }
     }
 
     override fun handleViewEvent(event: SettingsViewEvent) {
         return when (event) {
-            is SignificantScroll -> scrollBus.publish(SignificantScrollEvent(event.visible))
+            is SignificantScroll -> sendScroll(event.visible)
+        }
+    }
+
+    private fun sendScroll(visible: Boolean) {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            scrollBus.send(SignificantScrollEvent(visible))
         }
     }
 

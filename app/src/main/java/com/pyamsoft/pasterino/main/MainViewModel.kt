@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
 import javax.inject.Inject
 import javax.inject.Named
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class MainViewModel @Inject internal constructor(
@@ -33,7 +34,8 @@ internal class MainViewModel @Inject internal constructor(
     interactor: PasteServiceInteractor,
     visibilityBus: EventBus<SignificantScrollEvent>
 ) : UiViewModel<MainViewState, MainViewEvent, MainControllerEvent>(
-    initialState = MainViewState(isVisible = true, isServiceRunning = false), debug = debug) {
+    initialState = MainViewState(isVisible = true, isServiceRunning = false), debug = debug
+) {
 
     init {
         doOnInit {
@@ -44,7 +46,7 @@ internal class MainViewModel @Inject internal constructor(
         }
 
         doOnInit {
-            viewModelScope.launch {
+            viewModelScope.launch(context = Dispatchers.Default) {
                 visibilityBus.onEvent { setState { copy(isVisible = it.visible) } }
             }
         }

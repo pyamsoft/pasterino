@@ -21,10 +21,13 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.ui.Injector
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ConfirmationDialog : DialogFragment() {
 
@@ -44,7 +47,9 @@ class ConfirmationDialog : DialogFragment() {
         |""".trimMargin()
             )
             .setPositiveButton("Yes") { _, _ ->
-                requireNotNull(bus).publish(ClearAllEvent)
+                lifecycleScope.launch(context = Dispatchers.Default) {
+                    requireNotNull(bus).send(ClearAllEvent)
+                }
                 dismiss()
             }
             .setNegativeButton("No") { _, _ -> dismiss() }

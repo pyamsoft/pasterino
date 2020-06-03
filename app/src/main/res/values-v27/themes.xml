@@ -21,21 +21,21 @@
 
     <style name="Theme.Pasterino" parent="@style/Base.Theme.Pasterino">
         <item name="android:windowLightStatusBar">@bool/light_bars</item>
-        <item name="android:windowLightNavigationBar">@bool/light_bars</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 
     <style name="Theme.Pasterino.Dialog" parent="@style/Base.Theme.Pasterino.Dialog">
         <item name="android:windowLightStatusBar">@bool/light_bars</item>
-        <item name="android:windowLightNavigationBar">@bool/light_bars</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 
     <style name="Theme.Pasterino.Dialog.Alert" parent="@style/Base.Theme.Pasterino.Dialog.Alert">
         <item name="android:windowLightStatusBar">@bool/light_bars</item>
-        <item name="android:windowLightNavigationBar">@bool/light_bars</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 
     <style name="Theme.Pasterino.Splash" parent="@style/Base.Theme.Pasterino.Splash">
         <item name="android:windowLightStatusBar">@bool/light_bars</item>
-        <item name="android:windowLightNavigationBar">@bool/light_bars</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>

@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
 import javax.inject.Inject
@@ -49,7 +50,7 @@ class MainFragment : Fragment() {
     @JvmField
     @Inject
     internal var toolbarView: ToolbarView<MainViewState, MainViewEvent>? = null
-    private val viewModel by factory<MainViewModel> { factory }
+    private val viewModel by viewModelFactory<MainViewModel> { factory }
 
     private var stateSaver: StateSaver? = null
 

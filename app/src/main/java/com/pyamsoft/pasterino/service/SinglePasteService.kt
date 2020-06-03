@@ -23,6 +23,11 @@ import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.ui.Injector
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
@@ -30,6 +35,8 @@ class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
     @JvmField
     @Inject
     internal var bus: EventBus<PasteRequestEvent>? = null
+
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     override fun onCreate() {
         super.onCreate()
@@ -39,13 +46,15 @@ class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        serviceScope.cancel()
         bus = null
     }
 
     override fun onHandleIntent(intent: Intent?) {
         try {
-            requireNotNull(bus).publish(PasteRequestEvent)
+            serviceScope.launch(context = Dispatchers.Default) {
+                requireNotNull(bus).send(PasteRequestEvent)
+            }
         } catch (e: IllegalStateException) {
             Timber.e(e, "Error pasting")
         }

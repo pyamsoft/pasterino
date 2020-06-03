@@ -17,18 +17,14 @@
 
 package com.pyamsoft.pasterino.service
 
-import java.io.Closeable
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import timber.log.Timber
 
 abstract class Binder<T : Any> {
 
-    val binderScope: CoroutineScope
-        get() = CloseableCoroutineScope(SupervisorJob() + Dispatchers.Main)
+    val binderScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     fun bind(onEvent: (event: T) -> Unit) {
         onBind(onEvent)
@@ -38,26 +34,10 @@ abstract class Binder<T : Any> {
     }
 
     fun unbind() {
+        binderScope.cancel()
         onUnbind()
-
-        val scope = binderScope
-        if (scope is Closeable) {
-            try {
-                scope.close()
-            } catch (e: Throwable) {
-                Timber.e(e, "Failed to close binder scope")
-            }
-        }
     }
 
     protected open fun onUnbind() {
-    }
-
-    private class CloseableCoroutineScope(context: CoroutineContext) : Closeable, CoroutineScope {
-        override val coroutineContext: CoroutineContext = context
-
-        override fun close() {
-            coroutineContext.cancel()
-        }
     }
 }

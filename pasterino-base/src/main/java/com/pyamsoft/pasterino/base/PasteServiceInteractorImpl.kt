@@ -22,12 +22,10 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.EventConsumer
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Singleton
 internal class PasteServiceInteractorImpl @Inject internal constructor(
@@ -39,9 +37,9 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
 
     private val runningStateBus = EventBus.create<Boolean>()
 
-    override fun setServiceState(start: Boolean) {
+    override suspend fun setServiceState(start: Boolean) {
         running = start
-        runningStateBus.publish(start)
+        runningStateBus.send(start)
     }
 
     override suspend fun observeServiceState(): EventConsumer<Boolean> =
@@ -50,15 +48,8 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
             return@withContext object : EventConsumer<Boolean> {
 
                 override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
-                    return onEvent(EmptyCoroutineContext, emitter)
-                }
-
-                override suspend fun onEvent(
-                    context: CoroutineContext,
-                    emitter: suspend (event: Boolean) -> Unit
-                ) {
                     emitter(running)
-                    runningStateBus.onEvent(context = context) { emitter(it) }
+                    runningStateBus.onEvent(emitter)
                 }
             }
         }
