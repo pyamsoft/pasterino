@@ -43,7 +43,6 @@ class Pasterino : Application() {
                     isDebugMode(),
                     this,
                     provider.theming(),
-                    provider.enforcer(),
                     provider.imageLoader()
                 )
         }

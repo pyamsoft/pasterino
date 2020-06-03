@@ -25,9 +25,9 @@ import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.ui.Injector
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ConfirmationDialog : DialogFragment() {
 

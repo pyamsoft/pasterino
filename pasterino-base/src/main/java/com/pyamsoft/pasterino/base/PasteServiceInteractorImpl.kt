@@ -29,7 +29,6 @@ import kotlinx.coroutines.withContext
 
 @Singleton
 internal class PasteServiceInteractorImpl @Inject internal constructor(
-    private val enforcer: Enforcer,
     private val preferences: PastePreferences
 ) : PasteServiceInteractor {
 
@@ -38,13 +37,14 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
     private val runningStateBus = EventBus.create<Boolean>()
 
     override suspend fun setServiceState(start: Boolean) {
+        Enforcer.assertNotOnMainThread()
         running = start
         runningStateBus.send(start)
     }
 
     override suspend fun observeServiceState(): EventConsumer<Boolean> =
         withContext(context = Dispatchers.Default) {
-            enforcer.assertNotOnMainThread()
+            Enforcer.assertNotOnMainThread()
             return@withContext object : EventConsumer<Boolean> {
 
                 override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
@@ -55,13 +55,13 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
         }
 
     override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
-        enforcer.assertNotOnMainThread()
+        Enforcer.assertNotOnMainThread()
         return@withContext preferences.getPasteDelayTime()
     }
 
     override suspend fun isDeepSearchEnabled(): Boolean =
         withContext(context = Dispatchers.Default) {
-            enforcer.assertNotOnMainThread()
+            Enforcer.assertNotOnMainThread()
             return@withContext preferences.isDeepSearchEnabled()
         }
 }

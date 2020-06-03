@@ -32,7 +32,6 @@ import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.arch.EventBus
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import dagger.BindsInstance
@@ -69,7 +68,6 @@ interface PasterinoComponent {
             @Named("debug") @BindsInstance debug: Boolean,
             @BindsInstance context: Context,
             @BindsInstance theming: Theming,
-            @BindsInstance enforcer: Enforcer,
             @BindsInstance imageLoader: ImageLoader
         ): PasterinoComponent
     }

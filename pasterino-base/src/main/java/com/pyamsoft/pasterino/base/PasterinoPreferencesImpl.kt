@@ -25,10 +25,11 @@ import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pydroid.core.Enforcer
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Singleton
 internal class PasterinoPreferencesImpl @Inject internal constructor(
-    private val enforcer: Enforcer,
     context: Context
 ) : PastePreferences, ClearPreferences {
 
@@ -39,7 +40,7 @@ internal class PasterinoPreferencesImpl @Inject internal constructor(
     private val deepSearchDefault: Boolean
 
     private val preferences by lazy {
-        enforcer.assertNotOnMainThread()
+        Enforcer.assertNotOnMainThread()
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     }
 
@@ -53,23 +54,26 @@ internal class PasterinoPreferencesImpl @Inject internal constructor(
         }
     }
 
-    override suspend fun getPasteDelayTime(): Long {
-        enforcer.assertNotOnMainThread()
-        return preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
+    override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
+        Enforcer.assertNotOnMainThread()
+        return@withContext preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
     }
 
-    override suspend fun isDeepSearchEnabled(): Boolean {
-        enforcer.assertNotOnMainThread()
-        return preferences.getBoolean(deepSearch, deepSearchDefault)
-    }
+    override suspend fun isDeepSearchEnabled(): Boolean =
+        withContext(context = Dispatchers.Default) {
+            Enforcer.assertNotOnMainThread()
+            return@withContext preferences.getBoolean(deepSearch, deepSearchDefault)
+        }
 
     @SuppressLint("ApplySharedPref")
-    override suspend fun clearAll() {
-        enforcer.assertNotOnMainThread()
+    override suspend fun clearAll() = withContext(context = Dispatchers.Default) {
+        Enforcer.assertNotOnMainThread()
 
         // Make sure we commit so that they are cleared
         preferences.edit()
             .clear()
             .commit()
+
+        return@withContext
     }
 }

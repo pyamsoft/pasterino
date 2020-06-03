@@ -43,7 +43,7 @@ internal class PasteBinder @Inject internal constructor(
     }
 
     override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
-        binderScope.launch {
+        binderScope.launch(context = Dispatchers.Default) {
             listenFinish(onEvent)
             listenPaste(onEvent)
         }
@@ -60,20 +60,20 @@ internal class PasteBinder @Inject internal constructor(
         }
 
     private inline fun CoroutineScope.paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-        launch {
+        launch(context = Dispatchers.Default) {
             pasteRunner.call { event ->
                 launch(context = Dispatchers.Main) { onEvent(event) }
             }
         }
 
     fun start() {
-        binderScope.launch {
+        binderScope.launch(context = Dispatchers.Default) {
             interactor.setServiceState(true)
         }
     }
 
     fun stop() {
-        binderScope.launch {
+        binderScope.launch(context = Dispatchers.Default) {
             interactor.setServiceState(false)
         }
     }
