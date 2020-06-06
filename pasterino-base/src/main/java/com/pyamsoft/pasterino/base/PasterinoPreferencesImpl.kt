@@ -40,7 +40,7 @@ internal class PasterinoPreferencesImpl @Inject internal constructor(
     private val deepSearchDefault: Boolean
 
     private val preferences by lazy {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     }
 
@@ -55,19 +55,19 @@ internal class PasterinoPreferencesImpl @Inject internal constructor(
     }
 
     override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         return@withContext preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
     }
 
     override suspend fun isDeepSearchEnabled(): Boolean =
         withContext(context = Dispatchers.Default) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             return@withContext preferences.getBoolean(deepSearch, deepSearchDefault)
         }
 
     @SuppressLint("ApplySharedPref")
     override suspend fun clearAll() = withContext(context = Dispatchers.Default) {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
 
         // Make sure we commit so that they are cleared
         preferences.edit()

@@ -37,14 +37,14 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
     private val runningStateBus = EventBus.create<Boolean>()
 
     override suspend fun setServiceState(start: Boolean) {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         running = start
         runningStateBus.send(start)
     }
 
     override suspend fun observeServiceState(): EventConsumer<Boolean> =
         withContext(context = Dispatchers.Default) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             return@withContext object : EventConsumer<Boolean> {
 
                 override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
@@ -55,13 +55,13 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
         }
 
     override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         return@withContext preferences.getPasteDelayTime()
     }
 
     override suspend fun isDeepSearchEnabled(): Boolean =
         withContext(context = Dispatchers.Default) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             return@withContext preferences.isDeepSearchEnabled()
         }
 }
