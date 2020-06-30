@@ -58,8 +58,8 @@ internal class SettingsViewModel @Inject internal constructor(
         }
     }
 
-    private fun killApplication() {
-        serviceFinishBus.publish(ServiceFinishEvent)
+    private suspend fun killApplication() {
+        serviceFinishBus.send(ServiceFinishEvent)
         publish(ClearAll)
     }
 }
