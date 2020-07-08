@@ -32,17 +32,17 @@ import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
-import com.pyamsoft.pydroid.util.fakeBind
-import com.pyamsoft.pydroid.util.fakeUnbind
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
+import kotlin.LazyThreadSafetyMode.NONE
 
 class PasteService : AccessibilityService(), LifecycleOwner {
 
     @JvmField
     @Inject
     internal var binder: PasteBinder? = null
-    private val registry = LifecycleRegistry(this)
+
+    private val registry by lazy(NONE) { LifecycleRegistry(this) }
 
     override fun getLifecycle(): Lifecycle {
         return registry
@@ -68,7 +68,11 @@ class PasteService : AccessibilityService(), LifecycleOwner {
             }
         }
 
-        registry.fakeBind()
+        registry.apply {
+            handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+            handleLifecycleEvent(Lifecycle.Event.ON_START)
+            handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        }
     }
 
     private fun finish() {
@@ -172,6 +176,10 @@ class PasteService : AccessibilityService(), LifecycleOwner {
         binder?.unbind()
         binder = null
 
-        registry.fakeUnbind()
+        registry.apply {
+            handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+            handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+            handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        }
     }
 }
