@@ -32,9 +32,9 @@ import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
-import timber.log.Timber
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
+import timber.log.Timber
 
 class PasteService : AccessibilityService(), LifecycleOwner {
 

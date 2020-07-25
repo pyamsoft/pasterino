@@ -20,10 +20,6 @@ package com.pyamsoft.pasterino.base
 import com.pyamsoft.pasterino.api.ClearPreferences
 import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class MainInteractorImpl @Inject internal constructor(
@@ -35,4 +31,3 @@ internal class MainInteractorImpl @Inject internal constructor(
         preferences.clearAll()
     }
 }
-
