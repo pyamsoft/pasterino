@@ -15,29 +15,6 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.service.monitor
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-
-abstract class Binder<T : Any> {
-
-    val binderScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
-    fun bind(onEvent: (event: T) -> Unit) {
-        onBind(onEvent)
-    }
-
-    protected open fun onBind(onEvent: (event: T) -> Unit) {
-    }
-
-    fun unbind() {
-        onUnbind()
-        binderScope.cancel()
-    }
-
-    protected open fun onUnbind() {
-    }
-}
+internal object ServiceFinishEvent

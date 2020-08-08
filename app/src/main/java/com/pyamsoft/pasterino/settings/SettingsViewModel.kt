@@ -18,7 +18,7 @@
 package com.pyamsoft.pasterino.settings
 
 import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pasterino.service.ServiceFinishEvent
+import com.pyamsoft.pasterino.service.monitor.ServiceFinishEvent
 import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.arch.EventBus

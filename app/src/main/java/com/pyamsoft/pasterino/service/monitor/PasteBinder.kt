@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,24 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.service.monitor
 
+import android.view.accessibility.AccessibilityNodeInfo
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.service.ServiceControllerEvent.Finish
-import com.pyamsoft.pasterino.service.ServiceControllerEvent.PasteEvent
+import com.pyamsoft.pasterino.service.Binder
+import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.Finish
+import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
+import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pydroid.arch.EventBus
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
     private val finishBus: EventBus<ServiceFinishEvent>,
@@ -75,6 +80,28 @@ internal class PasteBinder @Inject internal constructor(
     fun stop() {
         binderScope.launch(context = Dispatchers.Default) {
             interactor.setServiceState(false)
+        }
+    }
+
+    inline fun pasteInput(
+        deepSearch: Boolean,
+        rootNode: AccessibilityNodeInfo?,
+        crossinline onResult: (Boolean) -> Unit
+    ) {
+        binderScope.launch(context = Dispatchers.Main) {
+            val inputFocus = rootNode?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+            val accessibilityFocus = rootNode?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+            val nodeTarget = withContext(context = Dispatchers.Default) {
+                Paster.performPaste(deepSearch, rootNode, inputFocus, accessibilityFocus)
+            }
+
+            if (nodeTarget == null) {
+                onResult(false)
+            } else {
+                Timber.d("Perform paste on target: $nodeTarget")
+                nodeTarget.performAction(AccessibilityNodeInfoCompat.ACTION_PASTE)
+                onResult(true)
+            }
         }
     }
 }

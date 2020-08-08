@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.service.monitor
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -31,6 +31,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import com.pyamsoft.pasterino.R
+import com.pyamsoft.pasterino.service.single.SinglePasteReceiver
 import timber.log.Timber
 
 object PasteServiceNotification {
@@ -44,14 +45,30 @@ object PasteServiceNotification {
 
     @JvmStatic
     internal fun start(context: Context) {
-        Timber.d("Start notification %d", ID)
-        getNotificationManager(context).notify(ID, createNotification(context))
+        Timber.d(
+            "Start notification %d",
+            ID
+        )
+        getNotificationManager(
+            context
+        ).notify(
+            ID,
+            createNotification(
+                context
+            )
+        )
     }
 
     @JvmStatic
     internal fun stop(context: Context) {
-        Timber.d("Stop notification %d", ID)
-        getNotificationManager(context).cancel(ID)
+        Timber.d(
+            "Stop notification %d",
+            ID
+        )
+        getNotificationManager(
+            context
+        )
+            .cancel(ID)
     }
 
     @JvmStatic
@@ -73,15 +90,22 @@ object PasteServiceNotification {
     @CheckResult
     private fun createNotification(context: Context): Notification {
         val appContext = context.applicationContext
-        val singlePasteIntent = Intent(appContext, SinglePasteService::class.java)
         if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
             setupNotificationChannel(appContext)
         }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            appContext,
+            RC,
+            Intent(appContext, SinglePasteReceiver::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         return NotificationCompat.Builder(appContext, CHANNEL_ID)
             .apply {
                 setSmallIcon(R.drawable.ic_paste_notification)
                 setContentText("Pasterino Plzarino")
-                setContentIntent(PendingIntent.getService(appContext, RC, singlePasteIntent, 0))
+                setContentIntent(pendingIntent)
                 setWhen(0)
                 setOngoing(true)
                 setAutoCancel(false)
@@ -108,7 +132,12 @@ object PasteServiceNotification {
             setSound(null, null)
         }
 
-        Timber.d("Create notification channel with id: %s", CHANNEL_ID)
-        getNotificationManager(context).createNotificationChannel(notificationChannel)
+        Timber.d(
+            "Create notification channel with id: %s",
+            CHANNEL_ID
+        )
+        getNotificationManager(
+            context
+        ).createNotificationChannel(notificationChannel)
     }
 }

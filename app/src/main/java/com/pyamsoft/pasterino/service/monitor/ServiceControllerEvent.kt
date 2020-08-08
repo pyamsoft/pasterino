@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,13 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.service.monitor
 
-internal object ServiceFinishEvent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+
+sealed class ServiceControllerEvent : UiControllerEvent {
+
+    data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceControllerEvent()
+
+    object Finish : ServiceControllerEvent()
+}

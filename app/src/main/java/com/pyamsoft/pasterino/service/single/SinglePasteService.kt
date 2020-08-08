@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,48 +15,57 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.service.single
 
-import android.app.IntentService
+import android.content.Context
 import android.content.Intent
+import androidx.core.app.JobIntentService
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.ui.Injector
-import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class SinglePasteService : IntentService(SinglePasteService::class.java.name) {
+class SinglePasteService : JobIntentService() {
 
     @JvmField
     @Inject
-    internal var bus: EventBus<PasteRequestEvent>? = null
-
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    internal var binder: SingleBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         Injector.obtain<PasterinoComponent>(applicationContext)
             .inject(this)
+
+        requireNotNull(binder).bind { }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        serviceScope.cancel()
-        bus = null
+        binder?.unbind()
+        binder = null
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onHandleWork(intent: Intent) {
         try {
-            serviceScope.launch(context = Dispatchers.Default) {
-                requireNotNull(bus).send(PasteRequestEvent)
-            }
+            requireNotNull(binder).paste()
         } catch (e: IllegalStateException) {
             Timber.e(e, "Error pasting")
+        }
+    }
+
+    companion object {
+
+        private const val JOB_ID = 42069
+
+        @JvmStatic
+        fun enqueue(context: Context) {
+            val intent = Intent(context.applicationContext, SinglePasteService::class.java)
+            enqueueWork(
+                context,
+                SinglePasteService::class.java,
+                JOB_ID,
+                intent
+            )
         }
     }
 }

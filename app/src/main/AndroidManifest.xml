@@ -24,6 +24,9 @@
         android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- For SinglePasteService JobIntentService requirement -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".Pasterino"
         android:icon="@mipmap/ic_launcher"
@@ -54,7 +57,7 @@
 
         <!-- Accessibility Service -->
         <service
-            android:name=".service.PasteService"
+            android:name=".service.monitor.PasteService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
@@ -64,8 +67,15 @@
                 android:resource="@xml/pasterino" />
         </service>
 
+        <!-- Export service bound as Job service -->
         <service
-            android:name=".service.SinglePasteService"
+            android:name=".service.single.SinglePasteService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- Receive paste requests from notification and launch SinglePasteService -->
+        <receiver
+            android:name=".service.single.SinglePasteReceiver"
             android:exported="false" />
 
     </application>

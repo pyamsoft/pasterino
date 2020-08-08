@@ -23,10 +23,10 @@ import com.pyamsoft.pasterino.PasterinoComponent.PasterinoModule
 import com.pyamsoft.pasterino.base.BaseModule
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponent
-import com.pyamsoft.pasterino.service.PasteRequestEvent
-import com.pyamsoft.pasterino.service.PasteService
-import com.pyamsoft.pasterino.service.ServiceFinishEvent
-import com.pyamsoft.pasterino.service.SinglePasteService
+import com.pyamsoft.pasterino.service.single.PasteRequestEvent
+import com.pyamsoft.pasterino.service.monitor.PasteService
+import com.pyamsoft.pasterino.service.monitor.ServiceFinishEvent
+import com.pyamsoft.pasterino.service.single.SinglePasteService
 import com.pyamsoft.pasterino.settings.ClearAllEvent
 import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent

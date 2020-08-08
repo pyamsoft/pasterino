@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,21 @@
  *
  */
 
-package com.pyamsoft.pasterino.service
+package com.pyamsoft.pasterino.service.single
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pasterino.service.Binder
+import com.pyamsoft.pydroid.arch.EventBus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-sealed class ServiceControllerEvent : UiControllerEvent {
+internal class SingleBinder @Inject internal constructor(
+    private val pasteRequestBus: EventBus<PasteRequestEvent>
+) : Binder<Unit>() {
 
-    data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceControllerEvent()
-
-    object Finish : ServiceControllerEvent()
+    fun paste() {
+        binderScope.launch(context = Dispatchers.Default) {
+            pasteRequestBus.send(PasteRequestEvent)
+        }
+    }
 }
