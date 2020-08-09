@@ -22,6 +22,4 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 sealed class ServiceControllerEvent : UiControllerEvent {
 
     data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceControllerEvent()
-
-    object Finish : ServiceControllerEvent()
 }

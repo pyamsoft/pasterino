@@ -19,13 +19,11 @@ package com.pyamsoft.pasterino.service.monitor
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
-import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
@@ -61,17 +59,10 @@ class PasteService : AccessibilityService(), LifecycleOwner {
         requireNotNull(binder).bind {
             return@bind when (it) {
                 is PasteEvent -> performPaste(it.isDeepSearchEnabled)
-                is Finish -> finish()
             }
         }
 
         registry.currentState = Lifecycle.State.RESUMED
-    }
-
-    private fun finish() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            disableSelf()
-        }
     }
 
     private fun performPaste(deepSearch: Boolean) {

@@ -17,14 +17,11 @@
 
 package com.pyamsoft.pasterino.settings
 
-import android.app.ActivityManager
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.R
-import com.pyamsoft.pasterino.settings.SettingsControllerEvent.ClearAll
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UnitViewState
@@ -33,9 +30,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
-import com.pyamsoft.pydroid.ui.util.show
 import javax.inject.Inject
-import timber.log.Timber
 
 class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
@@ -73,9 +68,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
             requireNotNull(settingsView),
             requireNotNull(toolbarView)
         ) {
-            return@createComponent when (it) {
-                is ClearAll -> killApplication()
-            }
+            // TODO(Peter): Handle controller events
         }
     }
 
@@ -90,20 +83,6 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
         toolbarView = null
         factory = null
         stateSaver = null
-    }
-
-    private fun killApplication() {
-        requireContext().also {
-            Timber.d("Clear application data")
-            val activityManager = it.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            activityManager.clearApplicationUserData()
-        }
-    }
-
-    override fun onClearAllClicked() {
-        super.onClearAllClicked()
-        ConfirmationDialog()
-            .show(requireActivity(), "confirm")
     }
 
     companion object {

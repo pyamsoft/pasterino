@@ -22,7 +22,6 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.Binder
-import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.Finish
 import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pydroid.arch.EventBus
@@ -35,7 +34,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
-    private val finishBus: EventBus<ServiceFinishEvent>,
     private val pasteRequestBus: EventBus<PasteRequestEvent>,
     private val interactor: PasteServiceInteractor
 ) : Binder<ServiceControllerEvent>() {
@@ -49,15 +47,9 @@ internal class PasteBinder @Inject internal constructor(
 
     override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
         binderScope.launch(context = Dispatchers.Default) {
-            listenFinish(onEvent)
             listenPaste(onEvent)
         }
     }
-
-    private inline fun CoroutineScope.listenFinish(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-        launch(context = Dispatchers.Default) {
-            finishBus.onEvent { withContext(context = Dispatchers.Main) { onEvent(Finish) } }
-        }
 
     private inline fun CoroutineScope.listenPaste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
         launch(context = Dispatchers.Default) {

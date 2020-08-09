@@ -23,12 +23,9 @@ import com.pyamsoft.pasterino.PasterinoComponent.PasterinoModule
 import com.pyamsoft.pasterino.base.BaseModule
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponent
-import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pasterino.service.monitor.PasteService
-import com.pyamsoft.pasterino.service.monitor.ServiceFinishEvent
+import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pasterino.service.single.SinglePasteService
-import com.pyamsoft.pasterino.settings.ClearAllEvent
-import com.pyamsoft.pasterino.settings.ConfirmationDialog
 import com.pyamsoft.pasterino.settings.SettingsComponent
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.arch.EventBus
@@ -44,8 +41,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [PasterinoModule::class, BaseModule::class])
 interface PasterinoComponent {
-
-    fun inject(dialog: ConfirmationDialog)
 
     fun inject(service: PasteService)
 
@@ -82,23 +77,7 @@ interface PasterinoComponent {
             @Singleton
             @JvmStatic
             @CheckResult
-            internal fun provideClearBus(): EventBus<ClearAllEvent> {
-                return EventBus.create()
-            }
-
-            @Provides
-            @Singleton
-            @JvmStatic
-            @CheckResult
             internal fun providePasteBus(): EventBus<PasteRequestEvent> {
-                return EventBus.create()
-            }
-
-            @Provides
-            @Singleton
-            @JvmStatic
-            @CheckResult
-            internal fun provideServiceBus(): EventBus<ServiceFinishEvent> {
                 return EventBus.create()
             }
 
