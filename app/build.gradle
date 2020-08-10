@@ -104,5 +104,5 @@ dependencies {
 	implementation "com.google.dagger:dagger:$dagger"
 	kapt "com.google.dagger:dagger-compiler:$dagger"
 
-	implementation project(':pasterino-base')
+	implementation project(':service')
 }
