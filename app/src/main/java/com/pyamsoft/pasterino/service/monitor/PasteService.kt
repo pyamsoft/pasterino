@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.pyamsoft.pasterino.service.monitor
@@ -27,9 +26,9 @@ import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
-import timber.log.Timber
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
+import timber.log.Timber
 
 class PasteService : AccessibilityService(), LifecycleOwner {
 

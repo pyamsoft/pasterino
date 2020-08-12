@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.pyamsoft.pasterino.service.monitor
@@ -25,13 +24,13 @@ import com.pyamsoft.pasterino.service.Binder
 import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pydroid.arch.EventBus
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
     private val pasteRequestBus: EventBus<PasteRequestEvent>,

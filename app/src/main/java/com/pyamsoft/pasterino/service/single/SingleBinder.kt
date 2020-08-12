@@ -12,16 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.pyamsoft.pasterino.service.single
 
 import com.pyamsoft.pasterino.service.Binder
 import com.pyamsoft.pydroid.arch.EventBus
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 internal class SingleBinder @Inject internal constructor(
     private val pasteRequestBus: EventBus<PasteRequestEvent>
