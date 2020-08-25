@@ -106,6 +106,7 @@ dependencies {
 
 	// PYDroid
 	implementation "com.pyamsoft.pydroid:ui:$pydroid"
+	implementation "com.pyamsoft.pydroid:notify:$pydroid"
 
 	implementation "com.google.dagger:dagger:$dagger"
 	kapt "com.google.dagger:dagger-compiler:$dagger"

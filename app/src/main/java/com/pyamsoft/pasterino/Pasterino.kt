@@ -17,6 +17,7 @@
 package com.pyamsoft.pasterino
 
 import android.app.Application
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.util.isDebugMode
 
@@ -37,6 +38,9 @@ class Pasterino : Application() {
                 privacyPolicyUrl = PRIVACY_POLICY_URL
             )
         ) { provider ->
+            // Using pydroid-notify
+            OssLibraries.usingNotify = true
+
             component = DaggerPasterinoComponent.factory()
                 .create(
                     isDebugMode(),

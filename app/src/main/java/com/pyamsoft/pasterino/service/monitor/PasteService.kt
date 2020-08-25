@@ -24,17 +24,22 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
+import com.pyamsoft.pasterino.service.monitor.notification.NotificationHandler
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
-import timber.log.Timber
 
 class PasteService : AccessibilityService(), LifecycleOwner {
 
     @JvmField
     @Inject
     internal var binder: PasteBinder? = null
+
+    @JvmField
+    @Inject
+    internal var notificationHandler: NotificationHandler? = null
 
     private val registry by lazy(NONE) { LifecycleRegistry(this) }
 
@@ -80,11 +85,11 @@ class PasteService : AccessibilityService(), LifecycleOwner {
     override fun onServiceConnected() {
         super.onServiceConnected()
         requireNotNull(binder).start()
-        PasteServiceNotification.start(this)
+        requireNotNull(notificationHandler).start()
     }
 
     override fun onUnbind(intent: Intent): Boolean {
-        PasteServiceNotification.stop(this)
+        notificationHandler?.stop()
         binder?.stop()
         return super.onUnbind(intent)
     }

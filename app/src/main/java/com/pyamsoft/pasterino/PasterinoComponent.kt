@@ -23,6 +23,7 @@ import com.pyamsoft.pasterino.base.BaseModule
 import com.pyamsoft.pasterino.main.MainComponent
 import com.pyamsoft.pasterino.main.MainFragmentComponent
 import com.pyamsoft.pasterino.service.monitor.PasteService
+import com.pyamsoft.pasterino.service.monitor.notification.NotificationModule
 import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pasterino.service.single.SinglePasteService
 import com.pyamsoft.pasterino.settings.SettingsComponent
@@ -38,7 +39,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [PasterinoModule::class, BaseModule::class])
+@Component(modules = [PasterinoModule::class, BaseModule::class, NotificationModule::class])
 interface PasterinoComponent {
 
     fun inject(service: PasteService)
