@@ -74,10 +74,8 @@ class PasteService : AccessibilityService(), LifecycleOwner {
             if (result) {
                 Toaster.bindTo(this)
                     .short(applicationContext, "Pasting text into currently focused input")
-                    .show()
             } else {
                 Toaster.bindTo(this).short(applicationContext, "Nothing to paste into")
-                    .show()
             }
         }
     }

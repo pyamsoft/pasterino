@@ -23,45 +23,38 @@ import com.pyamsoft.pydroid.util.isDebugMode
 
 class Pasterino : Application() {
 
-    private var component: PasterinoComponent? = null
+    private val component by lazy {
+        val url = "https://github.com/pyamsoft/pasterino"
 
-    override fun onCreate() {
-        super.onCreate()
-
-        PYDroid.init(
+        val provider = PYDroid.init(
             this,
             PYDroid.Parameters(
-                viewSourceUrl = "https://github.com/pyamsoft/pasterino",
-                bugReportUrl = "https://github.com/pyamsoft/pasterino/issues",
+                viewSourceUrl = url,
+                bugReportUrl = "$url/issues",
                 version = BuildConfig.VERSION_CODE,
                 termsConditionsUrl = TERMS_CONDITIONS_URL,
                 privacyPolicyUrl = PRIVACY_POLICY_URL
             )
-        ) { provider ->
-            // Using pydroid-notify
-            OssLibraries.usingNotify = true
+        )
+        // Using pydroid-notify
+        OssLibraries.usingNotify = true
 
-            component = DaggerPasterinoComponent.factory()
-                .create(
-                    isDebugMode(),
-                    this,
-                    provider.theming(),
-                    provider.imageLoader()
-                )
-        }
+        return@lazy DaggerPasterinoComponent.factory().create(
+            isDebugMode(),
+            this,
+            provider.theming(),
+            provider.imageLoader()
+        )
     }
 
     override fun getSystemService(name: String): Any? {
-        val service = PYDroid.getSystemService(name)
-        if (service != null) {
-            return service
-        }
+        return PYDroid.getSystemService(name) ?: fallbackGetSystemService(name)
+    }
 
-        if (PasterinoComponent::class.java.name == name) {
-            return requireNotNull(component)
+    private fun fallbackGetSystemService(name: String): Any? {
+        return if (PasterinoComponent::class.java.name == name) component else {
+            super.getSystemService(name)
         }
-
-        return super.getSystemService(name)
     }
 
     companion object {
