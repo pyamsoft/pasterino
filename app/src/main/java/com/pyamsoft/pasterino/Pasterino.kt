@@ -17,6 +17,7 @@
 package com.pyamsoft.pasterino
 
 import android.app.Application
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.util.isDebugMode
@@ -51,6 +52,7 @@ class Pasterino : Application() {
         return PYDroid.getSystemService(name) ?: fallbackGetSystemService(name)
     }
 
+    @CheckResult
     private fun fallbackGetSystemService(name: String): Any? {
         return if (PasterinoComponent::class.java.name == name) component else {
             super.getSystemService(name)

@@ -23,10 +23,10 @@ import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
-import javax.inject.Inject
-import javax.inject.Named
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Named
 
 internal class MainViewModel @Inject internal constructor(
     @Named("debug") debug: Boolean,
@@ -37,14 +37,14 @@ internal class MainViewModel @Inject internal constructor(
 ) {
 
     init {
-        doOnInit {
+        doOnBind {
             viewModelScope.launch(context = Dispatchers.Default) {
                 interactor.observeServiceState()
                     .onEvent { setState { copy(isServiceRunning = it) } }
             }
         }
 
-        doOnInit {
+        doOnBind {
             viewModelScope.launch(context = Dispatchers.Default) {
                 visibilityBus.onEvent { setState { copy(isVisible = it.visible) } }
             }
