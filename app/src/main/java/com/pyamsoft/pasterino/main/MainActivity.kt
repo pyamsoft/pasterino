@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
+import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
 
@@ -97,6 +98,8 @@ class MainActivity : RatingActivity() {
         val toolbar = requireNotNull(toolbar)
         val dropshadow =
             DropshadowView.createTyped<ActivityViewState, ActivityViewEvent>(layoutRoot)
+
+        stableLayoutHideNavigation()
 
         stateSaver = createComponent(
             savedInstanceState, this,

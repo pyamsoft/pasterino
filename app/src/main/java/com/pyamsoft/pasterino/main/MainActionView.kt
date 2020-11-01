@@ -18,6 +18,7 @@ package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
 import androidx.core.view.ViewPropertyAnimatorCompat
+import androidx.core.view.updateLayoutParams
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.FloatingActionButtonBinding
 import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
@@ -27,6 +28,7 @@ import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.util.popHide
 import com.pyamsoft.pydroid.ui.util.popShow
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import javax.inject.Inject
 
 internal class MainActionView @Inject internal constructor(
@@ -43,6 +45,14 @@ internal class MainActionView @Inject internal constructor(
     private var animator: ViewPropertyAnimatorCompat? = null
 
     init {
+        doOnInflate {
+            binding.fab.doOnApplyWindowInsets { v, insets, _ ->
+                v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = insets.systemWindowInsetBottom
+                }
+            }
+        }
+
         doOnTeardown {
             binding.fab.setOnDebouncedClickListener(null)
             actionIconLoaded?.dispose()

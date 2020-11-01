@@ -28,8 +28,8 @@
         <item name="alertDialogTheme">@style/Theme.Pasterino.Dialog.Alert</item>
 
         <item name="android:windowBackground">@color/windowBackground</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
     </style>
 
     <style name="Base.Theme.Pasterino.Dialog" parent="@style/Theme.MaterialComponents.DayNight.Dialog">
@@ -40,8 +40,8 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
         <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
     </style>
 
     <style name="Base.Theme.Pasterino.Dialog.Alert" parent="@style/Theme.MaterialComponents.DayNight.Dialog.Alert">
@@ -52,8 +52,8 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
         <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
     </style>
 
     <style name="Base.Theme.Pasterino.Splash" parent="@style/Base.Theme.Pasterino">

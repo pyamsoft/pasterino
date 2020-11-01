@@ -43,6 +43,10 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
 
     @JvmField
     @Inject
+    internal var spacer: SettingsSpacer? = null
+
+    @JvmField
+    @Inject
     internal var toolbarView: ToolbarView<UnitViewState, SettingsViewEvent>? = null
     private val viewModel by viewModelFactory<SettingsViewModel> { factory }
 
@@ -65,7 +69,8 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
             savedInstanceState, viewLifecycleOwner,
             viewModel,
             requireNotNull(settingsView),
-            requireNotNull(toolbarView)
+            requireNotNull(toolbarView),
+            requireNotNull(spacer)
         ) {
             // TODO(Peter): Handle controller events
         }
