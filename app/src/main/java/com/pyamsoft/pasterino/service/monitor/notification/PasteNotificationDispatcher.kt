@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.notify.NotifyId
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.pyamsoft.pydroid.ui.R as R2
 
 @Singleton
 internal class PasteNotificationDispatcher @Inject internal constructor(
@@ -64,7 +65,6 @@ internal class PasteNotificationDispatcher @Inject internal constructor(
             Timber.d("Channel already exists: ${channel.id}")
             return
         }
-
 
         val notificationGroup = NotificationChannelGroup(channelInfo.id, channelInfo.title)
         val notificationChannel =
@@ -103,7 +103,7 @@ internal class PasteNotificationDispatcher @Inject internal constructor(
             .setAutoCancel(false)
             .setNumber(0)
             .setPriority(NotificationCompat.PRIORITY_MIN)
-            .setColor(ContextCompat.getColor(context, R.color.green500)).build()
+            .setColor(ContextCompat.getColor(context, R2.color.green500)).build()
     }
 
     override fun canShow(notification: NotifyData): Boolean {
@@ -114,5 +114,4 @@ internal class PasteNotificationDispatcher @Inject internal constructor(
 
         private const val RC = 1005
     }
-
 }

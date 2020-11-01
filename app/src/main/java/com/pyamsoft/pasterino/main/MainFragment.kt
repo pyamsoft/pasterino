@@ -24,13 +24,13 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.util.commit
@@ -42,9 +42,11 @@ class MainFragment : Fragment() {
     @JvmField
     @Inject
     internal var factory: ViewModelProvider.Factory? = null
+
     @JvmField
     @Inject
     internal var actionView: MainActionView? = null
+
     @JvmField
     @Inject
     internal var toolbarView: ToolbarView<MainViewState, MainViewEvent>? = null

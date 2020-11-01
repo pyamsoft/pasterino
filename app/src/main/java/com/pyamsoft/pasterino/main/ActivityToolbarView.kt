@@ -26,8 +26,9 @@ import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.privacy.addPrivacy
 import com.pyamsoft.pydroid.ui.privacy.removePrivacy
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
-import com.pyamsoft.pydroid.util.toDp
+import com.pyamsoft.pydroid.util.asDp
 import javax.inject.Inject
+import com.google.android.material.R as R2
 
 internal class ActivityToolbarView @Inject internal constructor(
     theming: ThemeProvider,
@@ -55,16 +56,16 @@ internal class ActivityToolbarView @Inject internal constructor(
         theming: ThemeProvider
     ) {
         val theme = if (theming.isDarkTheme()) {
-            R.style.ThemeOverlay_MaterialComponents
+            R2.style.ThemeOverlay_MaterialComponents
         } else {
-            R.style.ThemeOverlay_MaterialComponents_Light
+            R2.style.ThemeOverlay_MaterialComponents_Light
         }
 
         layoutRoot.apply {
             popupTheme = theme
             toolbarActivityProvider.setToolbar(this)
             setTitle(R.string.app_name)
-            ViewCompat.setElevation(this, 4F.toDp(context).toFloat())
+            ViewCompat.setElevation(this, 4F.asDp(context).toFloat())
             viewScope.addPrivacy(
                 binding.toolbar,
                 Pasterino.PRIVACY_POLICY_URL,
