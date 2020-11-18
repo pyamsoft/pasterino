@@ -16,7 +16,12 @@
 
 <resources>
 
-    <style name="Theme.Pasterino" parent="@style/Custom.Theme.Pasterino" />
+    <style name="Custom.ThemeOverlay.Pasterino.Dialog" parent="@style/Base.ThemeOverlay.Pasterino.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+    </style>
 
-    <style name="Theme.Pasterino.Splash" parent="@style/Custom.Theme.Pasterino.Splash" />
+    <style name="Custom.ThemeOverlay.Pasterino.Dialog.Alert" parent="@style/Base.ThemeOverlay.Pasterino.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+    </style>
+
 </resources>

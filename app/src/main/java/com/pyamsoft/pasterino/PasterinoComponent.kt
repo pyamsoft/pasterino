@@ -78,7 +78,7 @@ interface PasterinoComponent {
             @JvmStatic
             @CheckResult
             internal fun providePasteBus(): EventBus<PasteRequestEvent> {
-                return EventBus.create()
+                return EventBus.create(emitOnlyWhenActive = true)
             }
 
             @Provides
@@ -86,7 +86,7 @@ interface PasterinoComponent {
             @JvmStatic
             @CheckResult
             internal fun provideScrollBus(): EventBus<SignificantScrollEvent> {
-                return EventBus.create()
+                return EventBus.create(emitOnlyWhenActive = true)
             }
         }
     }

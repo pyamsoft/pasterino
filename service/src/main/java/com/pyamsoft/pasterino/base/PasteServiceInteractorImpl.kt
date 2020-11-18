@@ -21,10 +21,10 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.EventConsumer
 import com.pyamsoft.pydroid.core.Enforcer
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 internal class PasteServiceInteractorImpl @Inject internal constructor(
@@ -33,7 +33,7 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
 
     private var running = false
 
-    private val runningStateBus = EventBus.create<Boolean>()
+    private val runningStateBus = EventBus.create<Boolean>(emitOnlyWhenActive = true)
 
     override suspend fun setServiceState(start: Boolean) {
         Enforcer.assertOffMainThread()

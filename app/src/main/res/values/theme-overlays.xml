@@ -16,7 +16,7 @@
 
 <resources>
 
-    <style name="Theme.Pasterino" parent="@style/Custom.Theme.Pasterino" />
+    <style name="ThemeOverlay.Pasterino.Dialog" parent="@style/Custom.ThemeOverlay.Pasterino.Dialog" />
 
-    <style name="Theme.Pasterino.Splash" parent="@style/Custom.Theme.Pasterino.Splash" />
+    <style name="ThemeOverlay.Pasterino.Dialog.Alert" parent="@style/Custom.ThemeOverlay.Pasterino.Dialog.Alert" />
 </resources>

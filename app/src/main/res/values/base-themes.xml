@@ -16,47 +16,6 @@
 
 <resources>
 
-    <style name="Base.Theme.Pasterino" parent="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+    <style name="Base.Theme.Pasterino" parent="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
 
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="dialogTheme">@style/Theme.Pasterino.Dialog</item>
-        <item name="alertDialogTheme">@style/Theme.Pasterino.Dialog.Alert</item>
-
-        <item name="android:windowBackground">@color/windowBackground</item>
-        <item name="android:navigationBarColor">@color/transparent</item>
-        <item name="android:statusBarColor">@color/transparent</item>
-    </style>
-
-    <style name="Base.Theme.Pasterino.Dialog" parent="@style/Theme.MaterialComponents.DayNight.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
-
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-        <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:navigationBarColor">@color/transparent</item>
-        <item name="android:statusBarColor">@color/transparent</item>
-    </style>
-
-    <style name="Base.Theme.Pasterino.Dialog.Alert" parent="@style/Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
-
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-        <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="android:navigationBarColor">@color/transparent</item>
-        <item name="android:statusBarColor">@color/transparent</item>
-    </style>
-
-    <style name="Base.Theme.Pasterino.Splash" parent="@style/Base.Theme.Pasterino">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
-    </style>
 </resources>
