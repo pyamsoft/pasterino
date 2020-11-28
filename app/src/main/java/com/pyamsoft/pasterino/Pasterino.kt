@@ -49,7 +49,8 @@ class Pasterino : Application() {
     }
 
     override fun getSystemService(name: String): Any? {
-        return PYDroid.getSystemService(name) ?: fallbackGetSystemService(name)
+        // Do this weird thing to ensure that component is initialized
+        return component.run { PYDroid.getSystemService(name) } ?: fallbackGetSystemService(name)
     }
 
     @CheckResult

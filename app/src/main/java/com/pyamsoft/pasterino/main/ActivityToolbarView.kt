@@ -73,9 +73,8 @@ internal class ActivityToolbarView @Inject internal constructor(
             ViewCompat.setElevation(this, 0F)
         }
 
-        viewScope.addPrivacy(
-            binding.toolbar,
-            Pasterino.PRIVACY_POLICY_URL,
+        binding.toolbar.addPrivacy(
+            viewScope, Pasterino.PRIVACY_POLICY_URL,
             Pasterino.TERMS_CONDITIONS_URL
         )
     }

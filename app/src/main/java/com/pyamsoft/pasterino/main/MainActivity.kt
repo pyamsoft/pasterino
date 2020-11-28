@@ -29,9 +29,8 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
-import com.pyamsoft.pydroid.ui.rating.ChangeLogBuilder
-import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.rating.buildChangeLog
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
+import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.commit
@@ -41,7 +40,7 @@ import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MainActivity : RatingActivity() {
+class MainActivity : ChangeLogActivity() {
 
     @JvmField
     @Inject
@@ -73,7 +72,7 @@ class MainActivity : RatingActivity() {
     override val fragmentContainerId: Int
         get() = requireNotNull(activityView).id()
 
-    override val changeLogLines: ChangeLogBuilder = buildChangeLog {
+    override val changelog = buildChangeLog {
         change("Lower memory consumption and faster operation")
         bugfix("Fixed a memory leak in the license viewing experience")
         feature("Added links to Terms of Service and Privacy Policy")

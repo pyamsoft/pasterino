@@ -25,6 +25,6 @@
 
     <style name="Theme.Pasterino.Splash" parent="@style/Custom.Theme.Pasterino.Splash">
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">@bool/light_bars</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>
