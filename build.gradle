@@ -36,7 +36,7 @@ buildscript {
         minSdk = 22
         maxSdk = 30
 
-        pydroid = "22.1.2"
+        pydroid = "22.2.6"
         highlander = "0.0.14"
 
         leakCanary = "2.5"
@@ -59,7 +59,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.1.1'
 
         // Gradle version checker
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.29.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.36.0'
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
