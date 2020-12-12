@@ -45,7 +45,4 @@ internal class SettingsView @Inject internal constructor(
             scrollListener = null
         }
     }
-
-    override fun onRender(state: UnitViewState) {
-    }
 }

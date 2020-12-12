@@ -78,7 +78,4 @@ internal class ActivityToolbarView @Inject internal constructor(
             Pasterino.TERMS_CONDITIONS_URL
         )
     }
-
-    override fun onRender(state: ActivityViewState) {
-    }
 }

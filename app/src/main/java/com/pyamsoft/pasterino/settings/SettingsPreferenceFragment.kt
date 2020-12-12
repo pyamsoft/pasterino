@@ -72,7 +72,6 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
             requireNotNull(toolbarView),
             requireNotNull(spacer)
         ) {
-            // TODO(Peter): Handle controller events
         }
     }
 

@@ -29,6 +29,4 @@ internal class ActivityFrameView @Inject internal constructor(
 
     override val layoutRoot by boundView { mainContainer }
 
-    override fun onRender(state: ActivityViewState) {
-    }
 }

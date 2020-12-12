@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pasterino.settings
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 
 sealed class SettingsViewEvent : UiViewEvent {
@@ -24,7 +23,3 @@ sealed class SettingsViewEvent : UiViewEvent {
     data class SignificantScroll internal constructor(val visible: Boolean) : SettingsViewEvent()
 }
 
-sealed class SettingsControllerEvent : UiControllerEvent {
-
-    object ClearAll : SettingsControllerEvent()
-}
