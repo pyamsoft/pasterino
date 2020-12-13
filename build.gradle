@@ -36,7 +36,7 @@ buildscript {
         minSdk = 22
         maxSdk = 30
 
-        pydroid = "22.2.6"
+        pydroid = "22.2.7"
         highlander = "0.0.14"
 
         leakCanary = "2.5"
@@ -96,14 +96,27 @@ allprojects {
     spotless {
         java {
             target "src/**/*.java"
+
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            endWithNewline()
+            indentWithSpaces(2)
         }
         kotlin {
             target "src/**/*.kt"
             ktlint()
+
+            trimTrailingWhitespace()
+            endWithNewline()
+            indentWithSpaces(2)
         }
         groovyGradle {
             target "*.gradle"
             greclipse()
+
+            trimTrailingWhitespace()
+            endWithNewline()
+            indentWithSpaces(2)
         }
     }
 
