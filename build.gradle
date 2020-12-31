@@ -39,7 +39,7 @@ buildscript {
         pydroid = "22.3.0"
         highlander = "0.0.15"
 
-        leakCanary = "2.5"
+        leakCanary = "2.6"
         dagger = "2.30.1"
 
         // Logging
