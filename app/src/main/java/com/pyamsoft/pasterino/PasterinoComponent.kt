@@ -28,7 +28,7 @@ import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pasterino.service.single.SinglePasteService
 import com.pyamsoft.pasterino.settings.SettingsComponent
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
-import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import dagger.BindsInstance

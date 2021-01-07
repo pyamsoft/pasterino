@@ -21,7 +21,7 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
-import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

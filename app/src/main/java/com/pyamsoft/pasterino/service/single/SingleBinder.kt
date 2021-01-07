@@ -17,7 +17,7 @@
 package com.pyamsoft.pasterino.service.single
 
 import com.pyamsoft.pasterino.service.Binder
-import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

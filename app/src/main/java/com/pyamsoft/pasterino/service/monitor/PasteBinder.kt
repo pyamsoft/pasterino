@@ -23,7 +23,7 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.Binder
 import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
 import com.pyamsoft.pasterino.service.single.PasteRequestEvent
-import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

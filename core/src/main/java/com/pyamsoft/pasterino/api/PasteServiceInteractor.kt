@@ -17,7 +17,7 @@
 package com.pyamsoft.pasterino.api
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.EventConsumer
+import com.pyamsoft.pydroid.bus.EventConsumer
 
 interface PasteServiceInteractor {
 

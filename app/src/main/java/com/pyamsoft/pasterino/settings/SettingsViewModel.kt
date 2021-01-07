@@ -18,7 +18,7 @@ package com.pyamsoft.pasterino.settings
 
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
-import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.UnitViewState

@@ -18,8 +18,8 @@ package com.pyamsoft.pasterino.base
 
 import com.pyamsoft.pasterino.api.PastePreferences
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pydroid.arch.EventBus
-import com.pyamsoft.pydroid.arch.EventConsumer
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.EventConsumer
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
