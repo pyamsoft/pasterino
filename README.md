@@ -1,6 +1,6 @@
 # pasterino
 
-[![Get it on Google Play](https://raw.githubusercontent.com/pyamsoft/pasterino/master/art/google-play-badge.png)][1]
+[![Get it on Google Play](https://raw.githubusercontent.com/pyamsoft/pasterino/main/art/google-play-badge.png)][1]
 
 ## Motivation
 
