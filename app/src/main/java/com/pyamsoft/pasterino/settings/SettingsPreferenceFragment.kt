@@ -60,7 +60,7 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
+        Injector.obtainFromApplication<PasterinoComponent>(view.context)
             .plusSettingsComponent()
             .create(requireToolbarActivity(), listView, preferenceScreen)
             .inject(this)

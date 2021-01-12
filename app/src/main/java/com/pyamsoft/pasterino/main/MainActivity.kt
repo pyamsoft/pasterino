@@ -81,7 +81,7 @@ class MainActivity : ChangeLogActivity() {
         setContentView(R.layout.snackbar_screen)
 
         val layoutRoot = findViewById<ConstraintLayout>(R.id.content_root)
-        Injector.obtain<PasterinoComponent>(applicationContext)
+        Injector.obtainFromApplication<PasterinoComponent>(this)
             .plusMainComponent()
             .create(
                 layoutRoot,

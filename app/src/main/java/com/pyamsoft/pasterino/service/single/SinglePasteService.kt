@@ -32,7 +32,7 @@ class SinglePasteService : JobIntentService() {
 
     override fun onCreate() {
         super.onCreate()
-        Injector.obtain<PasterinoComponent>(applicationContext)
+        Injector.obtainFromApplication<PasterinoComponent>(this)
             .inject(this)
 
         requireNotNull(binder).bind { }

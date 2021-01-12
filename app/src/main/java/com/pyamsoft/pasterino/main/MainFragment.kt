@@ -69,7 +69,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val layoutRoot = view.findViewById<CoordinatorLayout>(R.id.layout_coordinator)
-        Injector.obtain<PasterinoComponent>(requireContext().applicationContext)
+        Injector.obtainFromApplication<PasterinoComponent>(view.context)
             .plusMainFragmentComponent()
             .create(requireToolbarActivity(), layoutRoot)
             .inject(this)
