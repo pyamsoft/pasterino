@@ -18,10 +18,8 @@ package com.pyamsoft.pasterino.main
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pasterino.PasterinoViewModelFactory
-import com.pyamsoft.pasterino.main.MainComponent.ViewModelModule
-import com.pyamsoft.pydroid.arch.UiViewModel
+import androidx.lifecycle.ViewModel
+import com.pyamsoft.pasterino.ViewModelFactoryModule
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import dagger.Binds
@@ -31,7 +29,12 @@ import dagger.Subcomponent
 import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
 
-@Subcomponent(modules = [ViewModelModule::class])
+@Subcomponent(
+    modules = [
+        MainComponent.ComponentModule::class,
+        ViewModelFactoryModule::class
+    ]
+)
 interface MainComponent {
 
     fun inject(activity: MainActivity)
@@ -48,14 +51,11 @@ interface MainComponent {
     }
 
     @Module
-    abstract class ViewModelModule {
-
-        @Binds
-        internal abstract fun bindViewModelFactory(factory: PasterinoViewModelFactory): ViewModelProvider.Factory
+    abstract class ComponentModule {
 
         @Binds
         @IntoMap
         @ClassKey(ActivityViewModel::class)
-        internal abstract fun activityViewModel(viewModel: ActivityViewModel): UiViewModel<*, *, *>
+        internal abstract fun activityViewModel(viewModel: ActivityViewModel): ViewModel
     }
 }

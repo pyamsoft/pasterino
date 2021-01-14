@@ -21,14 +21,14 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pasterino.BuildConfig
 import com.pyamsoft.pasterino.PasterinoComponent
+import com.pyamsoft.pasterino.PasterinoViewModelFactory
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -55,8 +55,8 @@ class MainActivity : ChangeLogActivity() {
 
     @JvmField
     @Inject
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<ActivityViewModel> { factory }
+    internal var factory: PasterinoViewModelFactory? = null
+    private val viewModel by fromViewModelFactory<ActivityViewModel> { factory?.create(this) }
 
     private var stateSaver: StateSaver? = null
 

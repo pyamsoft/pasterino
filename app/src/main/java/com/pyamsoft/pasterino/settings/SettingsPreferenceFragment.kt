@@ -18,8 +18,8 @@ package com.pyamsoft.pasterino.settings
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pasterino.PasterinoComponent
+import com.pyamsoft.pasterino.PasterinoViewModelFactory
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.StateSaver
@@ -27,15 +27,11 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import javax.inject.Inject
 
 class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
-
-    @JvmField
-    @Inject
-    internal var factory: ViewModelProvider.Factory? = null
 
     @JvmField
     @Inject
@@ -48,7 +44,11 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
     @JvmField
     @Inject
     internal var toolbarView: ToolbarView<UnitViewState, SettingsViewEvent>? = null
-    private val viewModel by viewModelFactory<SettingsViewModel> { factory }
+
+    @JvmField
+    @Inject
+    internal var factory: PasterinoViewModelFactory? = null
+    private val viewModel by fromViewModelFactory<SettingsViewModel> { factory?.create(this) }
 
     private var stateSaver: StateSaver? = null
 
