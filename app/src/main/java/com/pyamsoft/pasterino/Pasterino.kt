@@ -43,8 +43,8 @@ class Pasterino : Application() {
         return@lazy DaggerPasterinoComponent.factory().create(
             isDebugMode(),
             this,
-            provider.theming(),
-            provider.imageLoader()
+            provider.get().theming(),
+            provider.get().imageLoader()
         )
     }
 

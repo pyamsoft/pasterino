@@ -21,8 +21,8 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.bus.EventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,9 +48,7 @@ internal class MainViewModel @Inject internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: MainViewEvent) {
-        return when (event) {
-            is ActionClick -> publish(ServiceAction(event.isServiceRunning))
-        }
+    override fun handleViewEvent(event: MainViewEvent) = when (event) {
+        is ActionClick -> publish(ServiceAction(event.isServiceRunning))
     }
 }
