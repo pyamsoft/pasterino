@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.api
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bus.EventConsumer
 
 interface PasteServiceInteractor {
 
@@ -27,8 +26,7 @@ interface PasteServiceInteractor {
     @CheckResult
     suspend fun getPasteDelayTime(): Long
 
-    @CheckResult
-    suspend fun observeServiceState(): EventConsumer<Boolean>
+    suspend fun observeServiceState(onEvent: (Boolean) -> Unit)
 
     suspend fun setServiceState(start: Boolean)
 }

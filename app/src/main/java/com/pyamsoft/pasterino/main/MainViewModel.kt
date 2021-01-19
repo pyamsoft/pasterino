@@ -39,8 +39,7 @@ internal class MainViewModel @Inject internal constructor(
 
     init {
         viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.observeServiceState()
-                .onEvent { setState { copy(isServiceRunning = it) } }
+            interactor.observeServiceState { setState { copy(isServiceRunning = it) } }
         }
 
         viewModelScope.launch(context = Dispatchers.Default) {

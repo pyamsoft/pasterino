@@ -34,6 +34,15 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
     private var running = false
 
     private val runningStateBus = EventBus.create<Boolean>(emitOnlyWhenActive = true)
+    private val serviceState by lazy {
+        object : EventConsumer<Boolean> {
+
+            override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
+                emitter(running)
+                runningStateBus.onEvent(emitter)
+            }
+        }
+    }
 
     override suspend fun setServiceState(start: Boolean) {
         Enforcer.assertOffMainThread()
@@ -41,16 +50,10 @@ internal class PasteServiceInteractorImpl @Inject internal constructor(
         runningStateBus.send(start)
     }
 
-    override suspend fun observeServiceState(): EventConsumer<Boolean> =
+    override suspend fun observeServiceState(onEvent: (Boolean) -> Unit) =
         withContext(context = Dispatchers.Default) {
             Enforcer.assertOffMainThread()
-            return@withContext object : EventConsumer<Boolean> {
-
-                override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
-                    emitter(running)
-                    runningStateBus.onEvent(emitter)
-                }
-            }
+            serviceState.onEvent { onEvent(it) }
         }
 
     override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
