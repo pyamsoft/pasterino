@@ -22,8 +22,9 @@ import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pasterino.PasterinoComponent
-import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
+import com.pyamsoft.pasterino.service.monitor.ServiceEvent.PasteEvent
 import com.pyamsoft.pasterino.service.monitor.notification.NotificationHandler
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
@@ -60,7 +61,7 @@ class PasteService : AccessibilityService(), LifecycleOwner {
         Injector.obtainFromApplication<PasterinoComponent>(this)
             .inject(this)
 
-        requireNotNull(binder).bind {
+        requireNotNull(binder).bind(lifecycleScope) {
             return@bind when (it) {
                 is PasteEvent -> performPaste(it.isDeepSearchEnabled)
             }
@@ -70,7 +71,11 @@ class PasteService : AccessibilityService(), LifecycleOwner {
     }
 
     private fun performPaste(deepSearch: Boolean) {
-        requireNotNull(binder).pasteInput(deepSearch, rootInActiveWindow) { result ->
+        requireNotNull(binder).handlePasteInput(
+            lifecycleScope,
+            deepSearch,
+            rootInActiveWindow
+        ) { result ->
             if (result) {
                 Toaster.bindTo(this)
                     .short(applicationContext, "Pasting text into currently focused input")
@@ -82,13 +87,13 @@ class PasteService : AccessibilityService(), LifecycleOwner {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        requireNotNull(binder).start()
+        requireNotNull(binder).handleStart(lifecycleScope)
         requireNotNull(notificationHandler).start()
     }
 
     override fun onUnbind(intent: Intent): Boolean {
         notificationHandler?.stop()
-        binder?.stop()
+        binder?.handleStop(lifecycleScope)
         return super.onUnbind(intent)
     }
 

@@ -21,8 +21,4 @@ import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import javax.inject.Inject
 
 internal class ActivityViewModel @Inject internal constructor(
-) : UiViewModel<ActivityViewState, ActivityViewEvent, UnitControllerEvent>(ActivityViewState) {
-
-    override fun handleViewEvent(event: ActivityViewEvent) {
-    }
-}
+) : UiViewModel<ActivityViewState, ActivityViewEvent, UnitControllerEvent>(ActivityViewState)

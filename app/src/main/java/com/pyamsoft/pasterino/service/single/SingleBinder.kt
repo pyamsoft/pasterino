@@ -18,16 +18,17 @@ package com.pyamsoft.pasterino.service.single
 
 import com.pyamsoft.pasterino.service.Binder
 import com.pyamsoft.pydroid.bus.EventBus
-import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 internal class SingleBinder @Inject internal constructor(
     private val pasteRequestBus: EventBus<PasteRequestEvent>
 ) : Binder<Unit>() {
 
-    fun paste() {
-        binderScope.launch(context = Dispatchers.Default) {
+    fun paste(scope: CoroutineScope) {
+        scope.launch(context = Dispatchers.Default) {
             pasteRequestBus.send(PasteRequestEvent)
         }
     }

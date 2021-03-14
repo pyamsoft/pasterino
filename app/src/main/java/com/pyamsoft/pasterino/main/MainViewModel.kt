@@ -18,10 +18,9 @@ package com.pyamsoft.pasterino.main
 
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
-import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
-import com.pyamsoft.pasterino.main.MainViewEvent.ActionClick
 import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bus.EventBus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,7 +29,7 @@ import javax.inject.Inject
 internal class MainViewModel @Inject internal constructor(
     interactor: PasteServiceInteractor,
     visibilityBus: EventBus<SignificantScrollEvent>
-) : UiViewModel<MainViewState, MainViewEvent, MainControllerEvent>(
+) : UiViewModel<MainViewState, MainViewEvent, UnitControllerEvent>(
     MainViewState(
         isVisible = true,
         isServiceRunning = false
@@ -45,9 +44,5 @@ internal class MainViewModel @Inject internal constructor(
         viewModelScope.launch(context = Dispatchers.Default) {
             visibilityBus.onEvent { setState { copy(isVisible = it.visible) } }
         }
-    }
-
-    override fun handleViewEvent(event: MainViewEvent) = when (event) {
-        is ActionClick -> publish(ServiceAction(event.isServiceRunning))
     }
 }

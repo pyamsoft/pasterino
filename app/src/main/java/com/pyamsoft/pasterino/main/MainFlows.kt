@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pasterino.main
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
@@ -30,7 +29,3 @@ sealed class MainViewEvent : UiViewEvent {
     data class ActionClick(val isServiceRunning: Boolean) : MainViewEvent()
 }
 
-sealed class MainControllerEvent : UiControllerEvent {
-
-    data class ServiceAction(val isServiceRunning: Boolean) : MainControllerEvent()
-}

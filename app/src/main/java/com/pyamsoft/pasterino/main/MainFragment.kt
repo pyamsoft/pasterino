@@ -24,11 +24,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.PasterinoViewModelFactory
-import com.pyamsoft.pasterino.main.MainControllerEvent.ServiceAction
 import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
@@ -74,15 +73,14 @@ class MainFragment : Fragment() {
             .create(requireToolbarActivity(), layoutRoot)
             .inject(this)
 
-        stateSaver = createComponent(
+        stateSaver = viewModel.bindController(
             savedInstanceState,
             viewLifecycleOwner,
-            viewModel,
             requireNotNull(actionView),
             requireNotNull(toolbarView)
         ) {
-            return@createComponent when (it) {
-                is ServiceAction -> {
+            return@bindController when (it) {
+                is MainViewEvent.ActionClick -> {
                     if (it.isServiceRunning) {
                         showInfoDialog()
                     } else {

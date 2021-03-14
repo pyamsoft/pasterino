@@ -24,7 +24,7 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
@@ -65,13 +65,16 @@ class SettingsPreferenceFragment : AppSettingsPreferenceFragment() {
             .create(requireToolbarActivity(), listView, preferenceScreen)
             .inject(this)
 
-        stateSaver = createComponent(
-            savedInstanceState, viewLifecycleOwner,
-            viewModel,
+        stateSaver = viewModel.bindController(
+            savedInstanceState,
+            viewLifecycleOwner,
             requireNotNull(settingsView),
             requireNotNull(toolbarView),
             requireNotNull(spacer)
         ) {
+            return@bindController when (it) {
+                is SettingsViewEvent.SignificantScroll -> viewModel.handleSendScroll(it.visible)
+            }
         }
     }
 

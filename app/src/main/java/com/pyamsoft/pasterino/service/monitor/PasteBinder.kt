@@ -21,65 +21,62 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pasterino.service.Binder
-import com.pyamsoft.pasterino.service.monitor.ServiceControllerEvent.PasteEvent
+import com.pyamsoft.pasterino.service.monitor.ServiceEvent.PasteEvent
 import com.pyamsoft.pasterino.service.single.PasteRequestEvent
 import com.pyamsoft.pydroid.bus.EventBus
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
 internal class PasteBinder @Inject internal constructor(
     private val pasteRequestBus: EventBus<PasteRequestEvent>,
     private val interactor: PasteServiceInteractor
-) : Binder<ServiceControllerEvent>() {
+) : Binder<ServiceEvent>() {
 
-    private val pasteRunner = highlander<Unit, (event: ServiceControllerEvent) -> Unit> { onEvent ->
+    private val pasteRunner = highlander<PasteEvent> {
         val delayTime = interactor.getPasteDelayTime()
         delay(delayTime)
         val isDeepSearchEnabled = interactor.isDeepSearchEnabled()
-        onEvent(PasteEvent(isDeepSearchEnabled))
+        return@highlander PasteEvent(isDeepSearchEnabled)
     }
 
-    override fun onBind(onEvent: (event: ServiceControllerEvent) -> Unit) {
-        binderScope.launch(context = Dispatchers.Default) {
-            listenPaste(onEvent)
-        }
+    override fun CoroutineScope.onBind(onEvent: (event: ServiceEvent) -> Unit) {
+        launch(context = Dispatchers.Default) { listenPaste(onEvent) }
     }
 
-    private inline fun CoroutineScope.listenPaste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
+    private inline fun CoroutineScope.listenPaste(crossinline onEvent: (event: ServiceEvent) -> Unit) =
         launch(context = Dispatchers.Default) {
-            pasteRequestBus.onEvent { paste(onEvent) }
-        }
-
-    private inline fun CoroutineScope.paste(crossinline onEvent: (event: ServiceControllerEvent) -> Unit) =
-        launch(context = Dispatchers.Default) {
-            pasteRunner.call { event ->
-                launch(context = Dispatchers.Main) { onEvent(event) }
+            pasteRequestBus.onEvent {
+                val pasteEvent = pasteRunner.call()
+                withContext(context = Dispatchers.Main) {
+                    onEvent(pasteEvent)
+                }
             }
         }
 
-    fun start() {
-        binderScope.launch(context = Dispatchers.Default) {
+    internal fun handleStart(scope: CoroutineScope) {
+        scope.launch(context = Dispatchers.Default) {
             interactor.setServiceState(true)
         }
     }
 
-    fun stop() {
-        binderScope.launch(context = Dispatchers.Default) {
+    internal fun handleStop(scope: CoroutineScope) {
+        scope.launch(context = Dispatchers.Default) {
             interactor.setServiceState(false)
         }
     }
 
-    inline fun pasteInput(
+    internal inline fun handlePasteInput(
+        scope: CoroutineScope,
         deepSearch: Boolean,
         rootNode: AccessibilityNodeInfo?,
         crossinline onResult: (Boolean) -> Unit
     ) {
-        binderScope.launch(context = Dispatchers.Main) {
+        scope.launch(context = Dispatchers.Main) {
             val inputFocus = rootNode?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
             val accessibilityFocus = rootNode?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
             val nodeTarget = withContext(context = Dispatchers.Default) {

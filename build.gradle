@@ -36,8 +36,8 @@ buildscript {
         minSdk = 22
         maxSdk = 30
 
-        pydroid = "22.6.1"
-        highlander = "0.0.15"
+        pydroid = "23.0.0-SNAPSHOT"
+        highlander = "0.0.16"
 
         leakCanary = "2.6"
         dagger = "2.33"

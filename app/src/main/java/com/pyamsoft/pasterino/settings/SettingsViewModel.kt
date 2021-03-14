@@ -17,7 +17,6 @@
 package com.pyamsoft.pasterino.settings
 
 import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pasterino.settings.SettingsViewEvent.SignificantScroll
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
@@ -30,11 +29,7 @@ internal class SettingsViewModel @Inject internal constructor(
     private val scrollBus: EventBus<SignificantScrollEvent>
 ) : UiViewModel<UnitViewState, SettingsViewEvent, UnitControllerEvent>(UnitViewState) {
 
-    override fun handleViewEvent(event: SettingsViewEvent) = when (event) {
-        is SignificantScroll -> sendScroll(event.visible)
-    }
-
-    private fun sendScroll(visible: Boolean) {
+    internal fun handleSendScroll(visible: Boolean) {
         viewModelScope.launch(context = Dispatchers.Default) {
             scrollBus.send(SignificantScrollEvent(visible))
         }

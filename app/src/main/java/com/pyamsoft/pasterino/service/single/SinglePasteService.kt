@@ -19,34 +19,48 @@ package com.pyamsoft.pasterino.service.single
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pydroid.ui.Injector
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
-class SinglePasteService : JobIntentService() {
+class SinglePasteService : JobIntentService(), LifecycleOwner {
 
     @JvmField
     @Inject
     internal var binder: SingleBinder? = null
+
+    private val registry by lazy(LazyThreadSafetyMode.NONE) { LifecycleRegistry(this) }
+
+    override fun getLifecycle(): Lifecycle {
+        return registry
+    }
 
     override fun onCreate() {
         super.onCreate()
         Injector.obtainFromApplication<PasterinoComponent>(this)
             .inject(this)
 
-        requireNotNull(binder).bind { }
+        requireNotNull(binder).bind(lifecycleScope) { }
+
+        registry.currentState = Lifecycle.State.RESUMED
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binder?.unbind()
         binder = null
+
+        registry.currentState = Lifecycle.State.DESTROYED
     }
 
     override fun onHandleWork(intent: Intent) {
         try {
-            requireNotNull(binder).paste()
+            requireNotNull(binder).paste(lifecycleScope)
         } catch (e: IllegalStateException) {
             Timber.e(e, "Error pasting")
         }

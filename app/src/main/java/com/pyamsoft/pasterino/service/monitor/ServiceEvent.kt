@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pasterino.service.monitor
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+sealed class ServiceEvent {
 
-sealed class ServiceControllerEvent : UiControllerEvent {
-
-    data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceControllerEvent()
+    data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceEvent()
 }

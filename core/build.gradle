@@ -63,10 +63,10 @@ dependencies {
     api "com.jakewharton.timber:timber:$timber"
 
     // PYDroid
-    api "com.pyamsoft.pydroid:arch:$pydroid"
-    api "com.pyamsoft.pydroid:loader:$pydroid"
+    api "com.github.pyamsoft.pydroid:arch:$pydroid"
+    api "com.github.pyamsoft.pydroid:loader:$pydroid"
 
-    api "com.pyamsoft.highlander:highlander:$highlander"
+    api "com.github.pyamsoft.highlander:highlander:$highlander"
 
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
