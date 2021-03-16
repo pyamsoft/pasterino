@@ -29,7 +29,7 @@ import javax.inject.Inject
 internal class MainViewModel @Inject internal constructor(
     interactor: PasteServiceInteractor,
     visibilityBus: EventBus<SignificantScrollEvent>
-) : UiViewModel<MainViewState, MainViewEvent, UnitControllerEvent>(
+) : UiViewModel<MainViewState, UnitControllerEvent>(
     MainViewState(
         isVisible = true,
         isServiceRunning = false

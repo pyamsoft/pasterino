@@ -23,6 +23,8 @@ import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ToolbarBinding
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.privacy.addPrivacy
 import com.pyamsoft.pydroid.ui.privacy.removePrivacy
@@ -35,7 +37,7 @@ internal class ActivityToolbarView @Inject internal constructor(
     theming: ThemeProvider,
     toolbarActivityProvider: ToolbarActivityProvider,
     parent: ViewGroup
-) : BaseUiView<ActivityViewState, ActivityViewEvent, ToolbarBinding>(parent) {
+) : BaseUiView<UnitViewState, UnitViewEvent, ToolbarBinding>(parent) {
 
     override val viewBinding = ToolbarBinding::inflate
 

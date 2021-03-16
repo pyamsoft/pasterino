@@ -18,7 +18,8 @@ package com.pyamsoft.pasterino.main
 
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
 import javax.inject.Inject
 
 internal class ActivityViewModel @Inject internal constructor(
-) : UiViewModel<ActivityViewState, ActivityViewEvent, UnitControllerEvent>(ActivityViewState)
+) : UiViewModel<UnitViewState, UnitControllerEvent>(initialState = UnitViewState)

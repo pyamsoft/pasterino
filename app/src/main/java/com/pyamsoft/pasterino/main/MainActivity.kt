@@ -26,7 +26,9 @@ import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pasterino.PasterinoViewModelFactory
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.UiController
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
@@ -39,7 +41,7 @@ import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MainActivity : ChangeLogActivity() {
+class MainActivity : ChangeLogActivity(), UiController<UnitControllerEvent> {
 
     @JvmField
     @Inject
@@ -91,13 +93,14 @@ class MainActivity : ChangeLogActivity() {
 
         val activityView = requireNotNull(activityView)
         val toolbar = requireNotNull(toolbar)
-        val dropshadow =
-            DropshadowView.createTyped<ActivityViewState, ActivityViewEvent>(layoutRoot)
+        val dropshadow = DropshadowView.create(layoutRoot)
 
         stableLayoutHideNavigation()
 
-        stateSaver = viewModel.bindController(
+        stateSaver = createComponent(
             savedInstanceState,
+            this,
+            viewModel,
             this,
             activityView,
             toolbar,
@@ -135,6 +138,9 @@ class MainActivity : ChangeLogActivity() {
         }
 
         showMainFragment()
+    }
+
+    override fun onControllerEvent(event: UnitControllerEvent) {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -19,11 +19,13 @@ package com.pyamsoft.pasterino.main
 import android.view.ViewGroup
 import com.pyamsoft.pasterino.databinding.MainContainerBinding
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
 import javax.inject.Inject
 
 internal class ActivityFrameView @Inject internal constructor(
     parent: ViewGroup
-) : BaseUiView<ActivityViewState, ActivityViewEvent, MainContainerBinding>(parent) {
+) : BaseUiView<UnitViewState, UnitViewEvent, MainContainerBinding>(parent) {
 
     override val viewBinding = MainContainerBinding::inflate
 

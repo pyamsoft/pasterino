@@ -27,7 +27,9 @@ import com.pyamsoft.pasterino.PasterinoViewModelFactory
 import com.pyamsoft.pasterino.settings.SettingsFragment
 import com.pyamsoft.pasterino.widget.ToolbarView
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.UiController
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
@@ -36,7 +38,7 @@ import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
 import javax.inject.Inject
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), UiController<UnitControllerEvent> {
 
     @JvmField
     @Inject
@@ -73,13 +75,15 @@ class MainFragment : Fragment() {
             .create(requireToolbarActivity(), layoutRoot)
             .inject(this)
 
-        stateSaver = viewModel.bindController(
+        stateSaver = createComponent(
             savedInstanceState,
             viewLifecycleOwner,
+            viewModel,
+            this,
             requireNotNull(actionView),
             requireNotNull(toolbarView)
         ) {
-            return@bindController when (it) {
+            return@createComponent when (it) {
                 is MainViewEvent.ActionClick -> {
                     if (it.isServiceRunning) {
                         showInfoDialog()
@@ -91,6 +95,9 @@ class MainFragment : Fragment() {
         }
 
         displayPreferenceFragment()
+    }
+
+    override fun onControllerEvent(event: UnitControllerEvent) {
     }
 
     override fun onDestroyView() {
