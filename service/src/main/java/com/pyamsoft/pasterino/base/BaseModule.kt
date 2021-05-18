@@ -27,19 +27,21 @@ import dagger.Module
 @Module
 abstract class BaseModule {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindServiceInteractor(impl: PasteServiceInteractorImpl): PasteServiceInteractor
+  @Binds
+  @CheckResult
+  internal abstract fun bindServiceInteractor(
+      impl: PasteServiceInteractorImpl
+  ): PasteServiceInteractor
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindMainInteractor(impl: MainInteractorImpl): MainInteractor
+  @Binds
+  @CheckResult
+  internal abstract fun bindMainInteractor(impl: MainInteractorImpl): MainInteractor
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindPastePreferences(impl: PasterinoPreferencesImpl): PastePreferences
+  @Binds
+  @CheckResult
+  internal abstract fun bindPastePreferences(impl: PasterinoPreferencesImpl): PastePreferences
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindClearPreferences(impl: PasterinoPreferencesImpl): ClearPreferences
+  @Binds
+  @CheckResult
+  internal abstract fun bindClearPreferences(impl: PasterinoPreferencesImpl): ClearPreferences
 }

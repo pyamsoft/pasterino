@@ -43,127 +43,102 @@ import kotlin.LazyThreadSafetyMode.NONE
 
 class MainActivity : ChangeLogActivity(), UiController<UnitControllerEvent> {
 
-    @JvmField
-    @Inject
-    internal var toolbar: ActivityToolbarView? = null
+  @JvmField @Inject internal var toolbar: ActivityToolbarView? = null
 
-    @JvmField
-    @Inject
-    internal var activityView: ActivityFrameView? = null
+  @JvmField @Inject internal var activityView: ActivityFrameView? = null
 
-    @JvmField
-    @Inject
-    internal var theming: Theming? = null
+  @JvmField @Inject internal var theming: Theming? = null
 
-    @JvmField
-    @Inject
-    internal var factory: PasterinoViewModelFactory? = null
-    private val viewModel by fromViewModelFactory<ActivityViewModel> { factory?.create(this) }
+  @JvmField @Inject internal var factory: PasterinoViewModelFactory? = null
+  private val viewModel by fromViewModelFactory<ActivityViewModel> { factory?.create(this) }
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    override val versionName: String = BuildConfig.VERSION_NAME
+  override val versionName: String = BuildConfig.VERSION_NAME
 
-    override val applicationIcon: Int = R.mipmap.ic_launcher
+  override val applicationIcon: Int = R.mipmap.ic_launcher
 
-    override val snackbarRoot: ViewGroup by lazy(NONE) {
-        findViewById<CoordinatorLayout>(R.id.snackbar_root)
+  override val snackbarRoot: ViewGroup by lazy(NONE) {
+    findViewById<CoordinatorLayout>(R.id.snackbar_root)
+  }
+
+  override val fragmentContainerId: Int
+    get() = requireNotNull(activityView).id()
+
+  override val changelog = buildChangeLog {
+    feature("Support for full screen content and gesture navigation")
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    setTheme(R.style.Theme_Pasterino)
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.snackbar_screen)
+
+    val layoutRoot = findViewById<ConstraintLayout>(R.id.content_root)
+    Injector.obtainFromApplication<PasterinoComponent>(this)
+        .plusMainComponent()
+        .create(layoutRoot, this) { requireNotNull(theming).isDarkTheme(this) }
+        .inject(this)
+
+    val activityView = requireNotNull(activityView)
+    val toolbar = requireNotNull(toolbar)
+    val dropshadow = DropshadowView.create(layoutRoot)
+
+    stableLayoutHideNavigation()
+
+    stateSaver =
+        createComponent(
+            savedInstanceState, this, viewModel, this, activityView, toolbar, dropshadow) {}
+
+    layoutRoot.layout {
+      toolbar.also {
+        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      dropshadow.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      activityView.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
     }
 
-    override val fragmentContainerId: Int
-        get() = requireNotNull(activityView).id()
+    showMainFragment()
+  }
 
-    override val changelog = buildChangeLog {
-        feature("Support for full screen content and gesture navigation")
+  override fun onControllerEvent(event: UnitControllerEvent) {}
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+
+    stateSaver = null
+    factory = null
+    activityView = null
+    toolbar = null
+    theming = null
+  }
+
+  private fun showMainFragment() {
+    val fm = supportFragmentManager
+    if (fm.findFragmentByTag(MainFragment.TAG) == null) {
+      fm.commit(this) { add(fragmentContainerId, MainFragment(), MainFragment.TAG) }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_Pasterino)
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.snackbar_screen)
-
-        val layoutRoot = findViewById<ConstraintLayout>(R.id.content_root)
-        Injector.obtainFromApplication<PasterinoComponent>(this)
-            .plusMainComponent()
-            .create(
-                layoutRoot,
-                this
-            ) { requireNotNull(theming).isDarkTheme(this) }
-            .inject(this)
-
-        val activityView = requireNotNull(activityView)
-        val toolbar = requireNotNull(toolbar)
-        val dropshadow = DropshadowView.create(layoutRoot)
-
-        stableLayoutHideNavigation()
-
-        stateSaver = createComponent(
-            savedInstanceState,
-            this,
-            viewModel,
-            this,
-            activityView,
-            toolbar,
-            dropshadow
-        ) {}
-
-        layoutRoot.layout {
-            toolbar.also {
-                connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-            }
-
-            dropshadow.also {
-                connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-            }
-
-            activityView.also {
-                connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-                connect(
-                    it.id(),
-                    ConstraintSet.BOTTOM,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.BOTTOM
-                )
-                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-            }
-        }
-
-        showMainFragment()
-    }
-
-    override fun onControllerEvent(event: UnitControllerEvent) {
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        stateSaver = null
-        factory = null
-        activityView = null
-        toolbar = null
-        theming = null
-    }
-
-    private fun showMainFragment() {
-        val fm = supportFragmentManager
-        if (fm.findFragmentByTag(MainFragment.TAG) == null) {
-            fm.commit(this) {
-                add(fragmentContainerId, MainFragment(), MainFragment.TAG)
-            }
-        }
-    }
+  }
 }

@@ -22,7 +22,7 @@ import android.content.Intent
 
 class SinglePasteReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent) {
-        SinglePasteService.enqueue(context)
-    }
+  override fun onReceive(context: Context, intent: Intent) {
+    SinglePasteService.enqueue(context)
+  }
 }

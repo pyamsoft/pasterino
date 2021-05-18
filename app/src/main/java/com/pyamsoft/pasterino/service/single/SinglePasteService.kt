@@ -25,60 +25,52 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pasterino.PasterinoComponent
 import com.pyamsoft.pydroid.ui.Injector
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class SinglePasteService : JobIntentService(), LifecycleOwner {
 
-    @JvmField
-    @Inject
-    internal var binder: SingleBinder? = null
+  @JvmField @Inject internal var binder: SingleBinder? = null
 
-    private val registry by lazy(LazyThreadSafetyMode.NONE) { LifecycleRegistry(this) }
+  private val registry by lazy(LazyThreadSafetyMode.NONE) { LifecycleRegistry(this) }
 
-    override fun getLifecycle(): Lifecycle {
-        return registry
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
+
+  override fun onCreate() {
+    super.onCreate()
+    Injector.obtainFromApplication<PasterinoComponent>(this).inject(this)
+
+    requireNotNull(binder).bind(lifecycleScope) {}
+
+    registry.currentState = Lifecycle.State.RESUMED
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    binder?.unbind()
+    binder = null
+
+    registry.currentState = Lifecycle.State.DESTROYED
+  }
+
+  override fun onHandleWork(intent: Intent) {
+    try {
+      requireNotNull(binder).paste(lifecycleScope)
+    } catch (e: IllegalStateException) {
+      Timber.e(e, "Error pasting")
     }
+  }
 
-    override fun onCreate() {
-        super.onCreate()
-        Injector.obtainFromApplication<PasterinoComponent>(this)
-            .inject(this)
+  companion object {
 
-        requireNotNull(binder).bind(lifecycleScope) { }
+    private const val JOB_ID = 42069
 
-        registry.currentState = Lifecycle.State.RESUMED
+    @JvmStatic
+    fun enqueue(context: Context) {
+      val intent = Intent(context.applicationContext, SinglePasteService::class.java)
+      enqueueWork(context, SinglePasteService::class.java, JOB_ID, intent)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binder?.unbind()
-        binder = null
-
-        registry.currentState = Lifecycle.State.DESTROYED
-    }
-
-    override fun onHandleWork(intent: Intent) {
-        try {
-            requireNotNull(binder).paste(lifecycleScope)
-        } catch (e: IllegalStateException) {
-            Timber.e(e, "Error pasting")
-        }
-    }
-
-    companion object {
-
-        private const val JOB_ID = 42069
-
-        @JvmStatic
-        fun enqueue(context: Context) {
-            val intent = Intent(context.applicationContext, SinglePasteService::class.java)
-            enqueueWork(
-                context,
-                SinglePasteService::class.java,
-                JOB_ID,
-                intent
-            )
-        }
-    }
+  }
 }

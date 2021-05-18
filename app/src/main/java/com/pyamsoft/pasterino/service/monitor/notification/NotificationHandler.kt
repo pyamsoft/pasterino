@@ -19,36 +19,33 @@ package com.pyamsoft.pasterino.service.monitor.notification
 import com.pyamsoft.pydroid.notify.Notifier
 import com.pyamsoft.pydroid.notify.NotifyChannelInfo
 import com.pyamsoft.pydroid.notify.toNotifyId
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+import timber.log.Timber
 
 @Singleton
-internal class NotificationHandler @Inject internal constructor(
-    @InternalApi private val notifier: Notifier
-) {
+internal class NotificationHandler
+@Inject
+internal constructor(@InternalApi private val notifier: Notifier) {
 
-    fun start() {
-        stop()
-        notifier.show(
+  fun start() {
+    stop()
+    notifier.show(
             ID,
             NotifyChannelInfo(
                 id = "pasterino_foreground",
                 title = "Paste Service",
-                description = "Notification related to the Pasterino service"
-            ),
-            PasteNotification
-        ).also {
-            Timber.d("Start notification: $it")
-        }
-    }
+                description = "Notification related to the Pasterino service"),
+            PasteNotification)
+        .also { Timber.d("Start notification: $it") }
+  }
 
-    fun stop() {
-        notifier.cancel(ID)
-    }
+  fun stop() {
+    notifier.cancel(ID)
+  }
 
-    companion object {
+  companion object {
 
-        private val ID = 1005.toNotifyId()
-    }
+    private val ID = 1005.toNotifyId()
+  }
 }

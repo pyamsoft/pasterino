@@ -19,6 +19,7 @@ package com.pyamsoft.pasterino.main
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
+import com.google.android.material.R as R2
 import com.pyamsoft.pasterino.Pasterino
 import com.pyamsoft.pasterino.R
 import com.pyamsoft.pasterino.databinding.ToolbarBinding
@@ -31,53 +32,53 @@ import com.pyamsoft.pydroid.ui.privacy.removePrivacy
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import javax.inject.Inject
-import com.google.android.material.R as R2
 
-internal class ActivityToolbarView @Inject internal constructor(
+internal class ActivityToolbarView
+@Inject
+internal constructor(
     theming: ThemeProvider,
     toolbarActivityProvider: ToolbarActivityProvider,
     parent: ViewGroup
 ) : BaseUiView<UnitViewState, UnitViewEvent, ToolbarBinding>(parent) {
 
-    override val viewBinding = ToolbarBinding::inflate
+  override val viewBinding = ToolbarBinding::inflate
 
-    override val layoutRoot by boundView { appbar }
+  override val layoutRoot by boundView { appbar }
 
-    init {
-        doOnInflate {
-            setupToolbar(toolbarActivityProvider, theming)
+  init {
+    doOnInflate {
+      setupToolbar(toolbarActivityProvider, theming)
 
-            layoutRoot.doOnApplyWindowInsets { v, insets, padding ->
-                v.updatePadding(top = padding.top + insets.systemWindowInsetTop)
-            }
-        }
-
-        doOnTeardown {
-            toolbarActivityProvider.setToolbar(null)
-            binding.toolbar.removePrivacy()
-        }
+      layoutRoot.doOnApplyWindowInsets { v, insets, padding ->
+        v.updatePadding(top = padding.top + insets.systemWindowInsetTop)
+      }
     }
 
-    private fun setupToolbar(
-        toolbarActivityProvider: ToolbarActivityProvider,
-        theming: ThemeProvider
-    ) {
-        val theme = if (theming.isDarkTheme()) {
-            R2.style.ThemeOverlay_MaterialComponents
+    doOnTeardown {
+      toolbarActivityProvider.setToolbar(null)
+      binding.toolbar.removePrivacy()
+    }
+  }
+
+  private fun setupToolbar(
+      toolbarActivityProvider: ToolbarActivityProvider,
+      theming: ThemeProvider
+  ) {
+    val theme =
+        if (theming.isDarkTheme()) {
+          R2.style.ThemeOverlay_MaterialComponents
         } else {
-            R2.style.ThemeOverlay_MaterialComponents_Light
+          R2.style.ThemeOverlay_MaterialComponents_Light
         }
 
-        binding.toolbar.apply {
-            popupTheme = theme
-            toolbarActivityProvider.setToolbar(this)
-            setTitle(R.string.app_name)
-            ViewCompat.setElevation(this, 0F)
-        }
-
-        binding.toolbar.addPrivacy(
-            viewScope, Pasterino.PRIVACY_POLICY_URL,
-            Pasterino.TERMS_CONDITIONS_URL
-        )
+    binding.toolbar.apply {
+      popupTheme = theme
+      toolbarActivityProvider.setToolbar(this)
+      setTitle(R.string.app_name)
+      ViewCompat.setElevation(this, 0F)
     }
+
+    binding.toolbar.addPrivacy(
+        viewScope, Pasterino.PRIVACY_POLICY_URL, Pasterino.TERMS_CONDITIONS_URL)
+  }
 }

@@ -23,12 +23,10 @@ import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import javax.inject.Inject
 
-internal class ActivityFrameView @Inject internal constructor(
-    parent: ViewGroup
-) : BaseUiView<UnitViewState, UnitViewEvent, MainContainerBinding>(parent) {
+internal class ActivityFrameView @Inject internal constructor(parent: ViewGroup) :
+    BaseUiView<UnitViewState, UnitViewEvent, MainContainerBinding>(parent) {
 
-    override val viewBinding = MainContainerBinding::inflate
+  override val viewBinding = MainContainerBinding::inflate
 
-    override val layoutRoot by boundView { mainContainer }
-
+  override val layoutRoot by boundView { mainContainer }
 }

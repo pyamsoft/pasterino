@@ -40,98 +40,88 @@ import javax.inject.Inject
 
 class MainFragment : Fragment(), UiController<UnitControllerEvent> {
 
-    @JvmField
-    @Inject
-    internal var actionView: MainActionView? = null
+  @JvmField @Inject internal var actionView: MainActionView? = null
 
-    @JvmField
-    @Inject
-    internal var toolbarView: ToolbarView<MainViewState, MainViewEvent>? = null
+  @JvmField @Inject internal var toolbarView: ToolbarView<MainViewState, MainViewEvent>? = null
 
-    @JvmField
-    @Inject
-    internal var factory: PasterinoViewModelFactory? = null
-    private val viewModel by fromViewModelFactory<MainViewModel> { factory?.create(this) }
+  @JvmField @Inject internal var factory: PasterinoViewModelFactory? = null
+  private val viewModel by fromViewModelFactory<MainViewModel> { factory?.create(this) }
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.layout_coordinator, container, false)
-    }
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.layout_coordinator, container, false)
+  }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onViewCreated(view, savedInstanceState)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-        val layoutRoot = view.findViewById<CoordinatorLayout>(R.id.layout_coordinator)
-        Injector.obtainFromApplication<PasterinoComponent>(view.context)
-            .plusMainFragmentComponent()
-            .create(requireToolbarActivity(), layoutRoot)
-            .inject(this)
+    val layoutRoot = view.findViewById<CoordinatorLayout>(R.id.layout_coordinator)
+    Injector.obtainFromApplication<PasterinoComponent>(view.context)
+        .plusMainFragmentComponent()
+        .create(requireToolbarActivity(), layoutRoot)
+        .inject(this)
 
-        stateSaver = createComponent(
+    stateSaver =
+        createComponent(
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
             this,
             requireNotNull(actionView),
-            requireNotNull(toolbarView)
-        ) {
-            return@createComponent when (it) {
-                is MainViewEvent.ActionClick -> {
-                    if (it.isServiceRunning) {
-                        showInfoDialog()
-                    } else {
-                        showUsageAccessRequestDialog()
-                    }
-                }
+            requireNotNull(toolbarView)) {
+          return@createComponent when (it) {
+            is MainViewEvent.ActionClick -> {
+              if (it.isServiceRunning) {
+                showInfoDialog()
+              } else {
+                showUsageAccessRequestDialog()
+              }
             }
+          }
         }
 
-        displayPreferenceFragment()
-    }
+    displayPreferenceFragment()
+  }
 
-    override fun onControllerEvent(event: UnitControllerEvent) {
-    }
+  override fun onControllerEvent(event: UnitControllerEvent) {}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        stateSaver = null
-        actionView = null
-        toolbarView = null
-        factory = null
-    }
+  override fun onDestroyView() {
+    super.onDestroyView()
+    stateSaver = null
+    actionView = null
+    toolbarView = null
+    factory = null
+  }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
 
-    private fun showUsageAccessRequestDialog() {
-        AccessibilityRequestDialog().show(requireActivity(), "accessibility")
-    }
+  private fun showUsageAccessRequestDialog() {
+    AccessibilityRequestDialog().show(requireActivity(), "accessibility")
+  }
 
-    private fun showInfoDialog() {
-        HowToDialog().show(requireActivity(), "how_to")
-    }
+  private fun showInfoDialog() {
+    HowToDialog().show(requireActivity(), "how_to")
+  }
 
-    private fun displayPreferenceFragment() {
-        val fragmentManager = childFragmentManager
-        if (fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null) {
-            fragmentManager.commit(viewLifecycleOwner) {
-                add(requireNotNull(actionView).id(), SettingsFragment(), SettingsFragment.TAG)
-            }
-        }
+  private fun displayPreferenceFragment() {
+    val fragmentManager = childFragmentManager
+    if (fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null) {
+      fragmentManager.commit(viewLifecycleOwner) {
+        add(requireNotNull(actionView).id(), SettingsFragment(), SettingsFragment.TAG)
+      }
     }
+  }
 
-    companion object {
+  companion object {
 
-        const val TAG = "MainFragment"
-    }
+    const val TAG = "MainFragment"
+  }
 }

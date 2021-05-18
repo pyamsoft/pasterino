@@ -21,12 +21,12 @@ import com.pyamsoft.pasterino.api.MainInteractor
 import com.pyamsoft.pydroid.core.Enforcer
 import javax.inject.Inject
 
-internal class MainInteractorImpl @Inject internal constructor(
-    private val preferences: ClearPreferences
-) : MainInteractor {
+internal class MainInteractorImpl
+@Inject
+internal constructor(private val preferences: ClearPreferences) : MainInteractor {
 
-    override suspend fun clearAll() {
-        Enforcer.assertOffMainThread()
-        preferences.clearAll()
-    }
+  override suspend fun clearAll() {
+    Enforcer.assertOffMainThread()
+    preferences.clearAll()
+  }
 }

@@ -29,33 +29,28 @@ import dagger.Subcomponent
 import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
 
-@Subcomponent(
-    modules = [
-        MainComponent.ComponentModule::class,
-        ViewModelFactoryModule::class
-    ]
-)
+@Subcomponent(modules = [MainComponent.ComponentModule::class, ViewModelFactoryModule::class])
 interface MainComponent {
 
-    fun inject(activity: MainActivity)
+  fun inject(activity: MainActivity)
 
-    @Subcomponent.Factory
-    interface Factory {
+  @Subcomponent.Factory
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            @BindsInstance parent: ViewGroup,
-            @BindsInstance toolbarActivityProvider: ToolbarActivityProvider,
-            @BindsInstance themeProvider: ThemeProvider
-        ): MainComponent
-    }
+    @CheckResult
+    fun create(
+        @BindsInstance parent: ViewGroup,
+        @BindsInstance toolbarActivityProvider: ToolbarActivityProvider,
+        @BindsInstance themeProvider: ThemeProvider
+    ): MainComponent
+  }
 
-    @Module
-    abstract class ComponentModule {
+  @Module
+  abstract class ComponentModule {
 
-        @Binds
-        @IntoMap
-        @ClassKey(ActivityViewModel::class)
-        internal abstract fun activityViewModel(viewModel: ActivityViewModel): ViewModel
-    }
+    @Binds
+    @IntoMap
+    @ClassKey(ActivityViewModel::class)
+    internal abstract fun activityViewModel(viewModel: ActivityViewModel): ViewModel
+  }
 }

@@ -20,9 +20,7 @@ import androidx.annotation.CheckResult
 
 interface PastePreferences {
 
-    @CheckResult
-    suspend fun getPasteDelayTime(): Long
+  @CheckResult suspend fun getPasteDelayTime(): Long
 
-    @CheckResult
-    suspend fun isDeepSearchEnabled(): Boolean
+  @CheckResult suspend fun isDeepSearchEnabled(): Boolean
 }

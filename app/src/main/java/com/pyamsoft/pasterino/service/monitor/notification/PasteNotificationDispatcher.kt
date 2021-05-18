@@ -33,85 +33,84 @@ import com.pyamsoft.pydroid.notify.NotifyChannelInfo
 import com.pyamsoft.pydroid.notify.NotifyData
 import com.pyamsoft.pydroid.notify.NotifyDispatcher
 import com.pyamsoft.pydroid.notify.NotifyId
-import timber.log.Timber
+import com.pyamsoft.pydroid.ui.R as R2
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.pyamsoft.pydroid.ui.R as R2
+import timber.log.Timber
 
 @Singleton
-internal class PasteNotificationDispatcher @Inject internal constructor(
-    private val context: Context
-) : NotifyDispatcher<PasteNotification> {
+internal class PasteNotificationDispatcher
+@Inject
+internal constructor(private val context: Context) : NotifyDispatcher<PasteNotification> {
 
-    private val notificationManager by lazy { requireNotNull(context.getSystemService<NotificationManager>()) }
-    private val pendingIntent by lazy {
-        PendingIntent.getBroadcast(
-            context,
-            RC,
-            Intent(context, SinglePasteReceiver::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+  private val notificationManager by lazy {
+    requireNotNull(context.getSystemService<NotificationManager>())
+  }
+  private val pendingIntent by lazy {
+    PendingIntent.getBroadcast(
+        context,
+        RC,
+        Intent(context, SinglePasteReceiver::class.java),
+        PendingIntent.FLAG_UPDATE_CURRENT)
+  }
+
+  private fun setupNotificationChannel(channelInfo: NotifyChannelInfo) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+      Timber.d("No channel below Android O")
+      return
     }
 
-    private fun setupNotificationChannel(channelInfo: NotifyChannelInfo) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Timber.d("No channel below Android O")
-            return
-        }
+    val channel: NotificationChannel? = notificationManager.getNotificationChannel(channelInfo.id)
+    if (channel != null) {
+      Timber.d("Channel already exists: ${channel.id}")
+      return
+    }
 
-        val channel: NotificationChannel? =
-            notificationManager.getNotificationChannel(channelInfo.id)
-        if (channel != null) {
-            Timber.d("Channel already exists: ${channel.id}")
-            return
-        }
-
-        val notificationGroup = NotificationChannelGroup(channelInfo.id, channelInfo.title)
-        val notificationChannel =
-            NotificationChannel(
-                channelInfo.id,
-                channelInfo.title,
-                NotificationManager.IMPORTANCE_MIN
-            ).apply {
-                group = notificationGroup.id
-                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                description = channelInfo.description
-                enableLights(false)
-                enableVibration(false)
-                setSound(null, null)
+    val notificationGroup = NotificationChannelGroup(channelInfo.id, channelInfo.title)
+    val notificationChannel =
+        NotificationChannel(channelInfo.id, channelInfo.title, NotificationManager.IMPORTANCE_MIN)
+            .apply {
+              group = notificationGroup.id
+              lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+              description = channelInfo.description
+              enableLights(false)
+              enableVibration(false)
+              setSound(null, null)
             }
 
-        Timber.d("Create notification channel and group ${notificationChannel.id} ${notificationGroup.id}")
-        notificationManager.apply {
-            createNotificationChannelGroup(notificationGroup)
-            createNotificationChannel(notificationChannel)
-        }
+    Timber.d(
+        "Create notification channel and group ${notificationChannel.id} ${notificationGroup.id}")
+    notificationManager.apply {
+      createNotificationChannelGroup(notificationGroup)
+      createNotificationChannel(notificationChannel)
     }
+  }
 
-    override fun build(
-        id: NotifyId,
-        channelInfo: NotifyChannelInfo,
-        notification: PasteNotification
-    ): Notification {
-        setupNotificationChannel(channelInfo)
-        return NotificationCompat.Builder(context, channelInfo.id)
-            .setSmallIcon(R.drawable.ic_paste_notification)
-            .setContentText("Pasterino Plzarino")
-            .setContentIntent(pendingIntent)
-            .setWhen(0)
-            .setOngoing(true)
-            .setAutoCancel(false)
-            .setNumber(0)
-            .setPriority(NotificationCompat.PRIORITY_MIN)
-            .setColor(ContextCompat.getColor(context, R2.color.green500)).build()
-    }
+  override fun build(
+      id: NotifyId,
+      channelInfo: NotifyChannelInfo,
+      notification: PasteNotification
+  ): Notification {
+    setupNotificationChannel(channelInfo)
+    return NotificationCompat.Builder(context, channelInfo.id)
+        .setSmallIcon(R.drawable.ic_paste_notification)
+        .setContentText("Pasterino Plzarino")
+        .setContentIntent(pendingIntent)
+        .setWhen(0)
+        .setOngoing(true)
+        .setAutoCancel(false)
+        .setNumber(0)
+        .setPriority(NotificationCompat.PRIORITY_MIN)
+        .setColor(ContextCompat.getColor(context, R2.color.green500))
+        .build()
+  }
 
-    override fun canShow(notification: NotifyData): Boolean {
-        return notification is PasteNotification
-    }
+  override fun canShow(notification: NotifyData): Boolean {
+    return notification is PasteNotification
+  }
 
-    companion object {
+  companion object {
 
-        private const val RC = 1005
-    }
+    private const val RC = 1005
+  }
 }

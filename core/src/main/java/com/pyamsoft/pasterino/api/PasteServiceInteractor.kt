@@ -20,13 +20,11 @@ import androidx.annotation.CheckResult
 
 interface PasteServiceInteractor {
 
-    @CheckResult
-    suspend fun isDeepSearchEnabled(): Boolean
+  @CheckResult suspend fun isDeepSearchEnabled(): Boolean
 
-    @CheckResult
-    suspend fun getPasteDelayTime(): Long
+  @CheckResult suspend fun getPasteDelayTime(): Long
 
-    suspend fun observeServiceState(onEvent: (Boolean) -> Unit)
+  suspend fun observeServiceState(onEvent: suspend (Boolean) -> Unit)
 
-    suspend fun setServiceState(start: Boolean)
+  suspend fun setServiceState(start: Boolean)
 }

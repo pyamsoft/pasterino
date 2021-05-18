@@ -24,47 +24,42 @@ import com.pyamsoft.pydroid.util.isDebugMode
 
 class Pasterino : Application() {
 
-    private val component by lazy {
-        val url = "https://github.com/pyamsoft/pasterino"
+  private val component by lazy {
+    val url = "https://github.com/pyamsoft/pasterino"
 
-        val provider = PYDroid.init(
+    val provider =
+        PYDroid.init(
             this,
             PYDroid.Parameters(
                 viewSourceUrl = url,
                 bugReportUrl = "$url/issues",
                 version = BuildConfig.VERSION_CODE,
                 termsConditionsUrl = TERMS_CONDITIONS_URL,
-                privacyPolicyUrl = PRIVACY_POLICY_URL
-            )
-        )
-        // Using pydroid-notify
-        OssLibraries.usingNotify = true
+                privacyPolicyUrl = PRIVACY_POLICY_URL))
+    // Using pydroid-notify
+    OssLibraries.usingNotify = true
 
-        return@lazy DaggerPasterinoComponent.factory().create(
-            isDebugMode(),
-            this,
-            provider.get().theming(),
-            provider.get().imageLoader()
-        )
+    return@lazy DaggerPasterinoComponent.factory()
+        .create(isDebugMode(), this, provider.get().theming(), provider.get().imageLoader())
+  }
+
+  override fun getSystemService(name: String): Any? {
+    // Do this weird thing to ensure that component is initialized
+    return component.run { PYDroid.getSystemService(name) } ?: fallbackGetSystemService(name)
+  }
+
+  @CheckResult
+  private fun fallbackGetSystemService(name: String): Any? {
+    return if (PasterinoComponent::class.java.name == name) component
+    else {
+      super.getSystemService(name)
     }
+  }
 
-    override fun getSystemService(name: String): Any? {
-        // Do this weird thing to ensure that component is initialized
-        return component.run { PYDroid.getSystemService(name) } ?: fallbackGetSystemService(name)
-    }
+  companion object {
 
-    @CheckResult
-    private fun fallbackGetSystemService(name: String): Any? {
-        return if (PasterinoComponent::class.java.name == name) component else {
-            super.getSystemService(name)
-        }
-    }
-
-    companion object {
-
-        const val PRIVACY_POLICY_URL =
-            "https://pyamsoft.blogspot.com/p/pasterino-privacy-policy.html"
-        const val TERMS_CONDITIONS_URL =
-            "https://pyamsoft.blogspot.com/p/pasterino-terms-and-conditions.html"
-    }
+    const val PRIVACY_POLICY_URL = "https://pyamsoft.blogspot.com/p/pasterino-privacy-policy.html"
+    const val TERMS_CONDITIONS_URL =
+        "https://pyamsoft.blogspot.com/p/pasterino-terms-and-conditions.html"
+  }
 }

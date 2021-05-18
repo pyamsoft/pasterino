@@ -21,13 +21,12 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
 class SettingsFragment : AppSettingsFragment() {
 
-    override fun provideSettingsFragment(): AppSettingsPreferenceFragment =
-        SettingsPreferenceFragment()
+  override fun provideSettingsFragment(): AppSettingsPreferenceFragment =
+      SettingsPreferenceFragment()
 
-    override fun provideSettingsTag(): String =
-        SettingsPreferenceFragment.TAG
+  override fun provideSettingsTag(): String = SettingsPreferenceFragment.TAG
 
-    companion object {
-        const val TAG = "SettingsFragment"
-    }
+  companion object {
+    const val TAG = "SettingsFragment"
+  }
 }

@@ -28,51 +28,50 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Singleton
-internal class PasterinoPreferencesImpl @Inject internal constructor(
-    context: Context
-) : PastePreferences, ClearPreferences {
+internal class PasterinoPreferencesImpl @Inject internal constructor(context: Context) :
+    PastePreferences, ClearPreferences {
 
-    private val delayTime: String
-    private val delayTimeDefault: String
+  private val delayTime: String
+  private val delayTimeDefault: String
 
-    private val deepSearch: String
-    private val deepSearchDefault: Boolean
+  private val deepSearch: String
+  private val deepSearchDefault: Boolean
 
-    private val preferences by lazy {
-        Enforcer.assertOffMainThread()
-        PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+  private val preferences by lazy {
+    Enforcer.assertOffMainThread()
+    PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+  }
+
+  init {
+    context.applicationContext.resources.apply {
+      delayTime = getString(R.string.delay_time_key_v2)
+      delayTimeDefault = getString(R.string.delay_time_default_v2)
+
+      deepSearch = getString(R.string.deep_search_key_v1)
+      deepSearchDefault = getBoolean(R.bool.deep_search_default_v1)
     }
+  }
 
-    init {
-        context.applicationContext.resources.apply {
-            delayTime = getString(R.string.delay_time_key_v2)
-            delayTimeDefault = getString(R.string.delay_time_default_v2)
-
-            deepSearch = getString(R.string.deep_search_key_v1)
-            deepSearchDefault = getBoolean(R.bool.deep_search_default_v1)
-        }
-    }
-
-    override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
+  override suspend fun getPasteDelayTime(): Long =
+      withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
         return@withContext preferences.getString(delayTime, delayTimeDefault).orEmpty().toLong()
-    }
+      }
 
-    override suspend fun isDeepSearchEnabled(): Boolean =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            return@withContext preferences.getBoolean(deepSearch, deepSearchDefault)
-        }
+  override suspend fun isDeepSearchEnabled(): Boolean =
+      withContext(context = Dispatchers.Default) {
+        Enforcer.assertOffMainThread()
+        return@withContext preferences.getBoolean(deepSearch, deepSearchDefault)
+      }
 
-    @SuppressLint("ApplySharedPref")
-    override suspend fun clearAll() = withContext(context = Dispatchers.Default) {
+  @SuppressLint("ApplySharedPref")
+  override suspend fun clearAll() =
+      withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
 
         // Make sure we commit so that they are cleared
-        preferences.edit()
-            .clear()
-            .commit()
+        preferences.edit().clear().commit()
 
         return@withContext
-    }
+      }
 }

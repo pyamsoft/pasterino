@@ -28,81 +28,72 @@ import com.pyamsoft.pasterino.service.monitor.ServiceEvent.PasteEvent
 import com.pyamsoft.pasterino.service.monitor.notification.NotificationHandler
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.util.Toaster
-import timber.log.Timber
 import javax.inject.Inject
 import kotlin.LazyThreadSafetyMode.NONE
+import timber.log.Timber
 
 class PasteService : AccessibilityService(), LifecycleOwner {
 
-    @JvmField
-    @Inject
-    internal var binder: PasteBinder? = null
+  @JvmField @Inject internal var binder: PasteBinder? = null
 
-    @JvmField
-    @Inject
-    internal var notificationHandler: NotificationHandler? = null
+  @JvmField @Inject internal var notificationHandler: NotificationHandler? = null
 
-    private val registry by lazy(NONE) { LifecycleRegistry(this) }
+  private val registry by lazy(NONE) { LifecycleRegistry(this) }
 
-    override fun getLifecycle(): Lifecycle {
-        return registry
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
+
+  override fun onAccessibilityEvent(event: AccessibilityEvent) {
+    Timber.d("onAccessibilityEvent")
+  }
+
+  override fun onInterrupt() {
+    Timber.e("onInterrupt")
+  }
+
+  override fun onCreate() {
+    super.onCreate()
+    Injector.obtainFromApplication<PasterinoComponent>(this).inject(this)
+
+    requireNotNull(binder).bind(lifecycleScope) {
+      return@bind when (it) {
+        is PasteEvent -> performPaste(it.isDeepSearchEnabled)
+      }
     }
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        Timber.d("onAccessibilityEvent")
+    registry.currentState = Lifecycle.State.RESUMED
+  }
+
+  private fun performPaste(deepSearch: Boolean) {
+    requireNotNull(binder).handlePasteInput(lifecycleScope, deepSearch, rootInActiveWindow) { result
+      ->
+      if (result) {
+        Toaster.bindTo(this).short(applicationContext, "Pasting text into currently focused input")
+      } else {
+        Toaster.bindTo(this).short(applicationContext, "Nothing to paste into")
+      }
     }
+  }
 
-    override fun onInterrupt() {
-        Timber.e("onInterrupt")
-    }
+  override fun onServiceConnected() {
+    super.onServiceConnected()
+    requireNotNull(binder).handleStart(lifecycleScope)
+    requireNotNull(notificationHandler).start()
+  }
 
-    override fun onCreate() {
-        super.onCreate()
-        Injector.obtainFromApplication<PasterinoComponent>(this)
-            .inject(this)
+  override fun onUnbind(intent: Intent): Boolean {
+    notificationHandler?.stop()
+    binder?.handleStop(lifecycleScope)
+    return super.onUnbind(intent)
+  }
 
-        requireNotNull(binder).bind(lifecycleScope) {
-            return@bind when (it) {
-                is PasteEvent -> performPaste(it.isDeepSearchEnabled)
-            }
-        }
+  override fun onDestroy() {
+    super.onDestroy()
 
-        registry.currentState = Lifecycle.State.RESUMED
-    }
+    binder?.unbind()
+    binder = null
 
-    private fun performPaste(deepSearch: Boolean) {
-        requireNotNull(binder).handlePasteInput(
-            lifecycleScope,
-            deepSearch,
-            rootInActiveWindow
-        ) { result ->
-            if (result) {
-                Toaster.bindTo(this)
-                    .short(applicationContext, "Pasting text into currently focused input")
-            } else {
-                Toaster.bindTo(this).short(applicationContext, "Nothing to paste into")
-            }
-        }
-    }
-
-    override fun onServiceConnected() {
-        super.onServiceConnected()
-        requireNotNull(binder).handleStart(lifecycleScope)
-        requireNotNull(notificationHandler).start()
-    }
-
-    override fun onUnbind(intent: Intent): Boolean {
-        notificationHandler?.stop()
-        binder?.handleStop(lifecycleScope)
-        return super.onUnbind(intent)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        binder?.unbind()
-        binder = null
-
-        registry.currentState = Lifecycle.State.DESTROYED
-    }
+    registry.currentState = Lifecycle.State.DESTROYED
+  }
 }

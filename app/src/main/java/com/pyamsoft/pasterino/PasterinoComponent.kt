@@ -42,52 +42,49 @@ import javax.inject.Singleton
 @Component(modules = [PasterinoModule::class, BaseModule::class, NotificationModule::class])
 interface PasterinoComponent {
 
-    fun inject(service: PasteService)
+  fun inject(service: PasteService)
 
-    fun inject(service: SinglePasteService)
+  fun inject(service: SinglePasteService)
+
+  @CheckResult fun plusMainComponent(): MainComponent.Factory
+
+  @CheckResult fun plusMainFragmentComponent(): MainFragmentComponent.Factory
+
+  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
+
+  @Component.Factory
+  interface Factory {
 
     @CheckResult
-    fun plusMainComponent(): MainComponent.Factory
+    fun create(
+        @Named("debug") @BindsInstance debug: Boolean,
+        @BindsInstance context: Context,
+        @BindsInstance theming: Theming,
+        @BindsInstance imageLoader: ImageLoader
+    ): PasterinoComponent
+  }
 
-    @CheckResult
-    fun plusMainFragmentComponent(): MainFragmentComponent.Factory
-
-    @CheckResult
-    fun plusSettingsComponent(): SettingsComponent.Factory
-
-    @Component.Factory
-    interface Factory {
-
-        @CheckResult
-        fun create(
-            @Named("debug") @BindsInstance debug: Boolean,
-            @BindsInstance context: Context,
-            @BindsInstance theming: Theming,
-            @BindsInstance imageLoader: ImageLoader
-        ): PasterinoComponent
-    }
+  @Module
+  abstract class PasterinoModule {
 
     @Module
-    abstract class PasterinoModule {
+    companion object {
 
-        @Module
-        companion object {
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun providePasteBus(): EventBus<PasteRequestEvent> {
+        return EventBus.create(emitOnlyWhenActive = true)
+      }
 
-            @Provides
-            @Singleton
-            @JvmStatic
-            @CheckResult
-            internal fun providePasteBus(): EventBus<PasteRequestEvent> {
-                return EventBus.create(emitOnlyWhenActive = true)
-            }
-
-            @Provides
-            @Singleton
-            @JvmStatic
-            @CheckResult
-            internal fun provideScrollBus(): EventBus<SignificantScrollEvent> {
-                return EventBus.create(emitOnlyWhenActive = true)
-            }
-        }
+      @Provides
+      @Singleton
+      @JvmStatic
+      @CheckResult
+      internal fun provideScrollBus(): EventBus<SignificantScrollEvent> {
+        return EventBus.create(emitOnlyWhenActive = true)
+      }
     }
+  }
 }

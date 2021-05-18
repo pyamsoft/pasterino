@@ -32,69 +32,65 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import javax.inject.Inject
 
-internal class MainActionView @Inject internal constructor(
-    private val imageLoader: ImageLoader,
-    parent: ViewGroup
-) : BaseUiView<MainViewState, MainViewEvent, FloatingActionButtonBinding>(parent) {
+internal class MainActionView
+@Inject
+internal constructor(private val imageLoader: ImageLoader, parent: ViewGroup) :
+    BaseUiView<MainViewState, MainViewEvent, FloatingActionButtonBinding>(parent) {
 
-    override val viewBinding = FloatingActionButtonBinding::inflate
+  override val viewBinding = FloatingActionButtonBinding::inflate
 
-    override val layoutRoot by boundView { fabContainer }
+  override val layoutRoot by boundView { fabContainer }
 
-    private var actionIconLoaded: Loaded? = null
+  private var actionIconLoaded: Loaded? = null
 
-    private var animator: ViewPropertyAnimatorCompat? = null
+  private var animator: ViewPropertyAnimatorCompat? = null
 
-    init {
-        doOnInflate {
-            binding.fab.doOnApplyWindowInsets { v, insets, _ ->
-                v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = insets.systemWindowInsetBottom
-                }
-            }
+  init {
+    doOnInflate {
+      binding.fab.doOnApplyWindowInsets { v, insets, _ ->
+        v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+          bottomMargin = insets.systemWindowInsetBottom
         }
-
-        doOnTeardown {
-            binding.fab.setOnDebouncedClickListener(null)
-            actionIconLoaded?.dispose()
-        }
-
-        doOnTeardown {
-            cancelAnimator()
-        }
+      }
     }
 
-    private fun cancelAnimator() {
-        animator?.cancel()
-        animator = null
+    doOnTeardown {
+      binding.fab.setOnDebouncedClickListener(null)
+      actionIconLoaded?.dispose()
     }
 
-    override fun onRender(state: UiRender<MainViewState>) {
-        state.mapChanged { it.isVisible }.render(viewScope) { toggleVisibility(it) }
-        state.mapChanged { it.isServiceRunning }.render(viewScope) { setFabState(it) }
-    }
+    doOnTeardown { cancelAnimator() }
+  }
 
-    private fun setFabState(running: Boolean) {
-        binding.fab.setOnDebouncedClickListener {
-            publish(ActionClick(running))
-        }
+  private fun cancelAnimator() {
+    animator?.cancel()
+    animator = null
+  }
 
-        val icon = if (running) {
-            R.drawable.ic_help_24dp
+  override fun onRender(state: UiRender<MainViewState>) {
+    state.mapChanged { it.isVisible }.render(viewScope) { toggleVisibility(it) }
+    state.mapChanged { it.isServiceRunning }.render(viewScope) { setFabState(it) }
+  }
+
+  private fun setFabState(running: Boolean) {
+    binding.fab.setOnDebouncedClickListener { publish(ActionClick(running)) }
+
+    val icon =
+        if (running) {
+          R.drawable.ic_help_24dp
         } else {
-            R.drawable.ic_service_start_24dp
+          R.drawable.ic_service_start_24dp
         }
 
-        actionIconLoaded?.dispose()
-        actionIconLoaded = imageLoader.load(icon)
-            .into(binding.fab)
-    }
+    actionIconLoaded?.dispose()
+    actionIconLoaded = imageLoader.load(icon).into(binding.fab)
+  }
 
-    private fun toggleVisibility(visible: Boolean) {
-        if (animator == null) {
-            val a = if (visible) binding.fab.popShow() else binding.fab.popHide()
-            a.withEndAction { cancelAnimator() }
-            animator = a
-        }
+  private fun toggleVisibility(visible: Boolean) {
+    if (animator == null) {
+      val a = if (visible) binding.fab.popShow() else binding.fab.popHide()
+      a.withEndAction { cancelAnimator() }
+      animator = a
     }
+  }
 }

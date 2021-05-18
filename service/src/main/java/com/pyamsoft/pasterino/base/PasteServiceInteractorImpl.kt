@@ -21,49 +21,50 @@ import com.pyamsoft.pasterino.api.PasteServiceInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.bus.EventConsumer
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Singleton
-internal class PasteServiceInteractorImpl @Inject internal constructor(
-    private val preferences: PastePreferences
-) : PasteServiceInteractor {
+internal class PasteServiceInteractorImpl
+@Inject
+internal constructor(private val preferences: PastePreferences) : PasteServiceInteractor {
 
-    private var running = false
+  private var running = false
 
-    private val runningStateBus = EventBus.create<Boolean>(emitOnlyWhenActive = true)
-    private val serviceState by lazy {
-        object : EventConsumer<Boolean> {
+  private val runningStateBus = EventBus.create<Boolean>(emitOnlyWhenActive = true)
+  private val serviceState by lazy {
+    object : EventConsumer<Boolean> {
 
-            override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
-                emitter(running)
-                runningStateBus.onEvent(emitter)
-            }
-        }
+      override suspend fun onEvent(emitter: suspend (event: Boolean) -> Unit) {
+        emitter(running)
+        runningStateBus.onEvent(emitter)
+      }
     }
+  }
 
-    override suspend fun setServiceState(start: Boolean) {
+  override suspend fun setServiceState(start: Boolean) {
+    Enforcer.assertOffMainThread()
+    running = start
+    runningStateBus.send(start)
+  }
+
+  override suspend fun observeServiceState(onEvent: suspend (Boolean) -> Unit) =
+      withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
-        running = start
-        runningStateBus.send(start)
-    }
+        serviceState.onEvent { onEvent(it) }
+      }
 
-    override suspend fun observeServiceState(onEvent: (Boolean) -> Unit) =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            serviceState.onEvent { onEvent(it) }
-        }
-
-    override suspend fun getPasteDelayTime(): Long = withContext(context = Dispatchers.Default) {
+  override suspend fun getPasteDelayTime(): Long =
+      withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
         return@withContext preferences.getPasteDelayTime()
-    }
+      }
 
-    override suspend fun isDeepSearchEnabled(): Boolean =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            return@withContext preferences.isDeepSearchEnabled()
-        }
+  override suspend fun isDeepSearchEnabled(): Boolean =
+      withContext(context = Dispatchers.Default) {
+        Enforcer.assertOffMainThread()
+        return@withContext preferences.isDeepSearchEnabled()
+      }
 }

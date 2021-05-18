@@ -18,5 +18,5 @@ package com.pyamsoft.pasterino.service.monitor
 
 sealed class ServiceEvent {
 
-    data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceEvent()
+  data class PasteEvent(val isDeepSearchEnabled: Boolean) : ServiceEvent()
 }

@@ -24,20 +24,17 @@ import com.pyamsoft.pasterino.R
 import com.pyamsoft.pydroid.ui.preference.PreferenceCompat
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 
-internal class PreferenceBottomSpace internal constructor(
-    context: Context
-) : PreferenceCompat(context) {
+internal class PreferenceBottomSpace internal constructor(context: Context) :
+    PreferenceCompat(context) {
 
-    init {
-        layoutResource = R.layout.preference_spacer
-    }
+  init {
+    layoutResource = R.layout.preference_spacer
+  }
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder) {
-        super.onBindViewHolder(holder)
-        holder.itemView.doOnApplyWindowInsets { v, insets, _ ->
-            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                height = insets.systemWindowInsetBottom
-            }
-        }
+  override fun onBindViewHolder(holder: PreferenceViewHolder) {
+    super.onBindViewHolder(holder)
+    holder.itemView.doOnApplyWindowInsets { v, insets, _ ->
+      v.updateLayoutParams<ViewGroup.MarginLayoutParams> { height = insets.systemWindowInsetBottom }
     }
+  }
 }

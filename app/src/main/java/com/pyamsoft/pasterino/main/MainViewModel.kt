@@ -22,27 +22,26 @@ import com.pyamsoft.pasterino.settings.SignificantScrollEvent
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bus.EventBus
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-internal class MainViewModel @Inject internal constructor(
+internal class MainViewModel
+@Inject
+internal constructor(
     interactor: PasteServiceInteractor,
     visibilityBus: EventBus<SignificantScrollEvent>
-) : UiViewModel<MainViewState, UnitControllerEvent>(
-    MainViewState(
-        isVisible = true,
-        isServiceRunning = false
-    )
-) {
+) :
+    UiViewModel<MainViewState, UnitControllerEvent>(
+        MainViewState(isVisible = true, isServiceRunning = false)) {
 
-    init {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.observeServiceState { setState { copy(isServiceRunning = it) } }
-        }
-
-        viewModelScope.launch(context = Dispatchers.Default) {
-            visibilityBus.onEvent { setState { copy(isVisible = it.visible) } }
-        }
+  init {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      interactor.observeServiceState { setState { copy(isServiceRunning = it) } }
     }
+
+    viewModelScope.launch(context = Dispatchers.Default) {
+      visibilityBus.onEvent { setState { copy(isVisible = it.visible) } }
+    }
+  }
 }

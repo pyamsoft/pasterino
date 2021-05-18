@@ -18,5 +18,5 @@ package com.pyamsoft.pasterino.api
 
 interface MainInteractor {
 
-    suspend fun clearAll()
+  suspend fun clearAll()
 }
