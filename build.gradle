@@ -55,7 +55,7 @@ buildscript {
     constraintLayout = "2.0.4"
 
     // Material Design
-    materialDesign = "1.3.0"
+    materialDesign = "1.4.0"
   }
 
   dependencies {
